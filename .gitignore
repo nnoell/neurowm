@@ -1,0 +1,4 @@
+/neuro/*.o
+/neurowm
+/libneurowm.a
+/test/myneurowm

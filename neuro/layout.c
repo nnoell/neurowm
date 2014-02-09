@@ -1,0 +1,264 @@
+//----------------------------------------------------------------------------------------------------------------------
+// Module      :  layout
+// Copyright   :  (c) Julian Bouzas 2014
+// License     :  BSD3-style (see LICENSE)
+// Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
+// Stability   :  stable
+//----------------------------------------------------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// PREPROCESSOR
+//----------------------------------------------------------------------------------------------------------------------
+
+// Includes
+#include "layout.h"
+#include "area.h"
+#include "stackset.h"
+#include "workspace.h"
+
+// Defines
+#define STEP_SIZE_REALLOC 32
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// PRIVATE FUNCTION DEFINITION
+//----------------------------------------------------------------------------------------------------------------------
+
+static Arrange *allocArrangeL(int ws, Layout *l) {
+  Area **rs = NULL, **frs = NULL;
+  int i = 0, size = 0;
+  CliPtr c;
+  for (c=getHeadCliStackSS(ws); c; c=getNextCliSS(c)) {
+    if (!CLIVAL(c).freeLocFunc && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
+      if (i >= size || i <= 0) {  // Realloc if memory is needed
+        size += STEP_SIZE_REALLOC;
+        rs = (Area **)realloc(rs, size*sizeof(void *));
+        frs = (Area **)realloc(frs, size*sizeof(void *));
+        if (!rs || !frs)
+          return NULL;
+      }
+      rs[ i ] = getRegionCliSS(c);
+      frs[ i ] = &(CLIVAL(c).floatRegion);
+      ++i;
+    }
+  }
+  Arrange *a = (Arrange *)malloc(sizeof(Arrange));
+  if (!a)
+    return NULL;
+  a->size = i;
+  getRelativeAreaA(&a->region, getRegionStackSS(ws), l->region);
+  a->cliRegions = rs;
+  a->cliFloatRegions = frs;
+  a->as = l->as;
+  return a;
+}
+
+static void freeArrangeL(Arrange *a) {
+  free(a->cliRegions);
+  a->cliRegions = NULL;
+  free(a->cliFloatRegions);
+  a->cliFloatRegions = NULL;
+  free(a);
+  a = NULL;
+}
+
+// PRE: n must be > 0
+static void getLengthSizesL(int n, int length, int *xs, int *ws) {
+  int a = (float)length / (float)n + 0.5f;
+  int countx = 0;
+  int i;
+  for (i = 0; i < n; ++i) {
+    xs[ i ] = countx;
+    ws[ i ] = a;
+    countx += a;
+  }
+  if (( ws[ n-1 ] + xs[ n-1 ] ) != length)
+    ws[ n-1 ] = length - xs[ n-1 ];
+}
+
+// Arrange runners
+static Arrange *normalArrangeL(Arrange *a, ArrangeF af) {
+  af(a);
+  return a;
+}
+
+static Arrange *mirrorArrangeL(Arrange *a, ArrangeF af) {
+  transpAreaA(&a->region);
+  af(a);
+  int i;
+  for (i = 0; i < a->size; ++i)
+    transpAreaA(a->cliRegions[ i ]);
+  transpAreaA(&a->region);
+  return a;
+}
+
+// Mods
+static Arrange *reflXArrModL(Arrange *a) {
+  int i;
+  for (i = 0; i < a->size; ++i)
+    a->cliRegions[ i ]->x = 2*(a->region.x) + a->region.w - (a->cliRegions[ i ]->x + a->cliRegions[ i ]->w);
+  return a;
+}
+
+static Arrange *reflYArrModL(Arrange *a) {
+  int i;
+  for (i = 0; i < a->size; ++i)
+    a->cliRegions[ i ]->y = 2*(a->region.y) + a->region.h - (a->cliRegions[ i ]->y + a->cliRegions[ i ]->h);
+  return a;
+}
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// PUBLIC FUNCTION DEFINITION
+//----------------------------------------------------------------------------------------------------------------------
+
+void runLayoutL(int ws, int i) {
+  Layout *l = getLayoutStackSS(ws, i);
+  Arrange *a = allocArrangeL(ws, l);
+  if (!a)
+    exitErrorG("runLayoutL - could not run layout");
+  if (a->size) {  // Then run layout
+    if (l->mod & mirrModL)
+      mirrorArrangeL(a, l->arrangeFunc);
+    else
+      normalArrangeL(a, l->arrangeFunc);
+    if (l->mod & reflXModL)
+      reflXArrModL(a);
+    if (l->mod & reflYModL)
+      reflYArrModL(a);
+  }
+  freeArrangeL(a);
+}
+
+void runCurrLayoutL(int ws) {
+  runLayoutL(ws, getLayoutIdxStackSS(ws));
+}
+
+void togModLayoutL(int ws, int i, unsigned int mod) {
+  Layout *l = getLayoutStackSS(ws, i);
+  l->mod ^= mod;
+  runLayoutL(ws, i);
+  updateW(ws);
+}
+
+void togModCurrLayoutL(int ws, unsigned int mod) {
+  togModLayoutL(ws, getLayoutIdxStackSS(ws), mod);
+}
+
+void togLayoutL(int ws, int i) {
+  int tl = i;
+  if (isCurrTogLayoutStackSS( ws ))
+    tl = -1;
+  setTogLayoutStackSS(ws, tl);
+  runCurrLayoutL(ws);
+  updateFocusW(ws);
+}
+
+void changeLayoutL(int ws, int s) {
+  int val = getLayoutIdxStackSS(ws) + s;
+  setLayoutStackSS(ws, val);
+  runCurrLayoutL(ws);
+  updateFocusW(ws);
+}
+
+void resetLayoutL(int ws) {
+  Layout *l;
+  const LayoutConf *lc;
+  int i;
+  for (i = 0; i < getNumLayoutStackSS(ws); ++i) {
+    l = getLayoutStackSS(ws, i);
+    lc = getLayoutConfStackSS(ws, i);
+    l->mod = lc->mod;
+    l->followMouse = lc->followMouse;
+    memmove(l->as, lc->as, sizeof(float)*ARRSET_MAX);
+  }
+  tileW(ws);
+  setLayoutStackSS(ws, 0);
+  runCurrLayoutL(ws);
+  updateFocusW(ws);
+}
+
+void increaseMasterL(int ws, int s) {
+  float *as = getCurrLayoutStackSS(ws)->as;
+  int res = (int)as[ 0 ] + s;
+  if (res < 1)
+    return;
+  as[ 0 ] = (float)res;
+  runCurrLayoutL(ws);
+  updateFocusW(ws);
+}
+
+void resizeMasterL(int ws, int r) {
+  float *as = getCurrLayoutStackSS(ws)->as;
+  float newmsize = as[ 1 ] + r * as[ 2 ];
+  if (newmsize <= 0 || newmsize >= 1)
+    return;
+  as[ 1 ] = newmsize;
+  runCurrLayoutL(ws);
+  updateFocusW(ws);
+}
+
+// Layouts
+Arrange *tallArrL(Arrange *a) {
+  int n = a->size;
+  int mn = (int)a->as[ 0 ], ms = (int)( (float)a->as[ 1 ] * a->region.w );
+  int nwindows = n <= mn ? n : mn;
+  int ys[ n ], hs[ n ];
+  memset(ys, 0, sizeof(ys));
+  memset(hs, 0, sizeof(hs));
+  getLengthSizesL(nwindows, a->region.h, ys, hs);
+  int i;
+  for (i = 0; i < nwindows; ++i)  // Master area
+    setAreaA(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ] , n > mn ? ms : a->region.w, hs[ i ]);
+  getLengthSizesL(n-nwindows, a->region.h, ys, hs);
+  for (; i < n; ++i)  // Stacking area
+    setAreaA(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms, hs[ i-nwindows ]);
+  return a;
+}
+
+Arrange *gridArrL(Arrange *a) {
+  int n = a->size, cols, rows;
+  for (cols = 0; cols <= n/2; ++cols)
+    if (cols*cols >= n)
+      break;
+  rows = n/cols;
+  int xs[ cols ], ws[ cols ];
+  memset( xs, 0, sizeof( xs ) );
+  memset( ws, 0, sizeof( ws ) );
+  getLengthSizesL(cols, a->region.w, xs, ws);
+  int i, cn = 0, rn = 0;
+  for (i = 0; i < n; ++i) {
+    if (i/rows + 1 > cols - n%cols)
+      rows = n/cols + 1;
+    int ys[ rows ], hs[ rows ];
+    memset( ys, 0, sizeof( ys ) );
+    memset( hs, 0, sizeof( hs ) );
+    getLengthSizesL(rows, a->region.h, ys, hs);
+    setAreaA(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
+    if (++rn >= rows) {
+      rn = 0;
+      ++cn;
+    }
+  }
+  return a;
+}
+
+Arrange *fullArrL(Arrange *a) {
+  int i;
+  for (i = 0; i < a->size; ++i)
+    setAreaA(a->cliRegions[ i ], a->region.x, a->region.y, a->region.w, a->region.h);
+  return a;
+}
+
+Arrange *floatArrL(Arrange *a) {
+  Area *fr;
+  int i;
+  for (i = 0; i < a->size; ++i) {
+    fr = a->cliFloatRegions[ i ];
+    setAreaA(a->cliRegions[ i ], fr->x, fr->y, fr->w, fr->h);
+    fitAreaInRegA(a->cliRegions[ i ], &a->region);
+  }
+  return a;
+}
+
