@@ -317,11 +317,11 @@ void nnoellTempLoggerP(char *str) {
   if (-1 == readFileDP( tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp" ))
     strncpy(tmp, "N/A", LOGGER_MAX);
   else
-    snprintf(tmp, LOGGER_MAX, "%i??", atoi(tmp) / 1000);
+    snprintf(tmp, LOGGER_MAX, "%i°C", atoi(tmp) / 1000);
   if (-1 == readFileDP( tmp2, "/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/temp" ))
     strncpy(tmp2, "N/A", LOGGER_MAX);
   else
-    snprintf(tmp2, LOGGER_MAX, "%i??", atoi(tmp2) / 1000);
+    snprintf(tmp2, LOGGER_MAX, "%i°C", atoi(tmp2) / 1000);
   snprintf(tmp3, LOGGER_MAX, "%s %s", tmp, tmp2);
   wrapDzenBoxDP(tmp4, tmp3, &BlueBoxPP);
   wrapDzenBoxDP(str, "TEMP", &Gray2BoxPP);
