@@ -44,6 +44,9 @@ void moveCliToWorkspaceAndFollowW(CliPtr c, int ws);
 void moveCliToPrevWorkspaceAndFollowW(CliPtr c);
 void moveCliToNextWorkspaceAndFollowW(CliPtr c);
 void moveCliToLastWorkspaceAndFollowW(CliPtr c);
+void restoreLastMinimizedW(int ws);
+void addEnterNotifyMaskW(int ws);
+void rmvEnterNotifyMaskW(int ws);
 
 // Find functions
 CliPtr findWindowClientAllW(Window w);

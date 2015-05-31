@@ -202,22 +202,6 @@ void minimizeC(CliPtr c) {
   updateFocusW(cli->ws);
 }
 
-void restoreLastMinimizedC() {
-  int ws = getCurrStackSS();
-  if (getMinimizedNumStackSS(ws) <= 0)
-    return;
-  Client *cli = popMinimizedCliSS(ws);
-  if (!cli)
-    exitErrorG("restoreLastMinimizedC - could not realloc");
-  CliPtr c = addCliStartSS(cli);
-  if (!c)
-    exitErrorG("restoreLastMinimizedC - could not add client");
-  applyRuleR(c);
-  setCurrCliSS(c);
-  runCurrLayoutL(CLIVAL(c).ws);
-  updateFocusW(CLIVAL(c).ws);
-}
-
 void tileC(CliPtr c) {
   if (!c)
     return;

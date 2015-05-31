@@ -32,7 +32,6 @@ void showC(CliPtr c, int doRules);
 void setUrgentC(CliPtr c);
 void unsetUrgentC(CliPtr c);
 void minimizeC(CliPtr c);
-void restoreLastMinimizedC();
 void tileC(CliPtr c);
 void freeC(CliPtr c, const FreeLocF ff);
 void toggleFreeC(CliPtr c, const FreeLocF ff);

@@ -227,26 +227,31 @@ void manageWindowE(Window w) {
       centerAreaInRegA(getRegionCliSS(c), &screenArea);
   }
 
+  // Set event mask
+  XSelectInput(display, CLIVAL(c).win, CLIENT_MASK);
+
   // Map window
   hideC(c, False);
-  XSelectInput(display, CLIVAL(c).win, CLIENT_MASK);
   XMapWindow(display, CLIVAL(c).win);
   grabButtonsB(CLIVAL(c).win);
-  if (isCurrStackSS(CLIVAL(c).ws)) {
-    showC(c, True);
-    runCurrLayoutL(CLIVAL(c).ws);
-    updateFocusW(CLIVAL(c).ws);
-  }
-
-  XSync(display, True);
+  const int ws = CLIVAL(c).ws;
+  if (!isCurrStackSS(ws))
+    return;
+  rmvEnterNotifyMaskW(ws);
+  showC(c, True);
+  runCurrLayoutL(ws);
+  updateFocusW(ws);
+  addEnterNotifyMaskW(ws);
 }
 
 void unmanageCliE(CliPtr c) {
   int ws = CLIVAL(c).ws;
+  rmvEnterNotifyMaskW(ws);
   Client *cli = rmvCliSS(c);
   freeClientG(cli);
   runCurrLayoutL(ws);
   updateFocusW(ws);
+  addEnterNotifyMaskW(ws);
 }
 
 void loadWindowsE() {

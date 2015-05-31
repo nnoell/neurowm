@@ -237,6 +237,33 @@ void moveCliToLastWorkspaceAndFollowW(CliPtr c) {
   moveCliToWorkspaceAndFollowW(c, getLastStackSS());
 }
 
+void restoreLastMinimizedW(int ws) {
+  if (getMinimizedNumStackSS(ws) <= 0)
+    return;
+  Client *cli = popMinimizedCliSS(ws);
+  if (!cli)
+    exitErrorG("restoreLastMinimizedW - could not realloc");
+  CliPtr c = addCliStartSS(cli);
+  if (!c)
+    exitErrorG("restoreLastMinimizedW - could not add client");
+  applyRuleR(c);
+  setCurrCliSS(c);
+  runCurrLayoutL(CLIVAL(c).ws);
+  updateFocusW(CLIVAL(c).ws);
+}
+
+void addEnterNotifyMaskW(int ws) {
+  CliPtr c;
+  for (c = getHeadCliStackSS(ws); c; c = getNextCliSS(c))
+    XSelectInput(display, CLIVAL(c).win, CLIENT_MASK);
+}
+
+void rmvEnterNotifyMaskW(int ws) {
+  CliPtr c;
+  for (c = getHeadCliStackSS(ws); c; c = getNextCliSS(c))
+    XSelectInput(display, CLIVAL(c).win, CLIENT_MASK_NO_ENTER);
+}
+
 
 // Find functions
 CliPtr findWindowClientAllW(Window w) {

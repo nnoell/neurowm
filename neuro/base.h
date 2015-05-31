@@ -18,9 +18,9 @@
 #include "general.h"
 
 // Defines
-#define CLIENT_MASK (EnterWindowMask | FocusChangeMask | PropertyChangeMask | StructureNotifyMask)
-#define ROOT_MASK   (SubstructureRedirectMask | SubstructureNotifyMask | ButtonPressMask | LeaveWindowMask | \
-    StructureNotifyMask | CLIENT_MASK)
+#define CLIENT_MASK (FocusChangeMask|PropertyChangeMask|StructureNotifyMask|EnterWindowMask)
+#define CLIENT_MASK_NO_ENTER (FocusChangeMask|PropertyChangeMask|StructureNotifyMask)
+#define ROOT_MASK (SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|StructureNotifyMask|CLIENT_MASK)
 
 #define xPos 0
 #define yPos 0

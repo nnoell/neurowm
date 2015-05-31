@@ -101,6 +101,7 @@ static void setCursorsAndAtomsB() {
       NET_COUNT);
 }
 
+
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
@@ -139,7 +140,7 @@ Bool initB(const WMConfig *c) {
   // Check if other window manager is already running
   XSetErrorHandler(XErrorStartHandlerB);
 
-  // Setup root window
+  // Setup root window mask
   XSetWindowAttributes wa;
   wa.cursor = cursors[ CurNormal ];
   wa.event_mask = ROOT_MASK;
