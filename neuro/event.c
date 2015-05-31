@@ -151,9 +151,8 @@ static void clientMessageE(XEvent *e) {
       fullScreenC(c);
     else if (e->xclient.data.l[0] == 2)  // _NET_WM_STATE_TOGGLE
       toggleFullScreenC(c);
-  } else {
-    if (e->xclient.message_type == netatoms[ NET_ACTIVE ])
-      moveFocusW(c, selfC);
+  } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
+    moveFocusW(c, selfC);
   }
   updateDP(True);
 }
@@ -162,25 +161,23 @@ static void propertyNotifyE(XEvent *e) {
   XPropertyEvent *ev = &e->xproperty;
   if (ev->atom == XA_WM_NAME || ev->atom == netatoms[ NET_WM_NAME ]) {  // Window title
     CliPtr c = findWindowClientAllW(ev->window);
-    if (c) {
-      updateTitleC(c);
-      updateDP(True);
-    }
-  } else {
-    if (ev->atom == XA_WM_HINTS) {  // Urgency hint
-      CliPtr c = findWindowClientAllW(ev->window);
-      if (c) {
-        if (!isCurrCliSS(c) || !isCurrStackSS(CLIVAL(c).ws)) {
-          XWMHints *wmh = XGetWMHints(display, CLIVAL(c).win);
-          if (wmh && (wmh->flags & XUrgencyHint))
-            setUrgentC(c);
-          if (wmh)
-            XFree(wmh);
-          updateC(c);
-          updateDP(True);
-        }
-      }
-    }
+    if (!c)
+      return;
+    updateTitleC(c);
+    updateDP(True);
+  } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
+    CliPtr c = findWindowClientAllW(ev->window);
+    if (!c)
+      return;
+    if (isCurrCliSS(c) && isCurrStackSS(CLIVAL(c).ws))
+      return;
+    XWMHints *wmh = XGetWMHints(display, CLIVAL(c).win);
+    if (wmh && (wmh->flags & XUrgencyHint))
+      setUrgentC(c);
+    if (wmh)
+      XFree(wmh);
+    updateC(c);
+    updateDP(True);
   }
 }
 
