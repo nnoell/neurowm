@@ -68,10 +68,8 @@ static void destroyNotifyE(XEvent *e) {
     unmanageCliE(c);
   } else {
     Client *cli = rmvMinimizedCliSS(w);
-    if (!cli)
-      return;
-    freeClientG(cli);
-    XSync(display, True);
+    if (cli)
+      freeClientG(cli);
   }
   updateDP(True);
 }
@@ -83,10 +81,8 @@ static void unmapNotifyE(XEvent *e) {
     unmanageCliE(c);
   } else {
     Client *cli = rmvMinimizedCliSS(w);
-    if (!cli)
-      return;
-    freeClientG(cli);
-    XSync(display, True);
+    if (cli)
+      freeClientG(cli);
   }
   updateDP(True);
 }
@@ -96,17 +92,16 @@ static void enterNotifyE(XEvent *e) {
   if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != (unsigned int)root)
     return;
   int ws = getCurrStackSS();  // Mouse is always in the current workspace
-  if (getSizeStackSS( ws ) < 2)
+  if (getSizeStackSS(ws) < 2)
     return;
-  if (!getCurrLayoutStackSS( ws )->followMouse)
+  if (!getCurrLayoutStackSS(ws)->followMouse)
     return;
   CliPtr c = findWindowClientAllW(ev->window);
   if (!c)
     return;
-  if (isCurrCliSS( c ))
+  if (isCurrCliSS(c))
     return;
   moveFocusW(c, selfC);
-  XSync(display, True);
   updateDP(True);
 }
 
@@ -252,7 +247,6 @@ void unmanageCliE(CliPtr c) {
   freeClientG(cli);
   runCurrLayoutL(ws);
   updateFocusW(ws);
-  XSync(display, True);
 }
 
 void loadWindowsE() {

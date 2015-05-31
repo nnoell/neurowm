@@ -122,7 +122,6 @@ void killC(const CliPtr c) {
     ke.xclient.data.l[ 0 ] = wmatoms[ WM_DELETE_WINDOW ];
     ke.xclient.data.l[ 1 ] = CurrentTime;
     XSendEvent(display, CLIVAL(c).win, False, NoEventMask, &ke);
-    unmanageCliE(c);
   } else {
     XKillClient(display, CLIVAL(c).win);
     unmanageCliE(c);
