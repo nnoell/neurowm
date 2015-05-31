@@ -251,7 +251,6 @@ void manageWindowE(Window w) {
 
 void unmanageCliE(CliPtr c) {
   int ws = CLIVAL(c).ws;
-  hideC(c, True);
   Client *cli = rmvCliSS(c);
   freeClientG(cli);
   runCurrLayoutL(ws);
