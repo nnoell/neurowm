@@ -327,6 +327,14 @@ int getCurrStackSS() {
   return SS.curr;
 }
 
+int getPrevStackSS() {
+  return SS.curr - 1 < 0 ? SS.size -1 : SS.curr - 1;
+}
+
+int getNextStackSS() {
+  return SS.curr + 1 >= SS.size ? 0 : SS.curr + 1;
+}
+
 int getLastStackSS() {
   return SS.last;
 }

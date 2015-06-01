@@ -179,42 +179,8 @@ void changeToWorkspaceW(int ws) {
   updateFocusW(new);
 }
 
-void changeToPrevWorkspaceW() {
-  int ws = getCurrStackSS()-1 < 0 ? getSizeSS()-1 : getCurrStackSS()-1;
-  changeToWorkspaceW(ws);
-}
-
-void changeToNextWorkspaceW() {
-  changeToWorkspaceW(getCurrStackSS() + 1);
-}
-
-void changeToLastWorkspaceW() {
-  changeToWorkspaceW(getLastStackSS());
-}
-
 void moveCliToWorkspaceW(CliPtr c, int ws) {
   moveCliToAnyWorkspaceW(c, ws % getSizeSS());
-}
-
-void moveCliToPrevWorkspaceW(CliPtr c) {
-  int ws = getCurrStackSS()-1 < 0 ? getSizeSS()-1 : getCurrStackSS()-1;
-  moveCliToWorkspaceW(c, ws);
-}
-
-void moveCliToNextWorkspaceW(CliPtr c) {
-  moveCliToWorkspaceW(c, getCurrStackSS() + 1);
-}
-
-void moveCliToLastWorkspaceW(CliPtr c) {
-  moveCliToWorkspaceW(c, getLastStackSS());
-}
-
-void moveNSPCliToWorkspaceW(int ws) {
-  moveCliToWorkspaceW(getCurrCliNSPStackSS(), ws);
-}
-
-void moveCliToNSPWorkspaceW(CliPtr c) {
-  moveCliToAnyWorkspaceW(c, getNSPStackSS());
 }
 
 void moveCliToWorkspaceAndFollowW(CliPtr c, int ws) {
@@ -224,17 +190,10 @@ void moveCliToWorkspaceAndFollowW(CliPtr c, int ws) {
   changeToWorkspaceW(ws);
 }
 
-void moveCliToPrevWorkspaceAndFollowW(CliPtr c) {
-  int ws = getCurrStackSS()-1 < 0 ? getSizeSS()-1 : getCurrStackSS()-1;
-  moveCliToWorkspaceAndFollowW(c, ws);
-}
-
-void moveCliToNextWorkspaceAndFollowW(CliPtr c) {
-  moveCliToWorkspaceAndFollowW(c, getCurrStackSS() + 1);
-}
-
-void moveCliToLastWorkspaceAndFollowW(CliPtr c) {
-  moveCliToWorkspaceAndFollowW(c, getLastStackSS());
+void minimizeW(int ws) {
+  CliPtr c;
+  for (c = getHeadCliStackSS(ws); c; c = getNextCliSS(c))
+    minimizeC(c);
 }
 
 void restoreLastMinimizedW(int ws) {

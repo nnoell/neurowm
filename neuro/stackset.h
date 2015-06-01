@@ -26,6 +26,8 @@
 Bool initSS();
 void endSS();
 int getCurrStackSS();
+int getPrevStackSS();
+int getNextStackSS();
 int getLastStackSS();
 int getNSPStackSS();
 int getSizeSS();

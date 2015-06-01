@@ -159,22 +159,33 @@ void resizeMasterN(Arg arg) {
 }
 
 void changeToWorkspaceN(Arg arg) {
+  rmvEnterNotifyMaskW(arg.i);
   changeToWorkspaceW(arg.i);
+  addEnterNotifyMaskW(arg.i);
 }
 
 void changeToPrevWorkspaceN(Arg arg) {
   (void)arg;
-  changeToPrevWorkspaceW();
+  const int ws = getPrevStackSS();
+  rmvEnterNotifyMaskW(ws);
+  changeToWorkspaceW(ws);
+  addEnterNotifyMaskW(ws);
 }
 
 void changeToNextWorkspaceN(Arg arg) {
   (void)arg;
-  changeToNextWorkspaceW();
+  const int ws = getNextStackSS();
+  rmvEnterNotifyMaskW(ws);
+  changeToWorkspaceW(ws);
+  addEnterNotifyMaskW(ws);
 }
 
 void changeToLastWorkspaceN(Arg arg) {
   (void)arg;
-  changeToLastWorkspaceW();
+  const int ws = getLastStackSS();
+  rmvEnterNotifyMaskW(ws);
+  changeToWorkspaceW(ws);
+  addEnterNotifyMaskW(ws);
 }
 
 void toggleFreeCliN(Arg arg) {
@@ -281,14 +292,14 @@ void toggleNSPN(Arg arg) {
   rmvEnterNotifyMaskW(ws);
   CliPtr c = findNSPCliSS();
   if (c && CLIVAL(c).ws == ws) {
-    moveCliToNSPWorkspaceW(c);
+    moveCliToWorkspaceW(c, getNSPStackSS());
   } else if (c) {
     moveCliToWorkspaceW(c, ws);
   } else {
     if (!getSizeNSPSS())
       spawnG((char **)arg.com, NULL);
     else
-      moveNSPCliToWorkspaceW(ws);
+      moveCliToWorkspaceW(getCurrCliNSPStackSS(), ws);
   }
   addEnterNotifyMaskW(ws);
 }

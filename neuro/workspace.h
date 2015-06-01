@@ -22,6 +22,7 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
+// Basic functions
 void updateW(int ws);
 void updateFocusW(int ws);
 void moveFocusW(const CliPtr c, const SelectCliF sf);
@@ -31,19 +32,9 @@ void showW(int ws, Bool doRules);
 void tileW(int ws);
 void freeW(int ws, const FreeLocF ff);
 void changeToWorkspaceW(int ws);
-void changeToPrevWorkspaceW();
-void changeToNextWorkspaceW();
-void changeToLastWorkspaceW();
 void moveCliToWorkspaceW(CliPtr c, int ws);
-void moveCliToPrevWorkspaceW(CliPtr c);
-void moveCliToNextWorkspaceW(CliPtr c);
-void moveCliToLastWorkspaceW(CliPtr c);
-void moveNSPCliToWorkspaceW(int ws);
-void moveCliToNSPWorkspaceW(CliPtr c);
 void moveCliToWorkspaceAndFollowW(CliPtr c, int ws);
-void moveCliToPrevWorkspaceAndFollowW(CliPtr c);
-void moveCliToNextWorkspaceAndFollowW(CliPtr c);
-void moveCliToLastWorkspaceAndFollowW(CliPtr c);
+void minimizeW(int ws);
 void restoreLastMinimizedW(int ws);
 void addEnterNotifyMaskW(int ws);
 void rmvEnterNotifyMaskW(int ws);
