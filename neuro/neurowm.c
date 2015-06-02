@@ -280,11 +280,11 @@ void toggleLayoutN(Arg arg) {
 }
 
 void moveCliToWorkspaceN(Arg arg) {
-  moveCliToWorkspaceW(getCurrCliCurrStackSS(), arg.i);
+  moveCliToWorkspaceW(getCurrCliCurrStackSS(), arg.i % getSizeSS());
 }
 
 void moveCliToWorkspaceAndFollowN(Arg arg) {
-  moveCliToWorkspaceAndFollowW(getCurrCliCurrStackSS(), arg.i);
+  moveCliToWorkspaceAndFollowW(getCurrCliCurrStackSS(), arg.i % getSizeSS());
 }
 
 void toggleNSPN(Arg arg) {

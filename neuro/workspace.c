@@ -42,32 +42,6 @@ static void unfocusClientW(CliPtr c) {
   updateC(c);
 }
 
-// NOTE: ws must be a valid index
-static void moveCliToAnyWorkspaceW(CliPtr c, int ws) {
-  if (!c)
-    return;
-  int oldws = CLIVAL(c).ws,
-    newws = isNSPStackSS(ws) ? getNSPStackSS() : ws % getSizeSS(),
-    currws = getCurrStackSS();
-  if (oldws == newws)
-    return;
-  Area oldArea = (Area){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  if (CLIVAL(c).freeLocFunc)
-    memmove(&oldArea, getRegionCliSS(c), sizeof(Area));
-  hideC(c, True);
-  Client *cli = rmvCliSS(c);
-  cli->ws = newws;
-  CliPtr c2 = addCliStartSS(cli);
-  if (!c2)
-    exitErrorG("moveCliToAnyWorkspaceW - could not add client");
-  if (CLIVAL(c2).freeLocFunc)
-    memmove(getRegionCliSS(c2), &oldArea, sizeof(Area));
-  if (newws == currws)
-    showC(c2, True);
-  runCurrLayoutL(currws);
-  updateFocusW(currws);
-}
-
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
@@ -179,10 +153,33 @@ void changeToWorkspaceW(int ws) {
   updateFocusW(new);
 }
 
+// PRE: ws must be valid
 void moveCliToWorkspaceW(CliPtr c, int ws) {
-  moveCliToAnyWorkspaceW(c, ws % getSizeSS());
+  if (!c)
+    return;
+  int oldws = CLIVAL(c).ws,
+    newws = isNSPStackSS(ws) ? getNSPStackSS() : ws % getSizeSS(),
+    currws = getCurrStackSS();
+  if (oldws == newws)
+    return;
+  Area oldArea = (Area){ .x = 0, .y = 0, .h = 0, .w = 0 };
+  if (CLIVAL(c).freeLocFunc)
+    memmove(&oldArea, getRegionCliSS(c), sizeof(Area));
+  hideC(c, True);
+  Client *cli = rmvCliSS(c);
+  cli->ws = newws;
+  CliPtr c2 = addCliStartSS(cli);
+  if (!c2)
+    exitErrorG("moveCliToAnyWorkspaceW - could not add client");
+  if (CLIVAL(c2).freeLocFunc)
+    memmove(getRegionCliSS(c2), &oldArea, sizeof(Area));
+  if (newws == currws)
+    showC(c2, True);
+  runCurrLayoutL(currws);
+  updateFocusW(currws);
 }
 
+// PRE: ws must be valid
 void moveCliToWorkspaceAndFollowW(CliPtr c, int ws) {
   if (!c)
     return;
