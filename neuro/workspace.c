@@ -73,7 +73,7 @@ void updateFocusW(int ws) {
   focusClientW(c);
 
   if (n > 1) {
-    if (!XQueryTree(display, root, &d1, &d2, &wins, &num ))  // XQueryTree gets windows by stacking order
+    if (!XQueryTree(display, root, &d1, &d2, &wins, &num))  // XQueryTree gets windows by stacking order
       exitErrorG("updateFocusW - could not get windows");
     int n2 = n;
     for (i = 0; i < num; ++i) {
@@ -95,7 +95,7 @@ void updateFocusW(int ws) {
 void moveFocusW(const CliPtr c, const SelectCliF sf) {
   if (!c || !sf)
     return;
-  if (getSizeStackSS( CLIVAL(c).ws ) < 2)
+  if (getSizeStackSS(CLIVAL(c).ws) < 2)
     return;
   CliPtr dst = sf(c);
   if (!dst)
@@ -107,7 +107,7 @@ void moveFocusW(const CliPtr c, const SelectCliF sf) {
 void swapClientsW(const CliPtr c, const SelectCliF sf) {
   if (!c || !sf)
     return;
-  if (getSizeStackSS( CLIVAL(c).ws ) < 2)
+  if (getSizeStackSS(CLIVAL(c).ws) < 2)
     return;
   CliPtr dst = sf(c);
   if (!dst)
@@ -125,7 +125,7 @@ void hideW(int ws, Bool doRules) {
 
 void showW(int ws, Bool doRules) {
   CliPtr c;
-  for (c = getHeadCliStackSS(ws); c; c = getNextCliSS(c) )
+  for (c = getHeadCliStackSS(ws); c; c = getNextCliSS(c))
     showC(c, doRules);
 }
 

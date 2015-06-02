@@ -73,7 +73,7 @@ static void getLengthSizesL(int n, int length, int *xs, int *ws) {
     ws[ i ] = a;
     countx += a;
   }
-  if (( ws[ n-1 ] + xs[ n-1 ] ) != length)
+  if ((ws[ n-1 ] + xs[ n-1 ]) != length)
     ws[ n-1 ] = length - xs[ n-1 ];
 }
 
@@ -148,7 +148,7 @@ void togModCurrLayoutL(int ws, unsigned int mod) {
 
 void togLayoutL(int ws, int i) {
   int tl = i;
-  if (isCurrTogLayoutStackSS( ws ))
+  if (isCurrTogLayoutStackSS(ws))
     tl = -1;
   setTogLayoutStackSS(ws, tl);
   runCurrLayoutL(ws);
@@ -202,7 +202,7 @@ void resizeMasterL(int ws, int r) {
 // Layouts
 Arrange *tallArrL(Arrange *a) {
   int n = a->size;
-  int mn = (int)a->as[ 0 ], ms = (int)( (float)a->as[ 1 ] * a->region.w );
+  int mn = (int)a->as[ 0 ], ms = (int)((float)a->as[ 1 ] * a->region.w);
   int nwindows = n <= mn ? n : mn;
   int ys[ n ], hs[ n ];
   memset(ys, 0, sizeof(ys));
@@ -224,16 +224,16 @@ Arrange *gridArrL(Arrange *a) {
       break;
   rows = n/cols;
   int xs[ cols ], ws[ cols ];
-  memset( xs, 0, sizeof( xs ) );
-  memset( ws, 0, sizeof( ws ) );
+  memset(xs, 0, sizeof(xs));
+  memset(ws, 0, sizeof(ws));
   getLengthSizesL(cols, a->region.w, xs, ws);
   int i, cn = 0, rn = 0;
   for (i = 0; i < n; ++i) {
     if (i/rows + 1 > cols - n%cols)
       rows = n/cols + 1;
     int ys[ rows ], hs[ rows ];
-    memset( ys, 0, sizeof( ys ) );
-    memset( hs, 0, sizeof( hs ) );
+    memset(ys, 0, sizeof(ys));
+    memset(hs, 0, sizeof(hs));
     getLengthSizesL(rows, a->region.h, ys, hs);
     setAreaA(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
     if (++rn >= rows) {

@@ -291,7 +291,7 @@ void nnoellMemPercLoggerP(char *str) {
 
 void nnoellBatteryLoggerP(char *str) {
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  if (-1 == readFileDP( tmp, "/sys/class/power_supply/BAT0/capacity" ))
+  if (-1 == readFileDP(tmp, "/sys/class/power_supply/BAT0/capacity"))
     strncpy(tmp, "N/A", LOGGER_MAX);
   else
     strncat(tmp, "%", LOGGER_MAX);
@@ -314,11 +314,11 @@ void nnoellWifiStrengthLoggerP(char *str) {
 
 void nnoellTempLoggerP(char *str) {
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  if (-1 == readFileDP( tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp" ))
+  if (-1 == readFileDP(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))
     strncpy(tmp, "N/A", LOGGER_MAX);
   else
     snprintf(tmp, LOGGER_MAX, "%i°C", atoi(tmp) / 1000);
-  if (-1 == readFileDP( tmp2, "/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/temp" ))
+  if (-1 == readFileDP(tmp2, "/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/temp"))
     strncpy(tmp2, "N/A", LOGGER_MAX);
   else
     snprintf(tmp2, LOGGER_MAX, "%i°C", atoi(tmp2) / 1000);

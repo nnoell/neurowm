@@ -64,7 +64,7 @@ static char **strToCmdDP(char **cmd, char *str, const char *sep) {
 static char **getDzenCmdDP(char **cmd, char *line, const DzenFlags *df) {
   snprintf(line, DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
       df->x, df->y, df->w, df->h, df->fgColor, df->bgColor, df->align, df->font, df->event, df->extras);
-  return strToCmdDP( cmd, line, " \t\n" );
+  return strToCmdDP(cmd, line, " \t\n");
 }
 
 static void updateDzenPanelDP(const DzenPanel *dp, int fd) {
@@ -154,7 +154,7 @@ void endDP() {
   endUpdateThreadDP();
   int i;
   for (i = 0; i < PIP.numPanels; ++i)
-    if (kill( PIP.pi[ i ].pid, SIGTERM ) == -1)
+    if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)
       perror("endDP - could not kill panels");
   free(PIP.pi);
   PIP.pi = NULL;
@@ -328,8 +328,8 @@ static int getNumCpusDP(const char *file) {
     exitErrorG("getNumCpusDP - could not open file");
   int i = 0;
   char buf[ 256 ];
-  while (fgets( buf, sizeof(buf), fd )) {
-    if (strncmp( buf, "cpu", 3) != 0)
+  while (fgets(buf, sizeof(buf), fd)) {
+    if (strncmp(buf, "cpu", 3) != 0)
       break;
     ++i;
   }

@@ -93,16 +93,16 @@ struct Client {
 typedef Client *const *CliPtr;
 
 // TestCliPtrFunc
-typedef Bool (*TestCliPtrFunc)( const CliPtr c, const void *p );
+typedef Bool (*TestCliPtrFunc)(const CliPtr c, const void *p);
 
 // SelectCliF
-typedef CliPtr (*SelectCliF)( const CliPtr c );
+typedef CliPtr (*SelectCliF)(const CliPtr c);
 
 // BorderF
-typedef int (*BorderF)( const CliPtr c );
+typedef int (*BorderF)(const CliPtr c);
 
 // ColorF
-typedef Color (*ColorF)( const CliPtr c );
+typedef Color (*ColorF)(const CliPtr c);
 
 // Arrange
 typedef struct Arrange Arrange;

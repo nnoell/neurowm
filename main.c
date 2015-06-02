@@ -85,9 +85,9 @@ static int runCmd(char **cmd) {
 // static pid_t getNeurowmPid() {
 //   char pidstr[ NAME_MAX ];
 //   FILE *cmd = popen("/usr/bin/pidof -s " WM_MYNAME, "r");
-//   fgets( pidstr, NAME_MAX, cmd );
-//   pid_t wmpid = (pid_t)strtoul( pidstr, NULL, 10 );
-//   if( wmpid <= 0 ) //wm not running
+//   fgets(pidstr, NAME_MAX, cmd);
+//   pid_t wmpid = (pid_t)strtoul(pidstr, NULL, 10);
+//   if (wmpid <= 0) // WM not running
 //   return 0;
 //   return wmpid;
 // }
@@ -111,14 +111,14 @@ static int recompileHandler() {
   snprintf(src, SNPRINTF_SIZE, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
   char lib[ NAME_MAX ] = "/usr/lib/neuro/lib" WM_NAME ".a";
   char *cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
-  return runCmd( cmd );
+  return runCmd(cmd);
 }
 
 // static int reloadHandler() {
 //   pid_t wmpid = getNeurowmPid();
-//   if( wmpid == 0 )
+//   if (wmpid == 0)
 //     return 0;
-//   if( kill( wmpid, SIGUSR1 ) == -1 )
+//   if (kill(wmpid, SIGUSR1) == -1)
 //     return -1;
 //   return 0;
 // }
@@ -131,7 +131,7 @@ static int runNeurowm(int argc, char **argv) {
   int i;
   for (i = 1; i < argc; ++i)
     cmd[ i ] = argv[ i ];
-  return runCmd( cmd );
+  return runCmd(cmd);
 }
 
 static int runFlag(char *flgname) {

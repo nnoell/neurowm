@@ -23,7 +23,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 Client *allocClientG(Window w, const XWindowAttributes *wa) {
-  Client *c = (Client *)malloc(sizeof( Client ));
+  Client *c = (Client *)malloc(sizeof(Client));
   if (!c)
     return NULL;
   *(Window *)&c->win = w;  // Pointer casted away because of const
@@ -76,7 +76,7 @@ int spawnG(char **cmd, pid_t *p) {
 
 int spawnPipeG(char **cmd, pid_t *p) {
   int filedes[ 2 ];
-  if (pipe( filedes ))
+  if (pipe(filedes))
     return -1;
   pid_t pid = fork();
   if (pid < 0)

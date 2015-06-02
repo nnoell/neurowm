@@ -62,7 +62,7 @@ static CliPtr queryPointerC(int *x, int *y) {
   Window rootw, childw;
   int xc, yc;
   unsigned state;
-  if (!XQueryPointer( display, root, &rootw, &childw, x, y, &xc, &yc, &state ))
+  if (!XQueryPointer(display, root, &rootw, &childw, x, y, &xc, &yc, &state))
     return NULL;
   return findWindowClientAllW(childw);
 }
@@ -93,7 +93,7 @@ void updateC(const CliPtr c) {
   if (CLIVAL(c).isFullScreen)
     memmove(&r, &screenArea, sizeof(Area));
   else
-    memmove(&r, getRegionCliSS( c ), sizeof(Area));
+    memmove(&r, getRegionCliSS(c), sizeof(Area));
 
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
   int borderWidth = l->borderWidthFunc(c);
@@ -296,7 +296,7 @@ void resizePointerC() {
   if (!c)
     return;
   moveFocusW(c, selfC);
-  if (XGrabPointer( display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
+  if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
 
@@ -356,7 +356,7 @@ void freeResizePointerC() {
   CLIVAL(c).freeLocFunc = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
   moveFocusW(c, selfC);
-  if (XGrabPointer( display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
+  if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurResize ], CurrentTime) != GrabSuccess)
     return;
 
@@ -414,7 +414,7 @@ CliPtr upC(const CliPtr c) {
 
 CliPtr downC(const CliPtr c) {
   Area *r = getRegionCliSS(c);
-  return queryPointC( CLIVAL(c).ws, r->x+1, r->y + r->h + 1 );
+  return queryPointC(CLIVAL(c).ws, r->x+1, r->y + r->h + 1);
 }
 
 CliPtr leftC(const CliPtr c) {
@@ -450,19 +450,19 @@ Bool testIsFixedC(const CliPtr c, const void *p) {
 
 // Border Color
 Color onlyCurrBorderColorC(const CliPtr c) {
-  if (isCurrCliSS( c ))
+  if (isCurrCliSS(c))
     return currBorderColorB;
   return normBorderColorB;
 }
 
 Color allBorderColorC(const CliPtr c) {
-  if (isCurrCliSS( c ))
+  if (isCurrCliSS(c))
     return currBorderColorB;
   else if (CLIVAL(c).isUrgent)
     return urgtBorderColorB;
   else if (CLIVAL(c).freeLocFunc)
     return freeBorderColorB;
-  else if (isPrevCliSS( c ))
+  else if (isPrevCliSS(c))
     return prevBorderColorB;
   return normBorderColorB;
 }
@@ -496,7 +496,7 @@ int smartBorderWidthC(const CliPtr c) {
 }
 
 int onlyCurrBorderWidthC(const CliPtr c) {
-  if (isCurrCliSS( c ))
+  if (isCurrCliSS(c))
     return borderWidthB;
   return 0;
 }

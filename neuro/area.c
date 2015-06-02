@@ -20,10 +20,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 Area *getRelativeAreaA(Area *dst, const Area *src, const float *rel) {
-  dst->x = src->x + (int)( (float)src->w * rel[ 0 ] );
-  dst->y = src->y + (int)( (float)src->h * rel[ 1 ] );
-  dst->w = (int)( (float)src->w * rel[ 2 ] );
-  dst->h = (int)( (float)src->h * rel[ 3 ] );
+  dst->x = src->x + (int)((float)src->w * rel[ 0 ]);
+  dst->y = src->y + (int)((float)src->h * rel[ 1 ]);
+  dst->w = (int)((float)src->w * rel[ 2 ]);
+  dst->h = (int)((float)src->h * rel[ 3 ]);
   return dst;
 }
 
@@ -55,15 +55,15 @@ Area *setAreaSpaceA(Area *r, int sp) {
 }
 
 Area *setAreaBorderAndSpaceA(Area *r, int bs, int s) {
-  return setAreaSpaceA(setAreaBorderA( r, bs ), s);
+  return setAreaSpaceA(setAreaBorderA(r, bs), s);
 }
 
 Area *mirrorAreaA(Area *rect, const Area *reg) {
   const int oldx = rect->x, oldy = rect->y, oldw = rect->w, oldh = rect->h;
-  rect->y = (int)( ((float)oldx-reg->x) / ((float)reg->w) * ((float)reg->h) + 0.5f ) + reg->y;
-  rect->x = (int)( ((float)oldy-reg->y) / ((float)reg->h) * ((float)reg->w) + 0.5f ) + reg->x;
-  rect->h = (int)( ((float)oldw) / ((float)reg->w) * ((float)reg->h) + 0.5f );
-  rect->w = (int)( ((float)oldh) / ((float)reg->h) * ((float)reg->w) + 0.5f );
+  rect->y = (int)(((float)oldx-reg->x) / ((float)reg->w) * ((float)reg->h) + 0.5f) + reg->y;
+  rect->x = (int)(((float)oldy-reg->y) / ((float)reg->h) * ((float)reg->w) + 0.5f) + reg->x;
+  rect->h = (int)(((float)oldw) / ((float)reg->w) * ((float)reg->h) + 0.5f);
+  rect->w = (int)(((float)oldh) / ((float)reg->h) * ((float)reg->w) + 0.5f);
   return rect;
 }
 
