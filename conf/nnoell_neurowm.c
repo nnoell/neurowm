@@ -118,10 +118,10 @@ static const Workspace *myWorkspaceSet[] = { ws0, ws1, ws2, ws3, ws4, ws5, ws6, 
 
 // RULES (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
 static const Rule rule00[] = { {
-  "URxvt", WM_SCRATCHPAD_NAME, "urxvt", False,      scratchpadFreeR, notFixedR,  0.0f,    currWSR, False
+  "URxvt", WM_SCRATCHPAD_NAME, "urxvt", False, scratchpadFreeR, notFixedR, 0.0f, currWSR, False
 } };
 static const Rule rule01[] = { {
-  NULL, NULL, "Firefox Preferences", False,      centerFreeR,     notFixedR,  0.0f,    currWSR, False
+  NULL, NULL, "Firefox Preferences", False, centerFreeR, notFixedR, 0.0f, currWSR, False
 } };
 static const Rule rule02[] = { {
   NULL, NULL, "Buddy List", False, notFreeR, leftFixedR, 0.2f, 4, False
@@ -148,7 +148,7 @@ static const Rule rule09[] = { {
   "Transmission-gtk", NULL, NULL, False, notFreeR, notFixedR, 0.0f, 9, True
 } };
 static const Rule rule10[] = { {
-  "PPSSPPSDL", "PPSSPPSDL", NULL, False, centerFreeR, notFixedR,  0.0f, currWSR, False
+  "PPSSPPSDL", "PPSSPPSDL", NULL, False, centerFreeR, notFixedR, 0.0f, currWSR, False
 } };
 static const Rule rule11[] = { {
   "XCalc", NULL, NULL, False, centerFreeR, notFixedR, 0.0f, currWSR, False
