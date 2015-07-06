@@ -63,8 +63,8 @@ static void freeArrangeL(Arrange *a) {
   a = NULL;
 }
 
-// PRE: n must be > 0
 static void getLengthSizesL(int n, int length, int *xs, int *ws) {
+  assert(n >= 0);
   int a = (float)length / (float)n + 0.5f;
   int countx = 0;
   int i;

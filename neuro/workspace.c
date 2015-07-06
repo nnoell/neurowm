@@ -153,8 +153,8 @@ void changeToWorkspaceW(int ws) {
   updateFocusW(new);
 }
 
-// PRE: ws must be valid
 void moveCliToWorkspaceW(CliPtr c, int ws) {
+  assert(ws >= 0 && ws < getSizeSS() + 1);
   if (!c)
     return;
   int oldws = CLIVAL(c).ws,
@@ -179,8 +179,8 @@ void moveCliToWorkspaceW(CliPtr c, int ws) {
   updateFocusW(currws);
 }
 
-// PRE: ws must be valid
 void moveCliToWorkspaceAndFollowW(CliPtr c, int ws) {
+  assert(ws >= 0 && ws < getSizeSS() + 1);
   if (!c)
     return;
   moveCliToWorkspaceW(c, ws);

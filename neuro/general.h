@@ -33,6 +33,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <assert.h>
 
 // WM
 #define WM_NAME            "neurowm"
