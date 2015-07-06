@@ -51,7 +51,7 @@ CliPtr oldC(const CliPtr c);      // Previous selected client
 CliPtr headC(const CliPtr c);     // First client of the stack
 CliPtr lastC(const CliPtr c);     // Last client of the stack
 CliPtr upC(const CliPtr c);       // Upper client (layout position) of c
-CliPtr downC(const CliPtr c);     // Downer client (layout position) of c
+CliPtr downC(const CliPtr c);     // Lower client (layout position) of c
 CliPtr leftC(const CliPtr c);     // Left client (layout position) of c
 CliPtr rightC(const CliPtr c);    // Right client (layout position) of c
 CliPtr pointerC(const CliPtr c);  // Client under the pointer
