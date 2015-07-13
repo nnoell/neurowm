@@ -164,9 +164,10 @@ void moveCliToWorkspaceW(CliPtr c, int ws) {
     return;
   Area oldArea = (Area){ .x = 0, .y = 0, .h = 0, .w = 0 };
   Bool isFree = CLIVAL(c).freeLocFunc != notFreeR;
+  if (oldws == currws)
+    hideC(c, True);
   if (isFree)
     memmove(&oldArea, getRegionCliSS(c), sizeof(Area));
-  hideC(c, True);
   Client *cli = rmvCliSS(c);
   cli->ws = newws;
   CliPtr c2 = addCliStartSS(cli);

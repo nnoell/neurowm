@@ -162,8 +162,8 @@ void hideC(CliPtr c, Bool doRules) {  // Move off screen
   Area *regc = getRegionCliSS(c);
   regc->x += xRes;
   regc->y += yRes;
-  CLIVAL(c).isHidden = True;
   XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
+  CLIVAL(c).isHidden = True;
 }
 
 void showC(CliPtr c, Bool doRules) {  // Move back to screen
@@ -174,10 +174,10 @@ void showC(CliPtr c, Bool doRules) {  // Move back to screen
   Area *regc = getRegionCliSS(c);
   regc->x -= xRes;
   regc->y -= yRes;
-  CLIVAL(c).isHidden = False;
   if (doRules)
     applyRuleR(c);
   XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
+  CLIVAL(c).isHidden = False;
 }
 
 void setUrgentC(CliPtr c) {
