@@ -171,7 +171,7 @@ void moveCliToWorkspaceW(CliPtr c, int ws) {
   cli->ws = newws;
   CliPtr c2 = addCliStartSS(cli);
   if (!c2)
-    exitErrorG("moveCliToAnyWorkspaceW - could not add client");
+    exitErrorG("moveCliToWorkspaceW - could not add client");
   if (isFree)
     memmove(getRegionCliSS(c2), &oldArea, sizeof(Area));
   if (newws == currws)
