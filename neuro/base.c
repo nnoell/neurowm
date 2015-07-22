@@ -14,6 +14,17 @@
 // Includes
 #include "base.h"
 
+//----------------------------------------------------------------------------------------------------------------------
+// PRIVATE VARIABLE DEFINITION
+//----------------------------------------------------------------------------------------------------------------------
+
+// Global configuration
+static const char *normBorderColor;
+static const char *currBorderColor;
+static const char *prevBorderColor;
+static const char *freeBorderColor;
+static const char *urgtBorderColor;
+
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC VARIABLE DEFINITION
@@ -107,24 +118,13 @@ static void setCursorsAndAtomsB() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-Bool initB(const WMConfig *c) {
+void setConfigB(const WMConfig *c) {
   assert(c);
-  // WM global variables
-  display = XOpenDisplay(NULL);
-  if (!display)
-    return False;
-  *(int *)&screen = DefaultScreen(display);
-  *(Window *)&root = RootWindow(display, screen);
-  *(int *)&xRes = XDisplayWidth(display, screen);
-  *(int *)&yRes = XDisplayHeight(display, screen);
-  *(Area *)&screenArea = (Area){ .x = xPos, .y = yPos, .w = xRes, .h = yRes };
-
-  // Global configuration
-  *(Color *)&normBorderColorB = getColorB(c->normBorderColor);
-  *(Color *)&currBorderColorB = getColorB(c->currBorderColor);
-  *(Color *)&prevBorderColorB = getColorB(c->prevBorderColor);
-  *(Color *)&freeBorderColorB = getColorB(c->freeBorderColor);
-  *(Color *)&urgtBorderColorB = getColorB(c->urgtBorderColor);
+  *(const char **)&normBorderColor = c->normBorderColor;
+  *(const char **)&currBorderColor = c->currBorderColor;
+  *(const char **)&prevBorderColor = c->prevBorderColor;
+  *(const char **)&freeBorderColor = c->freeBorderColor;
+  *(const char **)&urgtBorderColor = c->urgtBorderColor;
   *(int *)&borderWidthB = c->borderWidth;
   *(int *)&borderGapB = c->borderGap;
   *(const Key *const **)&keyBindingsB = c->keys;
@@ -134,6 +134,23 @@ Bool initB(const WMConfig *c) {
   *(const DzenPanel *const **)&dzenPanelSetB = c->dzenPanelSet;
   *(const WMFunc *const **)&startUpHookB = c->startUpHook;
   *(const WMFunc *const **)&endUpHookB = c->endUpHook;
+}
+
+Bool initB() {
+  // WM global variables
+  display = XOpenDisplay(NULL);
+  if (!display)
+    return False;
+  *(int *)&screen = DefaultScreen(display);
+  *(Window *)&root = RootWindow(display, screen);
+  *(int *)&xRes = XDisplayWidth(display, screen);
+  *(int *)&yRes = XDisplayHeight(display, screen);
+  *(Area *)&screenArea = (Area){ .x = xPos, .y = yPos, .w = xRes, .h = yRes };
+  *(Color *)&normBorderColorB = getColorB(normBorderColor);
+  *(Color *)&currBorderColorB = getColorB(currBorderColor);
+  *(Color *)&prevBorderColorB = getColorB(prevBorderColor);
+  *(Color *)&freeBorderColorB = getColorB(freeBorderColor);
+  *(Color *)&urgtBorderColorB = getColorB(urgtBorderColor);
 
   // Set cursors and atoms
   setCursorsAndAtomsB();

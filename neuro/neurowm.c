@@ -66,8 +66,13 @@ static void signalHandler(int signo) {
 }
 
 static void initNeurowm(const WMConfig *c) {
+  assert(c);
+
+  // Set configuration
+  setConfigB(c);
+
   // Init base (must free with endB at some point)
-  if (!initB(c))
+  if (!initB())
     exitErrorG("initNeurowm - could not init Base");
 
   // Init stackset (must free with endSS at some point)

@@ -68,7 +68,8 @@ extern const Atom netatoms[ NET_COUNT ];
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-Bool initB(const WMConfig *c);
+void setConfigB(const WMConfig *c);
+Bool initB();
 void endB();
 
 // Binding functions
