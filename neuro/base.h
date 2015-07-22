@@ -31,7 +31,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // WM global variables
-extern Display *display;
+extern Display *const display;
 extern const int screen;
 extern const Window root;
 extern const uint32_t xRes;

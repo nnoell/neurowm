@@ -227,14 +227,14 @@ static Client *rmvNoLastNodeSS(Node *n) {
   return ret;
 }
 
-static void initLayoutsSS(Layout *l, const LayoutConf **lc, size_t size) {
+static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
   size_t i;
   for (i = 0; i < size; ++i) {
     *(ArrangeF *)&l[ i ].arrangeFunc = lc[ i ]->arrangeFunc;
     *(ColorF *)&l[ i ].borderColorFunc = lc[ i ]->borderColorFunc;
     *(BorderF *)&l[ i ].borderWidthFunc = lc[ i ]->borderWidthFunc;
     *(BorderF *)&l[ i ].borderGapFunc = lc[ i ]->borderGapFunc;
-    l[ i ].region = lc[ i ]->region;
+    *(const float **)&l[ i ].region = lc[ i ]->region;
     l[ i ].mod = lc[ i ]->mod;
     l[ i ].followMouse = lc[ i ]->followMouse;
     memmove(l[ i ].as, lc[ i ]->as, sizeof(float)*ARRSET_MAX);

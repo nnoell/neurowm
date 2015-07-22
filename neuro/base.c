@@ -31,7 +31,7 @@ static const char *urgtBorderColor;
 //----------------------------------------------------------------------------------------------------------------------
 
 // WM const global variables
-Display *display;
+Display *const display;
 const int screen;
 const Window root;
 const uint32_t xRes;
@@ -138,7 +138,7 @@ void setConfigB(const WMConfig *c) {
 
 Bool initB() {
   // WM global variables
-  display = XOpenDisplay(NULL);
+  *(Display **)&display = XOpenDisplay(NULL);
   if (!display)
     return False;
   *(int *)&screen = DefaultScreen(display);

@@ -34,7 +34,7 @@ static int recompileNeurowm(pid_t *pid) {
   snprintf(out, NAME_MAX, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
   snprintf(src, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
   char lib[ NAME_MAX ] = "/usr/lib/neuro/lib" WM_NAME ".a";
-  char *cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
+  const char *const cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
   return spawnG(cmd, pid);
 }
 
@@ -102,7 +102,7 @@ static void initNeurowm(const WMConfig *c) {
 //----------------------------------------------------------------------------------------------------------------------
 
 void spawnN(Arg arg) {
-  spawnG((char **)arg.com, NULL);
+  spawnG(arg.com, NULL);
 }
 
 void quitN(Arg arg) {
@@ -302,7 +302,7 @@ void toggleNSPN(Arg arg) {
     moveCliToWorkspaceW(c, ws);
   } else {
     if (!getSizeNSPSS())
-      spawnG((char **)arg.com, NULL);
+      spawnG(arg.com, NULL);
     else
       moveCliToWorkspaceW(getCurrCliNSPStackSS(), ws);
   }

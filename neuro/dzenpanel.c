@@ -140,7 +140,7 @@ Bool initDP() {
     if (dp->refreshRate > PIP.resetRate)
       PIP.resetRate *= dp->refreshRate;
     getDzenCmdDP(dzenCmd, line, dp->df);
-    PIP.pi[ i ].output = spawnPipeG(dzenCmd, &(PIP.pi[ i ].pid));
+    PIP.pi[ i ].output = spawnPipeG((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
     if (PIP.pi[ i ].output == -1)
       return False;
   }

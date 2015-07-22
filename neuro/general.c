@@ -58,7 +58,7 @@ void changeProcName(const char *newname) {
   prctl(PR_SET_NAME, (unsigned long)newname, 0, 0, 0);
 }
 
-int spawnG(char **cmd, pid_t *p) {
+int spawnG(const char *const *cmd, pid_t *p) {
   pid_t pid = fork();
   if (pid == -1)
     return -1;
@@ -66,7 +66,7 @@ int spawnG(char **cmd, pid_t *p) {
     if (display)
       close(ConnectionNumber(display));
     setsid();
-    execvp(cmd[ 0 ], cmd);
+    execvp(cmd[ 0 ], (char *const *)cmd);
     exitErrorG("spawnG - Could not execvp");
   }
   if (p)
@@ -74,7 +74,7 @@ int spawnG(char **cmd, pid_t *p) {
   return 0;
 }
 
-int spawnPipeG(char **cmd, pid_t *p) {
+int spawnPipeG(const char *const *cmd, pid_t *p) {
   int filedes[ 2 ];
   if (pipe(filedes))
     return -1;
@@ -87,7 +87,7 @@ int spawnPipeG(char **cmd, pid_t *p) {
     setsid();
     dup2(filedes[ 0 ], STDIN_FILENO);
     close(filedes[ 0 ]);
-    execvp(cmd[ 0 ], cmd);
+    execvp(cmd[ 0 ], (char *const *)cmd);
     exit(EXIT_FAILURE);
   }
   if (p)

@@ -94,7 +94,7 @@ struct Client {
 typedef Client *const *CliPtr;
 
 // TestCliPtrFunc
-typedef Bool (*TestCliPtrFunc)(const CliPtr c, const void *p);
+typedef Bool (*TestCliPtrFunc)(const CliPtr c, const void *const p);
 
 // SelectCliF
 typedef CliPtr (*SelectCliF)(const CliPtr c);
@@ -125,7 +125,7 @@ struct Layout {
   const ColorF borderColorFunc;
   const BorderF borderWidthFunc;
   const BorderF borderGapFunc;
-  const float *region;
+  const float *const region;
   unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   Bool followMouse;
   float as[ ARRSET_MAX ];
@@ -134,7 +134,7 @@ struct Layout {
 // LayoutConf
 typedef struct LayoutConf LayoutConf;
 struct LayoutConf {
-  const char *name;
+  const char *const name;
   const ArrangeF arrangeFunc;
   const ColorF borderColorFunc;
   const BorderF borderWidthFunc;
@@ -148,18 +148,18 @@ struct LayoutConf {
 // Workspace
 typedef struct Workspace Workspace;
 struct Workspace {
-  const char *name;
+  const char *const name;
   const int gaps[ 4 ];
-  const LayoutConf **layouts;
-  const LayoutConf **togLayouts;
+  const LayoutConf *const *const layouts;
+  const LayoutConf *const *const togLayouts;
 };
 
 // Arg
 typedef union Arg Arg;
 union Arg {
-  const void *v;
-  const char **com;
-  const char *str;
+  const void *const v;
+  const char *const *const com;
+  const char *const str;
   const int i;
   const unsigned int ui;
   const FreeLocF ff;
@@ -198,9 +198,9 @@ struct Button {
 // Rule
 typedef struct Rule Rule;
 struct Rule {
-  const char *class;
-  const char *name;
-  const char *title;
+  const char *const class;
+  const char *const name;
+  const char *const title;
   const Bool isFullScreen;
   const FreeLocF freeLocFunc;
   const unsigned int fixPos;
@@ -212,65 +212,65 @@ struct Rule {
 // BoxPP
 typedef struct BoxPP BoxPP;
 struct BoxPP {
-  char *bgColor;
-  char *fgColor;
-  char *boxColor;
-  char *leftIcon;
-  char *rightIcon;
-  int boxHeight;
+  const char *const bgColor;
+  const char *const fgColor;
+  const char *const boxColor;
+  const char *const leftIcon;
+  const char *const rightIcon;
+  const int boxHeight;
 };
 
 // CA
 typedef struct CA CA;
 struct CA {
-  char *leftClick;
-  char *middleClick;
-  char *rightClick;
-  char *wheelUp;
-  char *wheelDown;
+  const char *const leftClick;
+  const char *const middleClick;
+  const char *const rightClick;
+  const char *const wheelUp;
+  const char *const wheelDown;
 };
 
 // DzenFlags
 typedef struct DzenFlags DzenFlags;
 struct DzenFlags {
-  int x, y, w, h;
-  char *fgColor;
-  char *bgColor;
-  char align;
-  char *font;
-  char *event;
-  char *extras;
+  const int x, y, w, h;
+  const char *const fgColor;
+  const char *const bgColor;
+  const char align;
+  const char *const font;
+  const char *const event;
+  const char *const extras;
 };
 
 // Logger
-typedef void (*Logger)(char *);
+typedef void (*const Logger)(char *);
 
 // DzenPanel
 typedef struct DzenPanel DzenPanel;
 struct DzenPanel {
-  const DzenFlags *df;
-  const Logger *loggers;
-  const char *sep;
+  const DzenFlags *const df;
+  const Logger *const loggers;
+  const char *const sep;
   const int refreshRate;
 };
 
 // WMConfig
 typedef struct WMConfig WMConfig;
 struct WMConfig {
-  const char *normBorderColor;
-  const char *currBorderColor;
-  const char *prevBorderColor;
-  const char *freeBorderColor;
-  const char *urgtBorderColor;
+  const char *const normBorderColor;
+  const char *const currBorderColor;
+  const char *const prevBorderColor;
+  const char *const freeBorderColor;
+  const char *const urgtBorderColor;
   const int borderWidth;
   const int borderGap;
-  const Workspace **workspaceSet;
-  const Rule **ruleSet;
-  const DzenPanel **dzenPanelSet;
-  const Key **keys;
-  const Button **buttons;
-  const WMFunc **startUpHook;
-  const WMFunc **endUpHook;
+  const Workspace *const *const workspaceSet;
+  const Rule *const *const ruleSet;
+  const DzenPanel *const *const dzenPanelSet;
+  const Key *const *const keys;
+  const Button *const *const buttons;
+  const WMFunc *const *const startUpHook;
+  const WMFunc *const *const endUpHook;
 };
 
 
@@ -284,8 +284,8 @@ void freeClientG(Client *c);
 
 size_t ptrArrayLengthG(const void *const *arrayPtr);
 void changeProcName(const char *newname);
-int spawnG(char **cmd, pid_t *p);
-int spawnPipeG(char **cmd, pid_t *p);
+int spawnG(const char *const *cmd, pid_t *p);
+int spawnPipeG(const char *const *cmd, pid_t *p);
 void exitErrorG(const char *msg);
 
 
