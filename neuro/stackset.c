@@ -283,6 +283,7 @@ Client *popMinimizedCliStackSS(Stack *s) {
 
 // StackSet
 Bool initSS() {
+  assert(workspaceSetB);
   size_t size = ptrArrayLengthG((const void **)workspaceSetB);
   SS.stacks = allocStackSetSS(size + 1);  // We need on extra stack for NSP
   if (!SS.stacks)

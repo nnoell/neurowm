@@ -108,6 +108,7 @@ static void setCursorsAndAtomsB() {
 
 // Basic functions
 Bool initB(const WMConfig *c) {
+  assert(c);
   // WM global variables
   display = XOpenDisplay(NULL);
   if (!display)
