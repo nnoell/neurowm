@@ -125,7 +125,7 @@ static void endUpdateThreadDP() {
 //----------------------------------------------------------------------------------------------------------------------
 
 Bool initDP() {
-  PIP.numPanels = ptrArrayLengthG((const void **)dzenPanelSetB);
+  PIP.numPanels = ptrArrayLengthG((const void const *const *)dzenPanelSetB);
   PIP.pi = (PipeInfo *)calloc(PIP.numPanels, sizeof(PipeInfo));
   PIP.updateThread = -1;
   PIP.resetRate = 1;

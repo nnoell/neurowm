@@ -47,7 +47,7 @@ void freeClientG(Client *c) {
   c = NULL;
 }
 
-size_t ptrArrayLengthG(const void **arrayPtr) {
+size_t ptrArrayLengthG(const void *const *arrayPtr) {
   size_t size;
   for (size = 0; arrayPtr[ size ]; ++size)
     continue;

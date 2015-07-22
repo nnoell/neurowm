@@ -282,7 +282,7 @@ struct WMConfig {
 Client *allocClientG(Window w, const XWindowAttributes *wa);
 void freeClientG(Client *c);
 
-size_t ptrArrayLengthG(const void **arrayPtr);
+size_t ptrArrayLengthG(const void *const *arrayPtr);
 void changeProcName(const char *newname);
 int spawnG(char **cmd, pid_t *p);
 int spawnPipeG(char **cmd, pid_t *p);

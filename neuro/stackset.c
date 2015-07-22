@@ -284,7 +284,7 @@ Client *popMinimizedCliStackSS(Stack *s) {
 // StackSet
 Bool initSS() {
   assert(workspaceSetB);
-  size_t size = ptrArrayLengthG((const void **)workspaceSetB);
+  size_t size = ptrArrayLengthG((const void *const *const)workspaceSetB);
   SS.stacks = allocStackSetSS(size + 1);  // We need on extra stack for NSP
   if (!SS.stacks)
     return False;
@@ -292,10 +292,10 @@ Bool initSS() {
   size_t i, sizel, sizetl;
   for (i = 0; workspaceSetB[ i ]; ++i) {
     ws = workspaceSetB[ i ];
-    sizel = ptrArrayLengthG((const void **)(ws->layouts));
+    sizel = ptrArrayLengthG((const void *const *const)(ws->layouts));
     if (!sizel)
       return False;
-    sizetl = ptrArrayLengthG((const void **)(ws->togLayouts));
+    sizetl = ptrArrayLengthG((const void *const *const)(ws->togLayouts));
     Stack *s = allocStackSS(SS.stacks + i, sizel, sizetl);
     if (!s)
       return False;
