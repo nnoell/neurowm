@@ -46,13 +46,13 @@ extern const Color freeBorderColorB;
 extern const Color urgtBorderColorB;
 extern const int borderWidthB;
 extern const int borderGapB;
-extern const Key **keyBindingsB;
-extern const Button **buttonBindingsB;
-extern const Rule **ruleSetB;
-extern const Workspace **workspaceSetB;
-extern const DzenPanel **dzenPanelSetB;
-extern const WMFunc **startUpHookB;
-extern const WMFunc **endUpHookB;
+extern const Key *const *const keyBindingsB;
+extern const Button *const *const buttonBindingsB;
+extern const Rule *const *const ruleSetB;
+extern const Workspace *const *const workspaceSetB;
+extern const DzenPanel *const *const dzenPanelSetB;
+extern const WMFunc *const *const startUpHookB;
+extern const WMFunc *const *const endUpHookB;
 
 // Cursors and Atoms
 enum { CurNormal, CurResize, CurMove, CurLast };

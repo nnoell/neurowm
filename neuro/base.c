@@ -35,13 +35,13 @@ const Color freeBorderColorB;
 const Color urgtBorderColorB;
 const int borderWidthB;
 const int borderGapB;
-const Key **keyBindingsB;
-const Button **buttonBindingsB;
-const Rule **ruleSetB;
-const Workspace **workspaceSetB;
-const DzenPanel **dzenPanelSetB;
-const WMFunc **startUpHookB;
-const WMFunc **endUpHookB;
+const Key *const *const keyBindingsB;
+const Button *const *const buttonBindingsB;
+const Rule *const *const ruleSetB;
+const Workspace *const *const workspaceSetB;
+const DzenPanel *const *const dzenPanelSetB;
+const WMFunc *const *const startUpHookB;
+const WMFunc *const *const endUpHookB;
 
 // Cursors and Atoms
 const Cursor cursors[ CurLast ];
@@ -127,13 +127,13 @@ Bool initB(const WMConfig *c) {
   *(Color *)&urgtBorderColorB = getColorB(c->urgtBorderColor);
   *(int *)&borderWidthB = c->borderWidth;
   *(int *)&borderGapB = c->borderGap;
-  keyBindingsB = c->keys;
-  buttonBindingsB = c->buttons;
-  ruleSetB = c->ruleSet;
-  workspaceSetB = c->workspaceSet;
-  dzenPanelSetB = c->dzenPanelSet;
-  startUpHookB = c->startUpHook;
-  endUpHookB = c->endUpHook;
+  *(const Key *const **)&keyBindingsB = c->keys;
+  *(const Button *const **)&buttonBindingsB = c->buttons;
+  *(const Rule *const **)&ruleSetB = c->ruleSet;
+  *(const Workspace *const **)&workspaceSetB = c->workspaceSet;
+  *(const DzenPanel *const **)&dzenPanelSetB = c->dzenPanelSet;
+  *(const WMFunc *const **)&startUpHookB = c->startUpHook;
+  *(const WMFunc *const **)&endUpHookB = c->endUpHook;
 
   // Set cursors and atoms
   setCursorsAndAtomsB();
