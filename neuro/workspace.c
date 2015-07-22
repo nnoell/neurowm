@@ -154,13 +154,12 @@ void changeToWorkspaceW(int ws) {
 }
 
 void moveCliToWorkspaceW(CliPtr c, int ws) {
-  assert(ws >= 0 && ws < getSizeSS() + 1);
   if (!c)
     return;
-  int oldws = CLIVAL(c).ws,
-    newws = isNSPStackSS(ws) ? ws : ws % getSizeSS(),
-    currws = getCurrStackSS();
-  if (oldws == newws)
+  if (ws < 0 || ws >= getSizeSS() + 1)
+    return;
+  int oldws = CLIVAL(c).ws, currws = getCurrStackSS();
+  if (oldws == ws)
     return;
   Area oldArea = (Area){ .x = 0, .y = 0, .h = 0, .w = 0 };
   Bool isFree = CLIVAL(c).freeLocFunc != notFreeR;
@@ -169,21 +168,22 @@ void moveCliToWorkspaceW(CliPtr c, int ws) {
   if (isFree)
     memmove(&oldArea, getRegionCliSS(c), sizeof(Area));
   Client *cli = rmvCliSS(c);
-  cli->ws = newws;
+  cli->ws = ws;
   CliPtr c2 = addCliStartSS(cli);
   if (!c2)
     exitErrorG("moveCliToWorkspaceW - could not add client");
   if (isFree)
     memmove(getRegionCliSS(c2), &oldArea, sizeof(Area));
-  if (newws == currws)
+  if (ws == currws)
     showC(c2, True);
   runCurrLayoutL(currws);
   updateFocusW(currws);
 }
 
 void moveCliToWorkspaceAndFollowW(CliPtr c, int ws) {
-  assert(ws >= 0 && ws < getSizeSS() + 1);
   if (!c)
+    return;
+  if (ws < 0 || ws >= getSizeSS() + 1)
     return;
   moveCliToWorkspaceW(c, ws);
   changeToWorkspaceW(ws);
