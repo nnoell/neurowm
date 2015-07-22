@@ -111,7 +111,7 @@ Bool initB(const WMConfig *c) {
   // WM global variables
   display = XOpenDisplay(NULL);
   if (!display)
-    return 1;
+    return False;
   *(int *)&screen = DefaultScreen(display);
   *(Window *)&root = RootWindow(display, screen);
   *(int *)&xRes = XDisplayWidth(display, screen);
