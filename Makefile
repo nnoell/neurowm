@@ -40,15 +40,15 @@ CLEANEXTS = *~ $(MODSDIR)/*~ $(OBJS) $(TESTDIR)/*~ $(TESTDIR)/$(TESTOUT) $(CONFD
 #-----------------------------------------------------------------------------------------------------------------------
 
 # All target
-all: $(OBJS) main $(LIBNAME)
+all: $(OBJS) main $(BUILDIR)/$(LIBNAME)
 
 # Test target
 test: $(TESTDIR)/$(TESTSRC) $(TESTDIR)/$(UNITSRC)
 
 # Main target
-main: $(MAINSRC)
+main: $(MAINSRC) $(OBJS)
 	@mkdir -p $(BUILDIR)
-	${CC} $(CFLAGS) -o $(BUILDIR)/$(BINNAME) $<
+	${CC} $(CFLAGS) -o $(BUILDIR)/$(BINNAME) $< $(OBJS) $(LDADD)
 
 # Src/Obj target
 .c.o:
@@ -58,17 +58,17 @@ main: $(MAINSRC)
 # Test neurowm
 $(TESTDIR)/$(TESTSRC): $(OBJS)
 	@mkdir -p $(BUILDIR)
-	${CC} $(CFLAGS) -o $(BUILDIR)/$(TESTOUT) $(TESTDIR)/$(TESTSRC) $(OBJS) $(LDADDTEST)
+	${CC} $(CFLAGS) -o $(BUILDIR)/$(TESTOUT) $@ $(OBJS) $(LDADDTEST)
 
 # Test cunit
 $(TESTDIR)/$(UNITSRC): $(OBJS)
 	@mkdir -p $(BUILDIR)
-	${CC} $(CFLAGS) -o $(BUILDIR)/$(UNITOUT) $(TESTDIR)/$(UNITSRC) $(OBJS) $(LDADDTEST)
+	${CC} $(CFLAGS) -o $(BUILDIR)/$(UNITOUT) $@ $(OBJS) $(LDADDTEST)
 
 # Lib target
-$(LIBNAME):
+$(BUILDIR)/$(LIBNAME):
 	@mkdir -p $(BUILDIR)
-	@ar -cvq $(BUILDIR)/$(LIBNAME) $(OBJS)
+	@ar -cvq $@ $(OBJS)
 
 # Clean target
 clean:
