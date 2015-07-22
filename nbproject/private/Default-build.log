@@ -1,0 +1,27 @@
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/neurowm.c -o neuro/neurowm.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/config.c -o neuro/config.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/dzenpanel.c -o neuro/dzenpanel.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/event.c -o neuro/event.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/rule.c -o neuro/rule.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/workspace.c -o neuro/workspace.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/layout.c -o neuro/layout.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/client.c -o neuro/client.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/stackset.c -o neuro/stackset.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/base.c -o neuro/base.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/area.c -o neuro/area.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/general.c -o neuro/general.o
+gcc -c -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" neuro/personal.c -o neuro/personal.o
+gcc -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 -DVERSION=\"0.13\" -o ./build/neurowm main.c
+a - ./neuro/neurowm.o
+a - ./neuro/config.o
+a - ./neuro/dzenpanel.o
+a - ./neuro/event.o
+a - ./neuro/rule.o
+a - ./neuro/workspace.o
+a - ./neuro/layout.o
+a - ./neuro/client.o
+a - ./neuro/stackset.o
+a - ./neuro/base.o
+a - ./neuro/area.o
+a - ./neuro/general.o
+a - ./neuro/personal.o

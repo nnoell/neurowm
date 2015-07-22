@@ -1,4 +1,3 @@
 /neuro/*.o
-/neurowm
-/libneurowm.a
+/build/*
 /test/myneurowm

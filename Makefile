@@ -7,19 +7,23 @@ VERSION = 0.13
 
 # Compiler flags
 CC = gcc
-CPPFLAGS = -DVERSION=\"${VERSION}\"
-#CFLAGS = -Wall -Wextra -O3 ${CPPFLAGS}
-#CFLAGS = -Wall -Wextra -Wformat -Wfatal-errors -O3 ${CPPFLAGS}
-#CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -O3 ${CPPFLAGS}
-CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 ${CPPFLAGS}
+DFLAGS = -DVERSION=\"${VERSION}\"
+#CFLAGS = -Wall -Wextra -O3 ${DFLAGS}
+#CFLAGS = -Wall -Wextra -Wformat -Wfatal-errors -O3 ${DFLAGS}
+#CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -O3 ${DFLAGS}
+CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 ${DFLAGS}
 LDADD = -lX11 -pthread
+LDADDTEST = -lX11 -pthread -lcunit
 
 # Names and Directories
 MODSDIR = ./neuro
 TESTDIR = ./test
 CONFDIR = ./conf
-TESTSRC = neurowm.c
-TESTOUT = myneurowm
+BUILDIR = ./build
+TESTSRC = neurowm_test.c
+TESTOUT = myneurowm_test
+UNITSRC = cunit_test.c
+UNITOUT = cunit_test
 BINNAME = neurowm
 MAINSRC = main.c
 MODS = neurowm config dzenpanel event rule workspace layout client stackset base area general personal
@@ -28,7 +32,7 @@ MODS = neurowm config dzenpanel event rule workspace layout client stackset base
 OBJS = $(addprefix $(MODSDIR)/, $(addsuffix .o, $(MODS)))
 HDRS = $(addprefix $(MODSDIR)/, $(addsuffix .h, $(MODS)))
 LIBNAME = lib$(BINNAME).a
-CLEANEXTS = *~ $(MODSDIR)/*~ $(OBJS) $(BINNAME) $(LIBNAME) $(TESTDIR)/*~ $(TESTDIR)/$(TESTOUT) $(CONFDIR)/*~
+CLEANEXTS = *~ $(MODSDIR)/*~ $(OBJS) $(TESTDIR)/*~ $(TESTDIR)/$(TESTOUT) $(CONFDIR)/*~ $(BUILDIR)
 
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -39,27 +43,36 @@ CLEANEXTS = *~ $(MODSDIR)/*~ $(OBJS) $(BINNAME) $(LIBNAME) $(TESTDIR)/*~ $(TESTD
 all: $(OBJS) main $(LIBNAME)
 
 # Test target
-test: $(TESTDIR)/$(TESTSRC)
+test: $(TESTDIR)/$(TESTSRC) $(TESTDIR)/$(UNITSRC)
 
 # Main target
 main: $(MAINSRC)
-	${CC} $(CFLAGS) -o $(BINNAME) $<
+	@mkdir -p $(BUILDIR)
+	${CC} $(CFLAGS) -o $(BUILDIR)/$(BINNAME) $<
 
 # Src/Obj target
 .c.o:
+	@mkdir -p $(BUILDIR)
 	${CC} -c ${CFLAGS} $< -o $@
 
-# Test link
+# Test neurowm
 $(TESTDIR)/$(TESTSRC): $(OBJS)
-	${CC} $(CFLAGS) -o $(TESTDIR)/$(TESTOUT) $(TESTDIR)/$(TESTSRC) ${OBJS} $(LDADD)
+	@mkdir -p $(BUILDIR)
+	${CC} $(CFLAGS) -o $(BUILDIR)/$(TESTOUT) $(TESTDIR)/$(TESTSRC) $(OBJS) $(LDADDTEST)
+
+# Test cunit
+$(TESTDIR)/$(UNITSRC): $(OBJS)
+	@mkdir -p $(BUILDIR)
+	${CC} $(CFLAGS) -o $(BUILDIR)/$(UNITOUT) $(TESTDIR)/$(UNITSRC) $(OBJS) $(LDADDTEST)
 
 # Lib target
 $(LIBNAME):
-	@ar -cvq $(LIBNAME) $(OBJS)
+	@mkdir -p $(BUILDIR)
+	@ar -cvq $(BUILDIR)/$(LIBNAME) $(OBJS)
 
 # Clean target
 clean:
-	@rm -f $(CLEANEXTS)
+	@rm -rf $(CLEANEXTS)
 
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -75,10 +88,10 @@ install:
 	@echo "OK"
 	@echo -n ":: Copying lib to \"/usr/lib/neuro\"...   "
 	@mkdir -p /usr/lib/neuro
-	@cp $(LIBNAME) /usr/lib/neuro
+	@cp $(BUILDIR)/$(LIBNAME) /usr/lib/neuro
 	@echo "OK"
 	@echo -n ":: Copying binary to \"/usr/bin\"...   "
-	@cp $(BINNAME) /usr/bin
+	@cp $(BUILDIR)/$(BINNAME) /usr/bin
 	@echo "OK"
 	@echo -n ":: Copying man page to \"/usr/local/man/man1\"...   "
 	@mkdir -p /usr/local/man/man1

@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
-#include "neuro/neurowm.h"
+#include "../neuro/neurowm.h"
 
 // Fonts
 #define DZENPANELFONT "-*-terminus-medium-r-normal-*-11-*-*-*-*-*-*-*"
