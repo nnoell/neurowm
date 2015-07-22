@@ -1,10 +1,26 @@
+//----------------------------------------------------------------------------------------------------------------------
+// Module      :  neurowm
+// Copyright   :  (c) Julian Bouzas 2014
+// License     :  BSD3-style (see LICENSE)
+// Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
+// Stability   :  stable
+//----------------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------------
+// PREPROCESSOR
+//----------------------------------------------------------------------------------------------------------------------
+
+// Includes
 #include <stdio.h>
 #include <string.h>
 #include <CUnit/Basic.h>
-
 #include "../neuro/stackset.h"
 #include "../neuro/neurowm.h"
 
+
+//----------------------------------------------------------------------------------------------------------------------
+// STACKSET SUITE
+//----------------------------------------------------------------------------------------------------------------------
 int init_stackset_suite(void) {
   setConfigB(&defWMConfig);
   if (!initSS())
@@ -17,11 +33,15 @@ int clean_stackset_suite(void) {
   return 0;
 }
 
-// Test 1
+//----------------------------------------------------------------------------------------------------------------------
+// STACKSET TESTS
+//----------------------------------------------------------------------------------------------------------------------
+
+
 void add_remove_client(void) {
   // Create a fake client
   const Window w = 0;
-  const XWindowAttributes wa = (XWindowAttributes){.x=0, .y=0, .width=500, .height=500};
+  const XWindowAttributes wa = (XWindowAttributes){.x = 0, .y = 0, .width = 500, .height = 500};
   Client *cli = allocClientG(w, &wa);
   CU_ASSERT_PTR_NOT_NULL(cli);
 
@@ -38,13 +58,16 @@ void add_remove_client(void) {
   freeClientG(cli2);
 }
 
-// Test 2
 void set_curr_stack(void) {
   setCurrStackSS(1);
   CU_ASSERT(getCurrStackSS() == 1);
 }
 
-// Main
+
+//----------------------------------------------------------------------------------------------------------------------
+// MAIN
+//----------------------------------------------------------------------------------------------------------------------
+
 int main() {
   // Initialize the CUnit test registry
   if (CUE_SUCCESS != CU_initialize_registry())
