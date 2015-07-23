@@ -48,27 +48,31 @@ test: $(TESTDIR)/$(TESTSRC) $(TESTDIR)/$(UNITSRC)
 # Main target
 main: $(MAINSRC) $(OBJS)
 	@mkdir -p $(BUILDIR)
-	${CC} $(CFLAGS) -o $(BUILDIR)/$(BINNAME) $< $(OBJS) $(LDADD)
+	@${CC} $(CFLAGS) -o $(BUILDIR)/$(BINNAME) $< $(OBJS) $(LDADD)
+	@echo "CC $<"
 
 # Src/Obj target
 .c.o:
 	@mkdir -p $(BUILDIR)
-	${CC} -c ${CFLAGS} $< -o $@
+	@${CC} -c ${CFLAGS} $< -o $@
+	@echo "CC $<"
 
 # Test neurowm
 $(TESTDIR)/$(TESTSRC): $(OBJS)
 	@mkdir -p $(BUILDIR)
-	${CC} $(CFLAGS) -o $(BUILDIR)/$(TESTOUT) $@ $(OBJS) $(LDADDTEST)
+	@${CC} $(CFLAGS) -o $(BUILDIR)/$(TESTOUT) $@ $(OBJS) $(LDADDTEST)
+	@echo "CC $@"
 
 # Test cunit
 $(TESTDIR)/$(UNITSRC): $(OBJS)
 	@mkdir -p $(BUILDIR)
-	${CC} $(CFLAGS) -o $(BUILDIR)/$(UNITOUT) $@ $(OBJS) $(LDADDTEST)
+	@${CC} $(CFLAGS) -o $(BUILDIR)/$(UNITOUT) $@ $(OBJS) $(LDADDTEST)
+	@echo "CC $@"
 
 # Lib target
 $(BUILDIR)/$(LIBNAME):
 	@mkdir -p $(BUILDIR)
-	@ar -cvq $@ $(OBJS)
+	@ar -cq $@ $(OBJS)
 
 # Clean target
 clean:
