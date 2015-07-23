@@ -50,6 +50,9 @@ static Bool stopUpdateWhile = False;
 //----------------------------------------------------------------------------------------------------------------------
 
 static char **strToCmdDP(char **cmd, char *str, const char *sep) {
+  assert(cmd);
+  assert(str);
+  assert(sep);
   char *token, *saveptr;
   token = strtok_r(str, sep, &saveptr);
   int i;
@@ -62,12 +65,16 @@ static char **strToCmdDP(char **cmd, char *str, const char *sep) {
 }
 
 static char **getDzenCmdDP(char **cmd, char *line, const DzenFlags *df) {
+  assert(cmd);
+  assert(line);
+  assert(df);
   snprintf(line, DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
       df->x, df->y, df->w, df->h, df->fgColor, df->bgColor, df->align, df->font, df->event, df->extras);
   return strToCmdDP(cmd, line, " \t\n");
 }
 
 static void updateDzenPanelDP(const DzenPanel *dp, int fd) {
+  assert(dp);
   char line[ DZEN_LINE_MAX ] = "\0";
   int i;
   for (i = 0; dp->loggers[ i ]; ++i) {
@@ -176,6 +183,7 @@ void updateDP(Bool onlyEvent) {
 
 // Loggers
 void timeLoggerDP(char *str) {
+  assert(str);
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
@@ -184,6 +192,7 @@ void timeLoggerDP(char *str) {
 
 
 void dateLoggerDP(char *str) {
+  assert(str);
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
@@ -191,6 +200,7 @@ void dateLoggerDP(char *str) {
 }
 
 void dayLoggerDP(char *str) {
+  assert(str);
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
@@ -207,6 +217,7 @@ void dayLoggerDP(char *str) {
 }
 
 void uptimeLoggerDP(char *str) {
+  assert(str);
   struct sysinfo info;
   sysinfo(&info);
   int hours = (int)(info.uptime / 3600UL);
@@ -217,6 +228,7 @@ void uptimeLoggerDP(char *str) {
 }
 
 void memPercLoggerDP(char *str) {
+  assert(str);
   char buf[ LOGGER_MAX ];
   unsigned long memTotal = 0UL, memAvailable = 0UL;
   FILE *fd = fopen("/proc/meminfo", "r");
@@ -234,6 +246,7 @@ void memPercLoggerDP(char *str) {
 }
 
 void wifiStrengthDP(char *str) {
+  assert(str);
   char buf[ LOGGER_MAX ];
   FILE *fd = fopen("/proc/net/wireless", "r");
   if (!fd)
@@ -248,12 +261,14 @@ void wifiStrengthDP(char *str) {
 }
 
 void currWSLoggerDP(char *str) {
+  assert(str);
   const char *name = getNameStackSS(getCurrStackSS());
   if (name)
     strncpy(str, name, LOGGER_MAX);
 }
 
 void currLayoutLoggerDP(char *str) {
+  assert(str);
   int ws = getCurrStackSS();
   const LayoutConf *lc = getCurrLayoutConfStackSS(ws);
   if (lc)
@@ -261,6 +276,7 @@ void currLayoutLoggerDP(char *str) {
 }
 
 void currTitleLoggerDP(char *str) {
+  assert(str);
   CliPtr c = getCurrCliStackSS(getCurrStackSS());
   if (c)
     strncpy(str, CLIVAL(c).title, LOGGER_MAX);
@@ -269,6 +285,8 @@ void currTitleLoggerDP(char *str) {
 
 // Logger utilities
 int readFileDP(char *buf, const char *fileName) {
+  assert(buf);
+  assert(fileName);
   FILE *fd;
   fd = fopen(fileName, "r");
   if (!fd)
@@ -282,12 +300,18 @@ int readFileDP(char *buf, const char *fileName) {
 }
 
 void wrapDzenBoxDP(char *dst, const char *src, const BoxPP *b) {
+  assert(dst);
+  assert(src);
+  assert(b);
   snprintf(dst, LOGGER_MAX,
       "^fg(%s)^i(%s)^ib(1)^r(1920x%i)^p(-1920x)^fg(%s)%s^fg(%s)^i(%s)^fg(%s)^r(1920x%i)^p(-1920)^fg()^ib(0)",
       b->boxColor, b->leftIcon, b->boxHeight, b->fgColor, src, b->boxColor, b->rightIcon, b->bgColor, b->boxHeight);
 }
 
 void wrapDzenClickAreaDP(char *dst, const char *src, const CA *ca) {
+  assert(dst);
+  assert(src);
+  assert(ca);
   snprintf(dst, LOGGER_MAX, "^ca(1,%s)^ca(2,%s)^ca(3,%s)^ca(4,%s)^ca(5,%s)%s^ca()^ca()^ca()^ca()^ca()",
       ca->leftClick, ca->middleClick, ca->rightClick, ca->wheelUp, ca->wheelDown, src);
 }
@@ -323,6 +347,7 @@ Bool stopUpdateCpuPercWhile;
 
 // Private function definition
 static int getNumCpusDP(const char *file) {
+  assert(file);
   FILE *fd = fopen(file, "r");
   if (fd == NULL)
     exitErrorS("getNumCpusDP - could not open file");
@@ -338,6 +363,8 @@ static int getNumCpusDP(const char *file) {
 }
 
 static void getPercInfoDP(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, long prev_total) {
+  assert(cpu_info);
+  assert(cpu_vals);
   cpu_info->idle = cpu_vals[ 3 ];
   cpu_info->total = 0L;
   int i;
@@ -349,6 +376,7 @@ static void getPercInfoDP(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, lon
 }
 
 static void updateCpuPercDP(const char *file, int ncpus) {
+  assert(file);
   long cpusFileInfo[ ncpus ][ CPU_MAX_VALS ];
   long prevIdle[ ncpus ], prevTotal[ ncpus ];
   memset(prevIdle, 0, sizeof(prevIdle));
@@ -421,6 +449,7 @@ void endCpuCalcDP(Arg arg) {
 }
 
 void cpuPercUsageLoggerDP(char *str) {
+  assert(str);
   char buf[ LOGGER_MAX ];
   int i;
   for (i = 0; i < numCpus; ++i) {

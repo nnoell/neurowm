@@ -101,6 +101,7 @@ static Client *popMinimizedCliStackSS(Stack *s);
 //----------------------------------------------------------------------------------------------------------------------
 
 static Node *allocNodeSS(const Client *c) {
+  assert(c);
   Node *n = (Node *)malloc(sizeof(Node));
   if (!n)
     return NULL;
@@ -112,11 +113,14 @@ static Node *allocNodeSS(const Client *c) {
 }
 
 static void freeNodeSS(Node *n) {
+  if (!n)
+    return;
   free(n);
   n = NULL;
 }
 
 static Stack *allocStackSS(Stack *s, size_t sizel, size_t sizetl) {
+  assert(s);
   s->layouts = (Layout *)calloc(sizel, sizeof(Layout));
   if (!s->layouts)
     return NULL;
@@ -133,6 +137,8 @@ static Stack *allocStackSS(Stack *s, size_t sizel, size_t sizetl) {
 }
 
 static void freeStackSS(Stack *s) {
+  if (!s)
+    return;
   Client *c;
   while ((c=rmvLastNodeSS(s)))
     freeClientT(c);
@@ -151,11 +157,14 @@ static Stack *allocStackSetSS(size_t size) {
 }
 
 static void freeStackSetSS(Stack *s) {
+  if (!s)
+    return;
   free(s);
   s = NULL;
 }
 
 static Bool reallocMinimizedClientsIfNecessarySS(Stack *s, int newCount) {
+  assert(s);
   int newsize = STEP_SIZE_REALLOC;
   while (newsize < newCount)
     newsize += STEP_SIZE_REALLOC;
@@ -169,12 +178,14 @@ static Bool reallocMinimizedClientsIfNecessarySS(Stack *s, int newCount) {
 }
 
 static void setCurrNodeSS(Node *n) {
+  assert(n);
   int stack = n->cli->ws;
   SS.stacks[ stack ].prev = SS.stacks[ stack ].curr;
   SS.stacks[ stack ].curr = n;
 }
 
 static void updateNSPStackSS(Stack *s) {
+  assert(s);
   Node *n;
   for (n=s->head; n; n=n->next)
     if (n->cli->isNSP) {
@@ -185,6 +196,7 @@ static void updateNSPStackSS(Stack *s) {
 }
 
 static Client *rmvLastNodeSS(Stack *s) {
+  assert(s);
   if (s->size < 1)
     return NULL;
   Node *t = s->last;
@@ -207,6 +219,7 @@ static Client *rmvLastNodeSS(Stack *s) {
 }
 
 static Client *rmvNoLastNodeSS(Node *n) {
+  assert(n);
   Stack *s = SS.stacks + n->cli->ws;
   if (s->size == 0 || s->last == n)
     return NULL;
@@ -228,6 +241,8 @@ static Client *rmvNoLastNodeSS(Node *n) {
 }
 
 static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
+  assert(l);
+  assert(lc);
   size_t i;
   for (i = 0; i < size; ++i) {
     *(ArrangeF *)&l[ i ].arrangeFunc = lc[ i ]->arrangeFunc;
@@ -242,6 +257,7 @@ static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
 }
 
 static Client *rmvMinimizedCliStackSS(Stack *s, Window w) {
+  assert(s);
   Client *c, *found = NULL;
   int i;
   for (i = 0; i < s->minimizedNum; ++i) {
@@ -257,6 +273,8 @@ static Client *rmvMinimizedCliStackSS(Stack *s, Window w) {
 }
 
 Client *pushMinimizedCliStackSS(Stack *s, Client *c) {
+  assert(s);
+  assert(c);
   int newCount = s->minimizedNum + 1;
   if (!reallocMinimizedClientsIfNecessarySS(s, newCount))
     exitErrorS("pushMinimizedCliStackSS - could not realloc");
@@ -266,6 +284,7 @@ Client *pushMinimizedCliStackSS(Stack *s, Client *c) {
 }
 
 Client *popMinimizedCliStackSS(Stack *s) {
+  assert(s);
   if (s->minimizedNum == 0)
     return NULL;
   int newCount = s->minimizedNum - 1;
@@ -467,6 +486,7 @@ Client *rmvCliSS(CliPtr c) {
 }
 
 Client *pushMinimizedCliSS(Client *c) {
+  assert(c);
   Stack *s = SS.stacks + (c->ws % SS.size);
   return pushMinimizedCliStackSS(s, c);
 }
@@ -592,6 +612,7 @@ CliPtr getLastCliStackSS(int ws) {
 }
 
 CliPtr findCliStackSS(int ws, const TestCliPtrFunc tcfn, const void *p) {
+  assert(tcfn);
   Stack *s = SS.stacks + (ws % SS.size);
   Node *n;
   for (n=s->head; n; n=n->next)

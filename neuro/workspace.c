@@ -25,10 +25,12 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 static Bool isAboveTiledClientW(const CliPtr c) {
+  assert(c);
   return CLIVAL(c).freeLocFunc || CLIVAL(c).isFullScreen;
 }
 
 static void focusClientW(CliPtr c) {
+  assert(c);
   unsetUrgentC(c);
   ungrabButtonsS(CLIVAL(c).win);
   XSetInputFocus(display, CLIVAL(c).win, RevertToPointerRoot, CurrentTime);
@@ -38,6 +40,7 @@ static void focusClientW(CliPtr c) {
 }
 
 static void unfocusClientW(CliPtr c) {
+  assert(c);
   grabButtonsS(CLIVAL(c).win);
   updateC(c);
 }

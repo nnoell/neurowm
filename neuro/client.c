@@ -40,6 +40,7 @@ static Bool isProtocolDelete(Window w) {
 }
 
 static Bool setTitleAtomC(Client *c, Atom atom) {
+  assert(c);
   XTextProperty tp;
   XGetTextProperty(display, c->win, &tp, atom);
   if (!tp.nitems)
@@ -59,6 +60,8 @@ static Bool setTitleAtomC(Client *c, Atom atom) {
 }
 
 static CliPtr queryPointerC(int *x, int *y) {
+  assert(x);
+  assert(y);
   Window rootw, childw;
   int xc, yc;
   unsigned state;
@@ -181,10 +184,14 @@ void showC(CliPtr c, Bool doRules) {  // Move back to screen
 }
 
 void setUrgentC(CliPtr c) {
+  if (!c)
+    return;
   CLIVAL(c).isUrgent = True;
 }
 
 void unsetUrgentC(CliPtr c) {
+  if (!c)
+    return;
   CLIVAL(c).isUrgent = False;
 }
 
@@ -378,10 +385,12 @@ void freeResizePointerC() {
 
 // Select Functions
 CliPtr selfC(const CliPtr c) {
+  assert(c);
   return c;
 }
 
 CliPtr nextC(const CliPtr c) {
+  assert(c);
   CliPtr n = getNextCliSS(c);
   if (!n)
     n = getHeadCliStackSS(CLIVAL(c).ws);
@@ -389,6 +398,7 @@ CliPtr nextC(const CliPtr c) {
 }
 
 CliPtr prevC(const CliPtr c) {
+  assert(c);
   CliPtr p = getPrevCliSS(c);
   if (!p)
     p = getLastCliStackSS(CLIVAL(c).ws);
@@ -396,33 +406,40 @@ CliPtr prevC(const CliPtr c) {
 }
 
 CliPtr oldC(const CliPtr c) {
+  assert(c);
   return getPrevCliStackSS(CLIVAL(c).ws);
 }
 
 CliPtr headC(const CliPtr c) {
+  assert(c);
   return getHeadCliStackSS(CLIVAL(c).ws);
 }
 
 CliPtr lastC(const CliPtr c) {
+  assert(c);
   return getLastCliStackSS(CLIVAL(c).ws);
 }
 
 CliPtr upC(const CliPtr c) {
+  assert(c);
   Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x+1, r->y-1);
 }
 
 CliPtr downC(const CliPtr c) {
+  assert(c);
   Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x+1, r->y + r->h + 1);
 }
 
 CliPtr leftC(const CliPtr c) {
+  assert(c);
   Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x-1, r->y+1);
 }
 
 CliPtr rightC(const CliPtr c) {
+  assert(c);
   Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x + r->w + 1, r->y+1);
 }
@@ -435,27 +452,33 @@ CliPtr pointerC(const CliPtr c) {
 
 // Test functions
 Bool testWindowC(const CliPtr c, const void *w) {
+  assert(c);
+  assert(w);
   return CLIVAL(c).win == *((Window *)w);
 }
 
 Bool testIsUrgentC(const CliPtr c, const void *p) {
+  assert(c);
   (void)p;
   return CLIVAL(c).isUrgent;
 }
 
 Bool testIsFixedC(const CliPtr c, const void *p) {
+  assert(c);
   (void)p;
   return CLIVAL(c).fixPos != notFixedR;
 }
 
 // Border Color
 Color onlyCurrBorderColorC(const CliPtr c) {
+  assert(c);
   if (isCurrCliSS(c))
     return currBorderColorS;
   return normBorderColorS;
 }
 
 Color allBorderColorC(const CliPtr c) {
+  assert(c);
   if (isCurrCliSS(c))
     return currBorderColorS;
   else if (CLIVAL(c).isUrgent)
@@ -479,6 +502,7 @@ int alwaysBorderWidthC(const CliPtr c) {
 }
 
 int smartBorderWidthC(const CliPtr c) {
+  assert(c);
   if (CLIVAL(c).isFullScreen)
     return 0;
   if (CLIVAL(c).freeLocFunc)
@@ -496,6 +520,7 @@ int smartBorderWidthC(const CliPtr c) {
 }
 
 int onlyCurrBorderWidthC(const CliPtr c) {
+  assert(c);
   if (isCurrCliSS(c))
     return borderWidthS;
   return 0;
@@ -508,6 +533,7 @@ int alwaysBorderGapC(const CliPtr c) {
 }
 
 int smartBorderGapC(const CliPtr c) {
+  assert(c);
   Rectangle *a = getRegionCliSS(c);
   Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
   if (a->w == as->w && a->h == as->h)
@@ -516,6 +542,7 @@ int smartBorderGapC(const CliPtr c) {
 }
 
 int onlyCurrBorderGapC(const CliPtr c) {
+  assert(c);
   if (isCurrCliSS(c))
     return borderGapS;
   return 0;

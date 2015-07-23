@@ -66,7 +66,8 @@ static void signalHandler(int signo) {
 }
 
 static void initNeurowm(const WMConfig *c) {
-  assert(c);
+  if (!c)
+    exitErrorS("initNeurowm - could not set configuration");
 
   // Set configuration
   setConfigS(c);
@@ -102,6 +103,7 @@ static void initNeurowm(const WMConfig *c) {
 //----------------------------------------------------------------------------------------------------------------------
 
 void spawnN(Arg arg) {
+  assert(arg.com);
   spawnS(arg.com, NULL);
 }
 
@@ -121,6 +123,7 @@ void killCliN(Arg arg) {
 }
 
 void moveFocusN(Arg arg) {
+  assert(arg.sf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   moveFocusW(getCurrCliStackSS(ws), arg.sf);
@@ -128,6 +131,7 @@ void moveFocusN(Arg arg) {
 }
 
 void swapCliN(Arg arg) {
+  assert(arg.sf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   swapClientsW(getCurrCliStackSS(ws), arg.sf);
@@ -293,6 +297,7 @@ void moveCliToWorkspaceAndFollowN(Arg arg) {
 }
 
 void toggleNSPN(Arg arg) {
+  assert(arg.com);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   CliPtr c = findNSPCliSS();

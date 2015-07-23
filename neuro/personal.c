@@ -116,6 +116,7 @@ static const CA calendarCA = {
 
 // Nnoell Loggers
 void nnoellCurrLayoutLoggerP(char *str) {
+  assert(str);
   int ws = getCurrStackSS();
   int idx = getLayoutIdxStackSS(ws);
   const LayoutConf *lc = getCurrLayoutConfStackSS(ws);
@@ -134,6 +135,7 @@ void nnoellCurrLayoutLoggerP(char *str) {
 }
 
 void nnoellCurrLayoutModLoggerP(char *str) {
+  assert(str);
   int ws = getCurrStackSS();
   Layout *l = getCurrLayoutStackSS(ws);
   if (l) {
@@ -156,6 +158,7 @@ void nnoellCurrLayoutModLoggerP(char *str) {
 }
 
 void nnoellCurrWSLoggerP(char *str) {
+  assert(str);
   int ws = getCurrStackSS();
   const char *name = getNameStackSS(ws);
   if (name) {
@@ -169,6 +172,7 @@ void nnoellCurrWSLoggerP(char *str) {
 }
 
 void nnoellCurrTitleLoggerP(char *str) {
+  assert(str);
   CliPtr c = getCurrCliStackSS(getCurrStackSS());
   if (c) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
@@ -180,6 +184,7 @@ void nnoellCurrTitleLoggerP(char *str) {
 }
 
 void nnoellCurrWSListLoggerP(char *str) {
+  assert(str);
   int size = getSizeSS();
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   int i;
@@ -201,6 +206,7 @@ void nnoellCurrWSListLoggerP(char *str) {
 }
 
 void nnoellTimeLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ];
   time_t t = time(NULL);
   struct tm res;
@@ -212,6 +218,7 @@ void nnoellTimeLoggerP(char *str) {
 }
 
 void nnoellDateLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ];
   time_t t = time(NULL);
   struct tm res;
@@ -223,18 +230,21 @@ void nnoellDateLoggerP(char *str) {
 }
 
 void nnoellDayLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ];
   dayLoggerDP(tmp);
   wrapDzenBoxDP(str, tmp, &White2BBoxPP);
 }
 
 void nnoellCalendarLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ];
   wrapDzenClickAreaDP(tmp, "CALENDAR", &calendarCA);
   wrapDzenBoxDP(str, tmp, &BlueBoxPP);
 }
 
 void nnoellDateTimeLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   nnoellCalendarLoggerP(tmp);
   nnoellTimeLoggerP(tmp2);
@@ -244,6 +254,7 @@ void nnoellDateTimeLoggerP(char *str) {
 }
 
 void nnoellUptimeLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   uptimeLoggerDP(tmp);
   wrapDzenBoxDP(tmp2, tmp, &WhiteBoxPP);
@@ -252,6 +263,7 @@ void nnoellUptimeLoggerP(char *str) {
 }
 
 void nnoellCurrSizeStackLoggerP(char *str) {
+  assert(str);
   int size = getSizeStackSS(getCurrStackSS());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   snprintf(tmp, LOGGER_MAX, "%i", size);
@@ -261,6 +273,7 @@ void nnoellCurrSizeStackLoggerP(char *str) {
 }
 
 void nnoellCurrMinimizedCountLoggerP(char *str) {
+  assert(str);
   int count = getMinimizedNumStackSS(getCurrStackSS());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   snprintf(tmp, LOGGER_MAX, "%i", count);
@@ -270,6 +283,7 @@ void nnoellCurrMinimizedCountLoggerP(char *str) {
 }
 
 void nnoellCPUUsageLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   cpuPercUsageLoggerDP(tmp);
   char *p = strchr(tmp, ' ');  // Skip general cpu usage
@@ -282,6 +296,7 @@ void nnoellCPUUsageLoggerP(char *str) {
 }
 
 void nnoellMemPercLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   memPercLoggerDP(tmp);
   wrapDzenBoxDP(tmp2, tmp, &BlueBoxPP);
@@ -290,6 +305,7 @@ void nnoellMemPercLoggerP(char *str) {
 }
 
 void nnoellBatteryLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   if (-1 == readFileDP(tmp, "/sys/class/power_supply/BAT0/capacity"))
     strncpy(tmp, "N/A", LOGGER_MAX);
@@ -305,6 +321,7 @@ void nnoellBatteryLoggerP(char *str) {
 }
 
 void nnoellWifiStrengthLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   wifiStrengthDP(tmp);
   wrapDzenBoxDP(tmp2, tmp, &BlueBoxPP);
@@ -313,6 +330,7 @@ void nnoellWifiStrengthLoggerP(char *str) {
 }
 
 void nnoellTempLoggerP(char *str) {
+  assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   if (-1 == readFileDP(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))
     strncpy(tmp, "N/A", LOGGER_MAX);

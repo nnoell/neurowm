@@ -25,6 +25,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 static int isFreeSizeHintsR(Client *c) {
+  assert(c);
   int maxw = 0, maxh = 0, minw = 0, minh = 0;
   long msize;
   XSizeHints size;
@@ -45,6 +46,8 @@ static int isFreeSizeHintsR(Client *c) {
 }
 
 static Bool hasRuleR(const Client *c, const Rule *r) {
+  assert(c);
+  assert(r);
   if (!c)
     return False;
   if (!r->class && !r->name && !r->title)
@@ -60,6 +63,8 @@ static Bool hasRuleR(const Client *c, const Rule *r) {
 }
 
 static void setRuleR(Client *c, const Rule *r) {
+  assert(c);
+  assert(r);
   if (r->workspace != currWSR)
     c->ws = r->workspace % getSizeSS();
   c->isFullScreen = r->isFullScreen;
@@ -80,6 +85,7 @@ static void setRuleR(Client *c, const Rule *r) {
 //----------------------------------------------------------------------------------------------------------------------
 
 Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
+  assert(wa);
   Client *c = allocClientT(w, wa);
   if (!c)
     return NULL;
@@ -103,6 +109,7 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
 }
 
 void applyRuleR(const CliPtr c) {
+  assert(c);
   Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
   Rectangle *regc = getRegionCliSS(c);
   switch (CLIVAL(c).fixPos) {
@@ -156,6 +163,7 @@ void applyRuleR(const CliPtr c) {
 }
 
 void unapplyRuleR(const CliPtr c) {
+  assert(c);
   if (CLIVAL(c).freeLocFunc)
     return;
   Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
@@ -188,16 +196,22 @@ void defFreeR(Rectangle *a, const Rectangle *r) {
 }
 
 void centerFreeR(Rectangle *a, const Rectangle *r) {
+  assert(a);
+  assert(r);
   centerRectangleInRegionG(a, r);
 }
 
 void bigCenterFreeR(Rectangle *a, const Rectangle *r) {
+  assert(a);
+  assert(r);
   float size[ 4 ] = { 0.05f, 0.05f, 0.9f, 0.9f };
   getRelativeRectangleG(a, r, size);
   centerRectangleInRegionG(a, r);
 }
 
 void scratchpadFreeR(Rectangle *a, const Rectangle *r) {
+  assert(a);
+  assert(r);
   float size[ 4 ] = { 0.00f, 0.00f, 1.00f, 0.75f };
   getRelativeRectangleG(a, r, size);
 }

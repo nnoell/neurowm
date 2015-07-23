@@ -43,11 +43,14 @@ Client *allocClientT(Window w, const XWindowAttributes *wa) {
 }
 
 void freeClientT(Client *c) {
+  if (!c)
+    return;
   free(c);
   c = NULL;
 }
 
 size_t ptrArrayLengthT(const void *const *arrayPtr) {
+  assert(arrayPtr);
   size_t size;
   for (size = 0; arrayPtr[ size ]; ++size)
     continue;

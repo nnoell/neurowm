@@ -28,6 +28,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 static void keyPressE(XEvent *e) {
+  assert(e);
   XKeyEvent ke = e->xkey;
   int ks;
   KeySym *keysym = XGetKeyboardMapping(display, ke.keycode, 1, &ks);
@@ -44,6 +45,7 @@ static void keyPressE(XEvent *e) {
 }
 
 static void buttonPressE(XEvent *e) {
+  assert(e);
   XButtonPressedEvent *ev = &e->xbutton;
   const Button *b;
   int i;
@@ -57,11 +59,13 @@ static void buttonPressE(XEvent *e) {
 }
 
 static void mapRequestE(XEvent *e) {
+  assert(e);
   manageWindowE(e->xmaprequest.window);
   updateDP(True);
 }
 
 static void destroyNotifyE(XEvent *e) {
+  assert(e);
   Window w = e->xdestroywindow.window;
   CliPtr c = findWindowClientAllW(w);
   if (c) {
@@ -75,6 +79,7 @@ static void destroyNotifyE(XEvent *e) {
 }
 
 static void unmapNotifyE(XEvent *e) {
+  assert(e);
   Window w = e->xdestroywindow.window;
   CliPtr c = findWindowClientAllW(w);
   if (c) {
@@ -88,6 +93,7 @@ static void unmapNotifyE(XEvent *e) {
 }
 
 static void enterNotifyE(XEvent *e) {
+  assert(e);
   XCrossingEvent *ev = &e->xcrossing;
   if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != (unsigned int)root)
     return;
@@ -106,6 +112,7 @@ static void enterNotifyE(XEvent *e) {
 }
 
 static void configureRequestE(XEvent *e) {
+  assert(e);
   XConfigureRequestEvent *ev = &e->xconfigurerequest;
   XWindowChanges wc;
   wc.x = ev->x;
@@ -124,6 +131,7 @@ static void configureRequestE(XEvent *e) {
 }
 
 static void focusInE(XEvent *e) {
+  assert(e);
   CliPtr c = getCurrCliCurrStackSS();
   if (!c)
     return;
@@ -134,6 +142,7 @@ static void focusInE(XEvent *e) {
 }
 
 static void clientMessageE(XEvent *e) {
+  assert(e);
   CliPtr c = findWindowClientAllW(e->xclient.window);
   if (!c)
     return;
@@ -153,6 +162,7 @@ static void clientMessageE(XEvent *e) {
 }
 
 static void propertyNotifyE(XEvent *e) {
+  assert(e);
   XPropertyEvent *ev = &e->xproperty;
   if (ev->atom == XA_WM_NAME || ev->atom == netatoms[ NET_WM_NAME ]) {  // Window title
     CliPtr c = findWindowClientAllW(ev->window);
@@ -245,7 +255,8 @@ void manageWindowE(Window w) {
 }
 
 void unmanageCliE(CliPtr c) {
-  int ws = CLIVAL(c).ws;
+  assert(c);
+  const int ws = CLIVAL(c).ws;
   rmvEnterNotifyMaskW(ws);
   unapplyRuleR(c);
   Client *cli = rmvCliSS(c);

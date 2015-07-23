@@ -27,6 +27,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 static Arrange *allocArrangeL(int ws, Layout *l) {
+  assert(l);
   Rectangle **rs = NULL, **frs = NULL;
   int i = 0, size = 0;
   CliPtr c;
@@ -56,6 +57,8 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
 }
 
 static void freeArrangeL(Arrange *a) {
+  if (!a)
+    return;
   free(a->cliRegions);
   a->cliRegions = NULL;
   free(a->cliFloatRegions);
@@ -65,7 +68,9 @@ static void freeArrangeL(Arrange *a) {
 }
 
 static void getLengthSizesL(int n, int length, int *xs, int *ws) {
-  assert(n >= 0);
+  assert(xs);
+  assert(ws);
+  assert(n > 0);
   int a = (float)length / (float)n + 0.5f;
   int countx = 0;
   int i;
@@ -80,11 +85,15 @@ static void getLengthSizesL(int n, int length, int *xs, int *ws) {
 
 // Arrange runners
 static Arrange *normalArrangeL(Arrange *a, ArrangeF af) {
+  assert(a);
+  assert(af);
   af(a);
   return a;
 }
 
 static Arrange *mirrorArrangeL(Arrange *a, ArrangeF af) {
+  assert(a);
+  assert(af);
   transpRectangleG(&a->region);
   af(a);
   int i;
@@ -96,6 +105,7 @@ static Arrange *mirrorArrangeL(Arrange *a, ArrangeF af) {
 
 // Mods
 static Arrange *reflXArrModL(Arrange *a) {
+  assert(a);
   int i;
   for (i = 0; i < a->size; ++i)
     a->cliRegions[ i ]->x = 2*(a->region.x) + a->region.w - (a->cliRegions[ i ]->x + a->cliRegions[ i ]->w);
@@ -103,6 +113,7 @@ static Arrange *reflXArrModL(Arrange *a) {
 }
 
 static Arrange *reflYArrModL(Arrange *a) {
+  assert(a);
   int i;
   for (i = 0; i < a->size; ++i)
     a->cliRegions[ i ]->y = 2*(a->region.y) + a->region.h - (a->cliRegions[ i ]->y + a->cliRegions[ i ]->h);
@@ -202,6 +213,7 @@ void resizeMasterL(int ws, int r) {
 
 // Layouts
 Arrange *tallArrL(Arrange *a) {
+  assert(a);
   int n = a->size;
   int mn = (int)a->as[ 0 ], ms = (int)((float)a->as[ 1 ] * a->region.w);
   int nwindows = n <= mn ? n : mn;
@@ -212,7 +224,9 @@ Arrange *tallArrL(Arrange *a) {
   int i;
   for (i = 0; i < nwindows; ++i)  // Master area
     setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ] , n > mn ? ms : a->region.w, hs[ i ]);
-  getLengthSizesL(n-nwindows, a->region.h, ys, hs);
+  if (n - nwindows == 0)
+    return a;
+  getLengthSizesL(n - nwindows, a->region.h, ys, hs);
   for (; i < n; ++i)  // Stacking area
     setRectangleG(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms,
         hs[ i-nwindows ]);
@@ -220,6 +234,7 @@ Arrange *tallArrL(Arrange *a) {
 }
 
 Arrange *gridArrL(Arrange *a) {
+  assert(a);
   int n = a->size, cols, rows;
   for (cols = 0; cols <= n/2; ++cols)
     if (cols*cols >= n)
@@ -247,6 +262,7 @@ Arrange *gridArrL(Arrange *a) {
 }
 
 Arrange *fullArrL(Arrange *a) {
+  assert(a);
   int i;
   for (i = 0; i < a->size; ++i)
     setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y, a->region.w, a->region.h);
@@ -254,6 +270,7 @@ Arrange *fullArrL(Arrange *a) {
 }
 
 Arrange *floatArrL(Arrange *a) {
+  assert(a);
   Rectangle *fr;
   int i;
   for (i = 0; i < a->size; ++i) {

@@ -20,6 +20,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 Rectangle *getRelativeRectangleG(Rectangle *dst, const Rectangle *src, const float *rel) {
+  assert(dst);
+  assert(src);
+  assert(rel);
   dst->x = src->x + (int)((float)src->w * rel[ 0 ]);
   dst->y = src->y + (int)((float)src->h * rel[ 1 ]);
   dst->w = (int)((float)src->w * rel[ 2 ]);
@@ -28,6 +31,9 @@ Rectangle *getRelativeRectangleG(Rectangle *dst, const Rectangle *src, const flo
 }
 
 Rectangle *getGapsRectangleG(Rectangle *dst, const Rectangle *src, const int *gaps) {
+  assert(dst);
+  assert(src);
+  assert(gaps);
   dst->x = src->x + gaps[ 2 ];
   dst->y = src->y + gaps[ 0 ];
   dst->w = src->w - (gaps[ 3 ] + gaps[ 2 ]);
@@ -36,17 +42,20 @@ Rectangle *getGapsRectangleG(Rectangle *dst, const Rectangle *src, const int *ga
 }
 
 Rectangle *setRectangleG(Rectangle *r, int x, int y, int w, int h) {
+  assert(r);
   r->x = x; r->y = y; r->w = w; r->h = h;
   return r;
 }
 
 Rectangle *setRectangleBorderG(Rectangle *r, int bs) {
+  assert(r);
   r->w -= bs * 2;
   r->h -= bs * 2;
   return r;
 }
 
 Rectangle *setRectangleSpaceG(Rectangle *r, int sp) {
+  assert(r);
   r->x += sp;
   r->y += sp;
   r->w -= sp * 2;
@@ -55,10 +64,13 @@ Rectangle *setRectangleSpaceG(Rectangle *r, int sp) {
 }
 
 Rectangle *setRectangleBorderAndSpaceG(Rectangle *r, int bs, int s) {
+  assert(r);
   return setRectangleSpaceG(setRectangleBorderG(r, bs), s);
 }
 
 Rectangle *mirrorRectangleG(Rectangle *rect, const Rectangle *reg) {
+  assert(rect);
+  assert(reg);
   const int oldx = rect->x, oldy = rect->y, oldw = rect->w, oldh = rect->h;
   rect->y = (int)(((float)oldx-reg->x) / ((float)reg->w) * ((float)reg->h) + 0.5f) + reg->y;
   rect->x = (int)(((float)oldy-reg->y) / ((float)reg->h) * ((float)reg->w) + 0.5f) + reg->x;
@@ -78,6 +90,8 @@ Rectangle *transpRectangleG(Rectangle *rect) {
 }
 
 Rectangle *fitRectangleInRegionG(Rectangle *rect, const Rectangle *reg) {
+  assert(rect);
+  assert(reg);
   if (rect->x < reg->x)
     rect->x = reg->x;
   if (rect->y < reg->y)
@@ -94,12 +108,15 @@ Rectangle *fitRectangleInRegionG(Rectangle *rect, const Rectangle *reg) {
 }
 
 Rectangle *centerRectangleInRegionG(Rectangle *rect, const Rectangle *reg) {
+  assert(rect);
+  assert(reg);
   rect->x = reg->x + (reg->w - rect->w) / 2;
   rect->y = reg->y + (reg->h - rect->h) / 2;
   return rect;
 }
 
 Bool isPointInRectangleG(const Rectangle *a, int x, int y) {
+  assert(a);
   if (x < a->x)
     return False;
   if (y < a->y)

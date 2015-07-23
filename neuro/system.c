@@ -232,6 +232,7 @@ void ungrabButtonsS(Window w) {
 
 // Other useful X functions
 Color getColorS(const char* color) {
+  assert(color);
   XColor c;
   Colormap map = DefaultColormap(display, screen);
   if (!XAllocNamedColor(display, map, color, &c, &c))
@@ -240,6 +241,7 @@ Color getColorS(const char* color) {
 }
 
 void changeWMNameS(Arg arg) {
+  assert(arg.str);
   Atom netwmcheck = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
   Atom netwmname = XInternAtom(display, "_NET_WM_NAME", False);
   Atom utf8_str = XInternAtom(display, "UTF8_STRING", False);
@@ -248,10 +250,12 @@ void changeWMNameS(Arg arg) {
 }
 
 void changeProcNameS(const char *newname) {
+  assert(newname);
   prctl(PR_SET_NAME, (unsigned long)newname, 0, 0, 0);
 }
 
 int spawnS(const char *const *cmd, pid_t *p) {
+  assert(cmd);
   pid_t pid = fork();
   if (pid == -1)
     return -1;
@@ -268,6 +272,7 @@ int spawnS(const char *const *cmd, pid_t *p) {
 }
 
 int spawnPipeS(const char *const *cmd, pid_t *p) {
+  assert(cmd);
   int filedes[ 2 ];
   if (pipe(filedes))
     return -1;
