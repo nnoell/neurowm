@@ -13,7 +13,7 @@
 
 // Includes
 #include "workspace.h"
-#include "base.h"
+#include "system.h"
 #include "stackset.h"
 #include "layout.h"
 #include "client.h"
@@ -30,7 +30,7 @@ static Bool isAboveTiledClientW(const CliPtr c) {
 
 static void focusClientW(CliPtr c) {
   unsetUrgentC(c);
-  ungrabButtonsB(CLIVAL(c).win);
+  ungrabButtonsS(CLIVAL(c).win);
   XSetInputFocus(display, CLIVAL(c).win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(display, root, netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
       (unsigned char *)&(CLIVAL(c).win), 1);
@@ -38,7 +38,7 @@ static void focusClientW(CliPtr c) {
 }
 
 static void unfocusClientW(CliPtr c) {
-  grabButtonsB(CLIVAL(c).win);
+  grabButtonsS(CLIVAL(c).win);
   updateC(c);
 }
 
@@ -74,7 +74,7 @@ void updateFocusW(int ws) {
 
   if (n > 1) {
     if (!XQueryTree(display, root, &d1, &d2, &wins, &num))  // XQueryTree gets windows by stacking order
-      exitErrorG("updateFocusW - could not get windows");
+      exitErrorS("updateFocusW - could not get windows");
     int n2 = n;
     for (i = 0; i < num; ++i) {
       CliPtr c = findWindowClientW(ws, wins[ i ]);
@@ -161,19 +161,19 @@ void moveCliToWorkspaceW(CliPtr c, int ws) {
   int oldws = CLIVAL(c).ws, currws = getCurrStackSS();
   if (oldws == ws)
     return;
-  Area oldArea = (Area){ .x = 0, .y = 0, .h = 0, .w = 0 };
+  Rectangle oldArea = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
   Bool isFree = CLIVAL(c).freeLocFunc != notFreeR;
   if (oldws == currws)
     hideC(c, True);
   if (isFree)
-    memmove(&oldArea, getRegionCliSS(c), sizeof(Area));
+    memmove(&oldArea, getRegionCliSS(c), sizeof(Rectangle));
   Client *cli = rmvCliSS(c);
   cli->ws = ws;
   CliPtr c2 = addCliStartSS(cli);
   if (!c2)
-    exitErrorG("moveCliToWorkspaceW - could not add client");
+    exitErrorS("moveCliToWorkspaceW - could not add client");
   if (isFree)
-    memmove(getRegionCliSS(c2), &oldArea, sizeof(Area));
+    memmove(getRegionCliSS(c2), &oldArea, sizeof(Rectangle));
   if (ws == currws)
     showC(c2, True);
   runCurrLayoutL(currws);
@@ -200,10 +200,10 @@ void restoreLastMinimizedW(int ws) {
     return;
   Client *cli = popMinimizedCliSS(ws);
   if (!cli)
-    exitErrorG("restoreLastMinimizedW - could not realloc");
+    exitErrorS("restoreLastMinimizedW - could not realloc");
   CliPtr c = addCliStartSS(cli);
   if (!c)
-    exitErrorG("restoreLastMinimizedW - could not add client");
+    exitErrorS("restoreLastMinimizedW - could not add client");
   applyRuleR(c);
   setCurrCliSS(c);
   runCurrLayoutL(CLIVAL(c).ws);

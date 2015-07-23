@@ -15,7 +15,7 @@
 #define NEURO_STACKSET_H_
 
 // Includes
-#include "general.h"
+#include "type.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ Layout *getLayoutStackSS(int ws, int i);
 const LayoutConf *getLayoutConfStackSS(int ws, int i);
 Layout *getCurrLayoutStackSS(int ws);
 const LayoutConf *getCurrLayoutConfStackSS(int ws);
-Area *getRegionStackSS(int ws);
+Rectangle *getRegionStackSS(int ws);
 CliPtr getCurrCliStackSS(int ws);
 CliPtr getPrevCliStackSS(int ws);
 CliPtr getHeadCliStackSS(int ws);
@@ -73,7 +73,7 @@ Bool isCurrCliSS(const CliPtr c);
 Bool isPrevCliSS(const CliPtr c);
 Bool isHeadCliSS(const CliPtr c);
 Bool isLastCliSS(const CliPtr c);
-Area *getRegionCliSS(const CliPtr c);
+Rectangle *getRegionCliSS(const CliPtr c);
 CliPtr getNextCliSS(const CliPtr c);
 CliPtr getPrevCliSS(const CliPtr c);
 CliPtr swpCliSS(const CliPtr c1, const CliPtr c2);

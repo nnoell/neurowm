@@ -12,8 +12,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
+#include "system.h"
 #include "layout.h"
-#include "area.h"
+#include "geometry.h"
 #include "stackset.h"
 #include "workspace.h"
 
@@ -26,15 +27,15 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 static Arrange *allocArrangeL(int ws, Layout *l) {
-  Area **rs = NULL, **frs = NULL;
+  Rectangle **rs = NULL, **frs = NULL;
   int i = 0, size = 0;
   CliPtr c;
   for (c=getHeadCliStackSS(ws); c; c=getNextCliSS(c)) {
     if (!CLIVAL(c).freeLocFunc && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
-        rs = (Area **)realloc(rs, size*sizeof(void *));
-        frs = (Area **)realloc(frs, size*sizeof(void *));
+        rs = (Rectangle **)realloc(rs, size*sizeof(void *));
+        frs = (Rectangle **)realloc(frs, size*sizeof(void *));
         if (!rs || !frs)
           return NULL;
       }
@@ -47,7 +48,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   if (!a)
     return NULL;
   a->size = i;
-  getRelativeAreaA(&a->region, getRegionStackSS(ws), l->region);
+  getRelativeRectangleG(&a->region, getRegionStackSS(ws), l->region);
   a->cliRegions = rs;
   a->cliFloatRegions = frs;
   a->as = l->as;
@@ -84,12 +85,12 @@ static Arrange *normalArrangeL(Arrange *a, ArrangeF af) {
 }
 
 static Arrange *mirrorArrangeL(Arrange *a, ArrangeF af) {
-  transpAreaA(&a->region);
+  transpRectangleG(&a->region);
   af(a);
   int i;
   for (i = 0; i < a->size; ++i)
-    transpAreaA(a->cliRegions[ i ]);
-  transpAreaA(&a->region);
+    transpRectangleG(a->cliRegions[ i ]);
+  transpRectangleG(&a->region);
   return a;
 }
 
@@ -117,7 +118,7 @@ void runLayoutL(int ws, int i) {
   Layout *l = getLayoutStackSS(ws, i);
   Arrange *a = allocArrangeL(ws, l);
   if (!a)
-    exitErrorG("runLayoutL - could not run layout");
+    exitErrorS("runLayoutL - could not run layout");
   if (a->size) {  // Then run layout
     if (l->mod & mirrModL)
       mirrorArrangeL(a, l->arrangeFunc);
@@ -210,10 +211,11 @@ Arrange *tallArrL(Arrange *a) {
   getLengthSizesL(nwindows, a->region.h, ys, hs);
   int i;
   for (i = 0; i < nwindows; ++i)  // Master area
-    setAreaA(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ] , n > mn ? ms : a->region.w, hs[ i ]);
+    setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ] , n > mn ? ms : a->region.w, hs[ i ]);
   getLengthSizesL(n-nwindows, a->region.h, ys, hs);
   for (; i < n; ++i)  // Stacking area
-    setAreaA(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms, hs[ i-nwindows ]);
+    setRectangleG(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms,
+        hs[ i-nwindows ]);
   return a;
 }
 
@@ -235,7 +237,7 @@ Arrange *gridArrL(Arrange *a) {
     memset(ys, 0, sizeof(ys));
     memset(hs, 0, sizeof(hs));
     getLengthSizesL(rows, a->region.h, ys, hs);
-    setAreaA(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
+    setRectangleG(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
     if (++rn >= rows) {
       rn = 0;
       ++cn;
@@ -247,17 +249,17 @@ Arrange *gridArrL(Arrange *a) {
 Arrange *fullArrL(Arrange *a) {
   int i;
   for (i = 0; i < a->size; ++i)
-    setAreaA(a->cliRegions[ i ], a->region.x, a->region.y, a->region.w, a->region.h);
+    setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y, a->region.w, a->region.h);
   return a;
 }
 
 Arrange *floatArrL(Arrange *a) {
-  Area *fr;
+  Rectangle *fr;
   int i;
   for (i = 0; i < a->size; ++i) {
     fr = a->cliFloatRegions[ i ];
-    setAreaA(a->cliRegions[ i ], fr->x, fr->y, fr->w, fr->h);
-    fitAreaInRegA(a->cliRegions[ i ], &a->region);
+    setRectangleG(a->cliRegions[ i ], fr->x, fr->y, fr->w, fr->h);
+    fitRectangleInRegionG(a->cliRegions[ i ], &a->region);
   }
   return a;
 }

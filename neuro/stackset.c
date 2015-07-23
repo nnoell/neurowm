@@ -12,8 +12,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
-#include "base.h"
-#include "area.h"
+#include "system.h"
+#include "geometry.h"
 #include "stackset.h"
 
 // Defines
@@ -30,7 +30,7 @@ struct Node {
   Client *cli;
   Node *next;
   Node *prev;
-  Area region;
+  Rectangle region;
 };
 
 // Stack
@@ -43,7 +43,7 @@ struct Stack {
   Node *last;
   Node *nsp;
   int size;  // Number of clients the stack has
-  Area region;  // Region where all the layouts can be
+  Rectangle region;  // Region where all the layouts can be
   int currLayoutIdx;
   int currTogLayoutIdx;  // -1 if none
   const int numLayouts;
@@ -105,7 +105,7 @@ static Node *allocNodeSS(const Client *c) {
   if (!n)
     return NULL;
   n->cli = (Client *)c;
-  memmove(&(n->region), &(c->floatRegion), sizeof(Area));
+  memmove(&(n->region), &(c->floatRegion), sizeof(Rectangle));
   n->next = NULL;
   n->prev = NULL;
   return n;
@@ -135,13 +135,13 @@ static Stack *allocStackSS(Stack *s, size_t sizel, size_t sizetl) {
 static void freeStackSS(Stack *s) {
   Client *c;
   while ((c=rmvLastNodeSS(s)))
-    freeClientG(c);
+    freeClientT(c);
   free(s->layouts);
   s->layouts = NULL;
   free(s->togLayouts);
   s->togLayouts = NULL;
   while ((c = popMinimizedCliStackSS(s)))
-    freeClientG(c);
+    freeClientT(c);
   free(s->minimizedClients);
   s->minimizedClients = NULL;
 }
@@ -259,7 +259,7 @@ static Client *rmvMinimizedCliStackSS(Stack *s, Window w) {
 Client *pushMinimizedCliStackSS(Stack *s, Client *c) {
   int newCount = s->minimizedNum + 1;
   if (!reallocMinimizedClientsIfNecessarySS(s, newCount))
-    exitErrorG("pushMinimizedCliStackSS - could not realloc");
+    exitErrorS("pushMinimizedCliStackSS - could not realloc");
   s->minimizedNum = newCount;
   s->minimizedClients[ newCount - 1 ] = c;
   return c;
@@ -271,7 +271,7 @@ Client *popMinimizedCliStackSS(Stack *s) {
   int newCount = s->minimizedNum - 1;
   Client *cli = s->minimizedClients[ newCount ];
   if (!reallocMinimizedClientsIfNecessarySS(s, newCount))
-    exitErrorG("pushMinimizedCliStackSS - could not realloc");
+    exitErrorS("pushMinimizedCliStackSS - could not realloc");
   s->minimizedNum = newCount;
   return cli;
 }
@@ -283,26 +283,26 @@ Client *popMinimizedCliStackSS(Stack *s) {
 
 // StackSet
 Bool initSS() {
-  assert(workspaceSetB);
-  size_t size = ptrArrayLengthG((const void *const *const)workspaceSetB);
+  assert(workspaceSetS);
+  size_t size = ptrArrayLengthT((const void *const *const)workspaceSetS);
   SS.stacks = allocStackSetSS(size + 1);  // We need on extra stack for NSP
   if (!SS.stacks)
     return False;
   const Workspace *ws;
   size_t i, sizel, sizetl;
-  for (i = 0; workspaceSetB[ i ]; ++i) {
-    ws = workspaceSetB[ i ];
-    sizel = ptrArrayLengthG((const void *const *const)(ws->layouts));
+  for (i = 0; workspaceSetS[ i ]; ++i) {
+    ws = workspaceSetS[ i ];
+    sizel = ptrArrayLengthT((const void *const *const)(ws->layouts));
     if (!sizel)
       return False;
-    sizetl = ptrArrayLengthG((const void *const *const)(ws->togLayouts));
+    sizetl = ptrArrayLengthT((const void *const *const)(ws->togLayouts));
     Stack *s = allocStackSS(SS.stacks + i, sizel, sizetl);
     if (!s)
       return False;
     s->name = ws->name;
     s->curr = NULL; s->prev = NULL; s->head = NULL; s->last = NULL; s->nsp = NULL;
     s->size = 0;
-    getGapsAreaA(&s->region, &screenArea, ws->gaps);
+    getGapsRectangleG(&s->region, &screenArea, ws->gaps);
     s->currLayoutIdx = 0;
     s->currTogLayoutIdx = -1;  // No toggled layout by default
     *(int *)&(s->numLayouts) = sizel;
@@ -559,8 +559,8 @@ Layout *getLayoutStackSS(int ws, int i) {
 const LayoutConf *getLayoutConfStackSS(int ws, int i) {
   int s = ws % SS.size;
   if (SS.stacks[ s ].currTogLayoutIdx == -1)
-    return workspaceSetB[ s ]->layouts[ i % SS.stacks[ s ].numLayouts ];
-  return workspaceSetB[ s ]->togLayouts[ i % SS.stacks[ s ].numTogLayouts ];
+    return workspaceSetS[ s ]->layouts[ i % SS.stacks[ s ].numLayouts ];
+  return workspaceSetS[ s ]->togLayouts[ i % SS.stacks[ s ].numTogLayouts ];
 }
 
 Layout *getCurrLayoutStackSS(int ws) {
@@ -571,7 +571,7 @@ const LayoutConf *getCurrLayoutConfStackSS(int ws) {
   return getLayoutConfStackSS(ws, getLayoutIdxStackSS(ws));
 }
 
-Area *getRegionStackSS(int ws) {
+Rectangle *getRegionStackSS(int ws) {
   return &(SS.stacks[ ws % SS.size ].region);
 }
 
@@ -618,7 +618,7 @@ Bool isLastCliSS(const CliPtr c) {
   return !c ? False : (Node *)c == SS.stacks[ CLIVAL(c).ws ].last;
 }
 
-Area *getRegionCliSS(const CliPtr c) {
+Rectangle *getRegionCliSS(const CliPtr c) {
   Node *n = (Node *)c;
   return !c ? NULL : &n->region;
 }

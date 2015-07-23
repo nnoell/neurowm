@@ -15,7 +15,7 @@
 #define NEURO_CONFIG_H_
 
 // Includes
-#include "general.h"
+#include "type.h"
 
 // Colors
 #define defNormBorderColor "#1c1c1c"

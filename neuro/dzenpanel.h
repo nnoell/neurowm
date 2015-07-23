@@ -15,7 +15,7 @@
 #define NEURO_DZENPANEL_H_
 
 // Includes
-#include "general.h"
+#include "type.h"
 
 // Defines
 #define DZEN_LINE_MAX 16384

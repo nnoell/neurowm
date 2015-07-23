@@ -13,8 +13,8 @@
 
 // Includes
 #include "client.h"
-#include "area.h"
-#include "base.h"
+#include "geometry.h"
+#include "system.h"
 #include "stackset.h"
 #include "layout.h"
 #include "rule.h"
@@ -70,7 +70,7 @@ static CliPtr queryPointerC(int *x, int *y) {
 static CliPtr queryPointC(int ws, int x, int y) {
   CliPtr c;
   for (c=getHeadCliStackSS(ws); c; c=getNextCliSS(c))
-    if (isPointInArea(getRegionCliSS(c), x, y))
+    if (isPointInRectangleG(getRegionCliSS(c), x, y))
       break;
   return c;
 }
@@ -89,17 +89,17 @@ void updateC(const CliPtr c) {
     CLIVAL(c).freeLocFunc(getRegionCliSS(c), &screenArea);
 
   // Fullscreen windows
-  Area r;
+  Rectangle r;
   if (CLIVAL(c).isFullScreen)
-    memmove(&r, &screenArea, sizeof(Area));
+    memmove(&r, &screenArea, sizeof(Rectangle));
   else
-    memmove(&r, getRegionCliSS(c), sizeof(Area));
+    memmove(&r, getRegionCliSS(c), sizeof(Rectangle));
 
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
   int borderWidth = l->borderWidthFunc(c);
   int borderGap = l->borderGapFunc(c);
   if ((!CLIVAL(c).isFullScreen && !CLIVAL(c).freeLocFunc && l->arrangeFunc != floatArrL) || CLIVAL(c).isNSP)
-    setAreaBorderAndSpaceA(&r, borderWidth, borderGap);
+    setRectangleBorderAndSpaceG(&r, borderWidth, borderGap);
   if (r.w < 1)
     r.w = 1;
   if (r.h < 1)
@@ -159,7 +159,7 @@ void hideC(CliPtr c, Bool doRules) {  // Move off screen
     return;
   if (doRules)
     unapplyRuleR(c);
-  Area *regc = getRegionCliSS(c);
+  Rectangle *regc = getRegionCliSS(c);
   regc->x += xRes;
   regc->y += yRes;
   XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
@@ -171,7 +171,7 @@ void showC(CliPtr c, Bool doRules) {  // Move back to screen
     return;
   if (!CLIVAL(c).isHidden)
     return;
-  Area *regc = getRegionCliSS(c);
+  Rectangle *regc = getRegionCliSS(c);
   regc->x -= xRes;
   regc->y -= yRes;
   if (doRules)
@@ -274,7 +274,7 @@ void movePointerC() {
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
 
-  Area *r = &(CLIVAL(c).floatRegion);
+  Rectangle *r = &(CLIVAL(c).floatRegion);
   int cx = r->x, cy = r->y;
   XEvent ev;
   do {
@@ -300,7 +300,7 @@ void resizePointerC() {
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
 
-  Area *r = &(CLIVAL(c).floatRegion);
+  Rectangle *r = &(CLIVAL(c).floatRegion);
   XWarpPointer(display, None, CLIVAL(c).win, 0, 0, 0, 0, r->w, r->h);
   int cw = r->w, ch = r->h;
   XEvent ev;
@@ -331,7 +331,7 @@ void freeMovePointerC() {
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
 
-  Area *r = getRegionCliSS(c);
+  Rectangle *r = getRegionCliSS(c);
   int cx = r->x, cy = r->y;
   XEvent ev;
   do {
@@ -360,7 +360,7 @@ void freeResizePointerC() {
       GrabModeAsync, GrabModeAsync, None, cursors[ CurResize ], CurrentTime) != GrabSuccess)
     return;
 
-  Area *r = getRegionCliSS(c);
+  Rectangle *r = getRegionCliSS(c);
   XWarpPointer(display, None, CLIVAL(c).win, 0, 0, 0, 0, r->w, r->h);
   int cw = r->w, ch = r->h;
   XEvent ev;
@@ -408,22 +408,22 @@ CliPtr lastC(const CliPtr c) {
 }
 
 CliPtr upC(const CliPtr c) {
-  Area *r = getRegionCliSS(c);
+  Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x+1, r->y-1);
 }
 
 CliPtr downC(const CliPtr c) {
-  Area *r = getRegionCliSS(c);
+  Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x+1, r->y + r->h + 1);
 }
 
 CliPtr leftC(const CliPtr c) {
-  Area *r = getRegionCliSS(c);
+  Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x-1, r->y+1);
 }
 
 CliPtr rightC(const CliPtr c) {
-  Area *r = getRegionCliSS(c);
+  Rectangle *r = getRegionCliSS(c);
   return queryPointC(CLIVAL(c).ws, r->x + r->w + 1, r->y+1);
 }
 
@@ -451,73 +451,73 @@ Bool testIsFixedC(const CliPtr c, const void *p) {
 // Border Color
 Color onlyCurrBorderColorC(const CliPtr c) {
   if (isCurrCliSS(c))
-    return currBorderColorB;
-  return normBorderColorB;
+    return currBorderColorS;
+  return normBorderColorS;
 }
 
 Color allBorderColorC(const CliPtr c) {
   if (isCurrCliSS(c))
-    return currBorderColorB;
+    return currBorderColorS;
   else if (CLIVAL(c).isUrgent)
-    return urgtBorderColorB;
+    return urgtBorderColorS;
   else if (CLIVAL(c).freeLocFunc)
-    return freeBorderColorB;
+    return freeBorderColorS;
   else if (isPrevCliSS(c))
-    return prevBorderColorB;
-  return normBorderColorB;
+    return prevBorderColorS;
+  return normBorderColorS;
 }
 
 Color noBorderColorC(const CliPtr c) {
   (void)c;
-  return normBorderColorB;
+  return normBorderColorS;
 }
 
 // Border Width
 int alwaysBorderWidthC(const CliPtr c) {
   (void)c;
-  return borderWidthB;
+  return borderWidthS;
 }
 
 int smartBorderWidthC(const CliPtr c) {
   if (CLIVAL(c).isFullScreen)
     return 0;
   if (CLIVAL(c).freeLocFunc)
-    return borderWidthB;
+    return borderWidthS;
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
   if (l->arrangeFunc == floatArrL)
-    return borderWidthB;
+    return borderWidthS;
   if (findFixedClientW(CLIVAL(c).ws))
-    return borderWidthB;
-  Area *a = getRegionCliSS(c);
-  Area *as = getRegionStackSS(CLIVAL(c).ws);
+    return borderWidthS;
+  Rectangle *a = getRegionCliSS(c);
+  Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
   if (a->w == as->w && a->h == as->h)
     return 0;
-  return borderWidthB;
+  return borderWidthS;
 }
 
 int onlyCurrBorderWidthC(const CliPtr c) {
   if (isCurrCliSS(c))
-    return borderWidthB;
+    return borderWidthS;
   return 0;
 }
 
 // Border Gap
 int alwaysBorderGapC(const CliPtr c) {
   (void)c;
-  return borderGapB;
+  return borderGapS;
 }
 
 int smartBorderGapC(const CliPtr c) {
-  Area *a = getRegionCliSS(c);
-  Area *as = getRegionStackSS(CLIVAL(c).ws);
+  Rectangle *a = getRegionCliSS(c);
+  Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
   if (a->w == as->w && a->h == as->h)
     return 0;
-  return borderGapB;
+  return borderGapS;
 }
 
 int onlyCurrBorderGapC(const CliPtr c) {
   if (isCurrCliSS(c))
-    return borderGapB;
+    return borderGapS;
   return 0;
 }
 

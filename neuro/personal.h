@@ -10,7 +10,7 @@
 #define NEURO_PERSONAL_H_
 
 // Includes
-#include "general.h"
+#include "type.h"
 
 // Nnoell colors
 #define NNOELL_colorBlackP       "#020202"

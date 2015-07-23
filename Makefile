@@ -26,7 +26,7 @@ UNITSRC = cunit_test.c
 UNITOUT = cunit_test
 BINNAME = neurowm
 MAINSRC = main.c
-MODS = neurowm config dzenpanel event rule workspace layout client stackset base area general personal
+MODS = neurowm config dzenpanel event rule workspace layout client stackset system geometry type personal
 
 # Do not change
 OBJS = $(addprefix $(MODSDIR)/, $(addsuffix .o, $(MODS)))

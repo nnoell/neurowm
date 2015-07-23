@@ -15,7 +15,7 @@
 #define NEURO_RULE_H_
 
 // Includes
-#include "general.h"
+#include "type.h"
 
 // Defines
 #define notFreeR     NULL
@@ -37,10 +37,10 @@ void applyRuleR(const CliPtr c);
 void unapplyRuleR(const CliPtr c);
 
 // Free Locations
-void defFreeR(Area *a, const Area *r);
-void centerFreeR(Area *a, const Area *r);
-void bigCenterFreeR(Area *a, const Area *r);
-void scratchpadFreeR(Area *a, const Area *r);
+void defFreeR(Rectangle *a, const Rectangle *r);
+void centerFreeR(Rectangle *a, const Rectangle *r);
+void bigCenterFreeR(Rectangle *a, const Rectangle *r);
+void scratchpadFreeR(Rectangle *a, const Rectangle *r);
 
 
 #endif  // NEURO_RULE_H_

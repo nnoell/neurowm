@@ -13,7 +13,7 @@
 
 // Includes
 #include "dzenpanel.h"
-#include "base.h"
+#include "system.h"
 #include "stackset.h"
 
 
@@ -88,7 +88,7 @@ static void *updateThreadDP(void *args) {
   stopUpdateWhile = False;
   while (!stopUpdateWhile) {
     for (j = 0; j < PIP.numPanels; ++j) {
-      dp = dzenPanelSetB[ j ];
+      dp = dzenPanelSetS[ j ];
       if (dp->refreshRate == XEvDP || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
@@ -125,7 +125,7 @@ static void endUpdateThreadDP() {
 //----------------------------------------------------------------------------------------------------------------------
 
 Bool initDP() {
-  PIP.numPanels = ptrArrayLengthG((const void const *const *)dzenPanelSetB);
+  PIP.numPanels = ptrArrayLengthT((const void const *const *)dzenPanelSetS);
   PIP.pi = (PipeInfo *)calloc(PIP.numPanels, sizeof(PipeInfo));
   PIP.updateThread = -1;
   PIP.resetRate = 1;
@@ -136,16 +136,16 @@ Bool initDP() {
   for (i = 0; i < PIP.numPanels; ++i) {
     char *dzenCmd[ DZEN_ARGS_MAX ];
     char line[ DZEN_LINE_MAX ];
-    dp = dzenPanelSetB[ i ];
+    dp = dzenPanelSetS[ i ];
     if (dp->refreshRate > PIP.resetRate)
       PIP.resetRate *= dp->refreshRate;
     getDzenCmdDP(dzenCmd, line, dp->df);
-    PIP.pi[ i ].output = spawnPipeG((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
+    PIP.pi[ i ].output = spawnPipeS((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
     if (PIP.pi[ i ].output == -1)
       return False;
   }
   if (!initUpdateThreadDP())
-    exitErrorG("initDP - could not init thread to update panels");
+    exitErrorS("initDP - could not init thread to update panels");
   updateDP(False);
   return True;
 }
@@ -164,7 +164,7 @@ void updateDP(Bool onlyEvent) {
   const DzenPanel *dp;
   int i;
   for (i=0; i < PIP.numPanels; ++i) {
-    dp = dzenPanelSetB[ i ];
+    dp = dzenPanelSetS[ i ];
     if (onlyEvent) {
       if (dp->refreshRate == XEvDP || dp->refreshRate <= 0)
         updateDzenPanelDP(dp, PIP.pi[ i ].output);
@@ -325,7 +325,7 @@ Bool stopUpdateCpuPercWhile;
 static int getNumCpusDP(const char *file) {
   FILE *fd = fopen(file, "r");
   if (fd == NULL)
-    exitErrorG("getNumCpusDP - could not open file");
+    exitErrorS("getNumCpusDP - could not open file");
   int i = 0;
   char buf[ 256 ];
   while (fgets(buf, sizeof(buf), fd)) {
@@ -408,9 +408,9 @@ void startCpuCalcDP(Arg arg) {
   numCpus = getNumCpusDP(CPU_FILE_PATH);
   cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
   if (!cpusInfo)
-    exitErrorG("startCpuCalcDP - could not alloc cpusInfo");
+    exitErrorS("startCpuCalcDP - could not alloc cpusInfo");
   if (initCpuPercThreadDP())
-    exitErrorG("startCpuCalcDP - could not init thread to update cpus");
+    exitErrorS("startCpuCalcDP - could not init thread to update cpus");
 }
 
 void endCpuCalcDP(Arg arg) {

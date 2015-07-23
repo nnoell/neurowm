@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  general
+// Module      :  type
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
@@ -11,8 +11,8 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_GENERAL_H_
-#define NEURO_GENERAL_H_
+#ifndef NEURO_TYPE_H_
+#define NEURO_TYPE_H_
 
 // Includes
 #include <X11/keysym.h>
@@ -58,8 +58,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Area
-typedef struct Area Area;
-struct Area {
+typedef struct Rectangle Rectangle;
+struct Rectangle {
   int x;  // X position
   int y;  // Y position
   int w;  // Width
@@ -67,7 +67,7 @@ struct Area {
 };
 
 // FreeLocF
-typedef void (*FreeLocF)(Area *a, const Area *r);
+typedef void (*FreeLocF)(Rectangle *a, const Rectangle *r);
 
 // Color
 typedef unsigned long Color;
@@ -81,7 +81,7 @@ struct Client {
   char class[ NAME_MAX ];
   char name[ NAME_MAX ];
   char title[ NAME_MAX ];
-  Area floatRegion;
+  Rectangle floatRegion;
   Bool isHidden;
   Bool isFullScreen;
   FreeLocF freeLocFunc;
@@ -109,9 +109,9 @@ typedef Color (*ColorF)(const CliPtr c);
 typedef struct Arrange Arrange;
 struct Arrange {
   int size;                // Number of tiled clients
-  Area region;             // Tiled layout region
-  Area **cliRegions;       // Region of each client
-  Area **cliFloatRegions;  // Float region of each client
+  Rectangle region;             // Tiled layout region
+  Rectangle **cliRegions;       // Region of each client
+  Rectangle **cliFloatRegions;  // Float region of each client
   float *as;               // Settings of the arrange
 };
 
@@ -279,15 +279,11 @@ struct WMConfig {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Allocs and Frees
-Client *allocClientG(Window w, const XWindowAttributes *wa);
-void freeClientG(Client *c);
+Client *allocClientT(Window w, const XWindowAttributes *wa);
+void freeClientT(Client *c);
 
-size_t ptrArrayLengthG(const void *const *arrayPtr);
-void changeProcName(const char *newname);
-int spawnG(const char *const *cmd, pid_t *p);
-int spawnPipeG(const char *const *cmd, pid_t *p);
-void exitErrorG(const char *msg);
+// Useful type functions
+size_t ptrArrayLengthT(const void *const *arrayPtr);
 
-
-#endif  // NEURO_GENERAL_H_
+#endif  // NEURO_TYPE_H_
 

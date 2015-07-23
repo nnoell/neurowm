@@ -22,7 +22,7 @@
 // STACKSET SUITE
 //----------------------------------------------------------------------------------------------------------------------
 int init_stackset_suite(void) {
-  setConfigB(&defWMConfig);
+  setConfigS(&defWMConfig);
   if (!initSS())
     return -1;
   return 0;
@@ -42,7 +42,7 @@ void add_remove_client(void) {
   // Create a fake client
   const Window w = 0;
   const XWindowAttributes wa = (XWindowAttributes){.x = 0, .y = 0, .width = 500, .height = 500};
-  Client *cli = allocClientG(w, &wa);
+  Client *cli = allocClientT(w, &wa);
   CU_ASSERT_PTR_NOT_NULL(cli);
 
   // Add it to the stackset
@@ -55,7 +55,7 @@ void add_remove_client(void) {
   CU_ASSERT(cli == cli2);
 
   // Free the fake client
-  freeClientG(cli2);
+  freeClientT(cli2);
 }
 
 void set_curr_stack(void) {

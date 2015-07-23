@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  base
+// Module      :  system
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
@@ -11,11 +11,11 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_BASE_H_
-#define NEURO_BASE_H_
+#ifndef NEURO_SYSTEM_H_
+#define NEURO_SYSTEM_H_
 
 // Includes
-#include "general.h"
+#include "type.h"
 
 // Defines
 #define CLIENT_MASK (FocusChangeMask|PropertyChangeMask|StructureNotifyMask|EnterWindowMask)
@@ -36,23 +36,23 @@ extern const int screen;
 extern const Window root;
 extern const uint32_t xRes;
 extern const uint32_t yRes;
-extern const Area screenArea;
+extern const Rectangle screenArea;
 
 // Global configuration
-extern const Color normBorderColorB;
-extern const Color currBorderColorB;
-extern const Color prevBorderColorB;
-extern const Color freeBorderColorB;
-extern const Color urgtBorderColorB;
-extern const int borderWidthB;
-extern const int borderGapB;
-extern const Key *const *const keyBindingsB;
-extern const Button *const *const buttonBindingsB;
-extern const Rule *const *const ruleSetB;
-extern const Workspace *const *const workspaceSetB;
-extern const DzenPanel *const *const dzenPanelSetB;
-extern const WMFunc *const *const startUpHookB;
-extern const WMFunc *const *const endUpHookB;
+extern const Color normBorderColorS;
+extern const Color currBorderColorS;
+extern const Color prevBorderColorS;
+extern const Color freeBorderColorS;
+extern const Color urgtBorderColorS;
+extern const int borderWidthS;
+extern const int borderGapS;
+extern const Key *const *const keyBindingsS;
+extern const Button *const *const buttonBindingsS;
+extern const Rule *const *const ruleSetS;
+extern const Workspace *const *const workspaceSetS;
+extern const DzenPanel *const *const dzenPanelSetS;
+extern const WMFunc *const *const startUpHookS;
+extern const WMFunc *const *const endUpHookS;
 
 // Cursors and Atoms
 enum { CurNormal, CurResize, CurMove, CurLast };
@@ -68,19 +68,23 @@ extern const Atom netatoms[ NET_COUNT ];
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-void setConfigB(const WMConfig *c);
-Bool initB();
-void endB();
+void setConfigS(const WMConfig *c);
+Bool initS();
+void endS();
 
 // Binding functions
-void grabKeysB(Window w);
-void ungrabKeysB(Window w);
-void grabButtonsB(Window w);
-void ungrabButtonsB(Window w);
+void grabKeysS(Window w);
+void ungrabKeysS(Window w);
+void grabButtonsS(Window w);
+void ungrabButtonsS(Window w);
 
-// Other useful X functions
-Color getColorB(const char* color);
-void changeWMNameB(Arg arg);
+// Other useful functions
+Color getColorS(const char* color);
+void changeWMNameS(Arg arg);
+void changeProcNameS(const char *newname);
+int spawnS(const char *const *cmd, pid_t *p);
+int spawnPipeS(const char *const *cmd, pid_t *p);
+void exitErrorS(const char *msg);
 
-#endif  // NEURO_BASE_H_
+#endif  // NEURO_SYSTEM_H_
 

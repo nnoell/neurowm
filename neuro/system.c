@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  base
+// Module      :  system
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
-#include "base.h"
+#include "system.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE VARIABLE DEFINITION
@@ -36,23 +36,23 @@ const int screen;
 const Window root;
 const uint32_t xRes;
 const uint32_t yRes;
-const Area screenArea;
+const Rectangle screenArea;
 
 // Global configuration
-const Color normBorderColorB;
-const Color currBorderColorB;
-const Color prevBorderColorB;
-const Color freeBorderColorB;
-const Color urgtBorderColorB;
-const int borderWidthB;
-const int borderGapB;
-const Key *const *const keyBindingsB;
-const Button *const *const buttonBindingsB;
-const Rule *const *const ruleSetB;
-const Workspace *const *const workspaceSetB;
-const DzenPanel *const *const dzenPanelSetB;
-const WMFunc *const *const startUpHookB;
-const WMFunc *const *const endUpHookB;
+const Color normBorderColorS;
+const Color currBorderColorS;
+const Color prevBorderColorS;
+const Color freeBorderColorS;
+const Color urgtBorderColorS;
+const int borderWidthS;
+const int borderGapS;
+const Key *const *const keyBindingsS;
+const Button *const *const buttonBindingsS;
+const Rule *const *const ruleSetS;
+const Workspace *const *const workspaceSetS;
+const DzenPanel *const *const dzenPanelSetS;
+const WMFunc *const *const startUpHookS;
+const WMFunc *const *const endUpHookS;
 
 // Cursors and Atoms
 const Cursor cursors[ CurLast ];
@@ -65,10 +65,10 @@ const Atom netatoms[ NET_COUNT ];
 //----------------------------------------------------------------------------------------------------------------------
 
 // Starting error handler, used to check if another window manager is already running
-static int XErrorStartHandlerB(Display *d, XErrorEvent *ee) {
+static int XErrorStartHandlerS(Display *d, XErrorEvent *ee) {
   (void)d;
   (void)ee;
-  exitErrorG("XErrorStartHandlerB - another window manager is already running");
+  exitErrorS("XErrorStartHandlerS - another window manager is already running");
   return -1;
 }
 
@@ -90,7 +90,7 @@ static int XErrorHandlerB(Display *d, XErrorEvent *ee) {
   return -1;
 }
 
-static void setCursorsAndAtomsB() {
+static void setCursorsAndAtomsS() {
   // Cursors
   *(Cursor *)&cursors[ CurNormal ] = XCreateFontCursor(display, XC_left_ptr);
   *(Cursor *)&cursors[ CurResize ] = XCreateFontCursor(display, XC_bottom_right_corner);
@@ -118,25 +118,25 @@ static void setCursorsAndAtomsB() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-void setConfigB(const WMConfig *c) {
+void setConfigS(const WMConfig *c) {
   assert(c);
   *(const char **)&normBorderColor = c->normBorderColor;
   *(const char **)&currBorderColor = c->currBorderColor;
   *(const char **)&prevBorderColor = c->prevBorderColor;
   *(const char **)&freeBorderColor = c->freeBorderColor;
   *(const char **)&urgtBorderColor = c->urgtBorderColor;
-  *(int *)&borderWidthB = c->borderWidth;
-  *(int *)&borderGapB = c->borderGap;
-  *(const Key *const **)&keyBindingsB = c->keys;
-  *(const Button *const **)&buttonBindingsB = c->buttons;
-  *(const Rule *const **)&ruleSetB = c->ruleSet;
-  *(const Workspace *const **)&workspaceSetB = c->workspaceSet;
-  *(const DzenPanel *const **)&dzenPanelSetB = c->dzenPanelSet;
-  *(const WMFunc *const **)&startUpHookB = c->startUpHook;
-  *(const WMFunc *const **)&endUpHookB = c->endUpHook;
+  *(int *)&borderWidthS = c->borderWidth;
+  *(int *)&borderGapS = c->borderGap;
+  *(const Key *const **)&keyBindingsS = c->keys;
+  *(const Button *const **)&buttonBindingsS = c->buttons;
+  *(const Rule *const **)&ruleSetS = c->ruleSet;
+  *(const Workspace *const **)&workspaceSetS = c->workspaceSet;
+  *(const DzenPanel *const **)&dzenPanelSetS = c->dzenPanelSet;
+  *(const WMFunc *const **)&startUpHookS = c->startUpHook;
+  *(const WMFunc *const **)&endUpHookS = c->endUpHook;
 }
 
-Bool initB() {
+Bool initS() {
   // WM global variables
   *(Display **)&display = XOpenDisplay(NULL);
   if (!display)
@@ -145,18 +145,18 @@ Bool initB() {
   *(Window *)&root = RootWindow(display, screen);
   *(int *)&xRes = XDisplayWidth(display, screen);
   *(int *)&yRes = XDisplayHeight(display, screen);
-  *(Area *)&screenArea = (Area){ .x = xPos, .y = yPos, .w = xRes, .h = yRes };
-  *(Color *)&normBorderColorB = getColorB(normBorderColor);
-  *(Color *)&currBorderColorB = getColorB(currBorderColor);
-  *(Color *)&prevBorderColorB = getColorB(prevBorderColor);
-  *(Color *)&freeBorderColorB = getColorB(freeBorderColor);
-  *(Color *)&urgtBorderColorB = getColorB(urgtBorderColor);
+  *(Rectangle *)&screenArea = (Rectangle){ .x = xPos, .y = yPos, .w = xRes, .h = yRes };
+  *(Color *)&normBorderColorS = getColorS(normBorderColor);
+  *(Color *)&currBorderColorS = getColorS(currBorderColor);
+  *(Color *)&prevBorderColorS = getColorS(prevBorderColor);
+  *(Color *)&freeBorderColorS = getColorS(freeBorderColor);
+  *(Color *)&urgtBorderColorS = getColorS(urgtBorderColor);
 
   // Set cursors and atoms
-  setCursorsAndAtomsB();
+  setCursorsAndAtomsS();
 
   // Check if other window manager is already running
-  XSetErrorHandler(XErrorStartHandlerB);
+  XSetErrorHandler(XErrorStartHandlerS);
 
   // Setup root window mask
   XSetWindowAttributes wa;
@@ -171,12 +171,12 @@ Bool initB() {
   XSync(display, False);
 
   // Grab key bindings
-  grabKeysB(root);
+  grabKeysS(root);
 
   return True;
 }
 
-void endB() {
+void endS() {
   XFreeCursor(display, cursors[ CurNormal ]);
   XFreeCursor(display, cursors[ CurResize ]);
   XFreeCursor(display, cursors[ CurMove ]);
@@ -184,65 +184,111 @@ void endB() {
 }
 
 // Binding functions
-void grabKeysB(Window w) {
+void grabKeysS(Window w) {
   XUngrabKey(display, AnyKey, AnyModifier, w);
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; keyBindingsB[ i ]; ++i) {
-    k = keyBindingsB[ i ];
+  for (i = 0; keyBindingsS[ i ]; ++i) {
+    k = keyBindingsS[ i ];
     code = XKeysymToKeycode(display, k->keySym);
     if (code)
       XGrabKey(display, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
   }
 }
 
-void ungrabKeysB(Window w) {
+void ungrabKeysS(Window w) {
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; keyBindingsB[ i ]; ++i) {
-    k = keyBindingsB[ i ];
+  for (i = 0; keyBindingsS[ i ]; ++i) {
+    k = keyBindingsS[ i ];
     code = XKeysymToKeycode(display, k->keySym);
     if (code)
       XUngrabKey(display, code, k->mod, w);
   }
 }
 
-void grabButtonsB(Window w) {
+void grabButtonsS(Window w) {
   XUngrabButton(display, AnyButton, AnyModifier, w);
   const Button *b;
   int i;
-  for (i=0; buttonBindingsB[ i ]; ++i) {
-    b = buttonBindingsB[ i ];
+  for (i=0; buttonBindingsS[ i ]; ++i) {
+    b = buttonBindingsS[ i ];
     XGrabButton(display, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask,
         GrabModeAsync, GrabModeSync, None, None);
   }
 }
 
-void ungrabButtonsB(Window w) {
+void ungrabButtonsS(Window w) {
   const Button *b;
   int i;
-  for (i=0; buttonBindingsB[ i ]; ++i) {
-    b = buttonBindingsB[ i ];
+  for (i=0; buttonBindingsS[ i ]; ++i) {
+    b = buttonBindingsS[ i ];
     if (b->ungrabOnFocus)
       XUngrabButton(display, b->button, b->mod, w);
   }
 }
 
 // Other useful X functions
-Color getColorB(const char* color) {
+Color getColorS(const char* color) {
   XColor c;
   Colormap map = DefaultColormap(display, screen);
   if (!XAllocNamedColor(display, map, color, &c, &c))
-    exitErrorG("getColorB - could not allocate color");
+    exitErrorS("getColorS - could not allocate color");
   return c.pixel;
 }
 
-void changeWMNameB(Arg arg) {
+void changeWMNameS(Arg arg) {
   Atom netwmcheck = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
   Atom netwmname = XInternAtom(display, "_NET_WM_NAME", False);
   Atom utf8_str = XInternAtom(display, "UTF8_STRING", False);
   XChangeProperty(display, root, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root, 1);
   XChangeProperty(display, root, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)arg.str, strlen(arg.str));
+}
+
+void changeProcNameS(const char *newname) {
+  prctl(PR_SET_NAME, (unsigned long)newname, 0, 0, 0);
+}
+
+int spawnS(const char *const *cmd, pid_t *p) {
+  pid_t pid = fork();
+  if (pid == -1)
+    return -1;
+  if (!pid) {  // Child
+    if (display)
+      close(ConnectionNumber(display));
+    setsid();
+    execvp(cmd[ 0 ], (char *const *)cmd);
+    exitErrorS("spawnS - Could not execvp");
+  }
+  if (p)
+    *p = pid;
+  return 0;
+}
+
+int spawnPipeS(const char *const *cmd, pid_t *p) {
+  int filedes[ 2 ];
+  if (pipe(filedes))
+    return -1;
+  pid_t pid = fork();
+  if (pid < 0)
+    return -1;
+  if (pid == 0) {  // Child
+    if (display)
+      close(ConnectionNumber(display));
+    setsid();
+    dup2(filedes[ 0 ], STDIN_FILENO);
+    close(filedes[ 0 ]);
+    execvp(cmd[ 0 ], (char *const *)cmd);
+    exit(EXIT_FAILURE);
+  }
+  if (p)
+    *p = pid;
+  return filedes[ 1 ];
+}
+
+void exitErrorS(const char *msg) {
+  perror(msg);
+  exit(EXIT_FAILURE);
 }

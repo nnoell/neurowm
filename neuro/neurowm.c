@@ -13,7 +13,7 @@
 
 // Includes
 #include "neurowm.h"
-#include "base.h"
+#include "system.h"
 #include "stackset.h"
 #include "event.h"
 
@@ -35,14 +35,14 @@ static int recompileNeurowm(pid_t *pid) {
   snprintf(src, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
   char lib[ NAME_MAX ] = "/usr/lib/neuro/lib" WM_NAME ".a";
   const char *const cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
-  return spawnG(cmd, pid);
+  return spawnS(cmd, pid);
 }
 
 static void endNeurowm() {
   // End endup hook
   int i;
-  for (i = 0; endUpHookB[ i ]; ++i)
-    endUpHookB[ i ]->func(endUpHookB[ i ]->arg);
+  for (i = 0; endUpHookS[ i ]; ++i)
+    endUpHookS[ i ]->func(endUpHookS[ i ]->arg);
 
   // End panels
   endDP();
@@ -51,7 +51,7 @@ static void endNeurowm() {
   endSS();
 
   // End base
-  endB();
+  endS();
 }
 
 static void signalHandler(int signo) {
@@ -69,24 +69,24 @@ static void initNeurowm(const WMConfig *c) {
   assert(c);
 
   // Set configuration
-  setConfigB(c);
+  setConfigS(c);
 
   // Init base (must free with endB at some point)
-  if (!initB())
-    exitErrorG("initNeurowm - could not init Base");
+  if (!initS())
+    exitErrorS("initNeurowm - could not init Base");
 
   // Init stackset (must free with endSS at some point)
   if (!initSS())
-    exitErrorG("initNeurowm - could not init StackSet");
+    exitErrorS("initNeurowm - could not init StackSet");
 
   // Init panels (must free with endDP at some point)
   if (!initDP())
-    exitErrorG("initNeurowm - could not init Panels");
+    exitErrorS("initNeurowm - could not init Panels");
 
   // Init startup hook
   int i;
-  for (i = 0; startUpHookB[ i ]; ++i)
-    startUpHookB[ i ]->func(startUpHookB[ i ]->arg);
+  for (i = 0; startUpHookS[ i ]; ++i)
+    startUpHookS[ i ]->func(startUpHookS[ i ]->arg);
 
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, signalHandler))
@@ -102,7 +102,7 @@ static void initNeurowm(const WMConfig *c) {
 //----------------------------------------------------------------------------------------------------------------------
 
 void spawnN(Arg arg) {
-  spawnG(arg.com, NULL);
+  spawnS(arg.com, NULL);
 }
 
 void quitN(Arg arg) {
@@ -302,7 +302,7 @@ void toggleNSPN(Arg arg) {
     moveCliToWorkspaceW(c, ws);
   } else {
     if (!getSizeNSPSS())
-      spawnG(arg.com, NULL);
+      spawnS(arg.com, NULL);
     else
       moveCliToWorkspaceW(getCurrCliNSPStackSS(), ws);
   }

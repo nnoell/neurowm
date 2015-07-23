@@ -13,8 +13,8 @@
 
 // Includes
 #include "rule.h"
-#include "area.h"
-#include "base.h"
+#include "geometry.h"
+#include "system.h"
 #include "stackset.h"
 #include "client.h"
 #include "workspace.h"
@@ -65,7 +65,7 @@ static void setRuleR(Client *c, const Rule *r) {
   c->isFullScreen = r->isFullScreen;
   c->freeLocFunc = r->freeLocFunc;
   c->fixPos = r->fixPos;
-  Area *reg = getRegionStackSS(c->ws);
+  Rectangle *reg = getRegionStackSS(c->ws);
   if (c->fixPos == upFixedR || c->fixPos == downFixedR)
     c->fixSize = r->fixSize * reg->h;
   else if (c->fixPos == leftFixedR || c->fixPos == rightFixedR)
@@ -80,7 +80,7 @@ static void setRuleR(Client *c, const Rule *r) {
 //----------------------------------------------------------------------------------------------------------------------
 
 Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
-  Client *c = allocClientG(w, wa);
+  Client *c = allocClientT(w, wa);
   if (!c)
     return NULL;
   if (isFreeSizeHintsR(c))
@@ -90,8 +90,8 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
   updateTitleC(&c);
   const Rule *r;
   int i;
-  for (i = 0; ruleSetB[ i ]; ++i) {
-    r = ruleSetB[ i ];
+  for (i = 0; ruleSetS[ i ]; ++i) {
+    r = ruleSetS[ i ];
     if (hasRuleR(c, r)) {
       setRuleR(c, r);
       break;
@@ -103,8 +103,8 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
 }
 
 void applyRuleR(const CliPtr c) {
-  Area *reg = getRegionStackSS(CLIVAL(c).ws);
-  Area *regc = getRegionCliSS(c);
+  Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
+  Rectangle *regc = getRegionCliSS(c);
   switch (CLIVAL(c).fixPos) {
     case upFixedR: {
       regc->x = reg->x;
@@ -158,7 +158,7 @@ void applyRuleR(const CliPtr c) {
 void unapplyRuleR(const CliPtr c) {
   if (CLIVAL(c).freeLocFunc)
     return;
-  Area *reg = getRegionStackSS(CLIVAL(c).ws);
+  Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
   switch (CLIVAL(c).fixPos) {
     case upFixedR: {
       reg->y -= CLIVAL(c).fixSize;
@@ -182,23 +182,23 @@ void unapplyRuleR(const CliPtr c) {
 }
 
 // Free Locations
-void defFreeR(Area *a, const Area *r) {
+void defFreeR(Rectangle *a, const Rectangle *r) {
   (void)a;
   (void)r;
 }
 
-void centerFreeR(Area *a, const Area *r) {
-  centerAreaInRegA(a, r);
+void centerFreeR(Rectangle *a, const Rectangle *r) {
+  centerRectangleInRegionG(a, r);
 }
 
-void bigCenterFreeR(Area *a, const Area *r) {
+void bigCenterFreeR(Rectangle *a, const Rectangle *r) {
   float size[ 4 ] = { 0.05f, 0.05f, 0.9f, 0.9f };
-  getRelativeAreaA(a, r, size);
-  centerAreaInRegA(a, r);
+  getRelativeRectangleG(a, r, size);
+  centerRectangleInRegionG(a, r);
 }
 
-void scratchpadFreeR(Area *a, const Area *r) {
+void scratchpadFreeR(Rectangle *a, const Rectangle *r) {
   float size[ 4 ] = { 0.00f, 0.00f, 1.00f, 0.75f };
-  getRelativeAreaA(a, r, size);
+  getRelativeRectangleG(a, r, size);
 }
 

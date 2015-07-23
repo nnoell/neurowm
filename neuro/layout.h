@@ -15,7 +15,7 @@
 #define NEURO_LAYOUT_H_
 
 // Includes
-#include "general.h"
+#include "type.h"
 
 // Defines
 #define notModL      0

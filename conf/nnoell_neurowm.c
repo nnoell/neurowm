@@ -46,7 +46,7 @@ static const char* songpcmd[] = { "/usr/bin/mpc", "prev", NULL };
 //----------------------------------------------------------------------------------------------------------------------
 
 // FUNCS                              FUNC            ARGS
-static const WMFunc chgwmname[] = { { changeWMNameB,  {.str = "LG3D"}   } };
+static const WMFunc chgwmname[] = { { changeWMNameS,  {.str = "LG3D"}   } };
 static const WMFunc loadxdef[]  = { { spawnN,         {.com = xdefload} } };
 static const WMFunc wallpaper[] = { { spawnN,         {.com = wallcmd}  } };
 static const WMFunc startcpu[]  = { { startCpuCalcDP, {NULL}            } };

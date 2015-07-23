@@ -13,8 +13,8 @@
 
 // Includes
 #include "event.h"
-#include "area.h"
-#include "base.h"
+#include "geometry.h"
+#include "system.h"
 #include "stackset.h"
 #include "layout.h"
 #include "client.h"
@@ -33,8 +33,8 @@ static void keyPressE(XEvent *e) {
   KeySym *keysym = XGetKeyboardMapping(display, ke.keycode, 1, &ks);
   const Key *k;
   int i;
-  for (i = 0; keyBindingsB[ i ]; ++i) {
-    k = keyBindingsB[ i ];
+  for (i = 0; keyBindingsS[ i ]; ++i) {
+    k = keyBindingsS[ i ];
     if (k->keySym == *keysym && k->mod == ke.state) {
       k->handler(k->arg);
       updateDP(True);
@@ -47,8 +47,8 @@ static void buttonPressE(XEvent *e) {
   XButtonPressedEvent *ev = &e->xbutton;
   const Button *b;
   int i;
-  for (i = 0; buttonBindingsB[ i ]; ++i) {
-    b = buttonBindingsB[ i ];
+  for (i = 0; buttonBindingsS[ i ]; ++i) {
+    b = buttonBindingsS[ i ];
     if (b->handler && b->button == ev->button && b->mod == ev->state) {
       b->handler(b->arg);
       updateDP(True);
@@ -69,7 +69,7 @@ static void destroyNotifyE(XEvent *e) {
   } else {
     Client *cli = rmvMinimizedCliSS(w);
     if (cli)
-      freeClientG(cli);
+      freeClientT(cli);
   }
   updateDP(True);
 }
@@ -82,7 +82,7 @@ static void unmapNotifyE(XEvent *e) {
   } else {
     Client *cli = rmvMinimizedCliSS(w);
     if (cli)
-      freeClientG(cli);
+      freeClientT(cli);
   }
   updateDP(True);
 }
@@ -211,10 +211,10 @@ void manageWindowE(Window w) {
   // Add client to the stackset
   Client *cli = allocCliAndSetRulesR(w, &wa);
   if (!cli)
-    exitErrorG("manageWindowE - could not alloc Client and set rules");
+    exitErrorS("manageWindowE - could not alloc Client and set rules");
   CliPtr c = addCliStartSS(cli);
   if (!c)
-    exitErrorG("manageWindowE - could not add client");
+    exitErrorS("manageWindowE - could not add client");
 
   // Transient windows
   Window trans = None;
@@ -222,9 +222,9 @@ void manageWindowE(Window w) {
     CLIVAL(c).freeLocFunc = defFreeR;
     CliPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
-      centerAreaInRegA(getRegionCliSS(c), getRegionCliSS(t));
+      centerRectangleInRegionG(getRegionCliSS(c), getRegionCliSS(t));
     else
-      centerAreaInRegA(getRegionCliSS(c), &screenArea);
+      centerRectangleInRegionG(getRegionCliSS(c), &screenArea);
   }
 
   // Set event mask
@@ -233,7 +233,7 @@ void manageWindowE(Window w) {
   // Map window
   hideC(c, False);
   XMapWindow(display, CLIVAL(c).win);
-  grabButtonsB(CLIVAL(c).win);
+  grabButtonsS(CLIVAL(c).win);
   const int ws = CLIVAL(c).ws;
   if (!isCurrStackSS(ws))
     return;
@@ -249,7 +249,7 @@ void unmanageCliE(CliPtr c) {
   rmvEnterNotifyMaskW(ws);
   unapplyRuleR(c);
   Client *cli = rmvCliSS(c);
-  freeClientG(cli);
+  freeClientT(cli);
   runCurrLayoutL(ws);
   updateFocusW(ws);
   addEnterNotifyMaskW(ws);
@@ -260,7 +260,7 @@ void loadWindowsE() {
   Window d1, d2, *wins = NULL;
   XWindowAttributes wa;
   if (!XQueryTree(display, root, &d1, &d2, &wins, &num))
-    exitErrorG("loadWindowsE - could not get windows");
+    exitErrorS("loadWindowsE - could not get windows");
   for (i = 0; i < num; ++i) {
     if (!XGetWindowAttributes(display, wins[ i ], &wa))
       continue;

@@ -15,7 +15,7 @@
 #define NEURO_NEUROWM_H_
 
 // Includes
-#include "base.h"
+#include "system.h"
 #include "config.h"
 #include "layout.h"
 #include "client.h"
