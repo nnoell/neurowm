@@ -24,10 +24,10 @@ static const char* termcmd[]  = { "/usr/bin/xterm", NULL };
 static const char* lchrcmd[]  = { "/usr/bin/gmrun", NULL };
 
 // Startup
-const WMFunc *defStartUpHook[] = { NULL };
+const WMFn *defStartUpHook[] = { NULL };
 
 // Endup
-const WMFunc *defEndUpHook[] = { NULL };
+const WMFn *defEndUpHook[] = { NULL };
 
 // Layouts
 static const LayoutConf tile[] = { {

@@ -41,8 +41,8 @@ extern const LayoutConf *defLayoutSet[];
 extern const LayoutConf *defTogLayoutSet[];
 
 // Default WMConfig fields fields
-extern const WMFunc *defStartUpHook[];
-extern const WMFunc *defEndUpHook[];
+extern const WMFn *defStartUpHook[];
+extern const WMFn *defEndUpHook[];
 extern const Button *defButtons[];
 extern const Key *defKeys[];
 extern const DzenPanel *defDzenPanelSet[];

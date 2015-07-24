@@ -46,17 +46,17 @@ static const char* songpcmd[] = { "/usr/bin/mpc", "prev", NULL };
 //----------------------------------------------------------------------------------------------------------------------
 
 // FUNCS                              FUNC            ARGS
-static const WMFunc chgwmname[] = { { changeWMNameN,  {.str = "LG3D"}   } };
-static const WMFunc loadxdef[]  = { { spawnN,         {.com = xdefload} } };
-static const WMFunc wallpaper[] = { { spawnN,         {.com = wallcmd}  } };
-static const WMFunc startcpu[]  = { { startCpuCalcDP, {NULL}            } };
-static const WMFunc endcpu[]    = { { endCpuCalcDP,   {NULL}            } };
+static const WMFn chgwmname[] = { { changeWMNameN,  {.str = "LG3D"}   } };
+static const WMFn loadxdef[]  = { { spawnN,         {.com = xdefload} } };
+static const WMFn wallpaper[] = { { spawnN,         {.com = wallcmd}  } };
+static const WMFn startcpu[]  = { { startCpuCalcDP, {NULL}            } };
+static const WMFn endcpu[]    = { { endCpuCalcDP,   {NULL}            } };
 
 // STARTUP
-static const WMFunc *myStartUpHook[] = { chgwmname, loadxdef, wallpaper, startcpu, NULL };
+static const WMFn *myStartUpHook[] = { chgwmname, loadxdef, wallpaper, startcpu, NULL };
 
 // ENDUP
-static const WMFunc *myEndUpHook[] = { endcpu, NULL };
+static const WMFn *myEndUpHook[] = { endcpu, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -169,7 +169,7 @@ static const Rule *myRuleSet[] = {
 static const DzenFlags topLeftDzenFlags[] = { {
   0, 0, 1500, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'l', DZENPANELFONT, "onstart=lower", "-p"
 } };
-static const Logger topLeftLoggers[] = {
+static const LoggerFn topLeftLoggers[] = {
   nnoellCurrLayoutLoggerP, nnoellCurrLayoutModLoggerP, nnoellCurrWSLoggerP, nnoellCurrTitleLoggerP, NULL
 };
 
@@ -177,7 +177,7 @@ static const Logger topLeftLoggers[] = {
 static const DzenFlags topRightDzenFlags[] = { {
   1500, 0, 420, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'r', DZENPANELFONT, "onstart=lower", "-p"
 } };
-static const Logger topRightLoggers[] = {
+static const LoggerFn topRightLoggers[] = {
   nnoellUptimeLoggerP, nnoellDateTimeLoggerP, NULL
 };
 
@@ -185,7 +185,7 @@ static const Logger topRightLoggers[] = {
 static const DzenFlags botLeftDzenFlags[] = { {
   0, 1064, 920, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'l', DZENPANELFONT, "onstart=lower", "-p"
 } };
-static const Logger botLeftLoggers[] = {
+static const LoggerFn botLeftLoggers[] = {
   nnoellCurrWSListLoggerP, nnoellCurrSizeStackLoggerP, nnoellCurrMinimizedCountLoggerP, NULL
 };
 
@@ -193,7 +193,7 @@ static const Logger botLeftLoggers[] = {
 static const DzenFlags botRightDzenFlags[] = { {
   920, 1064, 1000, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'r', DZENPANELFONT, "onstart=lower", "-p"
 } };
-static const Logger botRightLoggers[] = {
+static const LoggerFn botRightLoggers[] = {
   nnoellCPUUsageLoggerP, nnoellMemPercLoggerP, nnoellTempLoggerP, nnoellWifiStrengthLoggerP, NULL
 };
 

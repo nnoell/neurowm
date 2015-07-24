@@ -66,8 +66,8 @@ struct Rectangle {
   int h;  // Height
 };
 
-// FreeLocF
-typedef void (*FreeLocF)(Rectangle *a, const Rectangle *r);
+// FreeLocFn
+typedef void (*FreeLocFn)(Rectangle *a, const Rectangle *r);
 
 // Color
 typedef unsigned long Color;
@@ -84,7 +84,7 @@ struct Client {
   Rectangle floatRegion;
   Bool isHidden;
   Bool isFullScreen;
-  FreeLocF freeLocFunc;
+  FreeLocFn freeLocFn;
   unsigned int fixPos;  // Can be: notFixedR | upFixedR | downFixedR | leftFixedR | rightFixedR
   int fixSize;
   Bool isUrgent;
@@ -93,17 +93,17 @@ struct Client {
 // CliPtr
 typedef Client *const *CliPtr;
 
-// TestCliPtrFunc
-typedef Bool (*TestCliPtrFunc)(const CliPtr c, const void *const p);
+// TestCliPtrFn
+typedef Bool (*TestCliPtrFn)(const CliPtr c, const void *const p);
 
-// SelectCliF
-typedef CliPtr (*SelectCliF)(const CliPtr c);
+// SelectCliFn
+typedef CliPtr (*SelectCliFn)(const CliPtr c);
 
-// BorderF
-typedef int (*BorderF)(const CliPtr c);
+// BorderFn
+typedef int (*BorderFn)(const CliPtr c);
 
-// ColorF
-typedef Color (*ColorF)(const CliPtr c);
+// ColorFn
+typedef Color (*ColorFn)(const CliPtr c);
 
 // Arrange
 typedef struct Arrange Arrange;
@@ -115,16 +115,16 @@ struct Arrange {
   float *as;               // Settings of the arrange
 };
 
-// ArrangeF
-typedef Arrange *(*ArrangeF)(Arrange *);
+// ArrangeFn
+typedef Arrange *(*ArrangeFn)(Arrange *);
 
 // Layout
 typedef struct Layout Layout;
 struct Layout {
-  const ArrangeF arrangeFunc;
-  const ColorF borderColorFunc;
-  const BorderF borderWidthFunc;
-  const BorderF borderGapFunc;
+  const ArrangeFn arrangeFn;
+  const ColorFn borderColorFn;
+  const BorderFn borderWidthFn;
+  const BorderFn borderGapFn;
   const float *const region;
   unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   Bool followMouse;
@@ -135,10 +135,10 @@ struct Layout {
 typedef struct LayoutConf LayoutConf;
 struct LayoutConf {
   const char *const name;
-  const ArrangeF arrangeFunc;
-  const ColorF borderColorFunc;
-  const BorderF borderWidthFunc;
-  const BorderF borderGapFunc;
+  const ArrangeFn arrangeFn;
+  const ColorFn borderColorFn;
+  const BorderFn borderWidthFn;
+  const BorderFn borderGapFn;
   const float region[ 4 ];
   const unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   const Bool followMouse;
@@ -162,17 +162,17 @@ union Arg {
   const char *const str;
   const int i;
   const unsigned int ui;
-  const FreeLocF ff;
-  const SelectCliF sf;
+  const FreeLocFn ff;
+  const SelectCliFn sf;
 };
 
-// GeneralF
-typedef void (*GeneralF)(Arg arg);
+// GeneralFn
+typedef void (*GeneralFn)(Arg arg);
 
-// WMFunc
-typedef struct WMFunc WMFunc;
-struct WMFunc {
-  const GeneralF func;
+// WMFn
+typedef struct WMFn WMFn;
+struct WMFn {
+  const GeneralFn func;
   const Arg arg;
 };
 
@@ -181,7 +181,7 @@ typedef struct Key Key;
 struct Key {
   const unsigned int mod;
   const KeySym keySym;
-  const GeneralF handler;
+  const GeneralFn handler;
   const Arg arg;
 };
 
@@ -190,7 +190,7 @@ typedef struct Button Button;
 struct Button {
   const unsigned int mod;
   const unsigned int button;
-  const GeneralF handler;
+  const GeneralFn handler;
   const Arg arg;
   const Bool ungrabOnFocus;
 };
@@ -202,7 +202,7 @@ struct Rule {
   const char *const name;
   const char *const title;
   const Bool isFullScreen;
-  const FreeLocF freeLocFunc;
+  const FreeLocFn freeLocFn;
   const unsigned int fixPos;
   const float fixSize;
   const int workspace;
@@ -242,14 +242,14 @@ struct DzenFlags {
   const char *const extras;
 };
 
-// Logger
-typedef void (*const Logger)(char *);
+// LoggerFn
+typedef void (*const LoggerFn)(char *);
 
 // DzenPanel
 typedef struct DzenPanel DzenPanel;
 struct DzenPanel {
   const DzenFlags *const df;
-  const Logger *const loggers;
+  const LoggerFn *const loggers;
   const char *const sep;
   const int refreshRate;
 };
@@ -269,8 +269,8 @@ struct WMConfig {
   const DzenPanel *const *const dzenPanelSet;
   const Key *const *const keys;
   const Button *const *const buttons;
-  const WMFunc *const *const startUpHook;
-  const WMFunc *const *const endUpHook;
+  const WMFn *const *const startUpHook;
+  const WMFn *const *const endUpHook;
 };
 
 

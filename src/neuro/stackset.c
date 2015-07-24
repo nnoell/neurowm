@@ -245,10 +245,10 @@ static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
   assert(lc);
   size_t i;
   for (i = 0; i < size; ++i) {
-    *(ArrangeF *)&l[ i ].arrangeFunc = lc[ i ]->arrangeFunc;
-    *(ColorF *)&l[ i ].borderColorFunc = lc[ i ]->borderColorFunc;
-    *(BorderF *)&l[ i ].borderWidthFunc = lc[ i ]->borderWidthFunc;
-    *(BorderF *)&l[ i ].borderGapFunc = lc[ i ]->borderGapFunc;
+    *(ArrangeFn *)&l[ i ].arrangeFn = lc[ i ]->arrangeFn;
+    *(ColorFn *)&l[ i ].borderColorFn = lc[ i ]->borderColorFn;
+    *(BorderFn *)&l[ i ].borderWidthFn = lc[ i ]->borderWidthFn;
+    *(BorderFn *)&l[ i ].borderGapFn = lc[ i ]->borderGapFn;
     *(const float **)&l[ i ].region = lc[ i ]->region;
     l[ i ].mod = lc[ i ]->mod;
     l[ i ].followMouse = lc[ i ]->followMouse;
@@ -391,7 +391,7 @@ void setCurrCliSS(const CliPtr c) {
 }
 
 // First, search in the current stack, if is not there, search in the other stacks
-CliPtr findCliSS(const TestCliPtrFunc tcfn, const void *p) {
+CliPtr findCliSS(const TestCliPtrFn tcfn, const void *p) {
   CliPtr c = findCliStackSS(SS.curr, tcfn, p);
   if (c)
     return c;
@@ -611,7 +611,7 @@ CliPtr getLastCliStackSS(int ws) {
   return (CliPtr)(SS.stacks[ ws % SS.size ].last);
 }
 
-CliPtr findCliStackSS(int ws, const TestCliPtrFunc tcfn, const void *p) {
+CliPtr findCliStackSS(int ws, const TestCliPtrFn tcfn, const void *p) {
   assert(tcfn);
   Stack *s = SS.stacks + (ws % SS.size);
   Node *n;

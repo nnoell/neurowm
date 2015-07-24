@@ -25,12 +25,12 @@
 // Basic functions
 void updateW(int ws);
 void updateFocusW(int ws);
-void moveFocusW(const CliPtr c, const SelectCliF sf);
-void swapClientsW(const CliPtr c, const SelectCliF sf);
+void moveFocusW(const CliPtr c, const SelectCliFn sf);
+void swapClientsW(const CliPtr c, const SelectCliFn sf);
 void hideW(int ws, Bool doRules);
 void showW(int ws, Bool doRules);
 void tileW(int ws);
-void freeW(int ws, const FreeLocF ff);
+void freeW(int ws, const FreeLocFn ff);
 void changeToWorkspaceW(int ws);
 void moveCliToWorkspaceW(CliPtr c, int ws);
 void moveCliToWorkspaceAndFollowW(CliPtr c, int ws);

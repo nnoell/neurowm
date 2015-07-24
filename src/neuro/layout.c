@@ -32,7 +32,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   int i = 0, size = 0;
   CliPtr c;
   for (c=getHeadCliStackSS(ws); c; c=getNextCliSS(c)) {
-    if (!CLIVAL(c).freeLocFunc && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
+    if (!CLIVAL(c).freeLocFn && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
         rs = (Rectangle **)realloc(rs, size*sizeof(void *));
@@ -84,14 +84,14 @@ static void getLengthSizesL(int n, int length, int *xs, int *ws) {
 }
 
 // Arrange runners
-static Arrange *normalArrangeL(Arrange *a, ArrangeF af) {
+static Arrange *normalArrangeL(Arrange *a, ArrangeFn af) {
   assert(a);
   assert(af);
   af(a);
   return a;
 }
 
-static Arrange *mirrorArrangeL(Arrange *a, ArrangeF af) {
+static Arrange *mirrorArrangeL(Arrange *a, ArrangeFn af) {
   assert(a);
   assert(af);
   transpRectangleG(&a->region);
@@ -132,9 +132,9 @@ void runLayoutL(int ws, int i) {
     exitErrorS("runLayoutL - could not run layout");
   if (a->size) {  // Then run layout
     if (l->mod & mirrModL)
-      mirrorArrangeL(a, l->arrangeFunc);
+      mirrorArrangeL(a, l->arrangeFn);
     else
-      normalArrangeL(a, l->arrangeFunc);
+      normalArrangeL(a, l->arrangeFn);
     if (l->mod & reflXModL)
       reflXArrModL(a);
     if (l->mod & reflYModL)

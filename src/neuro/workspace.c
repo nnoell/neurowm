@@ -26,7 +26,7 @@
 
 static Bool isAboveTiledClientW(const CliPtr c) {
   assert(c);
-  return CLIVAL(c).freeLocFunc || CLIVAL(c).isFullScreen;
+  return CLIVAL(c).freeLocFn || CLIVAL(c).isFullScreen;
 }
 
 static void focusClientW(CliPtr c) {
@@ -95,7 +95,7 @@ void updateFocusW(int ws) {
   XRestackWindows(display, windows, n);
 }
 
-void moveFocusW(const CliPtr c, const SelectCliF sf) {
+void moveFocusW(const CliPtr c, const SelectCliFn sf) {
   if (!c || !sf)
     return;
   if (getSizeStackSS(CLIVAL(c).ws) < 2)
@@ -107,7 +107,7 @@ void moveFocusW(const CliPtr c, const SelectCliF sf) {
   updateFocusW(CLIVAL(dst).ws);
 }
 
-void swapClientsW(const CliPtr c, const SelectCliF sf) {
+void swapClientsW(const CliPtr c, const SelectCliFn sf) {
   if (!c || !sf)
     return;
   if (getSizeStackSS(CLIVAL(c).ws) < 2)
@@ -138,7 +138,7 @@ void tileW(int ws) {
     tileC(c);
 }
 
-void freeW(int ws, const FreeLocF ff) {
+void freeW(int ws, const FreeLocFn ff) {
   CliPtr c;
   for (c = getHeadCliStackSS(ws); c; c = getNextCliSS(c))
     freeC(c, ff);
@@ -165,7 +165,7 @@ void moveCliToWorkspaceW(CliPtr c, int ws) {
   if (oldws == ws)
     return;
   Rectangle oldArea = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  Bool isFree = CLIVAL(c).freeLocFunc != notFreeR;
+  Bool isFree = CLIVAL(c).freeLocFn != notFreeR;
   if (oldws == currws)
     hideC(c, True);
   if (isFree)

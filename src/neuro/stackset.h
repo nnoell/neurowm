@@ -36,7 +36,7 @@ CliPtr getCurrCliCurrStackSS();
 CliPtr getCurrCliNSPStackSS();
 void setCurrStackSS(int ws);
 void setCurrCliSS(const CliPtr c);
-CliPtr findCliSS(const TestCliPtrFunc tcfn, const void *p);
+CliPtr findCliSS(const TestCliPtrFn tcfn, const void *p);
 CliPtr findNSPCliSS();
 CliPtr addCliEndSS(const Client *c);
 CliPtr addCliStartSS(const Client *c);
@@ -66,7 +66,7 @@ CliPtr getCurrCliStackSS(int ws);
 CliPtr getPrevCliStackSS(int ws);
 CliPtr getHeadCliStackSS(int ws);
 CliPtr getLastCliStackSS(int ws);
-CliPtr findCliStackSS(int ws, const TestCliPtrFunc tcfn, const void *p);
+CliPtr findCliStackSS(int ws, const TestCliPtrFn tcfn, const void *p);
 
 // CliPtr
 Bool isCurrCliSS(const CliPtr c);

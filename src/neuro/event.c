@@ -229,7 +229,7 @@ void manageWindowE(Window w) {
   // Transient windows
   Window trans = None;
   if (XGetTransientForHint(display, CLIVAL(c).win, &trans)) {
-    CLIVAL(c).freeLocFunc = defFreeR;
+    CLIVAL(c).freeLocFn = defFreeR;
     CliPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
       centerRectangleInRegionG(getRegionCliSS(c), getRegionCliSS(t));
