@@ -1,3 +1,5 @@
-/neuro/*.o
-/build/*
-/test/myneurowm
+build/bin/neurowm
+build/bin/myneurowm_test
+build/bin/cunit_test
+build/obj/*.o
+build/lib/*.a
