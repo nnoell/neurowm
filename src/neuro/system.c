@@ -73,7 +73,7 @@ static int XErrorStartHandlerS(Display *d, XErrorEvent *ee) {
 }
 
 // Default error handler, which might call exit
-static int XErrorHandlerB(Display *d, XErrorEvent *ee) {
+static int XErrorHandlerS(Display *d, XErrorEvent *ee) {
   (void)d;
   (void)ee;
   if (ee->error_code == BadWindow \
@@ -167,7 +167,7 @@ Bool initS() {
   XSync(display, False);
 
   // Set custom X error handler
-  XSetErrorHandler(XErrorHandlerB);
+  XSetErrorHandler(XErrorHandlerS);
   XSync(display, False);
 
   // Grab key bindings
