@@ -102,32 +102,32 @@ static void initNeurowm(const WMConfig *c) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-void changeWMNameN(Arg arg) {
+void changeWMNameN(GenericAr arg) {
   assert(arg.com);
   changeWMNameS(arg.str);
 }
 
-void spawnN(Arg arg) {
+void spawnN(GenericAr arg) {
   assert(arg.com);
   spawnS(arg.com, NULL);
 }
 
-void quitN(Arg arg) {
+void quitN(GenericAr arg) {
   (void)arg;
   stopWhile = True;
 }
 
-void reloadN(Arg arg) {
+void reloadN(GenericAr arg) {
   (void)arg;
   signalHandler(SIGUSR1);
 }
 
-void killCliN(Arg arg) {
+void killCliN(GenericAr arg) {
   (void)arg;
   killC(getCurrCliCurrStackSS());
 }
 
-void moveFocusN(Arg arg) {
+void moveFocusN(GenericAr arg) {
   assert(arg.sf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -135,7 +135,7 @@ void moveFocusN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void swapCliN(Arg arg) {
+void swapCliN(GenericAr arg) {
   assert(arg.sf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -143,14 +143,14 @@ void swapCliN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void changeLayoutN(Arg arg) {
+void changeLayoutN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   changeLayoutL(ws, arg.i);
   addEnterNotifyMaskW(ws);
 }
 
-void resetLayoutN(Arg arg) {
+void resetLayoutN(GenericAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -158,27 +158,27 @@ void resetLayoutN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void increaseMasterN(Arg arg) {
+void increaseMasterN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   increaseMasterL(ws, arg.i);
   addEnterNotifyMaskW(ws);
 }
 
-void resizeMasterN(Arg arg) {
+void resizeMasterN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   resizeMasterL(ws, arg.i);
   addEnterNotifyMaskW(ws);
 }
 
-void changeToWorkspaceN(Arg arg) {
+void changeToWorkspaceN(GenericAr arg) {
   rmvEnterNotifyMaskW(arg.i);
   changeToWorkspaceW(arg.i);
   addEnterNotifyMaskW(arg.i);
 }
 
-void changeToPrevWorkspaceN(Arg arg) {
+void changeToPrevWorkspaceN(GenericAr arg) {
   (void)arg;
   const int ws = getPrevStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -186,7 +186,7 @@ void changeToPrevWorkspaceN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void changeToNextWorkspaceN(Arg arg) {
+void changeToNextWorkspaceN(GenericAr arg) {
   (void)arg;
   const int ws = getNextStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -194,7 +194,7 @@ void changeToNextWorkspaceN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void changeToLastWorkspaceN(Arg arg) {
+void changeToLastWorkspaceN(GenericAr arg) {
   (void)arg;
   const int ws = getLastStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -202,14 +202,14 @@ void changeToLastWorkspaceN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void toggleFreeCliN(Arg arg) {
+void toggleFreeCliN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   toggleFreeC(getCurrCliStackSS(ws), arg.ff);
   addEnterNotifyMaskW(ws);
 }
 
-void tileCliN(Arg arg) {
+void tileCliN(GenericAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -217,14 +217,14 @@ void tileCliN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void freeCliN(Arg arg) {
+void freeCliN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   freeC(getCurrCliStackSS(ws), arg.ff);
   addEnterNotifyMaskW(ws);
 }
 
-void normalCliN(Arg arg) {
+void normalCliN(GenericAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -232,7 +232,7 @@ void normalCliN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void fullScreenCliN(Arg arg) {
+void fullScreenCliN(GenericAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -240,7 +240,7 @@ void fullScreenCliN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void toggleFullScreenCliN(Arg arg) {
+void toggleFullScreenCliN(GenericAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -248,60 +248,60 @@ void toggleFullScreenCliN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void toggleFreePtrCliN(Arg arg) {
+void toggleFreePtrCliN(GenericAr arg) {
   moveFocusW(getCurrCliCurrStackSS(), pointerC);
   toggleFreeC(getCurrCliCurrStackSS(), arg.ff);
 }
 
-void toggleFullScreenPtrCliN(Arg arg) {
+void toggleFullScreenPtrCliN(GenericAr arg) {
   (void)arg;
   moveFocusW(getCurrCliCurrStackSS(), pointerC);
   toggleFullScreenC(getCurrCliCurrStackSS());
 }
 
-void freeMovePointerCliN(Arg arg) {
+void freeMovePointerCliN(GenericAr arg) {
   (void)arg;
   freeMovePointerC();
 }
 
-void freeResizePointerCliN(Arg arg) {
+void freeResizePointerCliN(GenericAr arg) {
   (void)arg;
   freeResizePointerC();
 }
 
-void movePointerCliN(Arg arg) {
+void movePointerCliN(GenericAr arg) {
   (void)arg;
   movePointerC();
 }
 
-void resizePointerCliN(Arg arg) {
+void resizePointerCliN(GenericAr arg) {
   (void)arg;
   resizePointerC();
 }
 
-void toggleLayoutModN(Arg arg) {
+void toggleLayoutModN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   togModCurrLayoutL(ws, arg.ui);
   addEnterNotifyMaskW(ws);
 }
 
-void toggleLayoutN(Arg arg) {
+void toggleLayoutN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
   togLayoutL(ws, arg.i);
   addEnterNotifyMaskW(ws);
 }
 
-void moveCliToWorkspaceN(Arg arg) {
+void moveCliToWorkspaceN(GenericAr arg) {
   moveCliToWorkspaceW(getCurrCliCurrStackSS(), arg.i % getSizeSS());
 }
 
-void moveCliToWorkspaceAndFollowN(Arg arg) {
+void moveCliToWorkspaceAndFollowN(GenericAr arg) {
   moveCliToWorkspaceAndFollowW(getCurrCliCurrStackSS(), arg.i % getSizeSS());
 }
 
-void toggleNSPN(Arg arg) {
+void toggleNSPN(GenericAr arg) {
   assert(arg.com);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -319,7 +319,7 @@ void toggleNSPN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void minimizeCliN(Arg arg) {
+void minimizeCliN(GenericAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
@@ -327,7 +327,7 @@ void minimizeCliN(Arg arg) {
   addEnterNotifyMaskW(ws);
 }
 
-void restoreCliN(Arg arg) {
+void restoreCliN(GenericAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);

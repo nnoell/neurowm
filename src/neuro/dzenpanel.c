@@ -431,7 +431,7 @@ static void endCpuPercThreadDP() {
 
 
 // Public function definition
-void startCpuCalcDP(Arg arg) {
+void startCpuCalcDP(GenericAr arg) {
   (void)arg;
   numCpus = getNumCpusDP(CPU_FILE_PATH);
   cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
@@ -441,7 +441,7 @@ void startCpuCalcDP(Arg arg) {
     exitErrorS("startCpuCalcDP - could not init thread to update cpus");
 }
 
-void endCpuCalcDP(Arg arg) {
+void endCpuCalcDP(GenericAr arg) {
   (void)arg;
   endCpuPercThreadDP();
   free(cpusInfo);

@@ -154,9 +154,9 @@ struct Workspace {
   const LayoutConf *const *const togLayouts;
 };
 
-// Arg
-typedef union Arg Arg;
-union Arg {
+// GenericAr
+typedef union GenericAr GenericAr;
+union GenericAr {
   const void *const v;
   const char *const *const com;
   const char *const str;
@@ -166,14 +166,14 @@ union Arg {
   const SelectCliFn sf;
 };
 
-// GeneralFn
-typedef void (*GeneralFn)(Arg arg);
+// GenericFn
+typedef void (*GenericFn)(GenericAr arg);
 
 // WMFn
 typedef struct WMFn WMFn;
 struct WMFn {
-  const GeneralFn func;
-  const Arg arg;
+  const GenericFn func;
+  const GenericAr arg;
 };
 
 // Key
@@ -181,8 +181,8 @@ typedef struct Key Key;
 struct Key {
   const unsigned int mod;
   const KeySym keySym;
-  const GeneralFn handler;
-  const Arg arg;
+  const GenericFn handler;
+  const GenericAr arg;
 };
 
 // Button
@@ -190,8 +190,8 @@ typedef struct Button Button;
 struct Button {
   const unsigned int mod;
   const unsigned int button;
-  const GeneralFn handler;
-  const Arg arg;
+  const GenericFn handler;
+  const GenericAr arg;
   const Bool ungrabOnFocus;
 };
 
