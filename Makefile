@@ -5,9 +5,9 @@
 # Version
 VERSION = 0.14
 
-
 # Compiler flags
 CC = gcc
+#DFLAGS = -DVERSION=\"${VERSION}\"
 DFLAGS = -DNDEBUG -DVERSION=\"${VERSION}\"
 CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -O3 ${DFLAGS}
 LDADD = -lX11 -pthread
