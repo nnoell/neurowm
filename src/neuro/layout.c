@@ -17,6 +17,7 @@
 #include "geometry.h"
 #include "stackset.h"
 #include "workspace.h"
+#include "rule.h"
 
 // Defines
 #define STEP_SIZE_REALLOC 32
@@ -32,7 +33,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   int i = 0, size = 0;
   CliPtr c;
   for (c=getHeadCliStackSS(ws); c; c=getNextCliSS(c)) {
-    if (!CLIVAL(c).freeLocFn && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
+    if (CLIVAL(c).freeLocFn == notFreeR && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
         rs = (Rectangle **)realloc(rs, size*sizeof(void *));

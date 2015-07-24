@@ -26,7 +26,7 @@
 
 static Bool isAboveTiledClientW(const CliPtr c) {
   assert(c);
-  return CLIVAL(c).freeLocFn || CLIVAL(c).isFullScreen;
+  return (CLIVAL(c).freeLocFn != notFreeR) || CLIVAL(c).isFullScreen;
 }
 
 static void focusClientW(CliPtr c) {

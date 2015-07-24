@@ -108,11 +108,11 @@ typedef Color (*ColorFn)(const CliPtr c);
 // Arrange
 typedef struct Arrange Arrange;
 struct Arrange {
-  int size;                // Number of tiled clients
+  int size;                     // Number of tiled clients
   Rectangle region;             // Tiled layout region
   Rectangle **cliRegions;       // Region of each client
   Rectangle **cliFloatRegions;  // Float region of each client
-  float *as;               // Settings of the arrange
+  float *as;                    // Settings of the arrange
 };
 
 // ArrangeFn

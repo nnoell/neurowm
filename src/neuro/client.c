@@ -213,7 +213,7 @@ void minimizeC(CliPtr c) {
 void tileC(CliPtr c) {
   if (!c)
     return;
-  if (!CLIVAL(c).freeLocFn)
+  if (CLIVAL(c).freeLocFn == notFreeR)
     return;
   CLIVAL(c).freeLocFn = notFreeR;
   applyRuleR(c);
@@ -235,7 +235,7 @@ void freeC(CliPtr c, const FreeLocFn ff) {
 void toggleFreeC(CliPtr c, const FreeLocFn ff) {
   if (!c)
     return;
-  if (CLIVAL(c).freeLocFn)
+  if (CLIVAL(c).freeLocFn != notFreeR)
     tileC(c);
   else
     freeC(c, ff);
@@ -330,7 +330,7 @@ void freeMovePointerC() {
   CliPtr c = queryPointerC(&rx, &ry);
   if (!c)
     return;
-  if (!CLIVAL(c).freeLocFn)
+  if (CLIVAL(c).freeLocFn == notFreeR)
     unapplyRuleR(c);
   CLIVAL(c).freeLocFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
@@ -359,7 +359,7 @@ void freeResizePointerC() {
   CliPtr c = queryPointerC(&rx, &ry);
   if (!c)
     return;
-  if (!CLIVAL(c).freeLocFn)
+  if (CLIVAL(c).freeLocFn == notFreeR)
     unapplyRuleR(c);
   CLIVAL(c).freeLocFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
@@ -484,7 +484,7 @@ Color allBorderColorC(const CliPtr c) {
     return currBorderColorS;
   else if (CLIVAL(c).isUrgent)
     return urgtBorderColorS;
-  else if (CLIVAL(c).freeLocFn)
+  else if (CLIVAL(c).freeLocFn != notFreeR)
     return freeBorderColorS;
   else if (isPrevCliSS(c))
     return prevBorderColorS;
@@ -506,7 +506,7 @@ int smartBorderWidthC(const CliPtr c) {
   assert(c);
   if (CLIVAL(c).isFullScreen)
     return 0;
-  if (CLIVAL(c).freeLocFn)
+  if (CLIVAL(c).freeLocFn != notFreeR)
     return borderWidthS;
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
   if (l->arrangeFn == floatArrL)

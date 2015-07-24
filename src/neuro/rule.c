@@ -118,7 +118,7 @@ void applyRuleR(const CliPtr c) {
       regc->y = reg->y;
       regc->w = reg->w;
       regc->h = CLIVAL(c).fixSize;
-      if (CLIVAL(c).freeLocFn)
+      if (CLIVAL(c).freeLocFn != notFreeR)
         break;
       reg->y += CLIVAL(c).fixSize;
       reg->h -= CLIVAL(c).fixSize;
@@ -130,7 +130,7 @@ void applyRuleR(const CliPtr c) {
       regc->y = reg->h - CLIVAL(c).fixSize;
       regc->w = reg->w;
       regc->h = CLIVAL(c).fixSize;
-      if (CLIVAL(c).freeLocFn)
+      if (CLIVAL(c).freeLocFn != notFreeR)
         break;
       reg->h -= CLIVAL(c).fixSize;
       XMoveResizeWindow(display, CLIVAL(c).win, regc->x, regc->y, regc->w, regc->h);
@@ -141,7 +141,7 @@ void applyRuleR(const CliPtr c) {
       regc->y = reg->y;
       regc->w = CLIVAL(c).fixSize;
       regc->h = reg->h;
-      if (CLIVAL(c).freeLocFn)
+      if (CLIVAL(c).freeLocFn != notFreeR)
         break;
       reg->x += CLIVAL(c).fixSize;
       reg->w -= CLIVAL(c).fixSize;
@@ -153,7 +153,7 @@ void applyRuleR(const CliPtr c) {
       regc->y = reg->y;
       regc->w = CLIVAL(c).fixSize;
       regc->h = reg->h;
-      if (CLIVAL(c).freeLocFn)
+      if (CLIVAL(c).freeLocFn != notFreeR)
         break;
       reg->w -= CLIVAL(c).fixSize;
       XMoveResizeWindow(display, CLIVAL(c).win, regc->x, regc->y, regc->w, regc->h);
@@ -164,7 +164,7 @@ void applyRuleR(const CliPtr c) {
 
 void unapplyRuleR(const CliPtr c) {
   assert(c);
-  if (CLIVAL(c).freeLocFn)
+  if (CLIVAL(c).freeLocFn != notFreeR)
     return;
   Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
   switch (CLIVAL(c).fixPos) {
