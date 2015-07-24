@@ -102,6 +102,11 @@ static void initNeurowm(const WMConfig *c) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
+void changeWMNameN(Arg arg) {
+  assert(arg.com);
+  changeWMNameS(arg.str);
+}
+
 void spawnN(Arg arg) {
   assert(arg.com);
   spawnS(arg.com, NULL);

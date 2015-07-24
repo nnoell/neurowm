@@ -80,7 +80,7 @@ void ungrabButtonsS(Window w);
 
 // Other useful functions
 Color getColorS(const char* color);
-void changeWMNameS(Arg arg);
+void changeWMNameS(const char* name);
 void changeProcNameS(const char *newname);
 int spawnS(const char *const *cmd, pid_t *p);
 int spawnPipeS(const char *const *cmd, pid_t *p);

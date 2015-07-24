@@ -30,6 +30,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Common binding functions
+void changeWMNameN(Arg arg);
 void spawnN(Arg arg);
 void quitN(Arg arg);
 void reloadN(Arg arg);

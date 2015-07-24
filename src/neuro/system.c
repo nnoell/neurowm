@@ -240,13 +240,13 @@ Color getColorS(const char* color) {
   return c.pixel;
 }
 
-void changeWMNameS(Arg arg) {
-  assert(arg.str);
+void changeWMNameS(const char *name) {
+  assert(name);
   Atom netwmcheck = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
   Atom netwmname = XInternAtom(display, "_NET_WM_NAME", False);
   Atom utf8_str = XInternAtom(display, "UTF8_STRING", False);
   XChangeProperty(display, root, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root, 1);
-  XChangeProperty(display, root, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)arg.str, strlen(arg.str));
+  XChangeProperty(display, root, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)name, strlen(name));
 }
 
 void changeProcNameS(const char *newname) {
