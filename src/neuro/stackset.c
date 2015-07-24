@@ -277,7 +277,7 @@ Client *pushMinimizedCliStackSS(Stack *s, Client *c) {
   assert(c);
   int newCount = s->minimizedNum + 1;
   if (!reallocMinimizedClientsIfNecessarySS(s, newCount))
-    exitErrorS("pushMinimizedCliStackSS - could not realloc");
+    return NULL;
   s->minimizedNum = newCount;
   s->minimizedClients[ newCount - 1 ] = c;
   return c;
@@ -290,7 +290,7 @@ Client *popMinimizedCliStackSS(Stack *s) {
   int newCount = s->minimizedNum - 1;
   Client *cli = s->minimizedClients[ newCount ];
   if (!reallocMinimizedClientsIfNecessarySS(s, newCount))
-    exitErrorS("pushMinimizedCliStackSS - could not realloc");
+    return NULL;
   s->minimizedNum = newCount;
   return cli;
 }

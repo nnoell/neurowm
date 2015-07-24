@@ -203,7 +203,7 @@ void restoreLastMinimizedW(int ws) {
     return;
   Client *cli = popMinimizedCliSS(ws);
   if (!cli)
-    exitErrorS("restoreLastMinimizedW - could not realloc");
+    exitErrorS("restoreLastMinimizedW - could not restore last minimized client");
   CliPtr c = addCliStartSS(cli);
   if (!c)
     exitErrorS("restoreLastMinimizedW - could not add client");

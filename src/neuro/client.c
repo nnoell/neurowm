@@ -203,7 +203,8 @@ void minimizeC(CliPtr c) {
   Client *cli = rmvCliSS(c);
   if (!cli)
     return;
-  pushMinimizedCliSS(cli);
+  if (!pushMinimizedCliSS(cli))
+    exitErrorS("minimizeC - could not minimize client");
   XMoveWindow(display, cli->win, xRes + 1, yRes + 1);  // Move client off screen
   runCurrLayoutL(cli->ws);
   updateFocusW(cli->ws);
