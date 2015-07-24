@@ -23,14 +23,14 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // FlagHandler
-typedef int (*FlagHandler)();
+typedef int (*const FlagHandler)();
 
 // FlagHandlers
 typedef struct FlagHandlers FlagHandlers;
 struct FlagHandlers {
-  char *name;
-  FlagHandler handler;
-  char *desc;
+  const char *const name;
+  const FlagHandler handler;
+  const char *const desc;
 };
 
 
@@ -38,15 +38,15 @@ struct FlagHandlers {
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int runCmd(char **cmd);
+static int runCmd(const char *const *cmd);
 // static pid_t getNeurowmPid();
 static int helpHandler();
 static int versionHandler();
 static int recompileHandler();
 // static int reloadHandler();
-static int runNeurowm(int argc, char **argv);
-static int runFlag(char *flgname);
-static int loopRunNeurowm(int argc, char **argv);
+static int runNeurowm(int argc, const char *const *argv);
+static int runFlag(const char *flgname);
+static int loopRunNeurowm(int argc, const char *const *argv);
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -67,7 +67,8 @@ static const FlagHandlers *allFlags[] = { helpFlag, versionFlag, recompileFlag, 
 // FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int runCmd(char **cmd) {
+static int runCmd(const char *const *cmd) {
+  assert(cmd);
   int res = 0, status;
   pid_t pid = fork();
   if (pid == -1) {
@@ -75,7 +76,7 @@ static int runCmd(char **cmd) {
     exit(EXIT_FAILURE);
   }
   if (!pid) {  // Child
-    res = execvp(cmd[ 0 ], cmd);
+    res = execvp(cmd[ 0 ], (char *const *)cmd);
     exit(EXIT_FAILURE);
   }
   waitpid(pid, &status, WUNTRACED);
@@ -110,7 +111,7 @@ static int recompileHandler() {
   snprintf(out, SNPRINTF_SIZE, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
   snprintf(src, SNPRINTF_SIZE, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
   char lib[ NAME_MAX ] = "/usr/lib/neuro/lib" WM_NAME ".a";
-  char *cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
+  const char *const cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
   return runCmd(cmd);
 }
 
@@ -123,18 +124,21 @@ static int recompileHandler() {
 //   return 0;
 // }
 
-static int runNeurowm(int argc, char **argv) {
-  char bin[ NAME_MAX ] = "", *cmd[ argc + 1 ];
+static int runNeurowm(int argc, const char *const *argv) {
+  assert(argv);
+  const char *cmd[ argc + 1 ];
+  char bin[ NAME_MAX ] = "";
   snprintf(bin, SNPRINTF_SIZE, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
   cmd[ 0 ] = bin;
   cmd[ argc ] = NULL;
   int i;
   for (i = 1; i < argc; ++i)
     cmd[ i ] = argv[ i ];
-  return runCmd(cmd);
+  return runCmd((const char *const *)cmd);
 }
 
-static int runFlag(char *flgname) {
+static int runFlag(const char *flgname) {
+  assert(flgname);
   int i;
   for (i=0; allFlags[ i ]; ++i)
     if (!strcmp(flgname, allFlags[ i ]->name)) {
@@ -146,7 +150,8 @@ static int runFlag(char *flgname) {
   return 1;
 }
 
-static int loopRunNeurowm(int argc, char **argv) {
+static int loopRunNeurowm(int argc, const char *const *argv) {
+  assert(argv);
   int res;
   do {
     res = runNeurowm(argc, argv);
@@ -158,7 +163,7 @@ static int loopRunNeurowm(int argc, char **argv) {
 // MAIN DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-int main(int argc, char **argv) {
+int main(int argc, const char *const *argv) {
   int runwm = 1, reswm = 0;
   if (argc > 1) {
     int i, res;
