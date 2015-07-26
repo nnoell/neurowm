@@ -104,43 +104,45 @@ clean:
 
 
 #-----------------------------------------------------------------------------------------------------------------------
-# INSTALL
+# INSTALL / UNINSTALL
 #-----------------------------------------------------------------------------------------------------------------------
 
-# Install
-install:
-	@echo
-	@echo -n ":: Copying headers to \"/usr/include/neuro\"...   "
+# Install no bin
+install_no_bin:
+	@echo -n ":: Installing headers...   "
 	@mkdir -p /usr/include/neuro
 	@cp $(HDRS) /usr/include/neuro
 	@echo "OK"
-	@echo -n ":: Copying lib to \"/usr/lib/neuro\"...   "
+	@echo -n ":: Installing library...   "
 	@mkdir -p /usr/lib/neuro
 	@cp $(TARGET_LIB_DIR)/$(TARGET_LIB_NAME) /usr/lib/neuro
 	@echo "OK"
-	@echo -n ":: Copying binary to \"/usr/bin\"...   "
-	@cp $(TARGET_BIN_DIR)/$(TARGET_BIN_NAME) /usr/bin
-	@echo "OK"
-	@echo -n ":: Copying man page to \"/usr/local/man/man1\"...   "
+	@echo -n ":: Installing man page...   "
 	@mkdir -p /usr/local/man/man1
 	@cp man/neurowm.1 /usr/local/man/man1
 	@chmod 644 /usr/local/man/man1/neurowm.1
 	@echo "OK"
-	@echo -e "Done!\n"
 
-# Uninstall
-uninstall:
-	@echo
-	@echo -n ":: Removing directory \"/usr/include/neuro\"...   "
+# Install
+install: install_no_bin
+	@echo -n ":: Installing binary...   "
+	@cp $(TARGET_BIN_DIR)/$(TARGET_BIN_NAME) /usr/bin
+	@echo "OK"
+
+# Uninstall no bin
+uninstall_no_bin:
+	@echo -n ":: Uninstalling headers...   "
 	@rm -rf /usr/include/neuro
 	@echo "OK"
-	@echo -n ":: Removing directory \"/usr/lib/neuro\"...   "
+	@echo -n ":: Uninstalling library...   "
 	@rm -rf /usr/lib/neuro
 	@echo "OK"
-	@echo -n ":: Removing binary \"/usr/bin/neuro\"...   "
-	@rm -rf /usr/bin/neuro
+	@echo -n ":: Uninstalling man page...   "
+	@rm -f /usr/local/man/man1/neurowm.1
 	@echo "OK"
-	@echo -n ":: Removing man page \"/usr/local/man/man1/neurowm.1\"...   "
-	@rm -rf /usr/local/man/man1/neurowm.1
+
+# Uninstall
+uninstall: uninstall_no_bin
+	@echo -n ":: Uninstalling binary...   "
+	@rm -f /usr/bin/neurowm
 	@echo "OK"
-	@echo -e "Done!\n"
