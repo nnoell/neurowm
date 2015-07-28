@@ -36,7 +36,7 @@ const int screen;
 const Window root;
 const uint32_t xRes;
 const uint32_t yRes;
-const Rectangle screenArea;
+const Rectangle screenRegion;
 
 // Global configuration
 const Color normBorderColorS;
@@ -145,7 +145,7 @@ Bool initS() {
   *(Window *)&root = RootWindow(display, screen);
   *(int *)&xRes = XDisplayWidth(display, screen);
   *(int *)&yRes = XDisplayHeight(display, screen);
-  *(Rectangle *)&screenArea = (Rectangle){ .x = xPos, .y = yPos, .w = xRes, .h = yRes };
+  *(Rectangle *)&screenRegion = (Rectangle){ .x = xPos, .y = yPos, .w = xRes, .h = yRes };
   *(Color *)&normBorderColorS = getColorS(normBorderColor);
   *(Color *)&currBorderColorS = getColorS(currBorderColor);
   *(Color *)&prevBorderColorS = getColorS(prevBorderColor);

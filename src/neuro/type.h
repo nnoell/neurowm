@@ -57,7 +57,7 @@
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Area
+// Rectangle
 typedef struct Rectangle Rectangle;
 struct Rectangle {
   int x;  // X position

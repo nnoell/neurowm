@@ -36,7 +36,7 @@ extern const int screen;
 extern const Window root;
 extern const uint32_t xRes;
 extern const uint32_t yRes;
-extern const Rectangle screenArea;
+extern const Rectangle screenRegion;
 
 // Global configuration
 extern const Color normBorderColorS;

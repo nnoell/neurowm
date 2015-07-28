@@ -164,19 +164,19 @@ void moveCliToWorkspaceW(CliPtr c, int ws) {
   int oldws = CLIVAL(c).ws, currws = getCurrStackSS();
   if (oldws == ws)
     return;
-  Rectangle oldArea = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
+  Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
   Bool isFree = CLIVAL(c).freeLocFn != notFreeR;
   if (oldws == currws)
     hideC(c, True);
   if (isFree)
-    memmove(&oldArea, getRegionCliSS(c), sizeof(Rectangle));
+    memmove(&oldRegion, getRegionCliSS(c), sizeof(Rectangle));
   Client *cli = rmvCliSS(c);
   cli->ws = ws;
   CliPtr c2 = addCliStartSS(cli);
   if (!c2)
     exitErrorS("moveCliToWorkspaceW - could not add client");
   if (isFree)
-    memmove(getRegionCliSS(c2), &oldArea, sizeof(Rectangle));
+    memmove(getRegionCliSS(c2), &oldRegion, sizeof(Rectangle));
   if (ws == currws)
     showC(c2, True);
   runCurrLayoutL(currws);

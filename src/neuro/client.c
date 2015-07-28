@@ -89,12 +89,12 @@ void updateC(const CliPtr c) {
 
   // Free windows
   if (CLIVAL(c).freeLocFn != notFreeR)
-    CLIVAL(c).freeLocFn(getRegionCliSS(c), &screenArea);
+    CLIVAL(c).freeLocFn(getRegionCliSS(c), &screenRegion);
 
   // Fullscreen windows
   Rectangle r;
   if (CLIVAL(c).isFullScreen)
-    memmove(&r, &screenArea, sizeof(Rectangle));
+    memmove(&r, &screenRegion, sizeof(Rectangle));
   else
     memmove(&r, getRegionCliSS(c), sizeof(Rectangle));
 

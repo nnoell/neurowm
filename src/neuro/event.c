@@ -234,7 +234,7 @@ void manageWindowE(Window w) {
     if (t)  // Always true, but still
       centerRectangleInRegionG(getRegionCliSS(c), getRegionCliSS(t));
     else
-      centerRectangleInRegionG(getRegionCliSS(c), &screenArea);
+      centerRectangleInRegionG(getRegionCliSS(c), &screenRegion);
   }
 
   // Set event mask
