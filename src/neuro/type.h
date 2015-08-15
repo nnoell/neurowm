@@ -39,6 +39,7 @@
 #define WM_NAME            "neurowm"
 #define WM_MYNAME          "myneurowm"
 #define WM_SCRATCHPAD_NAME "neurowm_scratchpad"
+#define WM_NO_ARG          {.p = NULL}
 
 // Default sizes
 #define NAME_MAX    256
@@ -102,16 +103,16 @@ typedef Bool (*TestCliPtrFn)(const CliPtr c, const void *const p);
 typedef CliPtr (*SelectCliFn)(const CliPtr c);
 
 
-// FUNCTIONAL TYPES ----------------------------------------------------------------------------------------------------
+// ACTION TYPES ----------------------------------------------------------------------------------------------------
 
 // GenericAr
 typedef union GenericAr GenericAr;
 union GenericAr {
+  const void *const p;
   const char c;
   const int i;
   const unsigned int ui;
   const float f;
-  const void *const v;
   const char *const *const com;
   const char *const str;
   const FreeLocFn ff;
@@ -121,9 +122,9 @@ union GenericAr {
 // GenericFn
 typedef void (*GenericFn)(GenericAr arg);
 
-// WMFn
-typedef struct WMFn WMFn;
-struct WMFn {
+// Action
+typedef struct Action Action;
+struct Action {
   const GenericFn func;
   const GenericAr arg;
 };
@@ -196,9 +197,8 @@ struct Workspace {
 typedef struct Key Key;
 struct Key {
   const unsigned int mod;
-  const KeySym keySym;
-  const GenericFn handler;
-  const GenericAr arg;
+  const KeySym key;
+  const Action action;
 };
 
 // Button
@@ -206,8 +206,7 @@ typedef struct Button Button;
 struct Button {
   const unsigned int mod;
   const unsigned int button;
-  const GenericFn handler;
-  const GenericAr arg;
+  const Action action;
   const Bool ungrabOnFocus;
 };
 
@@ -285,8 +284,8 @@ struct WMConfig {
   const DzenPanel *const *const dzenPanelSet;
   const Key *const *const keys;
   const Button *const *const buttons;
-  const WMFn *const *const startUpHook;
-  const WMFn *const *const endUpHook;
+  const Action *const *const startUpHook;
+  const Action *const *const endUpHook;
 };
 
 

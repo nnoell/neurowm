@@ -36,8 +36,8 @@ static void keyPressE(XEvent *e) {
   int i;
   for (i = 0; keyBindingsS[ i ]; ++i) {
     k = keyBindingsS[ i ];
-    if (k->keySym == *keysym && k->mod == ke.state) {
-      k->handler(k->arg);
+    if (k->key == *keysym && k->mod == ke.state) {
+      k->action.func(k->action.arg);
       updateDP(True);
     }
   }
@@ -51,8 +51,8 @@ static void buttonPressE(XEvent *e) {
   int i;
   for (i = 0; buttonBindingsS[ i ]; ++i) {
     b = buttonBindingsS[ i ];
-    if (b->handler && b->button == ev->button && b->mod == ev->state) {
-      b->handler(b->arg);
+    if (b->action.func && b->button == ev->button && b->mod == ev->state) {
+      b->action.func(b->action.arg);
       updateDP(True);
     }
   }

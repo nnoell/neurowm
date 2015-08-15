@@ -29,7 +29,6 @@
 #define defBorderGap   0
 
 // Arrange Settings
-#define noArrangeSettings {.v = NULL}
 #define defTallMasterNum  {.i = 1}
 #define defTallMasterSize {.f = 0.5f}
 #define defTallStepSize   {.f = 0.03f}
@@ -47,8 +46,8 @@ extern const LayoutConf *defLayoutSet[];
 extern const LayoutConf *defTogLayoutSet[];
 
 // Default WMConfig fields fields
-extern const WMFn *defStartUpHook[];
-extern const WMFn *defEndUpHook[];
+extern const Action *defStartUpHook[];
+extern const Action *defEndUpHook[];
 extern const Button *defButtons[];
 extern const Key *defKeys[];
 extern const DzenPanel *defDzenPanelSet[];

@@ -51,8 +51,8 @@ const Button *const *const buttonBindingsS;
 const Rule *const *const ruleSetS;
 const Workspace *const *const workspaceSetS;
 const DzenPanel *const *const dzenPanelSetS;
-const WMFn *const *const startUpHookS;
-const WMFn *const *const endUpHookS;
+const Action *const *const startUpHookS;
+const Action *const *const endUpHookS;
 
 // Cursors and Atoms
 const Cursor cursors[ CurLast ];
@@ -132,8 +132,8 @@ void setConfigS(const WMConfig *c) {
   *(const Rule *const **)&ruleSetS = c->ruleSet;
   *(const Workspace *const **)&workspaceSetS = c->workspaceSet;
   *(const DzenPanel *const **)&dzenPanelSetS = c->dzenPanelSet;
-  *(const WMFn *const **)&startUpHookS = c->startUpHook;
-  *(const WMFn *const **)&endUpHookS = c->endUpHook;
+  *(const Action *const **)&startUpHookS = c->startUpHook;
+  *(const Action *const **)&endUpHookS = c->endUpHook;
 }
 
 Bool initS() {
@@ -191,7 +191,7 @@ void grabKeysS(Window w) {
   int i;
   for (i = 0; keyBindingsS[ i ]; ++i) {
     k = keyBindingsS[ i ];
-    code = XKeysymToKeycode(display, k->keySym);
+    code = XKeysymToKeycode(display, k->key);
     if (code)
       XGrabKey(display, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
   }
@@ -203,7 +203,7 @@ void ungrabKeysS(Window w) {
   int i;
   for (i = 0; keyBindingsS[ i ]; ++i) {
     k = keyBindingsS[ i ];
-    code = XKeysymToKeycode(display, k->keySym);
+    code = XKeysymToKeycode(display, k->key);
     if (code)
       XUngrabKey(display, code, k->mod, w);
   }
