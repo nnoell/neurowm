@@ -184,7 +184,7 @@ void resetLayoutL(int ws) {
     lc = getLayoutConfStackSS(ws, i);
     l->mod = lc->mod;
     l->followMouse = lc->followMouse;
-    memmove(l->as, lc->as, sizeof(float)*ARRSET_MAX);
+    memmove(l->as, lc->as, sizeof(GenericAr)*ARRSET_MAX);
   }
   tileW(ws);
   setLayoutStackSS(ws, 0);
@@ -192,22 +192,22 @@ void resetLayoutL(int ws) {
   updateFocusW(ws);
 }
 
-void increaseMasterL(int ws, int s) {
-  float *as = getCurrLayoutStackSS(ws)->as;
-  int res = (int)as[ 0 ] + s;
+void increaseMasterL(int ws, int size) {
+  GenericAr *as = getCurrLayoutStackSS(ws)->as;
+  const int res = as[ 0 ].i + size;
   if (res < 1)
     return;
-  as[ 0 ] = (float)res;
+  *(int *)&(as[ 0 ].i) = res;
   runCurrLayoutL(ws);
   updateFocusW(ws);
 }
 
-void resizeMasterL(int ws, int r) {
-  float *as = getCurrLayoutStackSS(ws)->as;
-  float newmsize = as[ 1 ] + r * as[ 2 ];
-  if (newmsize <= 0 || newmsize >= 1)
+void resizeMasterL(int ws, float factor) {
+  GenericAr *as = getCurrLayoutStackSS(ws)->as;
+  const float newmsize = factor * as[ 2 ].f + as[ 1 ].f;
+  if (newmsize <= 0.0f || newmsize >= 1.0f)
     return;
-  as[ 1 ] = newmsize;
+  *(float *)&(as[ 1 ].f) = newmsize;
   runCurrLayoutL(ws);
   updateFocusW(ws);
 }
@@ -216,7 +216,7 @@ void resizeMasterL(int ws, int r) {
 Arrange *tallArrL(Arrange *a) {
   assert(a);
   int n = a->size;
-  int mn = (int)a->as[ 0 ], ms = (int)((float)a->as[ 1 ] * a->region.w);
+  int mn = a->as[ 0 ].i, ms = (int)(a->as[ 1 ].f * a->region.w);
   int nwindows = n <= mn ? n : mn;
   int ys[ n ], hs[ n ];
   memset(ys, 0, sizeof(ys));

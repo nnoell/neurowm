@@ -43,7 +43,7 @@
 // Default sizes
 #define NAME_MAX    256
 #define COLOR_MAX   8
-#define ARRSET_MAX  8
+#define ARRSET_MAX  4
 
 // Reload
 #define EXIT_RELOAD ((int)'R')
@@ -107,12 +107,13 @@ typedef CliPtr (*SelectCliFn)(const CliPtr c);
 // GenericAr
 typedef union GenericAr GenericAr;
 union GenericAr {
-  const void *const v;
-  const char *const *const com;
-  const char *const str;
+  const char c;
   const int i;
   const unsigned int ui;
   const float f;
+  const void *const v;
+  const char *const *const com;
+  const char *const str;
   const FreeLocFn ff;
   const SelectCliFn sf;
 };
@@ -146,7 +147,7 @@ struct Arrange {
   Rectangle region;             // Tiled layout region
   Rectangle **cliRegions;       // Region of each client
   Rectangle **cliFloatRegions;  // Float region of each client
-  float *as;                    // Settings of the arrange
+  GenericAr *as;                // Settings of the arrange
 };
 
 // ArrangeFn
@@ -162,7 +163,7 @@ struct Layout {
   const float *const region;
   unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   Bool followMouse;
-  float as[ ARRSET_MAX ];
+  GenericAr as[ ARRSET_MAX ];
 };
 
 
@@ -179,7 +180,7 @@ struct LayoutConf {
   const float region[ 4 ];
   const unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   const Bool followMouse;
-  const float as[ ARRSET_MAX ];
+  const GenericAr as[ ARRSET_MAX ];
 };
 
 // Workspace

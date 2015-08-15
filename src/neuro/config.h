@@ -28,7 +28,13 @@
 #define defBorderWidth 2
 #define defBorderGap   0
 
-// Mod
+// Arrange Settings
+#define noArrangeSettings {.v = NULL}
+#define defTallMasterNum  {.i = 1}
+#define defTallMasterSize {.f = 0.5f}
+#define defTallStepSize   {.f = 0.03f}
+
+// Modmask
 #define noModMask 0
 
 

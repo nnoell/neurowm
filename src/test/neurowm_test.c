@@ -21,6 +21,11 @@
 #define myBorderWidth 1
 #define myBorderGap 0
 
+// Arrange Settings
+#define myTallMasterNum  {.i = 1}
+#define myTallMasterSize {.f = 0.5f}
+#define myTallStepSize   {.f = 0.03f}
+
 // Modmask
 // #define myModMask Mod4Mask
 #define myModMask Mod1Mask
@@ -66,23 +71,23 @@ static const WMFn *myEndUpHook[] = { endcpu, NULL };
 // LAYOUTS (NAME, ARRANGE, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
 static const LayoutConf tile[] = { {
   "Tile", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {1.0f, 0.5f, 0.03f}
+  notModL, True, {myTallMasterNum, myTallMasterSize, myTallStepSize}
 } };
 static const LayoutConf mirr[] = { {
   "Mirr", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  mirrModL, True, {1.0f, 0.5f, 0.03f}
+  mirrModL, True, {myTallMasterNum, myTallMasterSize, myTallStepSize}
 } };
 static const LayoutConf grid[] = { {
   "Grid", gridArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  mirrModL|reflXModL|reflYModL, True, {0.0f}
+  mirrModL|reflXModL|reflYModL, True, {noArrangeSettings}
 } };
 static const LayoutConf full[] = { {
   "Full",  fullArrL,  allBorderColorC, smartBorderWidthC,  alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {0.0f}
+  notModL, True, {noArrangeSettings}
 } };
 static const LayoutConf floa[] = { {
   "Float", floatArrL, allBorderColorC, alwaysBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, False, {0.0f}
+  notModL, False, {noArrangeSettings}
 } };
 
 // LAYOUTSET
@@ -240,8 +245,8 @@ static const Key key24[] = { { myModMask,            XK_o,         toggleLayoutN
 static const Key key25[] = { { myModMask|ShiftMask,  XK_f,         toggleFullScreenCliN,   {NULL}                 } };
 static const Key key26[] = { { myModMask,            XK_comma,     increaseMasterN,        {.i =  1}              } };
 static const Key key27[] = { { myModMask,            XK_period,    increaseMasterN,        {.i = -1}              } };
-static const Key key28[] = { { myModMask,            XK_l,         resizeMasterN,          {.i =  1}              } };
-static const Key key29[] = { { myModMask,            XK_h,         resizeMasterN,          {.i = -1}              } };
+static const Key key28[] = { { myModMask,            XK_l,         resizeMasterN,          {.f =  1.0f}           } };
+static const Key key29[] = { { myModMask,            XK_h,         resizeMasterN,          {.f = -1.0f}           } };
 static const Key key30[] = { { myModMask,            XK_1,         changeToWorkspaceN,     {.i =  0}              } };
 static const Key key31[] = { { myModMask,            XK_2,         changeToWorkspaceN,     {.i =  1}              } };
 static const Key key32[] = { { myModMask,            XK_3,         changeToWorkspaceN,     {.i =  2}              } };

@@ -36,8 +36,8 @@ void togLayoutL(int ws, int l);
 void changeLayoutL(int ws, int s);
 void resetLayoutL(int ws);
 
-void increaseMasterL(int ws, int s);
-void resizeMasterL(int ws, int r);
+void increaseMasterL(int ws, int size);
+void resizeMasterL(int ws, float factor);
 
 // Layouts
 Arrange *tallArrL(Arrange *a);

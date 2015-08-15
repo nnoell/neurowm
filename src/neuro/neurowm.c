@@ -168,7 +168,7 @@ void increaseMasterN(GenericAr arg) {
 void resizeMasterN(GenericAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  resizeMasterL(ws, arg.i);
+  resizeMasterL(ws, arg.f);
   addEnterNotifyMaskW(ws);
 }
 
