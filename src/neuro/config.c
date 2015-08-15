@@ -31,24 +31,24 @@ const WMFn *defEndUpHook[] = { NULL };
 
 // Layouts
 static const LayoutConf tile[] = { {
-  "Tile", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC,
-  {0.0f, 0.0f, 1.0f, 1.0f}, notModL, True, {defTallMasterNum, defTallMasterSize, defTallStepSize}
+  "Tile", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f}, notModL, True,
+  {defTallMasterNum, defTallMasterSize, defTallStepSize, noArrangeSettings}
 } };
 static const LayoutConf mirr[] = { {
-  "Mirr", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC,
-  {0.0f, 0.0f, 1.0f, 1.0f}, mirrModL, True, {defTallMasterNum, defTallMasterSize, defTallStepSize}
+  "Mirr", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f}, mirrModL, True,
+  {defTallMasterNum, defTallMasterSize, defTallStepSize, noArrangeSettings}
 } };
 static const LayoutConf grid[] = { {
-  "Grid", gridArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC,
-  {0.0f, 0.0f, 1.0f, 1.0f}, notModL, True, {noArrangeSettings}
+  "Grid", gridArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f}, notModL, True,
+  {noArrangeSettings, noArrangeSettings, noArrangeSettings, noArrangeSettings}
 } };
 static const LayoutConf full[] = { {
-  "Full", fullArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC,
-  {0.0f, 0.0f, 1.0f, 1.0f}, notModL, True, {noArrangeSettings}
+  "Full", fullArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f}, notModL, True,
+  {noArrangeSettings, noArrangeSettings, noArrangeSettings, noArrangeSettings}
 } };
 static const LayoutConf floa[] = { {
-  "Float", floatArrL, allBorderColorC, alwaysBorderWidthC, alwaysBorderGapC,
-  {0.0f, 0.0f, 1.0f, 1.0f}, notModL, False, {noArrangeSettings}
+  "Float", floatArrL, allBorderColorC, alwaysBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f}, notModL, False,
+  {noArrangeSettings, noArrangeSettings, noArrangeSettings, noArrangeSettings}
 } };
 
 // Layouts

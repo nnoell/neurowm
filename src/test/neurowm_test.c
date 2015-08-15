@@ -71,23 +71,23 @@ static const WMFn *myEndUpHook[] = { endcpu, NULL };
 // LAYOUTS (NAME, ARRANGE, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
 static const LayoutConf tile[] = { {
   "Tile", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {myTallMasterNum, myTallMasterSize, myTallStepSize}
+  notModL, True, {myTallMasterNum, myTallMasterSize, myTallStepSize, noArrangeSettings}
 } };
 static const LayoutConf mirr[] = { {
   "Mirr", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  mirrModL, True, {myTallMasterNum, myTallMasterSize, myTallStepSize}
+  mirrModL, True, {myTallMasterNum, myTallMasterSize, myTallStepSize, noArrangeSettings}
 } };
 static const LayoutConf grid[] = { {
   "Grid", gridArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  mirrModL|reflXModL|reflYModL, True, {noArrangeSettings}
+  mirrModL|reflXModL|reflYModL, True, {noArrangeSettings, noArrangeSettings, noArrangeSettings, noArrangeSettings}
 } };
 static const LayoutConf full[] = { {
   "Full",  fullArrL,  allBorderColorC, smartBorderWidthC,  alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {noArrangeSettings}
+  notModL, True, {noArrangeSettings, noArrangeSettings, noArrangeSettings, noArrangeSettings}
 } };
 static const LayoutConf floa[] = { {
   "Float", floatArrL, allBorderColorC, alwaysBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, False, {noArrangeSettings}
+  notModL, False, {noArrangeSettings, noArrangeSettings, noArrangeSettings, noArrangeSettings}
 } };
 
 // LAYOUTSET
