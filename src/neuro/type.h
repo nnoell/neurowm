@@ -57,6 +57,8 @@
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
+// GEOMETRY TYPES ------------------------------------------------------------------------------------------------------
+
 // Rectangle
 typedef struct Rectangle Rectangle;
 struct Rectangle {
@@ -69,8 +71,8 @@ struct Rectangle {
 // FreeLocFn
 typedef void (*FreeLocFn)(Rectangle *a, const Rectangle *r);
 
-// Color
-typedef unsigned long Color;
+
+// CLIENT TYPES --------------------------------------------------------------------------------------------------------
 
 // Client
 typedef struct Client Client;
@@ -99,11 +101,43 @@ typedef Bool (*TestCliPtrFn)(const CliPtr c, const void *const p);
 // SelectCliFn
 typedef CliPtr (*SelectCliFn)(const CliPtr c);
 
-// BorderFn
-typedef int (*BorderFn)(const CliPtr c);
+
+// FUNCTIONAL TYPES ----------------------------------------------------------------------------------------------------
+
+// GenericAr
+typedef union GenericAr GenericAr;
+union GenericAr {
+  const void *const v;
+  const char *const *const com;
+  const char *const str;
+  const int i;
+  const unsigned int ui;
+  const float f;
+  const FreeLocFn ff;
+  const SelectCliFn sf;
+};
+
+// GenericFn
+typedef void (*GenericFn)(GenericAr arg);
+
+// WMFn
+typedef struct WMFn WMFn;
+struct WMFn {
+  const GenericFn func;
+  const GenericAr arg;
+};
+
+
+// LAYOUT TYPES --------------------------------------------------------------------------------------------------------
+
+// Color
+typedef unsigned long Color;
 
 // ColorFn
 typedef Color (*ColorFn)(const CliPtr c);
+
+// BorderFn
+typedef int (*BorderFn)(const CliPtr c);
 
 // Arrange
 typedef struct Arrange Arrange;
@@ -131,6 +165,9 @@ struct Layout {
   float as[ ARRSET_MAX ];
 };
 
+
+// CONFIG TYPES --------------------------------------------------------------------------------------------------------
+
 // LayoutConf
 typedef struct LayoutConf LayoutConf;
 struct LayoutConf {
@@ -152,28 +189,6 @@ struct Workspace {
   const int gaps[ 4 ];
   const LayoutConf *const *const layouts;
   const LayoutConf *const *const togLayouts;
-};
-
-// GenericAr
-typedef union GenericAr GenericAr;
-union GenericAr {
-  const void *const v;
-  const char *const *const com;
-  const char *const str;
-  const int i;
-  const unsigned int ui;
-  const FreeLocFn ff;
-  const SelectCliFn sf;
-};
-
-// GenericFn
-typedef void (*GenericFn)(GenericAr arg);
-
-// WMFn
-typedef struct WMFn WMFn;
-struct WMFn {
-  const GenericFn func;
-  const GenericAr arg;
 };
 
 // Key
