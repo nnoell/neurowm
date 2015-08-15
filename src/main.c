@@ -53,7 +53,7 @@ static int loopRunNeurowm(int argc, const char *const *argv);
 // VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Flags                                         NAME           HANDLER           DESC
+// Flags                                        NAME           HANDLER           DESC
 static const FlagHandlers helpFlag[]      = { { "--help",      helpHandler,      "Print this message"           } };
 static const FlagHandlers versionFlag[]   = { { "--version",   versionHandler,   "Print the version number"     } };
 static const FlagHandlers recompileFlag[] = { { "--recompile", recompileHandler, "Recompile your configuration" } };
@@ -164,15 +164,15 @@ static int loopRunNeurowm(int argc, const char *const *argv) {
 //----------------------------------------------------------------------------------------------------------------------
 
 int main(int argc, const char *const *argv) {
-  int runwm = 1, reswm = 0;
+  Bool runwm = True;
   if (argc > 1) {
     int i, res;
     for (i = 1; i < argc; ++i) {
       res = runFlag(argv[ i ]);
-      if (res == -1 || res == 0)  // -1 error, 0 dont run, 1 run wm
-        runwm = 0;
+      runwm = res != -1 && res != 0;  // res: -1 error, 0 dont run, 1 run wm
     }
   }
+  int reswm = 0;
   if (runwm)
     reswm = loopRunNeurowm(argc, argv);
   return reswm == -1 ? EXIT_FAILURE : EXIT_SUCCESS;
