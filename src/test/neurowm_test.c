@@ -238,8 +238,8 @@ static const Key key22[] = { { myModMask,            XK_y,         toggleLayoutM
 static const Key key23[] = { { myModMask,            XK_f,         toggleLayoutN,          {.i =  0}              } };
 static const Key key24[] = { { myModMask,            XK_o,         toggleLayoutN,          {.i =  1}              } };
 static const Key key25[] = { { myModMask|ShiftMask,  XK_f,         toggleFullScreenCliN,   {NULL}                 } };
-static const Key key26[] = { { myModMask|ShiftMask,  XK_comma,     increaseMasterN,        {.i =  1}              } };
-static const Key key27[] = { { myModMask|ShiftMask,  XK_period,    increaseMasterN,        {.i = -1}              } };
+static const Key key26[] = { { myModMask,            XK_comma,     increaseMasterN,        {.i =  1}              } };
+static const Key key27[] = { { myModMask,            XK_period,    increaseMasterN,        {.i = -1}              } };
 static const Key key28[] = { { myModMask,            XK_l,         resizeMasterN,          {.i =  1}              } };
 static const Key key29[] = { { myModMask,            XK_h,         resizeMasterN,          {.i = -1}              } };
 static const Key key30[] = { { myModMask,            XK_1,         changeToWorkspaceN,     {.i =  0}              } };
