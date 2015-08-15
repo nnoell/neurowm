@@ -35,8 +35,8 @@ void endDP();
 void updateDP(int onlyEvent);
 
 // CPU Calculation
-void startCpuCalcDP(GenericAr arg);
-void endCpuCalcDP(GenericAr arg);
+void startCpuCalcDP(ActionAr arg);
+void endCpuCalcDP(ActionAr arg);
 
 // Loggers
 void timeLoggerDP(char *str);

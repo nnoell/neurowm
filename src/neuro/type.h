@@ -39,7 +39,18 @@
 #define WM_NAME            "neurowm"
 #define WM_MYNAME          "myneurowm"
 #define WM_SCRATCHPAD_NAME "neurowm_scratchpad"
-#define WM_NO_ARG          {.p = NULL}
+
+// Arg
+#define NO_ARG       {.p = NULL}
+#define ARG_PTR(X)   {.p = (X)}
+#define ARG_CHAR(X)  {.c = (X)}
+#define ARG_INT(X)   {.i = (X)}
+#define ARG_UINT(X)  {.ui = (X)}
+#define ARG_FLOAT(X) {.f = (X)}
+#define ARG_STR(X)   {.str = (X)}
+#define ARG_CMD(X)   {.cmd = (X)}
+#define ARG_FLF(X)   {.flf = (X)}
+#define ARG_SCF(X)   {.scf = (X)}
 
 // Default sizes
 #define NAME_MAX    256
@@ -105,28 +116,28 @@ typedef CliPtr (*SelectCliFn)(const CliPtr c);
 
 // ACTION TYPES ----------------------------------------------------------------------------------------------------
 
-// GenericAr
-typedef union GenericAr GenericAr;
-union GenericAr {
+// ActionAr
+typedef union ActionAr ActionAr;
+union ActionAr {
   const void *const p;
   const char c;
   const int i;
   const unsigned int ui;
   const float f;
-  const char *const *const com;
   const char *const str;
-  const FreeLocFn ff;
-  const SelectCliFn sf;
+  const char *const *const cmd;
+  const FreeLocFn flf;
+  const SelectCliFn scf;
 };
 
-// GenericFn
-typedef void (*GenericFn)(GenericAr arg);
+// ActionFn
+typedef void (*ActionFn)(ActionAr arg);
 
 // Action
 typedef struct Action Action;
 struct Action {
-  const GenericFn func;
-  const GenericAr arg;
+  const ActionFn func;
+  const ActionAr arg;
 };
 
 
@@ -148,7 +159,7 @@ struct Arrange {
   Rectangle region;             // Tiled layout region
   Rectangle **cliRegions;       // Region of each client
   Rectangle **cliFloatRegions;  // Float region of each client
-  GenericAr *as;                // Settings of the arrange
+  ActionAr *as;                // Settings of the arrange
 };
 
 // ArrangeFn
@@ -164,7 +175,7 @@ struct Layout {
   const float *const region;
   unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   Bool followMouse;
-  GenericAr as[ ARRSET_MAX ];
+  ActionAr as[ ARRSET_MAX ];
 };
 
 
@@ -181,7 +192,7 @@ struct LayoutConf {
   const float region[ 4 ];
   const unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   const Bool followMouse;
-  const GenericAr as[ ARRSET_MAX ];
+  const ActionAr as[ ARRSET_MAX ];
 };
 
 // Workspace
