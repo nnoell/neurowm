@@ -212,7 +212,8 @@ void rmvEnterNotifyMaskW(int ws) {
 
 
 // Clients
-void moveFocusClientW(const CliPtr c, const SelectCliFn scf) {
+void moveFocusClientW(const CliPtr c, const SelectCliFn scf, const void *data) {
+  (void)data;
   if (!c || !scf)
     return;
   CliPtr dst = scf(c);
@@ -222,7 +223,8 @@ void moveFocusClientW(const CliPtr c, const SelectCliFn scf) {
   updateFocusW(CLIVAL(dst).ws);
 }
 
-void swapClientW(const CliPtr c, const SelectCliFn scf) {
+void swapClientW(const CliPtr c, const SelectCliFn scf, const void *data) {
+  (void)data;
   if (!c || !scf)
     return;
   CliPtr dst = scf(c);
@@ -231,19 +233,19 @@ void swapClientW(const CliPtr c, const SelectCliFn scf) {
   if (!swpClientSS(c, dst))
     return;
   updateW(CLIVAL(c).ws);
-  moveFocusClientW(c, scf);
+  moveFocusClientW(c, scf, NULL);
 }
 
-void updateClientW(const CliPtr c, const SelectCliFn scf) {
-  processClientW(updateC, c, scf, NULL);
+void updateClientW(const CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(updateC, c, scf, data);
 }
 
-void updateClassAndNameClientW(CliPtr c, const SelectCliFn scf) {
-  processClientW(updateClassAndNameC, c, scf, NULL);
+void updateClassAndNameClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(updateClassAndNameC, c, scf, data);
 }
 
-void updateTitleClientW(CliPtr c, const SelectCliFn scf) {
-  processClientW(updateTitleC, c, scf, NULL);
+void updateTitleClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(updateTitleC, c, scf, data);
 }
 
 void hideClientW(CliPtr c, const SelectCliFn scf, const void *doRules) {
@@ -254,24 +256,24 @@ void showClientW(CliPtr c, const SelectCliFn scf, const void *doRules) {
   processClientW(showC, c, scf, doRules);
 }
 
-void setUrgentClientW(CliPtr c, const SelectCliFn scf) {
-  processClientW(setUrgentC, c, scf, NULL);
+void setUrgentClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(setUrgentC, c, scf, data);
 }
 
-void unsetUrgentClientW(CliPtr c, const SelectCliFn scf) {
-  processClientW(unsetUrgentC, c, scf, NULL);
+void unsetUrgentClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(unsetUrgentC, c, scf, data);
 }
 
-void killClientW(const CliPtr c, const SelectCliFn scf) {
-  processClientW(killC, c, scf, NULL);
+void killClientW(const CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(killC, c, scf, data);
 }
 
-void minimizeClientW(const CliPtr c, const SelectCliFn scf) {
-  processClientW(minimizeC, c, scf, NULL);
+void minimizeClientW(const CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(minimizeC, c, scf, data);
 }
 
-void tileClientW(CliPtr c, const SelectCliFn scf) {
-  processClientW(tileC, c, scf, NULL);
+void tileClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(tileC, c, scf, data);
 }
 
 void freeClientW(CliPtr c, const SelectCliFn scf, const void *freeLocFn) {
@@ -282,16 +284,45 @@ void toggleFreeClientW(CliPtr c, const SelectCliFn scf, const void *freeLocFn) {
   processClientW(toggleFreeC, c, scf, freeLocFn);
 }
 
-void normalClientW(CliPtr c, const SelectCliFn scf) {
-  processClientW(normalC, c, scf, NULL);
+void normalClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(normalC, c, scf, data);
 }
 
-void fullScreenClientW(CliPtr c, const SelectCliFn scf) {
-  processClientW(fullScreenC, c, scf, NULL);
+void fullScreenClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(fullScreenC, c, scf, data);
 }
 
-void toggleFullScreenClientW(const CliPtr c, const SelectCliFn scf) {
-  processClientW(toggleFullScreenC, c, scf, NULL);
+void toggleFullScreenClientW(const CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(toggleFullScreenC, c, scf, data);
+}
+
+void moveClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(moveC, c, scf, data);
+}
+
+void resizeClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(resizeC, c, scf, data);
+}
+
+void freeMoveClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(freeMoveC, c, scf, data);
+}
+
+void freeResizeClientW(CliPtr c, const SelectCliFn scf, const void *data) {
+  processClientW(freeResizeC, c, scf, data);
+}
+
+
+// Get functions
+CliPtr getPtrClientW(int *x, int *y) {
+  assert(x);
+  assert(y);
+  Window rootw, childw;
+  int xc, yc;
+  unsigned state;
+  if (!XQueryPointer(display, root, &rootw, &childw, x, y, &xc, &yc, &state))
+    return NULL;
+  return findWindowClientAllW(childw);
 }
 
 

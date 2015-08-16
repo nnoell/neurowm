@@ -108,16 +108,19 @@ struct Client {
 typedef Client *const *CliPtr;
 
 // TestCliPtrFn
-typedef Bool (*TestCliPtrFn)(const CliPtr c, const void *const p);
+typedef Bool (*TestCliPtrFn)(CliPtr c, const void *p);
 
 // SelectCliFn
-typedef CliPtr (*SelectCliFn)(const CliPtr c);
+typedef CliPtr (*SelectCliFn)(CliPtr c);
 
 // GenericCliFn
-typedef void (*GenericCliFn)(const CliPtr c, const void *data);
+typedef void (*GenericCliFn)(CliPtr c, const void *data);
 
 
 // ACTION TYPES ----------------------------------------------------------------------------------------------------
+
+// GenericCliActionFn
+typedef void (*GenericCliActionFn)(CliPtr c, SelectCliFn gcf, const void *data);
 
 // ArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
 typedef union ArgFn ArgFn;
@@ -156,10 +159,10 @@ struct Action {
 typedef unsigned long Color;
 
 // ColorFn
-typedef Color (*ColorFn)(const CliPtr c);
+typedef Color (*ColorFn)(CliPtr c);
 
 // BorderFn
-typedef int (*BorderFn)(const CliPtr c);
+typedef int (*BorderFn)(CliPtr c);
 
 // Arrange
 typedef struct Arrange Arrange;

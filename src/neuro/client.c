@@ -59,17 +59,6 @@ static Bool setTitleAtomC(Client *c, Atom atom) {
   return True;
 }
 
-static CliPtr queryPointerC(int *x, int *y) {
-  assert(x);
-  assert(y);
-  Window rootw, childw;
-  int xc, yc;
-  unsigned state;
-  if (!XQueryPointer(display, root, &rootw, &childw, x, y, &xc, &yc, &state))
-    return NULL;
-  return findWindowClientAllW(childw);
-}
-
 static CliPtr queryPointC(int ws, int x, int y) {
   CliPtr c;
   for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c))
@@ -83,7 +72,7 @@ static CliPtr queryPointC(int ws, int x, int y) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-void updateC(const CliPtr c, const void *data) {
+void updateC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -182,7 +171,7 @@ void unsetUrgentC(CliPtr c, const void *data) {
   CLIVAL(c).isUrgent = False;
 }
 
-void killC(const CliPtr c, const void *data) {
+void killC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -284,12 +273,13 @@ void toggleFullScreenC(CliPtr c, const void *data) {
     fullScreenC(c, NULL);
 }
 
-void movePtrC() {
-  int rx, ry;
-  CliPtr c = queryPointerC(&rx, &ry);
+void moveC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
-  moveFocusClientW(c, selfC);
+  int rx, ry;
+  getPtrClientW(&rx, &ry);
+  moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
@@ -310,12 +300,13 @@ void movePtrC() {
   XUngrabPointer(display, CurrentTime);
 }
 
-void resizePtrC() {
-  int rx, ry;
-  CliPtr c = queryPointerC(&rx, &ry);
+void resizeC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
-  moveFocusClientW(c, selfC);
+  int rx, ry;
+  getPtrClientW(&rx, &ry);
+  moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
@@ -337,16 +328,17 @@ void resizePtrC() {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeMovePtrC() {
-  int rx, ry;
-  CliPtr c = queryPointerC(&rx, &ry);
+void freeMoveC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
+  int rx, ry;
+  getPtrClientW(&rx, &ry);
   if (CLIVAL(c).freeLocFn == notFreeR)
     unapplyRuleR(c);
   CLIVAL(c).freeLocFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
-  moveFocusClientW(c, selfC);
+  moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
@@ -366,16 +358,17 @@ void freeMovePtrC() {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeResizePtrC() {
-  int rx, ry;
-  CliPtr c = queryPointerC(&rx, &ry);
+void freeResizeC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
+  int rx, ry;
+  getPtrClientW(&rx, &ry);
   if (CLIVAL(c).freeLocFn == notFreeR)
     unapplyRuleR(c);
   CLIVAL(c).freeLocFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
-  moveFocusClientW(c, selfC);
+  moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurResize ], CurrentTime) != GrabSuccess)
     return;
@@ -455,12 +448,6 @@ CliPtr rightC(const CliPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLIVAL(c).ws, r->x + r->w + 1, r->y+1);
-}
-
-CliPtr pointerC(const CliPtr c) {
-  (void)c;
-  int x, y;
-  return queryPointerC(&x, &y);
 }
 
 // Test functions

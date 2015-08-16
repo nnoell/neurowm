@@ -107,7 +107,7 @@ static void enterNotifyE(XEvent *e) {
     return;
   if (isCurrClientSS(c))
     return;
-  moveFocusClientW(c, selfC);
+  moveFocusClientW(c, selfC, NULL);
   updateDP(True);
 }
 
@@ -137,7 +137,7 @@ static void focusInE(XEvent *e) {
     return;
   if (CLIVAL(c).win == e->xfocus.window)
     return;
-  moveFocusClientW(c, selfC);
+  moveFocusClientW(c, selfC, NULL);
   updateDP(True);
 }
 
@@ -156,7 +156,7 @@ static void clientMessageE(XEvent *e) {
     else if (e->xclient.data.l[0] == 2)  // _NET_WM_STATE_TOGGLE
       toggleFullScreenC(c, NULL);
   } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
-    moveFocusClientW(c, selfC);
+    moveFocusClientW(c, selfC, NULL);
   }
   updateDP(True);
 }
