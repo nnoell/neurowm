@@ -29,7 +29,7 @@ static Bool stopWhile = False;
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int recompileNeurowm(pid_t *pid) {
+static int recompileNeurowmN(pid_t *pid) {
   char out[ NAME_MAX ] = "", src[ NAME_MAX ] = "";
   snprintf(out, NAME_MAX, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
   snprintf(src, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
@@ -38,46 +38,49 @@ static int recompileNeurowm(pid_t *pid) {
   return spawnS(cmd, pid);
 }
 
-static void endNeurowm() {
+static void endNeurowmN() {
   // End endup hook
   int i;
   for (i = 0; endUpHookS[ i ]; ++i)
     endUpHookS[ i ]->func(endUpHookS[ i ]->arg);
-
-  endDP();  // End panels
-  endSS();  // End stackset
-  endS();   // End base
+  // End panels, stackset and base
+  endDP();
+  endSS();
+  endS();
 }
 
-static void signalHandler(int signo) {
+static void signalHandlerN(int signo) {
   if (signo == SIGUSR1) {
-    endNeurowm();
+    endNeurowmN();
     pid_t pid;
-    if (recompileNeurowm(&pid) == -1)
+    if (recompileNeurowmN(&pid) == -1)
       perror("signalHandler - Could not recompile neurowm");
     waitpid(pid, NULL, WUNTRACED);
     exit(EXIT_RELOAD);
   }
 }
 
-static void initNeurowm(const WMConfig *c) {
+static void initNeurowmN(const WMConfig *c) {
   if (!c)
     exitErrorS("initNeurowm - could not set configuration");
 
-  setConfigS(c);  // Set configuration
-  if (!initS())  // Init base (must free with endB at some point)
+  // Set configuration and init base, stackset and panels
+  setConfigS(c);
+  if (!initS())
     exitErrorS("initNeurowm - could not init Base");
-  if (!initSS())  // Init stackset (must free with endSS at some point)
+  if (!initSS())
     exitErrorS("initNeurowm - could not init StackSet");
-  if (!initDP())  // Init panels (must free with endDP at some point)
+  if (!initDP())
     exitErrorS("initNeurowm - could not init Panels");
 
-  int i;  // Init startup hook
+  // Init startup hook
+  int i;
   for (i = 0; startUpHookS[ i ]; ++i)
     startUpHookS[ i ]->func(startUpHookS[ i ]->arg);
+
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, signalHandler))
-  //   exitErrorG("initNeurowm - could not set SIGHUP handler");
+  //   exitErrorG("initNeurowmN - could not set SIGHUP handler");
 
   // Load existing windows if Xsesion was not closed
   loadWindowsE();
@@ -106,24 +109,29 @@ static void processCliActionN(const GenericCliActionFn gcaf, CliPtr c, const Sel
 //----------------------------------------------------------------------------------------------------------------------
 
 // Window Manager
-void changeWMNameN(ActionAr string_arg) {
-  assert(string_arg.string_);
-  changeWMNameS(string_arg.string_);
-}
-
 void spawnN(ActionAr command_arg) {
   assert(command_arg.command_);
   spawnS(command_arg.command_, NULL);
 }
 
-void quitN(ActionAr no_arg) {
+void sleepN(ActionAr int_arg) {
+  assert(int_arg.int_ >= 0);
+  sleep(int_arg.int_);
+}
+
+void changeNeurowmNameN(ActionAr string_arg) {
+  assert(string_arg.string_);
+  changeWMNameS(string_arg.string_);
+}
+
+void quitNeurowmN(ActionAr no_arg) {
   (void)no_arg;
   stopWhile = True;
 }
 
-void reloadN(ActionAr no_arg) {
+void reloadNeurowmN(ActionAr no_arg) {
   (void)no_arg;
-  signalHandler(SIGUSR1);
+  signalHandlerN(SIGUSR1);
 }
 
 
@@ -332,9 +340,9 @@ void toggleFreePtrClientN(ActionAr freeLocFn_arg)  {
 // NEUROWM
 //----------------------------------------------------------------------------------------------------------------------
 
-int neurowm(const WMConfig *c) {
+int runNeurowmN(const WMConfig *c) {
   // Init window manager
-  initNeurowm(c);
+  initNeurowmN(c);
 
   // Main loop
   XEvent ev;
@@ -343,7 +351,7 @@ int neurowm(const WMConfig *c) {
       eventsE[ ev.type ](&ev);
 
   // End window manager
-  endNeurowm();
+  endNeurowmN();
 
   return EXIT_SUCCESS;
 }

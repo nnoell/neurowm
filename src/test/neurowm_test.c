@@ -46,11 +46,11 @@ static const char* songpcmd[] = { "/usr/bin/mpc", "prev", NULL };
 //----------------------------------------------------------------------------------------------------------------------
 
 // ACTIONS (ACTION)
-static const Action action0[] = { { changeWMNameN,  ARG_STR("LG3D") }   };
-static const Action action1[] = { { spawnN,         ARG_CMD(xdefload) } };
-static const Action action2[] = { { spawnN,         ARG_CMD(wallcmd) }  };
-static const Action action3[] = { { startCpuCalcDP, NO_ARG }            };
-static const Action action4[] = { { endCpuCalcDP,   NO_ARG }            };
+static const Action action0[] = { { changeNeurowmNameN, ARG_STR("LG3D") } };
+static const Action action1[] = { { spawnN, ARG_CMD(xdefload) }           };
+static const Action action2[] = { { spawnN, ARG_CMD(wallcmd) }            };
+static const Action action3[] = { { startCpuCalcDP, NO_ARG }              };
+static const Action action4[] = { { endCpuCalcDP, NO_ARG }                };
 
 // STARTUP
 static const Action *myStartUpHook[] = { action0, action1, action2, action3, NULL };
@@ -265,8 +265,8 @@ static const Key key49[] = { { myModMask|ShiftMask,  XK_7,         { moveClientT
 static const Key key50[] = { { myModMask|ShiftMask,  XK_8,         { moveClientToWorkspaceN, ARG_INT(7) }          } };
 static const Key key51[] = { { myModMask|ShiftMask,  XK_9,         { moveClientToWorkspaceN, ARG_INT(8) }          } };
 static const Key key52[] = { { myModMask|ShiftMask,  XK_0,         { moveClientToWorkspaceN, ARG_INT(9) }          } };
-static const Key key53[] = { { myModMask|ShiftMask,  XK_q,         { quitN, NO_ARG }                               } };
-static const Key key54[] = { { myModMask,            XK_q,         { reloadN, NO_ARG }                             } };
+static const Key key53[] = { { myModMask|ShiftMask,  XK_q,         { quitNeurowmN, NO_ARG }                        } };
+static const Key key54[] = { { myModMask,            XK_q,         { reloadNeurowmN, NO_ARG }                      } };
 static const Key key55[] = { { Mod1Mask,             XK_F2,        { spawnN, ARG_CMD(lchrcmd) }                    } };
 static const Key key56[] = { { myModMask|ShiftMask,  XK_space,     { resetLayoutN, NO_ARG }                        } };
 static const Key key57[] = { { myModMask,            XK_n,         { minimizeCurrClientN, ARG_SCF(selfC) }         } };
@@ -337,7 +337,7 @@ static const WMConfig myWMConfig = {
 int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
-  return neurowm(&myWMConfig);
-  // return neurowm(&defWMConfig);
+  return runNeurowmN(&myWMConfig);
+  // return runNeurowmN(&defWMConfig);
 }
 

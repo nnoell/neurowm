@@ -30,10 +30,11 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Window Manager
-void changeWMNameN(ActionAr string_arg);
 void spawnN(ActionAr command_arg);
-void quitN(ActionAr no_arg);
-void reloadN(ActionAr no_arg);
+void sleepN(ActionAr int_arg);
+void changeNeurowmNameN(ActionAr string_arg);
+void quitNeurowmN(ActionAr no_arg);
+void reloadNeurowmN(ActionAr no_arg);
 
 // Layout
 void changeLayoutN(ActionAr int_arg);
@@ -53,7 +54,7 @@ void moveClientToWorkspaceAndFollowN(ActionAr int_arg);
 void restoreLastMinimizedN(ActionAr no_arg);
 void toggleNSPN(ActionAr command_arg);
 
-// Curr Client
+// CurrClient
 void moveFocusCurrClientN(ActionAr selectCliFn_arg);
 void swapCurrClientN(ActionAr selectCliFn_arg);
 void killCurrClientN(ActionAr selectCliFn_arg);
@@ -65,7 +66,7 @@ void minimizeCurrClientN(ActionAr selectCliFn_arg);
 void freeCurrClientN(ActionAr freeLocFn_arg);
 void toggleFreeCurrClientN(ActionAr freeLocFn_arg);
 
-// Ptr Client
+// PtrClient
 void moveFocusPtrClientN(ActionAr selectCliFn_arg);
 void freeMovePtrClientN(ActionAr selectCliFn_arg);
 void freeResizePtrClientN(ActionAr selectCliFn_arg);
@@ -75,8 +76,8 @@ void toggleFullScreenPtrClientN(ActionAr selectCliFn_arg);
 void freePtrClientN(ActionAr freeLocFn_arg);
 void toggleFreePtrClientN(ActionAr freeLocFn_arg);
 
-// Main function
-int neurowm(const WMConfig *c);
+// Main functions
+int runNeurowmN(const WMConfig *c);
 
 #endif  // NEURO_NEUROWM_H_
 
