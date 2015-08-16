@@ -32,18 +32,18 @@ int getLastStackSS();
 int getNSPStackSS();
 int getSizeSS();
 int getSizeNSPSS();
-CliPtr getCurrCliCurrStackSS();
-CliPtr getCurrCliNSPStackSS();
+CliPtr getCurrClientCurrStackSS();
+CliPtr getCurrClientNSPStackSS();
 void setCurrStackSS(int ws);
-void setCurrCliSS(const CliPtr c);
-CliPtr findCliSS(const TestCliPtrFn tcfn, const void *p);
-CliPtr findNSPCliSS();
-CliPtr addCliEndSS(const Client *c);
-CliPtr addCliStartSS(const Client *c);
-Client *rmvCliSS(CliPtr c);
-Client *pushMinimizedCliSS(Client *c);
-Client *popMinimizedCliSS(int ws);
-Client *rmvMinimizedCliSS(Window w);
+void setCurrClientSS(const CliPtr c);
+CliPtr findClientSS(const TestCliPtrFn tcfn, const void *p);
+CliPtr findNSPClientSS();
+CliPtr addClientEndSS(const Client *c);
+CliPtr addClientStartSS(const Client *c);
+Client *rmvClientSS(CliPtr c);
+Client *pushMinimizedClientSS(Client *c);
+Client *popMinimizedClientSS(int ws);
+Client *rmvMinimizedClientSS(Window w);
 
 // Stack
 Bool isCurrStackSS(int ws);
@@ -62,21 +62,21 @@ const LayoutConf *getLayoutConfStackSS(int ws, int i);
 Layout *getCurrLayoutStackSS(int ws);
 const LayoutConf *getCurrLayoutConfStackSS(int ws);
 Rectangle *getRegionStackSS(int ws);
-CliPtr getCurrCliStackSS(int ws);
-CliPtr getPrevCliStackSS(int ws);
-CliPtr getHeadCliStackSS(int ws);
-CliPtr getLastCliStackSS(int ws);
-CliPtr findCliStackSS(int ws, const TestCliPtrFn tcfn, const void *p);
+CliPtr getCurrClientStackSS(int ws);
+CliPtr getPrevClientStackSS(int ws);
+CliPtr getHeadClientStackSS(int ws);
+CliPtr getLastClientStackSS(int ws);
+CliPtr findClientStackSS(int ws, const TestCliPtrFn tcfn, const void *p);
 
 // CliPtr
-Bool isCurrCliSS(const CliPtr c);
-Bool isPrevCliSS(const CliPtr c);
-Bool isHeadCliSS(const CliPtr c);
-Bool isLastCliSS(const CliPtr c);
-Rectangle *getRegionCliSS(const CliPtr c);
-CliPtr getNextCliSS(const CliPtr c);
-CliPtr getPrevCliSS(const CliPtr c);
-CliPtr swpCliSS(const CliPtr c1, const CliPtr c2);
+Bool isCurrClientSS(const CliPtr c);
+Bool isPrevClientSS(const CliPtr c);
+Bool isHeadClientSS(const CliPtr c);
+Bool isLastClientSS(const CliPtr c);
+Rectangle *getRegionClientSS(const CliPtr c);
+CliPtr getNextClientSS(const CliPtr c);
+CliPtr getPrevClientSS(const CliPtr c);
+CliPtr swpClientSS(const CliPtr c1, const CliPtr c2);
 
 
 #endif  // NEURO_STACKSET_H_

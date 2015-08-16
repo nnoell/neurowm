@@ -277,7 +277,7 @@ void currLayoutLoggerDP(char *str) {
 
 void currTitleLoggerDP(char *str) {
   assert(str);
-  CliPtr c = getCurrCliStackSS(getCurrStackSS());
+  CliPtr c = getCurrClientStackSS(getCurrStackSS());
   if (c)
     strncpy(str, CLIVAL(c).title, LOGGER_MAX);
 }

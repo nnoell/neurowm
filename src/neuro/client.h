@@ -33,15 +33,15 @@ void setUrgentC(CliPtr c);
 void unsetUrgentC(CliPtr c);
 void minimizeC(CliPtr c);
 void tileC(CliPtr c);
-void freeC(CliPtr c, const FreeLocFn ff);
-void toggleFreeC(CliPtr c, const FreeLocFn ff);
+void freeC(CliPtr c, const FreeLocFn flf);
+void toggleFreeC(CliPtr c, const FreeLocFn flf);
 void normalC(CliPtr c);
 void fullScreenC(CliPtr c);
 void toggleFullScreenC(CliPtr c);
-void movePointerC();
-void resizePointerC();
-void freeMovePointerC();
-void freeResizePointerC();
+void movePtrC();
+void resizePtrC();
+void freeMovePtrC();
+void freeResizePtrC();
 
 // Select Functions
 CliPtr selfC(const CliPtr c);     // Client c itself

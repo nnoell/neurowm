@@ -72,8 +72,8 @@ static CliPtr queryPointerC(int *x, int *y) {
 
 static CliPtr queryPointC(int ws, int x, int y) {
   CliPtr c;
-  for (c=getHeadCliStackSS(ws); c; c=getNextCliSS(c))
-    if (isPointInRectangleG(getRegionCliSS(c), x, y))
+  for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c))
+    if (isPointInRectangleG(getRegionClientSS(c), x, y))
       break;
   return c;
 }
@@ -89,14 +89,14 @@ void updateC(const CliPtr c) {
 
   // Free windows
   if (CLIVAL(c).freeLocFn != notFreeR)
-    CLIVAL(c).freeLocFn(getRegionCliSS(c), &screenRegion);
+    CLIVAL(c).freeLocFn(getRegionClientSS(c), &screenRegion);
 
   // Fullscreen windows
   Rectangle r;
   if (CLIVAL(c).isFullScreen)
     memmove(&r, &screenRegion, sizeof(Rectangle));
   else
-    memmove(&r, getRegionCliSS(c), sizeof(Rectangle));
+    memmove(&r, getRegionClientSS(c), sizeof(Rectangle));
 
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
   int borderWidth = l->borderWidthFn(c);
@@ -162,7 +162,7 @@ void hideC(CliPtr c, Bool doRules) {  // Move off screen
     return;
   if (doRules)
     unapplyRuleR(c);
-  Rectangle *regc = getRegionCliSS(c);
+  Rectangle *regc = getRegionClientSS(c);
   regc->x += xRes;
   regc->y += yRes;
   XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
@@ -174,7 +174,7 @@ void showC(CliPtr c, Bool doRules) {  // Move back to screen
     return;
   if (!CLIVAL(c).isHidden)
     return;
-  Rectangle *regc = getRegionCliSS(c);
+  Rectangle *regc = getRegionClientSS(c);
   regc->x -= xRes;
   regc->y -= yRes;
   if (doRules)
@@ -198,12 +198,12 @@ void unsetUrgentC(CliPtr c) {
 void minimizeC(CliPtr c) {
   if (!c)
     return;
-  setCurrCliSS(getNextCliSS(c));
+  setCurrClientSS(getNextClientSS(c));
   unapplyRuleR(c);
-  Client *cli = rmvCliSS(c);
+  Client *cli = rmvClientSS(c);
   if (!cli)
     return;
-  if (!pushMinimizedCliSS(cli))
+  if (!pushMinimizedClientSS(cli))
     exitErrorS("minimizeC - could not minimize client");
   XMoveWindow(display, cli->win, xRes + 1, yRes + 1);  // Move client off screen
   runCurrLayoutL(cli->ws);
@@ -221,24 +221,24 @@ void tileC(CliPtr c) {
   updateFocusW(CLIVAL(c).ws);
 }
 
-void freeC(CliPtr c, const FreeLocFn ff) {
+void freeC(CliPtr c, const FreeLocFn flf) {
   if (!c)
     return;
-  if (CLIVAL(c).freeLocFn == ff)
+  if (CLIVAL(c).freeLocFn == flf)
     return;
-  CLIVAL(c).freeLocFn = ff;
+  CLIVAL(c).freeLocFn = flf;
   unapplyRuleR(c);
   runCurrLayoutL(CLIVAL(c).ws);
   updateFocusW(CLIVAL(c).ws);
 }
 
-void toggleFreeC(CliPtr c, const FreeLocFn ff) {
+void toggleFreeC(CliPtr c, const FreeLocFn flf) {
   if (!c)
     return;
   if (CLIVAL(c).freeLocFn != notFreeR)
     tileC(c);
   else
-    freeC(c, ff);
+    freeC(c, flf);
 }
 
 void normalC(CliPtr c) {
@@ -272,12 +272,12 @@ void toggleFullScreenC(CliPtr c) {
     fullScreenC(c);
 }
 
-void movePointerC() {
+void movePtrC() {
   int rx, ry;
   CliPtr c = queryPointerC(&rx, &ry);
   if (!c)
     return;
-  moveFocusW(c, selfC);
+  moveFocusClientW(c, selfC);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
@@ -298,12 +298,12 @@ void movePointerC() {
   XUngrabPointer(display, CurrentTime);
 }
 
-void resizePointerC() {
+void resizePtrC() {
   int rx, ry;
   CliPtr c = queryPointerC(&rx, &ry);
   if (!c)
     return;
-  moveFocusW(c, selfC);
+  moveFocusClientW(c, selfC);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
@@ -325,7 +325,7 @@ void resizePointerC() {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeMovePointerC() {
+void freeMovePtrC() {
   int rx, ry;
   CliPtr c = queryPointerC(&rx, &ry);
   if (!c)
@@ -334,12 +334,12 @@ void freeMovePointerC() {
     unapplyRuleR(c);
   CLIVAL(c).freeLocFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
-  moveFocusW(c, selfC);
+  moveFocusClientW(c, selfC);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
 
-  Rectangle *r = getRegionCliSS(c);
+  Rectangle *r = getRegionClientSS(c);
   int cx = r->x, cy = r->y;
   XEvent ev;
   do {
@@ -354,7 +354,7 @@ void freeMovePointerC() {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeResizePointerC() {
+void freeResizePtrC() {
   int rx, ry;
   CliPtr c = queryPointerC(&rx, &ry);
   if (!c)
@@ -363,12 +363,12 @@ void freeResizePointerC() {
     unapplyRuleR(c);
   CLIVAL(c).freeLocFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
-  moveFocusW(c, selfC);
+  moveFocusClientW(c, selfC);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurResize ], CurrentTime) != GrabSuccess)
     return;
 
-  Rectangle *r = getRegionCliSS(c);
+  Rectangle *r = getRegionClientSS(c);
   XWarpPointer(display, None, CLIVAL(c).win, 0, 0, 0, 0, r->w, r->h);
   int cw = r->w, ch = r->h;
   XEvent ev;
@@ -392,56 +392,56 @@ CliPtr selfC(const CliPtr c) {
 
 CliPtr nextC(const CliPtr c) {
   assert(c);
-  CliPtr n = getNextCliSS(c);
+  CliPtr n = getNextClientSS(c);
   if (!n)
-    n = getHeadCliStackSS(CLIVAL(c).ws);
+    n = getHeadClientStackSS(CLIVAL(c).ws);
   return n;
 }
 
 CliPtr prevC(const CliPtr c) {
   assert(c);
-  CliPtr p = getPrevCliSS(c);
+  CliPtr p = getPrevClientSS(c);
   if (!p)
-    p = getLastCliStackSS(CLIVAL(c).ws);
+    p = getLastClientStackSS(CLIVAL(c).ws);
   return p;
 }
 
 CliPtr oldC(const CliPtr c) {
   assert(c);
-  return getPrevCliStackSS(CLIVAL(c).ws);
+  return getPrevClientStackSS(CLIVAL(c).ws);
 }
 
 CliPtr headC(const CliPtr c) {
   assert(c);
-  return getHeadCliStackSS(CLIVAL(c).ws);
+  return getHeadClientStackSS(CLIVAL(c).ws);
 }
 
 CliPtr lastC(const CliPtr c) {
   assert(c);
-  return getLastCliStackSS(CLIVAL(c).ws);
+  return getLastClientStackSS(CLIVAL(c).ws);
 }
 
 CliPtr upC(const CliPtr c) {
   assert(c);
-  Rectangle *r = getRegionCliSS(c);
+  Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLIVAL(c).ws, r->x+1, r->y-1);
 }
 
 CliPtr downC(const CliPtr c) {
   assert(c);
-  Rectangle *r = getRegionCliSS(c);
+  Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLIVAL(c).ws, r->x+1, r->y + r->h + 1);
 }
 
 CliPtr leftC(const CliPtr c) {
   assert(c);
-  Rectangle *r = getRegionCliSS(c);
+  Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLIVAL(c).ws, r->x-1, r->y+1);
 }
 
 CliPtr rightC(const CliPtr c) {
   assert(c);
-  Rectangle *r = getRegionCliSS(c);
+  Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLIVAL(c).ws, r->x + r->w + 1, r->y+1);
 }
 
@@ -473,20 +473,20 @@ Bool testIsFixedC(const CliPtr c, const void *p) {
 // Border Color
 Color onlyCurrBorderColorC(const CliPtr c) {
   assert(c);
-  if (isCurrCliSS(c))
+  if (isCurrClientSS(c))
     return currBorderColorS;
   return normBorderColorS;
 }
 
 Color allBorderColorC(const CliPtr c) {
   assert(c);
-  if (isCurrCliSS(c))
+  if (isCurrClientSS(c))
     return currBorderColorS;
   else if (CLIVAL(c).isUrgent)
     return urgtBorderColorS;
   else if (CLIVAL(c).freeLocFn != notFreeR)
     return freeBorderColorS;
-  else if (isPrevCliSS(c))
+  else if (isPrevClientSS(c))
     return prevBorderColorS;
   return normBorderColorS;
 }
@@ -513,7 +513,7 @@ int smartBorderWidthC(const CliPtr c) {
     return borderWidthS;
   if (findFixedClientW(CLIVAL(c).ws))
     return borderWidthS;
-  Rectangle *a = getRegionCliSS(c);
+  Rectangle *a = getRegionClientSS(c);
   Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
   if (a->w == as->w && a->h == as->h)
     return 0;
@@ -522,7 +522,7 @@ int smartBorderWidthC(const CliPtr c) {
 
 int onlyCurrBorderWidthC(const CliPtr c) {
   assert(c);
-  if (isCurrCliSS(c))
+  if (isCurrClientSS(c))
     return borderWidthS;
   return 0;
 }
@@ -535,7 +535,7 @@ int alwaysBorderGapC(const CliPtr c) {
 
 int smartBorderGapC(const CliPtr c) {
   assert(c);
-  Rectangle *a = getRegionCliSS(c);
+  Rectangle *a = getRegionClientSS(c);
   Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
   if (a->w == as->w && a->h == as->h)
     return 0;
@@ -544,7 +544,7 @@ int smartBorderGapC(const CliPtr c) {
 
 int onlyCurrBorderGapC(const CliPtr c) {
   assert(c);
-  if (isCurrCliSS(c))
+  if (isCurrClientSS(c))
     return borderGapS;
   return 0;
 }

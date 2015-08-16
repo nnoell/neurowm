@@ -71,7 +71,7 @@ static void destroyNotifyE(XEvent *e) {
   if (c) {
     unmanageCliE(c);
   } else {
-    Client *cli = rmvMinimizedCliSS(w);
+    Client *cli = rmvMinimizedClientSS(w);
     if (cli)
       freeClientT(cli);
   }
@@ -85,7 +85,7 @@ static void unmapNotifyE(XEvent *e) {
   if (c) {
     unmanageCliE(c);
   } else {
-    Client *cli = rmvMinimizedCliSS(w);
+    Client *cli = rmvMinimizedClientSS(w);
     if (cli)
       freeClientT(cli);
   }
@@ -105,9 +105,9 @@ static void enterNotifyE(XEvent *e) {
   CliPtr c = findWindowClientAllW(ev->window);
   if (!c)
     return;
-  if (isCurrCliSS(c))
+  if (isCurrClientSS(c))
     return;
-  moveFocusW(c, selfC);
+  moveFocusClientW(c, selfC);
   updateDP(True);
 }
 
@@ -132,12 +132,12 @@ static void configureRequestE(XEvent *e) {
 
 static void focusInE(XEvent *e) {
   assert(e);
-  CliPtr c = getCurrCliCurrStackSS();
+  CliPtr c = getCurrClientCurrStackSS();
   if (!c)
     return;
   if (CLIVAL(c).win == e->xfocus.window)
     return;
-  moveFocusW(c, selfC);
+  moveFocusClientW(c, selfC);
   updateDP(True);
 }
 
@@ -156,7 +156,7 @@ static void clientMessageE(XEvent *e) {
     else if (e->xclient.data.l[0] == 2)  // _NET_WM_STATE_TOGGLE
       toggleFullScreenC(c);
   } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
-    moveFocusW(c, selfC);
+    moveFocusClientW(c, selfC);
   }
   updateDP(True);
 }
@@ -174,7 +174,7 @@ static void propertyNotifyE(XEvent *e) {
     CliPtr c = findWindowClientAllW(ev->window);
     if (!c)
       return;
-    if (isCurrCliSS(c) && isCurrStackSS(CLIVAL(c).ws))
+    if (isCurrClientSS(c) && isCurrStackSS(CLIVAL(c).ws))
       return;
     XWMHints *wmh = XGetWMHints(display, CLIVAL(c).win);
     if (wmh && (wmh->flags & XUrgencyHint))
@@ -222,7 +222,7 @@ void manageWindowE(Window w) {
   Client *cli = allocCliAndSetRulesR(w, &wa);
   if (!cli)
     exitErrorS("manageWindowE - could not alloc Client and set rules");
-  CliPtr c = addCliStartSS(cli);
+  CliPtr c = addClientStartSS(cli);
   if (!c)
     exitErrorS("manageWindowE - could not add client");
 
@@ -232,9 +232,9 @@ void manageWindowE(Window w) {
     CLIVAL(c).freeLocFn = defFreeR;
     CliPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
-      centerRectangleInRegionG(getRegionCliSS(c), getRegionCliSS(t));
+      centerRectangleInRegionG(getRegionClientSS(c), getRegionClientSS(t));
     else
-      centerRectangleInRegionG(getRegionCliSS(c), &screenRegion);
+      centerRectangleInRegionG(getRegionClientSS(c), &screenRegion);
   }
 
   // Set event mask
@@ -259,7 +259,7 @@ void unmanageCliE(CliPtr c) {
   const int ws = CLIVAL(c).ws;
   rmvEnterNotifyMaskW(ws);
   unapplyRuleR(c);
-  Client *cli = rmvCliSS(c);
+  Client *cli = rmvClientSS(c);
   freeClientT(cli);
   runCurrLayoutL(ws);
   updateFocusW(ws);

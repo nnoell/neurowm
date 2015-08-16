@@ -46,11 +46,11 @@ void add_remove_client(void) {
   CU_ASSERT_PTR_NOT_NULL(cli);
 
   // Add it to the stackset
-  CliPtr c = addCliStartSS(cli);
+  CliPtr c = addClientStartSS(cli);
   CU_ASSERT_PTR_NOT_NULL(c);
 
   // Remove it from the stackset
-  Client *cli2 = rmvCliSS(c);
+  Client *cli2 = rmvClientSS(c);
   CU_ASSERT_PTR_NOT_NULL(cli2);
   CU_ASSERT(cli == cli2);
 

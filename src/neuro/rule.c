@@ -111,7 +111,7 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
 void applyRuleR(const CliPtr c) {
   assert(c);
   Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
-  Rectangle *regc = getRegionCliSS(c);
+  Rectangle *regc = getRegionClientSS(c);
   switch (CLIVAL(c).fixPos) {
     case upFixedR: {
       regc->x = reg->x;
