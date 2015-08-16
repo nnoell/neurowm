@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <CUnit/Basic.h>
+#include "../neuro/system.h"
 #include "../neuro/stackset.h"
 #include "../neuro/neurowm.h"
 

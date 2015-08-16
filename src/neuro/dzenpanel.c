@@ -96,7 +96,7 @@ static void *updateThreadDP(void *args) {
   while (!stopUpdateWhile) {
     for (j = 0; j < PIP.numPanels; ++j) {
       dp = dzenPanelSetS[ j ];
-      if (dp->refreshRate == XEvDP || dp->refreshRate <= 0)
+      if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
         updateDzenPanelDP(dp, PIP.pi[ j ].output);
@@ -173,7 +173,7 @@ void updateDP(Bool onlyEvent) {
   for (i=0; i < PIP.numPanels; ++i) {
     dp = dzenPanelSetS[ i ];
     if (onlyEvent) {
-      if (dp->refreshRate == XEvDP || dp->refreshRate <= 0)
+      if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         updateDzenPanelDP(dp, PIP.pi[ i ].output);
     } else {
       updateDzenPanelDP(dp, PIP.pi[ i ].output);
@@ -431,8 +431,7 @@ static void endCpuPercThreadDP() {
 
 
 // Public function definition
-void startCpuCalcDP(ActionAr arg) {
-  (void)arg;
+void startCpuCalcDP() {
   numCpus = getNumCpusDP(CPU_FILE_PATH);
   cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
   if (!cpusInfo)
@@ -441,8 +440,7 @@ void startCpuCalcDP(ActionAr arg) {
     exitErrorS("startCpuCalcDP - could not init thread to update cpus");
 }
 
-void endCpuCalcDP(ActionAr arg) {
-  (void)arg;
+void endCpuCalcDP() {
   endCpuPercThreadDP();
   free(cpusInfo);
   cpusInfo = NULL;

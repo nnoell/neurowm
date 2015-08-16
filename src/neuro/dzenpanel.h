@@ -22,8 +22,6 @@
 #define DZEN_ARGS_MAX 64
 #define LOGGER_MAX    8192
 
-#define XEvDP         0
-
 
 //----------------------------------------------------------------------------------------------------------------------
 // FUNCTION DECLARATION
@@ -35,8 +33,8 @@ void endDP();
 void updateDP(int onlyEvent);
 
 // CPU Calculation
-void startCpuCalcDP(ActionAr arg);
-void endCpuCalcDP(ActionAr arg);
+void startCpuCalcDP();
+void endCpuCalcDP();
 
 // Loggers
 void timeLoggerDP(char *str);

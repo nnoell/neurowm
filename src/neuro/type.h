@@ -39,6 +39,7 @@
 #define WM_NAME            "neurowm"
 #define WM_MYNAME          "myneurowm"
 #define WM_SCRATCHPAD_NAME "neurowm_scratchpad"
+#define WM_EVENT           0
 
 // Arg
 #define NO_ARG       {.pointer_ = NULL}

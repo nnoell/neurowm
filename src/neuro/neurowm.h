@@ -15,13 +15,12 @@
 #define NEURO_NEUROWM_H_
 
 // Includes
-#include "system.h"
 #include "config.h"
 #include "layout.h"
+#include "rule.h"
 #include "client.h"
 #include "workspace.h"
-#include "rule.h"
-#include "dzenpanel.h"
+#include "action.h"
 #include "personal.h"
 
 
@@ -29,55 +28,9 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Window Manager
-void spawnN(ActionAr command_arg);
-void sleepN(ActionAr int_arg);
-void changeNeurowmNameN(ActionAr string_arg);
-void quitNeurowmN(ActionAr no_arg);
-void reloadNeurowmN(ActionAr no_arg);
-
-// Layout
-void changeLayoutN(ActionAr int_arg);
-void resetLayoutN(ActionAr no_arg);
-void toggleLayoutModN(ActionAr int_arg);
-void toggleLayoutN(ActionAr int_arg);
-void increaseMasterLayoutN(ActionAr int_arg);
-void resizeMasterLayoutN(ActionAr float_arg);
-
-// Workspace
-void changeToWorkspaceN(ActionAr int_arg);
-void changeToPrevWorkspaceN(ActionAr no_arg);
-void changeToNextWorkspaceN(ActionAr no_arg);
-void changeToLastWorkspaceN(ActionAr no_arg);
-void moveClientToWorkspaceN(ActionAr int_arg);
-void moveClientToWorkspaceAndFollowN(ActionAr int_arg);
-void restoreLastMinimizedN(ActionAr no_arg);
-void toggleNSPN(ActionAr command_arg);
-
-// CurrClient
-void moveFocusCurrClientN(ActionAr selectCliFn_arg);
-void swapCurrClientN(ActionAr selectCliFn_arg);
-void killCurrClientN(ActionAr selectCliFn_arg);
-void tileCurrClientN(ActionAr selectCliFn_arg);
-void normalCurrClientN(ActionAr selectCliFn_arg);
-void fullScreenCurrClientN(ActionAr selectCliFn_arg);
-void toggleFullScreenCurrClientN(ActionAr selectCliFn_arg);
-void minimizeCurrClientN(ActionAr selectCliFn_arg);
-void freeCurrClientN(ActionAr freeLocFn_arg);
-void toggleFreeCurrClientN(ActionAr freeLocFn_arg);
-
-// PtrClient
-void moveFocusPtrClientN(ActionAr selectCliFn_arg);
-void freeMovePtrClientN(ActionAr selectCliFn_arg);
-void freeResizePtrClientN(ActionAr selectCliFn_arg);
-void movePtrClientN(ActionAr selectCliFn_arg);
-void resizePtrClientN(ActionAr selectCliFn_arg);
-void toggleFullScreenPtrClientN(ActionAr selectCliFn_arg);
-void freePtrClientN(ActionAr freeLocFn_arg);
-void toggleFreePtrClientN(ActionAr freeLocFn_arg);
-
-// Main functions
 int runNeurowmN(const WMConfig *c);
+void quitNeurowmN();
+void reloadNeurowmN();
 
 #endif  // NEURO_NEUROWM_H_
 
