@@ -44,14 +44,9 @@ static void endNeurowm() {
   for (i = 0; endUpHookS[ i ]; ++i)
     endUpHookS[ i ]->func(endUpHookS[ i ]->arg);
 
-  // End panels
-  endDP();
-
-  // End stackset
-  endSS();
-
-  // End base
-  endS();
+  endDP();  // End panels
+  endSS();  // End stackset
+  endS();   // End base
 }
 
 static void signalHandler(int signo) {
@@ -69,32 +64,30 @@ static void initNeurowm(const WMConfig *c) {
   if (!c)
     exitErrorS("initNeurowm - could not set configuration");
 
-  // Set configuration
-  setConfigS(c);
-
-  // Init base (must free with endB at some point)
-  if (!initS())
+  setConfigS(c);  // Set configuration
+  if (!initS())  // Init base (must free with endB at some point)
     exitErrorS("initNeurowm - could not init Base");
-
-  // Init stackset (must free with endSS at some point)
-  if (!initSS())
+  if (!initSS())  // Init stackset (must free with endSS at some point)
     exitErrorS("initNeurowm - could not init StackSet");
-
-  // Init panels (must free with endDP at some point)
-  if (!initDP())
+  if (!initDP())  // Init panels (must free with endDP at some point)
     exitErrorS("initNeurowm - could not init Panels");
 
-  // Init startup hook
-  int i;
+  int i;  // Init startup hook
   for (i = 0; startUpHookS[ i ]; ++i)
     startUpHookS[ i ]->func(startUpHookS[ i ]->arg);
-
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, signalHandler))
   //   exitErrorG("initNeurowm - could not set SIGHUP handler");
 
   // Load existing windows if Xsesion was not closed
   loadWindowsE();
+}
+
+static void processWSActionN(const GenericWSActionFn gwsaf, int ws) {
+  assert(gwsaf);
+  rmvEnterNotifyMaskW(ws);
+  gwsaf(ws);
+  addEnterNotifyMaskW(ws);
 }
 
 static void processCliActionN(const GenericCliActionFn gcaf, CliPtr c, const SelectCliFn scf, const void *data) {
@@ -181,49 +174,41 @@ void resizeMasterLayoutN(ActionAr float_arg) {
 
 // Workspace
 void changeToWorkspaceN(ActionAr int_arg) {
-  rmvEnterNotifyMaskW(int_arg.int_);
-  changeToWorkspaceW(int_arg.int_);
-  addEnterNotifyMaskW(int_arg.int_);
+  processWSActionN(changeToWorkspaceW, int_arg.int_);
 }
 
 void changeToPrevWorkspaceN(ActionAr no_arg) {
   (void)no_arg;
-  const int ws = getPrevStackSS();
-  rmvEnterNotifyMaskW(ws);
-  changeToWorkspaceW(ws);
-  addEnterNotifyMaskW(ws);
+  processWSActionN(changeToWorkspaceW, getPrevStackSS());
 }
 
 void changeToNextWorkspaceN(ActionAr no_arg) {
   (void)no_arg;
-  const int ws = getNextStackSS();
-  rmvEnterNotifyMaskW(ws);
-  changeToWorkspaceW(ws);
-  addEnterNotifyMaskW(ws);
+  processWSActionN(changeToWorkspaceW, getNextStackSS());
 }
 
 void changeToLastWorkspaceN(ActionAr no_arg) {
   (void)no_arg;
-  const int ws = getLastStackSS();
-  rmvEnterNotifyMaskW(ws);
-  changeToWorkspaceW(ws);
-  addEnterNotifyMaskW(ws);
+  processWSActionN(changeToWorkspaceW, getLastStackSS());
 }
 
 void moveClientToWorkspaceN(ActionAr int_arg) {
-  moveClientToWorkspaceW(getCurrClientCurrStackSS(), int_arg.int_ % getSizeSS());
+  CliPtr c = getCurrClientCurrStackSS();
+  rmvEnterNotifyMaskW(CLIVAL(c).ws);
+  moveClientToWorkspaceW(c, int_arg.int_);
+  addEnterNotifyMaskW(CLIVAL(c).ws);
 }
 
 void moveClientToWorkspaceAndFollowN(ActionAr int_arg) {
-  moveClientToWorkspaceAndFollowW(getCurrClientCurrStackSS(), int_arg.int_ % getSizeSS());
+  CliPtr c = getCurrClientCurrStackSS();
+  rmvEnterNotifyMaskW(CLIVAL(c).ws);
+  moveClientToWorkspaceAndFollowW(c, int_arg.int_);
+  addEnterNotifyMaskW(CLIVAL(c).ws);
 }
 
 void restoreLastMinimizedN(ActionAr no_arg) {
   (void)no_arg;
-  const int ws = getCurrStackSS();
-  rmvEnterNotifyMaskW(ws);
-  restoreLastMinimizedW(ws);
-  addEnterNotifyMaskW(ws);
+  processWSActionN(restoreLastMinimizedW, getCurrStackSS());
 }
 
 void toggleNSPN(ActionAr command_arg) {

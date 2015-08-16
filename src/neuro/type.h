@@ -122,6 +122,9 @@ typedef void (*GenericCliFn)(CliPtr c, const void *data);
 // GenericCliActionFn
 typedef void (*GenericCliActionFn)(CliPtr c, SelectCliFn gcf, const void *data);
 
+// GenericWSFn
+typedef void (*GenericWSActionFn)(int ws);
+
 // ArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
 typedef union ArgFn ArgFn;
 union ArgFn {
