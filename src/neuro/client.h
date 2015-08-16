@@ -23,21 +23,23 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-void updateC(const CliPtr c);
-void killC(const CliPtr c);
-void updateClassAndNameC(CliPtr c);
-void updateTitleC(CliPtr c);
-void hideC(CliPtr c, int doRules);
-void showC(CliPtr c, int doRules);
-void setUrgentC(CliPtr c);
-void unsetUrgentC(CliPtr c);
-void minimizeC(CliPtr c);
-void tileC(CliPtr c);
-void freeC(CliPtr c, const FreeLocFn flf);
-void toggleFreeC(CliPtr c, const FreeLocFn flf);
-void normalC(CliPtr c);
-void fullScreenC(CliPtr c);
-void toggleFullScreenC(CliPtr c);
+void updateC(const CliPtr c, const void *data);
+void updateClassAndNameC(CliPtr c, const void *data);
+void updateTitleC(CliPtr c, const void *data);
+void hideC(CliPtr c, const void *doRules);
+void showC(CliPtr c, const void *doRules);
+void setUrgentC(CliPtr c, const void *data);
+void unsetUrgentC(CliPtr c, const void *data);
+
+void killC(const CliPtr c, const void *data);
+void minimizeC(CliPtr c, const void *data);
+void tileC(CliPtr c, const void *data);
+void freeC(CliPtr c, const void *freeLocFn);
+void toggleFreeC(CliPtr c, const void *freeLocFn);
+void normalC(CliPtr c, const void *data);
+void fullScreenC(CliPtr c, const void *data);
+void toggleFullScreenC(CliPtr c, const void *data);
+
 void movePtrC();
 void resizePtrC();
 void freeMovePtrC();
@@ -45,16 +47,16 @@ void freeResizePtrC();
 
 // Select Functions
 CliPtr selfC(const CliPtr c);     // Client c itself
-CliPtr nextC(const CliPtr c);     // Next client of c
-CliPtr prevC(const CliPtr c);     // Previous client of c
-CliPtr oldC(const CliPtr c);      // Previous selected client
-CliPtr headC(const CliPtr c);     // First client of the stack
-CliPtr lastC(const CliPtr c);     // Last client of the stack
-CliPtr upC(const CliPtr c);       // Upper client (layout position) of c
-CliPtr downC(const CliPtr c);     // Lower client (layout position) of c
-CliPtr leftC(const CliPtr c);     // Left client (layout position) of c
-CliPtr rightC(const CliPtr c);    // Right client (layout position) of c
-CliPtr pointerC(const CliPtr c);  // Client under the pointer
+CliPtr nextC(const CliPtr c);     // The next client of c
+CliPtr prevC(const CliPtr c);     // The previous client of c
+CliPtr oldC(const CliPtr c);      // The previous selected client
+CliPtr headC(const CliPtr c);     // The first client of the stack
+CliPtr lastC(const CliPtr c);     // The last client of the stack
+CliPtr upC(const CliPtr c);       // The upper client (layout position) of c
+CliPtr downC(const CliPtr c);     // The lower client (layout position) of c
+CliPtr leftC(const CliPtr c);     // The left client (layout position) of c
+CliPtr rightC(const CliPtr c);    // The right client (layout position) of c
+CliPtr pointerC(const CliPtr c);  // The client under the pointer
 
 // Test Functions
 Bool testWindowC(const CliPtr c, const void *w);

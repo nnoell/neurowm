@@ -31,18 +31,27 @@ static Bool isAboveTiledClientW(const CliPtr c) {
 
 static void focusClientW(CliPtr c) {
   assert(c);
-  unsetUrgentC(c);
+  unsetUrgentC(c, NULL);
   ungrabButtonsS(CLIVAL(c).win);
   XSetInputFocus(display, CLIVAL(c).win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(display, root, netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
       (unsigned char *)&(CLIVAL(c).win), 1);
-  updateC(c);
+  updateC(c, NULL);
 }
 
 static void unfocusClientW(CliPtr c) {
   assert(c);
   grabButtonsS(CLIVAL(c).win);
-  updateC(c);
+  updateC(c, NULL);
+}
+
+static void processClientW(const GenericCliFn gcf, const CliPtr c, const SelectCliFn scf, const void *data) {
+  if (!c || !scf)
+    return;
+  CliPtr dst = scf(c);
+  if (!dst)
+    return;
+  gcf(dst, data);
 }
 
 
@@ -53,7 +62,7 @@ static void unfocusClientW(CliPtr c) {
 void updateW(int ws) {
   CliPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    updateC(c);
+    updateC(c, NULL);
 }
 
 void updateFocusW(int ws) {
@@ -98,25 +107,25 @@ void updateFocusW(int ws) {
 void hideW(int ws, Bool doRules) {
   CliPtr c;
   for (c=getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    hideC(c, doRules);
+    hideC(c, (const void *)&doRules);
 }
 
 void showW(int ws, Bool doRules) {
   CliPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    showC(c, doRules);
+    showC(c, (const void *)&doRules);
 }
 
 void tileW(int ws) {
   CliPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    tileC(c);
+    tileC(c, NULL);
 }
 
-void freeW(int ws, const FreeLocFn flf) {
+void freeW(int ws, const void *freeLocFn) {
   CliPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    freeC(c, flf);
+    freeC(c, freeLocFn);
 }
 
 void changeToWorkspaceW(int ws) {
@@ -140,9 +149,10 @@ void moveClientToWorkspaceW(CliPtr c, int ws) {
   if (oldws == ws)
     return;
   Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  Bool isFree = CLIVAL(c).freeLocFn != notFreeR;
+  const Bool isFree = CLIVAL(c).freeLocFn != notFreeR;
+  const Bool doRules = True;
   if (oldws == currws)
-    hideC(c, True);
+    hideC(c, (const void *)&doRules);
   if (isFree)
     memmove(&oldRegion, getRegionClientSS(c), sizeof(Rectangle));
   Client *cli = rmvClientSS(c);
@@ -153,7 +163,7 @@ void moveClientToWorkspaceW(CliPtr c, int ws) {
   if (isFree)
     memmove(getRegionClientSS(c2), &oldRegion, sizeof(Rectangle));
   if (ws == currws)
-    showC(c2, True);
+    showC(c2, (const void *)&doRules);
   runCurrLayoutL(currws);
   updateFocusW(currws);
 }
@@ -170,7 +180,7 @@ void moveClientToWorkspaceAndFollowW(CliPtr c, int ws) {
 void minimizeW(int ws) {
   CliPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    minimizeC(c);
+    minimizeC(c, NULL);
 }
 
 void restoreLastMinimizedW(int ws) {
@@ -202,19 +212,8 @@ void rmvEnterNotifyMaskW(int ws) {
 
 
 // Clients
-void killClientW(const CliPtr c, const SelectCliFn scf) {
-  if (!c || !scf)
-    return;
-  CliPtr dst = scf(c);
-  if (!dst)
-    return;
-  killC(dst);
-}
-
 void moveFocusClientW(const CliPtr c, const SelectCliFn scf) {
   if (!c || !scf)
-    return;
-  if (getSizeStackSS(CLIVAL(c).ws) < 2)
     return;
   CliPtr dst = scf(c);
   if (!dst)
@@ -226,32 +225,73 @@ void moveFocusClientW(const CliPtr c, const SelectCliFn scf) {
 void swapClientW(const CliPtr c, const SelectCliFn scf) {
   if (!c || !scf)
     return;
-  if (getSizeStackSS(CLIVAL(c).ws) < 2)
-    return;
   CliPtr dst = scf(c);
   if (!dst)
     return;
-  swpClientSS(c, dst);
+  if (!swpClientSS(c, dst))
+    return;
   updateW(CLIVAL(c).ws);
   moveFocusClientW(c, scf);
 }
 
-void toggleFullScreenClientW(const CliPtr c, const SelectCliFn scf) {
-  if (!c || !scf)
-    return;
-  CliPtr dst = scf(c);
-  if (!dst)
-    return;
-  toggleFullScreenC(dst);
+void updateClientW(const CliPtr c, const SelectCliFn scf) {
+  processClientW(updateC, c, scf, NULL);
+}
+
+void updateClassAndNameClientW(CliPtr c, const SelectCliFn scf) {
+  processClientW(updateClassAndNameC, c, scf, NULL);
+}
+
+void updateTitleClientW(CliPtr c, const SelectCliFn scf) {
+  processClientW(updateTitleC, c, scf, NULL);
+}
+
+void hideClientW(CliPtr c, const SelectCliFn scf, const void *doRules) {
+  processClientW(hideC, c, scf, doRules);
+}
+
+void showClientW(CliPtr c, const SelectCliFn scf, const void *doRules) {
+  processClientW(showC, c, scf, doRules);
+}
+
+void setUrgentClientW(CliPtr c, const SelectCliFn scf) {
+  processClientW(setUrgentC, c, scf, NULL);
+}
+
+void unsetUrgentClientW(CliPtr c, const SelectCliFn scf) {
+  processClientW(unsetUrgentC, c, scf, NULL);
+}
+
+void killClientW(const CliPtr c, const SelectCliFn scf) {
+  processClientW(killC, c, scf, NULL);
 }
 
 void minimizeClientW(const CliPtr c, const SelectCliFn scf) {
-  if (!c || !scf)
-    return;
-  CliPtr dst = scf(c);
-  if (!dst)
-    return;
-  minimizeC(dst);
+  processClientW(minimizeC, c, scf, NULL);
+}
+
+void tileClientW(CliPtr c, const SelectCliFn scf) {
+  processClientW(tileC, c, scf, NULL);
+}
+
+void freeClientW(CliPtr c, const SelectCliFn scf, const void *freeLocFn) {
+  processClientW(freeC, c, scf, freeLocFn);
+}
+
+void toggleFreeClientW(CliPtr c, const SelectCliFn scf, const void *freeLocFn) {
+  processClientW(toggleFreeC, c, scf, freeLocFn);
+}
+
+void normalClientW(CliPtr c, const SelectCliFn scf) {
+  processClientW(normalC, c, scf, NULL);
+}
+
+void fullScreenClientW(CliPtr c, const SelectCliFn scf) {
+  processClientW(fullScreenC, c, scf, NULL);
+}
+
+void toggleFullScreenClientW(const CliPtr c, const SelectCliFn scf) {
+  processClientW(toggleFullScreenC, c, scf, NULL);
 }
 
 

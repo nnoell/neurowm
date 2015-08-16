@@ -92,8 +92,8 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
   if (isFreeSizeHintsR(c))
     c->freeLocFn = defFreeR;
   c->ws = getCurrStackSS();
-  updateClassAndNameC(&c);
-  updateTitleC(&c);
+  updateClassAndNameC(&c, NULL);
+  updateTitleC(&c, NULL);
   const Rule *r;
   int i;
   for (i = 0; ruleSetS[ i ]; ++i) {

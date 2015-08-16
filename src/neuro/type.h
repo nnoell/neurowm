@@ -41,16 +41,16 @@
 #define WM_SCRATCHPAD_NAME "neurowm_scratchpad"
 
 // Arg
-#define NO_ARG       {.p = NULL}
-#define ARG_PTR(X)   {.p = (X)}
-#define ARG_CHAR(X)  {.c = (X)}
-#define ARG_INT(X)   {.i = (X)}
-#define ARG_UINT(X)  {.ui = (X)}
-#define ARG_FLOAT(X) {.f = (X)}
-#define ARG_STR(X)   {.str = (X)}
-#define ARG_CMD(X)   {.cmd = (X)}
-#define ARG_FLF(X)   {.flf = (X)}
-#define ARG_SCF(X)   {.scf = (X)}
+#define NO_ARG       {.pointer_ = NULL}
+#define ARG_PTR(X)   {.pointer_ = (X)}
+#define ARG_CHAR(X)  {.char_ = (X)}
+#define ARG_INT(X)   {.int_ = (X)}
+#define ARG_UINT(X)  {.uint_ = (X)}
+#define ARG_FLOAT(X) {.float_ = (X)}
+#define ARG_STR(X)   {.string_ = (X)}
+#define ARG_CMD(X)   {.command_ = (X)}
+#define ARG_FLF(X)   {.argfn_.freeLocFn = (X)}
+#define ARG_SCF(X)   {.argfn_.selectCliFn = (X)}
 
 // Default sizes
 #define NAME_MAX    256
@@ -113,21 +113,30 @@ typedef Bool (*TestCliPtrFn)(const CliPtr c, const void *const p);
 // SelectCliFn
 typedef CliPtr (*SelectCliFn)(const CliPtr c);
 
+// GenericCliFn
+typedef void (*GenericCliFn)(const CliPtr c, const void *data);
+
 
 // ACTION TYPES ----------------------------------------------------------------------------------------------------
+
+// ArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
+typedef union ArgFn ArgFn;
+union ArgFn {
+  const FreeLocFn freeLocFn;
+  const SelectCliFn selectCliFn;
+};
 
 // ActionAr
 typedef union ActionAr ActionAr;
 union ActionAr {
-  const void *const p;
-  const char c;
-  const int i;
-  const unsigned int ui;
-  const float f;
-  const char *const str;
-  const char *const *const cmd;
-  const FreeLocFn flf;
-  const SelectCliFn scf;
+  const void *const pointer_;
+  const char char_;
+  const int int_;
+  const unsigned int uint_;
+  const float float_;
+  const char *const string_;
+  const char *const *const command_;
+  const ArgFn argfn_;
 };
 
 // ActionFn

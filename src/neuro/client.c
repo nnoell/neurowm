@@ -83,7 +83,8 @@ static CliPtr queryPointC(int ws, int x, int y) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-void updateC(const CliPtr c) {
+void updateC(const CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
 
@@ -113,7 +114,76 @@ void updateC(const CliPtr c) {
   XMoveResizeWindow(display, CLIVAL(c).win, r.x, r.y, r.w, r.h);
 }
 
-void killC(const CliPtr c) {
+void updateClassAndNameC(CliPtr c, const void *data) {
+  (void)data;
+  if (!c)
+    return;
+  CLIVAL(c).class[ 0 ] = '\0';
+  CLIVAL(c).name[ 0 ] = '\0';
+  XClassHint ch = (XClassHint){.res_name = NULL, .res_class = NULL};
+  if (!XGetClassHint(display, CLIVAL(c).win, &ch))
+    return;
+  strncpy(CLIVAL(c).class, ch.res_class, NAME_MAX);
+  strncpy(CLIVAL(c).name, ch.res_name, NAME_MAX);
+  if (ch.res_class)
+    XFree(ch.res_class);
+  if (ch.res_name)
+    XFree(ch.res_name);
+}
+
+void updateTitleC(CliPtr c, const void *data) {
+  (void)data;
+  if (!c)
+    return;
+  CLIVAL(c).title[ 0 ] = '\0';
+  if (!setTitleAtomC(CLI(c), netatoms[ NET_WM_NAME ]))
+    setTitleAtomC(CLI(c), XA_WM_NAME);
+}
+
+void hideC(CliPtr c, const void *doRules) {  // Move off screen
+  if (!c)
+    return;
+  if (CLIVAL(c).isHidden)
+    return;
+  if (*(Bool *)doRules)
+    unapplyRuleR(c);
+  Rectangle *regc = getRegionClientSS(c);
+  regc->x += xRes;
+  regc->y += yRes;
+  XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
+  CLIVAL(c).isHidden = True;
+}
+
+void showC(CliPtr c, const void *doRules) {  // Move back to screen
+  if (!c)
+    return;
+  if (!CLIVAL(c).isHidden)
+    return;
+  Rectangle *regc = getRegionClientSS(c);
+  regc->x -= xRes;
+  regc->y -= yRes;
+  if (*(Bool *)doRules)
+    applyRuleR(c);
+  XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
+  CLIVAL(c).isHidden = False;
+}
+
+void setUrgentC(CliPtr c, const void *data) {
+  (void)data;
+  if (!c)
+    return;
+  CLIVAL(c).isUrgent = True;
+}
+
+void unsetUrgentC(CliPtr c, const void *data) {
+  (void)data;
+  if (!c)
+    return;
+  CLIVAL(c).isUrgent = False;
+}
+
+void killC(const CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
   if (isProtocolDelete(CLIVAL(c).win)) {
@@ -131,71 +201,8 @@ void killC(const CliPtr c) {
   }
 }
 
-void updateClassAndNameC(CliPtr c) {
-  if (!c)
-    return;
-  CLIVAL(c).class[ 0 ] = '\0';
-  CLIVAL(c).name[ 0 ] = '\0';
-  XClassHint ch = (XClassHint){.res_name = NULL, .res_class = NULL};
-  if (!XGetClassHint(display, CLIVAL(c).win, &ch))
-    return;
-  strncpy(CLIVAL(c).class, ch.res_class, NAME_MAX);
-  strncpy(CLIVAL(c).name, ch.res_name, NAME_MAX);
-  if (ch.res_class)
-    XFree(ch.res_class);
-  if (ch.res_name)
-    XFree(ch.res_name);
-}
-
-void updateTitleC(CliPtr c) {
-  if (!c)
-    return;
-  CLIVAL(c).title[ 0 ] = '\0';
-  if (!setTitleAtomC(CLI(c), netatoms[ NET_WM_NAME ]))
-    setTitleAtomC(CLI(c), XA_WM_NAME);
-}
-
-void hideC(CliPtr c, Bool doRules) {  // Move off screen
-  if (!c)
-    return;
-  if (CLIVAL(c).isHidden)
-    return;
-  if (doRules)
-    unapplyRuleR(c);
-  Rectangle *regc = getRegionClientSS(c);
-  regc->x += xRes;
-  regc->y += yRes;
-  XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
-  CLIVAL(c).isHidden = True;
-}
-
-void showC(CliPtr c, Bool doRules) {  // Move back to screen
-  if (!c)
-    return;
-  if (!CLIVAL(c).isHidden)
-    return;
-  Rectangle *regc = getRegionClientSS(c);
-  regc->x -= xRes;
-  regc->y -= yRes;
-  if (doRules)
-    applyRuleR(c);
-  XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
-  CLIVAL(c).isHidden = False;
-}
-
-void setUrgentC(CliPtr c) {
-  if (!c)
-    return;
-  CLIVAL(c).isUrgent = True;
-}
-
-void unsetUrgentC(CliPtr c) {
-  if (!c)
-    return;
-  CLIVAL(c).isUrgent = False;
-}
-
-void minimizeC(CliPtr c) {
+void minimizeC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
   setCurrClientSS(getNextClientSS(c));
@@ -210,7 +217,8 @@ void minimizeC(CliPtr c) {
   updateFocusW(cli->ws);
 }
 
-void tileC(CliPtr c) {
+void tileC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
   if (CLIVAL(c).freeLocFn == notFreeR)
@@ -221,27 +229,29 @@ void tileC(CliPtr c) {
   updateFocusW(CLIVAL(c).ws);
 }
 
-void freeC(CliPtr c, const FreeLocFn flf) {
+void freeC(CliPtr c, const void *freeLocFn) {
   if (!c)
     return;
-  if (CLIVAL(c).freeLocFn == flf)
+  const ArgFn *argfn = (const ArgFn *)freeLocFn;
+  if (CLIVAL(c).freeLocFn == argfn->freeLocFn)
     return;
-  CLIVAL(c).freeLocFn = flf;
+  CLIVAL(c).freeLocFn = argfn->freeLocFn;
   unapplyRuleR(c);
   runCurrLayoutL(CLIVAL(c).ws);
   updateFocusW(CLIVAL(c).ws);
 }
 
-void toggleFreeC(CliPtr c, const FreeLocFn flf) {
+void toggleFreeC(CliPtr c, const void *freeLocFn) {
   if (!c)
     return;
   if (CLIVAL(c).freeLocFn != notFreeR)
-    tileC(c);
+    tileC(c, NULL);
   else
-    freeC(c, flf);
+    freeC(c, freeLocFn);
 }
 
-void normalC(CliPtr c) {
+void normalC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
   if (!CLIVAL(c).isFullScreen)
@@ -252,7 +262,8 @@ void normalC(CliPtr c) {
   updateFocusW(CLIVAL(c).ws);
 }
 
-void fullScreenC(CliPtr c) {
+void fullScreenC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
   if (CLIVAL(c).isFullScreen)
@@ -263,13 +274,14 @@ void fullScreenC(CliPtr c) {
   updateFocusW(CLIVAL(c).ws);
 }
 
-void toggleFullScreenC(CliPtr c) {
+void toggleFullScreenC(CliPtr c, const void *data) {
+  (void)data;
   if (!c)
     return;
   if (CLIVAL(c).isFullScreen)
-    normalC(c);
+    normalC(c, NULL);
   else
-    fullScreenC(c);
+    fullScreenC(c, NULL);
 }
 
 void movePtrC() {

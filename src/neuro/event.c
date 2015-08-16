@@ -150,11 +150,11 @@ static void clientMessageE(XEvent *e) {
       ((unsigned)e->xclient.data.l[1] == netatoms[ NET_FULLSCREEN ]
       || (unsigned)e->xclient.data.l[2] == netatoms[ NET_FULLSCREEN ])) {
     if (e->xclient.data.l[0] == 0)  // _NET_WM_STATE_REMOVE
-      normalC(c);
+      normalC(c, NULL);
     else if (e->xclient.data.l[0] == 1)  // _NET_WM_STATE_ADD
-      fullScreenC(c);
+      fullScreenC(c, NULL);
     else if (e->xclient.data.l[0] == 2)  // _NET_WM_STATE_TOGGLE
-      toggleFullScreenC(c);
+      toggleFullScreenC(c, NULL);
   } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
     moveFocusClientW(c, selfC);
   }
@@ -168,7 +168,7 @@ static void propertyNotifyE(XEvent *e) {
     CliPtr c = findWindowClientAllW(ev->window);
     if (!c)
       return;
-    updateTitleC(c);
+    updateTitleC(c, NULL);
     updateDP(True);
   } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
     CliPtr c = findWindowClientAllW(ev->window);
@@ -178,10 +178,10 @@ static void propertyNotifyE(XEvent *e) {
       return;
     XWMHints *wmh = XGetWMHints(display, CLIVAL(c).win);
     if (wmh && (wmh->flags & XUrgencyHint))
-      setUrgentC(c);
+      setUrgentC(c, NULL);
     if (wmh)
       XFree(wmh);
-    updateC(c);
+    updateC(c, NULL);
     updateDP(True);
   }
 }
@@ -241,14 +241,16 @@ void manageWindowE(Window w) {
   XSelectInput(display, CLIVAL(c).win, CLIENT_MASK);
 
   // Map window
-  hideC(c, False);
+  Bool doRules = False;
+  hideC(c, (const void*)&doRules);
   XMapWindow(display, CLIVAL(c).win);
   grabButtonsS(CLIVAL(c).win);
   const int ws = CLIVAL(c).ws;
   if (!isCurrStackSS(ws))
     return;
   rmvEnterNotifyMaskW(ws);
-  showC(c, True);
+  doRules = True;
+  showC(c, (const void*)&doRules);
   runCurrLayoutL(ws);
   updateFocusW(ws);
   addEnterNotifyMaskW(ws);

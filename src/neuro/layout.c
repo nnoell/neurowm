@@ -194,20 +194,20 @@ void resetLayoutL(int ws) {
 
 void increaseMasterL(int ws, int size) {
   ActionAr *as = getCurrLayoutStackSS(ws)->as;
-  const int res = as[ 0 ].i + size;
+  const int res = as[ 0 ].int_ + size;
   if (res < 1)
     return;
-  *(int *)&(as[ 0 ].i) = res;
+  *(int *)&(as[ 0 ].int_) = res;
   runCurrLayoutL(ws);
   updateFocusW(ws);
 }
 
 void resizeMasterL(int ws, float factor) {
   ActionAr *as = getCurrLayoutStackSS(ws)->as;
-  const float newmsize = factor * as[ 2 ].f + as[ 1 ].f;
+  const float newmsize = factor * as[ 2 ].float_ + as[ 1 ].float_;
   if (newmsize <= 0.0f || newmsize >= 1.0f)
     return;
-  *(float *)&(as[ 1 ].f) = newmsize;
+  *(float *)&(as[ 1 ].float_) = newmsize;
   runCurrLayoutL(ws);
   updateFocusW(ws);
 }
@@ -216,7 +216,7 @@ void resizeMasterL(int ws, float factor) {
 Arrange *tallArrL(Arrange *a) {
   assert(a);
   int n = a->size;
-  int mn = a->as[ 0 ].i, ms = (int)(a->as[ 1 ].f * a->region.w);
+  int mn = a->as[ 0 ].int_, ms = (int)(a->as[ 1 ].float_ * a->region.w);
   int nwindows = n <= mn ? n : mn;
   int ys[ n ], hs[ n ];
   memset(ys, 0, sizeof(ys));

@@ -179,9 +179,11 @@ static Bool reallocMinimizedClientsIfNecessarySS(Stack *s, int newCount) {
 
 static void setCurrNodeSS(Node *n) {
   assert(n);
-  int stack = n->cli->ws;
-  SS.stacks[ stack ].prev = SS.stacks[ stack ].curr;
-  SS.stacks[ stack ].curr = n;
+  Stack *s = SS.stacks + n->cli->ws;
+  if (n == s->curr)
+    return;
+  s->prev = s->curr;
+  s->curr = n;
 }
 
 static void updateNSPStackSS(Stack *s) {
@@ -390,7 +392,7 @@ void setCurrClientSS(const CliPtr c) {
   setCurrNodeSS((Node *)c);
 }
 
-// First, search in the current stack, if is not there, search in the other stacks
+// First off, search in the current stack, if it is not there, search in the other stacks
 CliPtr findClientSS(const TestCliPtrFn tcfn, const void *p) {
   CliPtr c = findClientStackSS(SS.curr, tcfn, p);
   if (c)
@@ -611,12 +613,12 @@ CliPtr getLastClientStackSS(int ws) {
   return (CliPtr)(SS.stacks[ ws % SS.size ].last);
 }
 
-CliPtr findClientStackSS(int ws, const TestCliPtrFn tcfn, const void *p) {
+CliPtr findClientStackSS(int ws, const TestCliPtrFn tcfn, const void *data) {
   assert(tcfn);
   Stack *s = SS.stacks + (ws % SS.size);
   Node *n;
   for (n=s->head; n; n=n->next)
-    if (tcfn((CliPtr)n, p))
+    if (tcfn((CliPtr)n, data))
       return (CliPtr)n;
   return NULL;
 }
@@ -654,6 +656,8 @@ CliPtr getPrevClientSS(const CliPtr c) {
 
 CliPtr swpClientSS(const CliPtr c1, const CliPtr c2) {
   if (!c1 || !c2)
+    return NULL;
+  if (c1 == c2)
     return NULL;
   Node *n1 = (Node *)c1;
   Node *n2 = (Node *)c2;

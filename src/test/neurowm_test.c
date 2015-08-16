@@ -46,9 +46,9 @@ static const char* songpcmd[] = { "/usr/bin/mpc", "prev", NULL };
 //----------------------------------------------------------------------------------------------------------------------
 
 // ACTIONS (ACTION)
-static const Action action0[] = { { changeWMNameN,  {.str = "LG3D"} }   };
-static const Action action1[] = { { spawnN,         {.cmd = xdefload} } };
-static const Action action2[] = { { spawnN,         {.cmd = wallcmd} }  };
+static const Action action0[] = { { changeWMNameN,  ARG_STR("LG3D") }   };
+static const Action action1[] = { { spawnN,         ARG_CMD(xdefload) } };
+static const Action action2[] = { { spawnN,         ARG_CMD(wallcmd) }  };
 static const Action action3[] = { { startCpuCalcDP, NO_ARG }            };
 static const Action action4[] = { { endCpuCalcDP,   NO_ARG }            };
 

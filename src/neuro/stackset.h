@@ -36,7 +36,7 @@ CliPtr getCurrClientCurrStackSS();
 CliPtr getCurrClientNSPStackSS();
 void setCurrStackSS(int ws);
 void setCurrClientSS(const CliPtr c);
-CliPtr findClientSS(const TestCliPtrFn tcfn, const void *p);
+CliPtr findClientSS(const TestCliPtrFn tcfn, const void *data);
 CliPtr findNSPClientSS();
 CliPtr addClientEndSS(const Client *c);
 CliPtr addClientStartSS(const Client *c);

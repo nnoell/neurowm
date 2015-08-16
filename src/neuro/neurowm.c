@@ -104,12 +104,12 @@ static void initNeurowm(const WMConfig *c) {
 
 void changeWMNameN(ActionAr arg) {
   assert(arg.com);
-  changeWMNameS(arg.str);
+  changeWMNameS(arg.string_);
 }
 
 void spawnN(ActionAr arg) {
   assert(arg.com);
-  spawnS(arg.cmd, NULL);
+  spawnS(arg.command_, NULL);
 }
 
 void quitN(ActionAr arg) {
@@ -123,30 +123,30 @@ void reloadN(ActionAr arg) {
 }
 
 void killClientN(ActionAr arg) {
-  assert(arg.scf);
-  killClientW(getCurrClientCurrStackSS(), arg.scf);
+  assert(arg.afn.scf);
+  killClientW(getCurrClientCurrStackSS(), arg.argfn_.selectCliFn);
 }
 
 void moveFocusClientN(ActionAr arg) {
-  assert(arg.scf);
+  assert(arg.afn.scf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  moveFocusClientW(getCurrClientStackSS(ws), arg.scf);
+  moveFocusClientW(getCurrClientStackSS(ws), arg.argfn_.selectCliFn);
   addEnterNotifyMaskW(ws);
 }
 
 void swapClientN(ActionAr arg) {
-  assert(arg.scf);
+  assert(arg.afn.scf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  swapClientW(getCurrClientStackSS(ws), arg.scf);
+  swapClientW(getCurrClientStackSS(ws), arg.argfn_.selectCliFn);
   addEnterNotifyMaskW(ws);
 }
 
 void changeLayoutN(ActionAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  changeLayoutL(ws, arg.i);
+  changeLayoutL(ws, arg.int_);
   addEnterNotifyMaskW(ws);
 }
 
@@ -161,21 +161,21 @@ void resetLayoutN(ActionAr arg) {
 void increaseMasterN(ActionAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  increaseMasterL(ws, arg.i);
+  increaseMasterL(ws, arg.int_);
   addEnterNotifyMaskW(ws);
 }
 
 void resizeMasterN(ActionAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  resizeMasterL(ws, arg.f);
+  resizeMasterL(ws, arg.float_);
   addEnterNotifyMaskW(ws);
 }
 
 void changeToWorkspaceN(ActionAr arg) {
-  rmvEnterNotifyMaskW(arg.i);
-  changeToWorkspaceW(arg.i);
-  addEnterNotifyMaskW(arg.i);
+  rmvEnterNotifyMaskW(arg.int_);
+  changeToWorkspaceW(arg.int_);
+  addEnterNotifyMaskW(arg.int_);
 }
 
 void changeToPrevWorkspaceN(ActionAr arg) {
@@ -205,7 +205,7 @@ void changeToLastWorkspaceN(ActionAr arg) {
 void toggleFreeCurrClientN(ActionAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  toggleFreeC(getCurrClientStackSS(ws), arg.flf);
+  toggleFreeClientW(getCurrClientStackSS(ws), selfC, (const void *)&arg.argfn_);
   addEnterNotifyMaskW(ws);
 }
 
@@ -213,14 +213,14 @@ void tileClientN(ActionAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  tileC(getCurrClientStackSS(ws));
+  tileC(getCurrClientStackSS(ws), NULL);
   addEnterNotifyMaskW(ws);
 }
 
 void freeClientN(ActionAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  freeC(getCurrClientStackSS(ws), arg.flf);
+  freeClientW(getCurrClientStackSS(ws), selfC, (const void *)&arg.argfn_);
   addEnterNotifyMaskW(ws);
 }
 
@@ -228,7 +228,7 @@ void normalClientN(ActionAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  normalC(getCurrClientStackSS(ws));
+  normalC(getCurrClientStackSS(ws), NULL);
   addEnterNotifyMaskW(ws);
 }
 
@@ -236,27 +236,27 @@ void fullScreenClientN(ActionAr arg) {
   (void)arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  fullScreenC(getCurrClientStackSS(ws));
+  fullScreenC(getCurrClientStackSS(ws), NULL);
   addEnterNotifyMaskW(ws);
 }
 
 void toggleFullScreenClientN(ActionAr arg) {
-  assert(arg.scf);
+  assert(arg.afn.scf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  toggleFullScreenClientW(getCurrClientStackSS(ws), arg.scf);
+  toggleFullScreenClientW(getCurrClientStackSS(ws), arg.argfn_.selectCliFn);
   addEnterNotifyMaskW(ws);
 }
 
 void toggleFreePtrClientN(ActionAr arg) {
   moveFocusClientW(getCurrClientCurrStackSS(), pointerC);
-  toggleFreeC(getCurrClientCurrStackSS(), arg.flf);
+  toggleFreeC(getCurrClientCurrStackSS(), (const void *)&arg.argfn_);
 }
 
 void toggleFullScreenPtrClientN(ActionAr arg) {
   (void)arg;
   moveFocusClientW(getCurrClientCurrStackSS(), pointerC);
-  toggleFullScreenC(getCurrClientCurrStackSS());
+  toggleFullScreenC(getCurrClientCurrStackSS(), NULL);
 }
 
 void freeMovePtrClientN(ActionAr arg) {
@@ -282,23 +282,23 @@ void resizePtrClientN(ActionAr arg) {
 void toggleLayoutModN(ActionAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  togModCurrLayoutL(ws, arg.ui);
+  togModCurrLayoutL(ws, arg.uint_);
   addEnterNotifyMaskW(ws);
 }
 
 void toggleLayoutN(ActionAr arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  togLayoutL(ws, arg.i);
+  togLayoutL(ws, arg.int_);
   addEnterNotifyMaskW(ws);
 }
 
 void moveClientToWorkspaceN(ActionAr arg) {
-  moveClientToWorkspaceW(getCurrClientCurrStackSS(), arg.i % getSizeSS());
+  moveClientToWorkspaceW(getCurrClientCurrStackSS(), arg.int_ % getSizeSS());
 }
 
 void moveClientToWorkspaceAndFollowN(ActionAr arg) {
-  moveClientToWorkspaceAndFollowW(getCurrClientCurrStackSS(), arg.i % getSizeSS());
+  moveClientToWorkspaceAndFollowW(getCurrClientCurrStackSS(), arg.int_ % getSizeSS());
 }
 
 void toggleNSPN(ActionAr arg) {
@@ -312,7 +312,7 @@ void toggleNSPN(ActionAr arg) {
     moveClientToWorkspaceW(c, ws);
   } else {
     if (!getSizeNSPSS())
-      spawnS(arg.cmd, NULL);
+      spawnS(arg.command_, NULL);
     else
       moveClientToWorkspaceW(getCurrClientNSPStackSS(), ws);
   }
@@ -320,10 +320,10 @@ void toggleNSPN(ActionAr arg) {
 }
 
 void minimizeClientN(ActionAr arg) {
-  assert(arg.scf);
+  assert(arg.afn.scf);
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  minimizeClientW(getCurrClientStackSS(ws), arg.scf);
+  minimizeClientW(getCurrClientStackSS(ws), arg.argfn_.selectCliFn);
   addEnterNotifyMaskW(ws);
 }
 
