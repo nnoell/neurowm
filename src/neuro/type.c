@@ -33,7 +33,7 @@ Client *allocClientT(Window w, const XWindowAttributes *wa) {
   c->name[ 0 ] = '\0';
   c->title[ 0 ] = '\0';
   c->isHidden = False;
-  c->freeLocFn = notFreeR;
+  c->freeSetterFn = notFreeR;
   c->fixPos = notFixedR;
   c->fixSize = 0;
   c->isUrgent = False;

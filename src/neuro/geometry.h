@@ -23,11 +23,11 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 Rectangle *getRelativeRectangleG(Rectangle *dst, const Rectangle *src, const float *rel);
-Rectangle *getGapsRectangleG(Rectangle *dst, const Rectangle *src, const int *gaps);
+Rectangle *getAbsoluteRelativeRectangleG(Rectangle *dst, const Rectangle *src, const int *gaps);
 Rectangle *setRectangleG(Rectangle *r, int x, int y, int w, int h);
-Rectangle *setRectangleBorderG(Rectangle *r, int bs);
-Rectangle *setRectangleSpaceG(Rectangle *r, int sp);
-Rectangle *setRectangleBorderAndSpaceG(Rectangle *r, int bs, int s);
+Rectangle *setRectangleBorderWidthG(Rectangle *r, int width);
+Rectangle *setRectangleBorderGapG(Rectangle *r, int gap);
+Rectangle *setRectangleBorderWidthAndGapG(Rectangle *r, int width, int gap);
 Rectangle *mirrorRectangleG(Rectangle *rect, const Rectangle *reg);
 Rectangle *transpRectangleG(Rectangle *rect);
 Rectangle *fitRectangleInRegionG(Rectangle *rect, const Rectangle *reg);

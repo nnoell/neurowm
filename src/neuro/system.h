@@ -51,8 +51,8 @@ extern const Button *const *const buttonBindingsS;
 extern const Rule *const *const ruleSetS;
 extern const Workspace *const *const workspaceSetS;
 extern const DzenPanel *const *const dzenPanelSetS;
-extern const Action *const *const startUpHookS;
-extern const Action *const *const endUpHookS;
+extern const ActionChain *const startUpHookS;
+extern const ActionChain *const endUpHookS;
 
 // Cursors and Atoms
 enum { CurNormal, CurResize, CurMove, CurLast };

@@ -26,7 +26,7 @@
 typedef void (*EventHandler)(XEvent *e);
 
 // Array of Events
-extern EventHandler eventsE[ LASTEvent ];
+extern const EventHandler const eventsE[ LASTEvent ];
 
 
 //----------------------------------------------------------------------------------------------------------------------

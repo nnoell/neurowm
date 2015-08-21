@@ -21,6 +21,7 @@
 #include "workspace.h"
 #include "rule.h"
 #include "dzenpanel.h"
+#include "action.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -37,7 +38,7 @@ static void keyPressE(XEvent *e) {
   for (i = 0; keyBindingsS[ i ]; ++i) {
     k = keyBindingsS[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
-      k->action.func(k->action.arg);
+      runActionChainA(&k->actionChain);
       updateDP(True);
     }
   }
@@ -51,8 +52,8 @@ static void buttonPressE(XEvent *e) {
   int i;
   for (i = 0; buttonBindingsS[ i ]; ++i) {
     b = buttonBindingsS[ i ];
-    if (b->action.func && b->button == ev->button && b->mod == ev->state) {
-      b->action.func(b->action.arg);
+    if (b->button == ev->button && b->mod == ev->state) {
+      runActionChainA(&b->actionChain);
       updateDP(True);
     }
   }
@@ -190,7 +191,7 @@ static void propertyNotifyE(XEvent *e) {
 // PUBLIC VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-EventHandler eventsE[ LASTEvent ] = {
+const EventHandler const eventsE[ LASTEvent ] = {
   [ KeyPress ]         = keyPressE,
   [ ButtonPress ]      = buttonPressE,
   [ MapRequest ]       = mapRequestE,
@@ -229,7 +230,7 @@ void manageWindowE(Window w) {
   // Transient windows
   Window trans = None;
   if (XGetTransientForHint(display, CLIVAL(c).win, &trans)) {
-    CLIVAL(c).freeLocFn = defFreeR;
+    CLIVAL(c).freeSetterFn = defFreeR;
     CliPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
       centerRectangleInRegionG(getRegionClientSS(c), getRegionClientSS(t));

@@ -28,7 +28,7 @@ void endSS();
 int getCurrStackSS();
 int getPrevStackSS();
 int getNextStackSS();
-int getLastStackSS();
+int getOldStackSS();
 int getNSPStackSS();
 int getSizeSS();
 int getSizeNSPSS();
@@ -36,7 +36,7 @@ CliPtr getCurrClientCurrStackSS();
 CliPtr getCurrClientNSPStackSS();
 void setCurrStackSS(int ws);
 void setCurrClientSS(const CliPtr c);
-CliPtr findClientSS(const TestCliPtrFn tcfn, const void *data);
+CliPtr findClientSS(const ClientTesterFn ctf, const void *data);
 CliPtr findNSPClientSS();
 CliPtr addClientEndSS(const Client *c);
 CliPtr addClientStartSS(const Client *c);
@@ -66,7 +66,7 @@ CliPtr getCurrClientStackSS(int ws);
 CliPtr getPrevClientStackSS(int ws);
 CliPtr getHeadClientStackSS(int ws);
 CliPtr getLastClientStackSS(int ws);
-CliPtr findClientStackSS(int ws, const TestCliPtrFn tcfn, const void *p);
+CliPtr findClientStackSS(int ws, const ClientTesterFn ctf, const void *p);
 
 // CliPtr
 Bool isCurrClientSS(const CliPtr c);

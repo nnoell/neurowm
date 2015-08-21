@@ -41,8 +41,8 @@
 #define WM_SCRATCHPAD_NAME "neurowm_scratchpad"
 #define WM_EVENT           0
 
-// Arg
-#define NO_ARG       {.pointer_ = NULL}
+// Action
+#define ARG_NULL     {.pointer_ = NULL}
 #define ARG_PTR(X)   {.pointer_ = (X)}
 #define ARG_CHAR(X)  {.char_ = (X)}
 #define ARG_INT(X)   {.int_ = (X)}
@@ -50,8 +50,15 @@
 #define ARG_FLOAT(X) {.float_ = (X)}
 #define ARG_STR(X)   {.string_ = (X)}
 #define ARG_CMD(X)   {.command_ = (X)}
-#define ARG_FLF(X)   {.argfn_.freeLocFn = (X)}
-#define ARG_SCF(X)   {.argfn_.selectCliFn = (X)}
+#define ARG_FLF(X)   {.ArgFn_.FreeSetterFn_ = (X)}
+#define ARG_CSF(X)   {.ArgFn_.ClientSelectorFn_ = (X)}
+#define ARG_WSF(X)   {.ArgFn_.WorkspaceSelectorFn_ = (X)}
+
+// Chainned Actions
+#define CHAIN_ARG_NULL {.use = False, .arg = ARG_NULL}
+#define CHAIN_ARG(X)   {.use = True, .arg = X}
+#define CHAIN_NULL(X)  {.chain = (X), .arg = CHAIN_ARG_NULL}
+#define CHAIN(X,Y)     {.chain = (X), .arg = CHAIN_ARG(Y)}
 
 // Default sizes
 #define NAME_MAX    256
@@ -81,8 +88,8 @@ struct Rectangle {
   int h;  // Height
 };
 
-// FreeLocFn
-typedef void (*FreeLocFn)(Rectangle *a, const Rectangle *r);
+// FreeSetterFn
+typedef void (*FreeSetterFn)(Rectangle *a, const Rectangle *r);
 
 
 // CLIENT TYPES --------------------------------------------------------------------------------------------------------
@@ -99,7 +106,7 @@ struct Client {
   Rectangle floatRegion;
   Bool isHidden;
   Bool isFullScreen;
-  FreeLocFn freeLocFn;
+  FreeSetterFn freeSetterFn;
   unsigned int fixPos;  // Can be: notFixedR | upFixedR | downFixedR | leftFixedR | rightFixedR
   int fixSize;
   Bool isUrgent;
@@ -108,29 +115,36 @@ struct Client {
 // CliPtr
 typedef Client *const *CliPtr;
 
-// TestCliPtrFn
-typedef Bool (*TestCliPtrFn)(CliPtr c, const void *p);
+// ClientTesterFn
+typedef Bool (*ClientTesterFn)(CliPtr c, const void *p);
 
-// SelectCliFn
-typedef CliPtr (*SelectCliFn)(CliPtr c);
+// ClientSelectorFn
+typedef CliPtr (*ClientSelectorFn)(CliPtr c);
 
-// GenericCliFn
-typedef void (*GenericCliFn)(CliPtr c, const void *data);
+// GenericClientFn
+typedef void (*GenericClientFn)(CliPtr c, const void *data);
 
 
-// ACTION TYPES ----------------------------------------------------------------------------------------------------
+// WORKSPACE TYPES -----------------------------------------------------------------------------------------------------
+
+// WorkspaceSelectorFn
+typedef int (*WorkspaceSelectorFn)();
+
+
+// ACTION TYPES --------------------------------------------------------------------------------------------------------
 
 // GenericCliActionFn
-typedef void (*GenericCliActionFn)(CliPtr c, SelectCliFn gcf, const void *data);
+typedef void (*GenericCliActionFn)(CliPtr c, ClientSelectorFn gcf, const void *data);
 
-// GenericWSFn
+// GenericWSActionFn
 typedef void (*GenericWSActionFn)(int ws);
 
 // ArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
 typedef union ArgFn ArgFn;
 union ArgFn {
-  const FreeLocFn freeLocFn;
-  const SelectCliFn selectCliFn;
+  const FreeSetterFn FreeSetterFn_;
+  const ClientSelectorFn ClientSelectorFn_;
+  const WorkspaceSelectorFn WorkspaceSelectorFn_;
 };
 
 // ActionAr
@@ -143,7 +157,7 @@ union ActionAr {
   const float float_;
   const char *const string_;
   const char *const *const command_;
-  const ArgFn argfn_;
+  const ArgFn ArgFn_;
 };
 
 // ActionFn
@@ -152,8 +166,22 @@ typedef void (*ActionFn)(ActionAr arg);
 // Action
 typedef struct Action Action;
 struct Action {
-  const ActionFn func;
+  const ActionFn handler;
   const ActionAr arg;
+};
+
+// ActionChainAr
+typedef struct ActionChainAr ActionChainAr;
+struct ActionChainAr {
+  const Bool use;
+  const ActionAr arg;
+};
+
+// ActionChain
+typedef struct ActionChain ActionChain;
+struct ActionChain {
+  const Action *const *const chain;
+  const ActionChainAr arg;
 };
 
 
@@ -162,36 +190,36 @@ struct Action {
 // Color
 typedef unsigned long Color;
 
-// ColorFn
-typedef Color (*ColorFn)(CliPtr c);
+// ColorSetterFn
+typedef Color (*ColorSetterFn)(CliPtr c);
 
-// BorderFn
-typedef int (*BorderFn)(CliPtr c);
+// BorderSetterFn
+typedef int (*BorderSetterFn)(CliPtr c);
 
 // Arrange
 typedef struct Arrange Arrange;
 struct Arrange {
-  int size;                     // Number of tiled clients
-  Rectangle region;             // Tiled layout region
-  Rectangle **cliRegions;       // Region of each client
-  Rectangle **cliFloatRegions;  // Float region of each client
-  ActionAr *as;                // Settings of the arrange
+  int size;                    // Number of tiled clients
+  Rectangle region;            // Tiled layout region
+  Rectangle **cliRegions;      // Region of each client
+  Rectangle **cliFloatRegions; // Float region of each client
+  ActionAr *arrangeSettings;   // Settings of the arrange
 };
 
-// ArrangeFn
-typedef Arrange *(*ArrangeFn)(Arrange *);
+// ArrangerFn
+typedef Arrange *(*ArrangerFn)(Arrange *);
 
 // Layout
 typedef struct Layout Layout;
 struct Layout {
-  const ArrangeFn arrangeFn;
-  const ColorFn borderColorFn;
-  const BorderFn borderWidthFn;
-  const BorderFn borderGapFn;
+  const ArrangerFn arrangerFn;
+  const ColorSetterFn borderColorSetterFn;
+  const BorderSetterFn borderWidthSetterFn;
+  const BorderSetterFn borderGapSetterFn;
   const float *const region;
   unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   Bool followMouse;
-  ActionAr as[ ARRSET_MAX ];
+  ActionAr arrangeSettings[ ARRSET_MAX ];
 };
 
 
@@ -201,14 +229,14 @@ struct Layout {
 typedef struct LayoutConf LayoutConf;
 struct LayoutConf {
   const char *const name;
-  const ArrangeFn arrangeFn;
-  const ColorFn borderColorFn;
-  const BorderFn borderWidthFn;
-  const BorderFn borderGapFn;
+  const ArrangerFn arrangerFn;
+  const ColorSetterFn borderColorSetterFn;
+  const BorderSetterFn borderWidthSetterFn;
+  const BorderSetterFn borderGapSetterFn;
   const float region[ 4 ];
   const unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   const Bool followMouse;
-  const ActionAr as[ ARRSET_MAX ];
+  const ActionAr arrangeSettings[ ARRSET_MAX ];
 };
 
 // Workspace
@@ -225,7 +253,7 @@ typedef struct Key Key;
 struct Key {
   const unsigned int mod;
   const KeySym key;
-  const Action action;
+  const ActionChain actionChain;
 };
 
 // Button
@@ -233,7 +261,7 @@ typedef struct Button Button;
 struct Button {
   const unsigned int mod;
   const unsigned int button;
-  const Action action;
+  const ActionChain actionChain;
   const Bool ungrabOnFocus;
 };
 
@@ -244,7 +272,7 @@ struct Rule {
   const char *const name;
   const char *const title;
   const Bool isFullScreen;
-  const FreeLocFn freeLocFn;
+  const FreeSetterFn freeSetterFn;
   const unsigned int fixPos;
   const float fixSize;
   const int workspace;
@@ -311,8 +339,8 @@ struct WMConfig {
   const DzenPanel *const *const dzenPanelSet;
   const Key *const *const keys;
   const Button *const *const buttons;
-  const Action *const *const startUpHook;
-  const Action *const *const endUpHook;
+  const ActionChain *const startUpHook;
+  const ActionChain *const endUpHook;
 };
 
 

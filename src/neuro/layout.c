@@ -33,7 +33,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   int i = 0, size = 0;
   CliPtr c;
   for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c)) {
-    if (CLIVAL(c).freeLocFn == notFreeR && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
+    if (CLIVAL(c).freeSetterFn == notFreeR && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
         rs = (Rectangle **)realloc(rs, size*sizeof(void *));
@@ -53,7 +53,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   getRelativeRectangleG(&a->region, getRegionStackSS(ws), l->region);
   a->cliRegions = rs;
   a->cliFloatRegions = frs;
-  a->as = l->as;
+  a->arrangeSettings = l->arrangeSettings;
   return a;
 }
 
@@ -85,14 +85,14 @@ static void getLengthSizesL(int n, int length, int *xs, int *ws) {
 }
 
 // Arrange runners
-static Arrange *normalArrangeL(Arrange *a, ArrangeFn af) {
+static Arrange *normalArrangeL(Arrange *a, ArrangerFn af) {
   assert(a);
   assert(af);
   af(a);
   return a;
 }
 
-static Arrange *mirrorArrangeL(Arrange *a, ArrangeFn af) {
+static Arrange *mirrorArrangeL(Arrange *a, ArrangerFn af) {
   assert(a);
   assert(af);
   transpRectangleG(&a->region);
@@ -133,9 +133,9 @@ void runLayoutL(int ws, int i) {
     exitErrorS("runLayoutL - could not run layout");
   if (a->size) {  // Then run layout
     if (l->mod & mirrModL)
-      mirrorArrangeL(a, l->arrangeFn);
+      mirrorArrangeL(a, l->arrangerFn);
     else
-      normalArrangeL(a, l->arrangeFn);
+      normalArrangeL(a, l->arrangerFn);
     if (l->mod & reflXModL)
       reflXArrModL(a);
     if (l->mod & reflYModL)
@@ -184,7 +184,7 @@ void resetLayoutL(int ws) {
     lc = getLayoutConfStackSS(ws, i);
     l->mod = lc->mod;
     l->followMouse = lc->followMouse;
-    memmove(l->as, lc->as, sizeof(ActionAr)*ARRSET_MAX);
+    memmove(l->arrangeSettings, lc->arrangeSettings, sizeof(ActionAr)*ARRSET_MAX);
   }
   tileW(ws);
   setLayoutStackSS(ws, 0);
@@ -193,7 +193,7 @@ void resetLayoutL(int ws) {
 }
 
 void increaseMasterL(int ws, int size) {
-  ActionAr *as = getCurrLayoutStackSS(ws)->as;
+  ActionAr *as = getCurrLayoutStackSS(ws)->arrangeSettings;
   const int res = as[ 0 ].int_ + size;
   if (res < 1)
     return;
@@ -203,7 +203,7 @@ void increaseMasterL(int ws, int size) {
 }
 
 void resizeMasterL(int ws, float factor) {
-  ActionAr *as = getCurrLayoutStackSS(ws)->as;
+  ActionAr *as = getCurrLayoutStackSS(ws)->arrangeSettings;
   const float newmsize = factor * as[ 2 ].float_ + as[ 1 ].float_;
   if (newmsize <= 0.0f || newmsize >= 1.0f)
     return;
@@ -212,11 +212,11 @@ void resizeMasterL(int ws, float factor) {
   updateFocusW(ws);
 }
 
-// Layouts
-Arrange *tallArrL(Arrange *a) {
+// Layout Arrangers
+Arrange *tallArrangerL(Arrange *a) {
   assert(a);
   int n = a->size;
-  int mn = a->as[ 0 ].int_, ms = (int)(a->as[ 1 ].float_ * a->region.w);
+  int mn = a->arrangeSettings[ 0 ].int_, ms = (int)(a->arrangeSettings[ 1 ].float_ * a->region.w);
   int nwindows = n <= mn ? n : mn;
   int ys[ n ], hs[ n ];
   memset(ys, 0, sizeof(ys));
@@ -234,7 +234,7 @@ Arrange *tallArrL(Arrange *a) {
   return a;
 }
 
-Arrange *gridArrL(Arrange *a) {
+Arrange *gridArrangerL(Arrange *a) {
   assert(a);
   int n = a->size, cols, rows;
   for (cols = 0; cols <= n/2; ++cols)
@@ -262,7 +262,7 @@ Arrange *gridArrL(Arrange *a) {
   return a;
 }
 
-Arrange *fullArrL(Arrange *a) {
+Arrange *fullArrangerL(Arrange *a) {
   assert(a);
   int i;
   for (i = 0; i < a->size; ++i)
@@ -270,7 +270,7 @@ Arrange *fullArrL(Arrange *a) {
   return a;
 }
 
-Arrange *floatArrL(Arrange *a) {
+Arrange *floatArrangerL(Arrange *a) {
   assert(a);
   Rectangle *fr;
   int i;

@@ -36,7 +36,7 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa);
 void applyRuleR(const CliPtr c);
 void unapplyRuleR(const CliPtr c);
 
-// Free Locations
+// Free Setters
 void defFreeR(Rectangle *a, const Rectangle *r);
 void centerFreeR(Rectangle *a, const Rectangle *r);
 void bigCenterFreeR(Rectangle *a, const Rectangle *r);

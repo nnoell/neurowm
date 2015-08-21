@@ -40,11 +40,7 @@ static int recompileNeurowmN(pid_t *pid) {
 }
 
 static void endNeurowmN() {
-  // End endup hook
-  int i;
-  for (i = 0; endUpHookS[ i ]; ++i)
-    endUpHookS[ i ]->func(endUpHookS[ i ]->arg);
-  // End panels, stackset and base
+  runActionChainA(endUpHookS);
   endDP();
   endSS();
   endS();
@@ -74,10 +70,7 @@ static void initNeurowmN(const WMConfig *c) {
   if (!initDP())
     exitErrorS("initNeurowm - could not init Panels");
 
-  // Init startup hook
-  int i;
-  for (i = 0; startUpHookS[ i ]; ++i)
-    startUpHookS[ i ]->func(startUpHookS[ i ]->arg);
+  runActionChainA(startUpHookS);
 
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, signalHandler))

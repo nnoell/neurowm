@@ -39,11 +39,11 @@ void resetLayoutL(int ws);
 void increaseMasterL(int ws, int size);
 void resizeMasterL(int ws, float factor);
 
-// Layouts
-Arrange *tallArrL(Arrange *a);
-Arrange *gridArrL(Arrange *a);
-Arrange *fullArrL(Arrange *a);
-Arrange *floatArrL(Arrange *a);
+// Layout Arrangers
+Arrange *tallArrangerL(Arrange *a);
+Arrange *gridArrangerL(Arrange *a);
+Arrange *fullArrangerL(Arrange *a);
+Arrange *floatArrangerL(Arrange *a);
 
 #endif  // NEURO_LAYOUT_H_
 

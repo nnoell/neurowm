@@ -51,8 +51,8 @@ const Button *const *const buttonBindingsS;
 const Rule *const *const ruleSetS;
 const Workspace *const *const workspaceSetS;
 const DzenPanel *const *const dzenPanelSetS;
-const Action *const *const startUpHookS;
-const Action *const *const endUpHookS;
+const ActionChain *const startUpHookS;
+const ActionChain *const endUpHookS;
 
 // Cursors and Atoms
 const Cursor cursors[ CurLast ];
@@ -132,8 +132,8 @@ void setConfigS(const WMConfig *c) {
   *(const Rule *const **)&ruleSetS = c->ruleSet;
   *(const Workspace *const **)&workspaceSetS = c->workspaceSet;
   *(const DzenPanel *const **)&dzenPanelSetS = c->dzenPanelSet;
-  *(const Action *const **)&startUpHookS = c->startUpHook;
-  *(const Action *const **)&endUpHookS = c->endUpHook;
+  *(const ActionChain **)&startUpHookS = c->startUpHook;
+  *(const ActionChain **)&endUpHookS = c->endUpHook;
 }
 
 Bool initS() {

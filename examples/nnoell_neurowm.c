@@ -45,44 +45,43 @@ static const char* songpcmd[] = { "/usr/bin/mpc", "prev", NULL };
 // START/END UP HOOK
 //----------------------------------------------------------------------------------------------------------------------
 
-// ACTIONS (ACTION)
-static const Action action0[] = { { changeNeurowmNameA, ARG_STR("LG3D") } };
-static const Action action1[] = { { spawnA, ARG_CMD(xdefload) }           };
-static const Action action2[] = { { spawnA, ARG_CMD(wallcmd) }            };
-static const Action action3[] = { { startCpuCalcA, NO_ARG }               };
-static const Action action4[] = { { endCpuCalcA, NO_ARG }                 };
-
 // STARTUP
-static const Action *myStartUpHook[] = { action0, action1, action2, action3, NULL };
+static const Action action0[] = { { changeNeurowmNameHandlerA, ARG_STR("LG3D") } };
+static const Action action1[] = { { spawnHandlerA, ARG_CMD(xdefload) } };
+static const Action action2[] = { { spawnHandlerA, ARG_CMD(wallcmd) } };
+
+static const Action *startUpHookActions[] = { action0, action1, action2, startCpuCalcActionA, NULL };
+
+static const ActionChain myStartUpHook[] = { CHAIN_NULL(startUpHookActions) };
 
 // ENDUP
-static const Action *myEndUpHook[] = { action4, NULL };
+static const ActionChain myEndUpHook[] = { CHAIN_NULL(endCpuCalcA) };
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // LAYOUTS
 //----------------------------------------------------------------------------------------------------------------------
 
-// LAYOUTCONFS (NAME, ARRANGE, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
+// LAYOUTCONFS (NAME, ARRANGERF, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
 static const LayoutConf tile[] = { {
-  "Tile", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), NO_ARG}
+  "Tile", tallArrangerL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  notModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf mirr[] = { {
-  "Mirr", tallArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  mirrModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), NO_ARG}
+  "Mirr", tallArrangerL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  mirrModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf grid[] = { {
-  "Grid", gridArrL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  mirrModL|reflXModL|reflYModL, True, {NO_ARG, NO_ARG, NO_ARG, NO_ARG}
+  "Grid", gridArrangerL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  mirrModL|reflXModL|reflYModL, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf full[] = { {
-  "Full",  fullArrL,  allBorderColorC, smartBorderWidthC,  alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {NO_ARG, NO_ARG, NO_ARG, NO_ARG}
+  "Full",  fullArrangerL,  allBorderColorC, smartBorderWidthC,  alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  notModL, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf floa[] = { {
-  "Float", floatArrL, allBorderColorC, alwaysBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, False, {NO_ARG, NO_ARG, NO_ARG, NO_ARG}
+  "Float", floatArrangerL, allBorderColorC, alwaysBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  notModL, False, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 
 // LAYOUTSET
@@ -211,73 +210,83 @@ static const DzenPanel *myDzenPanelSet[] = { topLeftPanel, topRightPanel, botLef
 // KEYS (GRABBED TO THE ROOT WINDOW)
 //----------------------------------------------------------------------------------------------------------------------
 
-// KEY (MOD, KEY, ACTION)
-static const Key key00[] = { { myModMask|ShiftMask,  XK_Return,    { spawnA, ARG_CMD(termcmd) }                    } };
-static const Key key01[] = { { myModMask,            XK_c,         { killCurrClientA, ARG_SCF(selfC) }             } };
-static const Key key02[] = { { myModMask,            XK_j,         { moveFocusCurrClientA, ARG_SCF(nextC) }        } };
-static const Key key03[] = { { myModMask,            XK_k,         { moveFocusCurrClientA, ARG_SCF(prevC) }        } };
-static const Key key04[] = { { myModMask,            XK_Tab,       { moveFocusCurrClientA, ARG_SCF(oldC) }         } };
-static const Key key05[] = { { myModMask,            XK_m,         { moveFocusCurrClientA, ARG_SCF(headC) }        } };
-static const Key key06[] = { { myModMask|ShiftMask,  XK_j,         { swapCurrClientA, ARG_SCF(nextC) }             } };
-static const Key key07[] = { { myModMask|ShiftMask,  XK_k,         { swapCurrClientA, ARG_SCF(prevC) }             } };
-static const Key key08[] = { { myModMask|ShiftMask,  XK_p,         { swapCurrClientA, ARG_SCF(oldC) }              } };
-static const Key key09[] = { { myModMask|ShiftMask,  XK_m,         { swapCurrClientA, ARG_SCF(headC) }             } };
-static const Key key10[] = { { myModMask,            XK_Up,        { moveFocusCurrClientA, ARG_SCF(upC) }          } };
-static const Key key11[] = { { myModMask,            XK_Down,      { moveFocusCurrClientA, ARG_SCF(downC) }        } };
-static const Key key12[] = { { myModMask,            XK_Left,      { moveFocusCurrClientA, ARG_SCF(leftC) }        } };
-static const Key key13[] = { { myModMask,            XK_Right,     { moveFocusCurrClientA, ARG_SCF(rightC) }       } };
-static const Key key14[] = { { myModMask|ShiftMask,  XK_Up,        { swapCurrClientA, ARG_SCF(upC) }               } };
-static const Key key15[] = { { myModMask|ShiftMask,  XK_Down,      { swapCurrClientA, ARG_SCF(downC) }             } };
-static const Key key16[] = { { myModMask|ShiftMask,  XK_Left,      { swapCurrClientA, ARG_SCF(leftC) }             } };
-static const Key key17[] = { { myModMask|ShiftMask,  XK_Right,     { swapCurrClientA, ARG_SCF(rightC) }            } };
-static const Key key18[] = { { myModMask,            XK_space,     { changeLayoutA, ARG_INT(1) }                   } };
-static const Key key19[] = { { myModMask,            XK_t,         { toggleFreeCurrClientA, ARG_FLF(defFreeR) }    } };
-static const Key key20[] = { { myModMask,            XK_z,         { toggleLayoutModA, ARG_UINT(mirrModL) }        } };
-static const Key key21[] = { { myModMask,            XK_x,         { toggleLayoutModA, ARG_UINT(reflXModL) }       } };
-static const Key key22[] = { { myModMask,            XK_y,         { toggleLayoutModA, ARG_UINT(reflYModL) }       } };
-static const Key key23[] = { { myModMask,            XK_f,         { toggleLayoutA, ARG_INT(0) }                   } };
-static const Key key24[] = { { myModMask,            XK_o,         { toggleLayoutA, ARG_INT(1) }                   } };
-static const Key key25[] = { { myModMask|ShiftMask,  XK_f,         { toggleFullScreenCurrClientA, ARG_SCF(selfC) } } };
-static const Key key26[] = { { myModMask,            XK_comma,     { increaseMasterLayoutA, ARG_INT(1) }           } };
-static const Key key27[] = { { myModMask,            XK_period,    { increaseMasterLayoutA, ARG_INT(-1) }          } };
-static const Key key28[] = { { myModMask,            XK_l,         { resizeMasterLayoutA, ARG_FLOAT(1.0f) }        } };
-static const Key key29[] = { { myModMask,            XK_h,         { resizeMasterLayoutA, ARG_FLOAT(-1.0f) }       } };
-static const Key key30[] = { { myModMask,            XK_1,         { changeToWorkspaceA, ARG_INT(0) }              } };
-static const Key key31[] = { { myModMask,            XK_2,         { changeToWorkspaceA, ARG_INT(1) }              } };
-static const Key key32[] = { { myModMask,            XK_3,         { changeToWorkspaceA, ARG_INT(2) }              } };
-static const Key key33[] = { { myModMask,            XK_4,         { changeToWorkspaceA, ARG_INT(3) }              } };
-static const Key key34[] = { { myModMask,            XK_5,         { changeToWorkspaceA, ARG_INT(4) }              } };
-static const Key key35[] = { { myModMask,            XK_6,         { changeToWorkspaceA, ARG_INT(5) }              } };
-static const Key key36[] = { { myModMask,            XK_7,         { changeToWorkspaceA, ARG_INT(6) }              } };
-static const Key key37[] = { { myModMask,            XK_8,         { changeToWorkspaceA, ARG_INT(7) }              } };
-static const Key key38[] = { { myModMask,            XK_9,         { changeToWorkspaceA, ARG_INT(8) }              } };
-static const Key key39[] = { { myModMask,            XK_0,         { changeToWorkspaceA, ARG_INT(9) }              } };
-static const Key key40[] = { { ControlMask|Mod1Mask, XK_Left,      { changeToPrevWorkspaceA, NO_ARG }              } };
-static const Key key41[] = { { ControlMask|Mod1Mask, XK_Right,     { changeToNextWorkspaceA, NO_ARG }              } };
-static const Key key42[] = { { myModMask|ShiftMask,  XK_Tab,       { changeToLastWorkspaceA, NO_ARG }              } };
-static const Key key43[] = { { myModMask|ShiftMask,  XK_1,         { moveClientToWorkspaceA, ARG_INT(0) }          } };
-static const Key key44[] = { { myModMask|ShiftMask,  XK_2,         { moveClientToWorkspaceA, ARG_INT(1) }          } };
-static const Key key45[] = { { myModMask|ShiftMask,  XK_3,         { moveClientToWorkspaceA, ARG_INT(2) }          } };
-static const Key key46[] = { { myModMask|ShiftMask,  XK_4,         { moveClientToWorkspaceA, ARG_INT(3) }          } };
-static const Key key47[] = { { myModMask|ShiftMask,  XK_5,         { moveClientToWorkspaceA, ARG_INT(4) }          } };
-static const Key key48[] = { { myModMask|ShiftMask,  XK_6,         { moveClientToWorkspaceA, ARG_INT(5) }          } };
-static const Key key49[] = { { myModMask|ShiftMask,  XK_7,         { moveClientToWorkspaceA, ARG_INT(6) }          } };
-static const Key key50[] = { { myModMask|ShiftMask,  XK_8,         { moveClientToWorkspaceA, ARG_INT(7) }          } };
-static const Key key51[] = { { myModMask|ShiftMask,  XK_9,         { moveClientToWorkspaceA, ARG_INT(8) }          } };
-static const Key key52[] = { { myModMask|ShiftMask,  XK_0,         { moveClientToWorkspaceA, ARG_INT(9) }          } };
-static const Key key53[] = { { myModMask|ShiftMask,  XK_q,         { quitNeurowmN, NO_ARG }                        } };
-static const Key key54[] = { { myModMask,            XK_q,         { reloadNeurowmN, NO_ARG }                      } };
-static const Key key55[] = { { Mod1Mask,             XK_F2,        { spawnA, ARG_CMD(lchrcmd) }                    } };
-static const Key key56[] = { { myModMask|ShiftMask,  XK_space,     { resetLayoutA, NO_ARG }                        } };
-static const Key key57[] = { { myModMask,            XK_n,         { minimizeCurrClientA, ARG_SCF(selfC) }         } };
-static const Key key58[] = { { myModMask|ShiftMask,  XK_n,         { restoreLastMinimizedA, NO_ARG }               } };
-static const Key key59[] = { { myModMask|ShiftMask,  XK_t,         { freeCurrClientA, ARG_FLF(bigCenterFreeR) }    } };
-static const Key key60[] = { { myModMask,            XK_grave,     { toggleNSPA, ARG_CMD(nspcmd) }                 } };
-static const Key key61[] = { { myModMask,            XK_masculine, { toggleNSPA, ARG_CMD(nspcmd) }                 } };
-static const Key key62[] = { { Mod1Mask,             XK_Up,        { spawnA, ARG_CMD(volupcmd) }                   } };
-static const Key key63[] = { { Mod1Mask,             XK_Down,      { spawnA, ARG_CMD(voldocmd) }                   } };
-static const Key key64[] = { { Mod1Mask,             XK_Right,     { spawnA, ARG_CMD(songncmd) }                   } };
-static const Key key65[] = { { Mod1Mask,             XK_Left,      { spawnA, ARG_CMD(songpcmd) }                   } };
+// KEY (MOD, KEY, ACTIONCHAIN)
+static const Key key00[] = { { myModMask|ShiftMask,   XK_Return,    CHAIN(spawnA, ARG_CMD(termcmd))                 } };
+static const Key key01[] = { { myModMask,             XK_c,         CHAIN_NULL(killCurrClientA)                     } };
+static const Key key02[] = { { myModMask,             XK_j,         CHAIN(moveFocusCurrClientA, ARG_CSF(nextC))     } };
+static const Key key03[] = { { myModMask,             XK_k,         CHAIN(moveFocusCurrClientA, ARG_CSF(prevC))     } };
+static const Key key04[] = { { myModMask,             XK_Tab,       CHAIN(moveFocusCurrClientA, ARG_CSF(oldC))      } };
+static const Key key05[] = { { myModMask,             XK_m,         CHAIN(moveFocusCurrClientA, ARG_CSF(headC))     } };
+static const Key key06[] = { { myModMask|ShiftMask,   XK_j,         CHAIN(swapCurrClientA, ARG_CSF(nextC))          } };
+static const Key key07[] = { { myModMask|ShiftMask,   XK_k,         CHAIN(swapCurrClientA, ARG_CSF(prevC))          } };
+static const Key key08[] = { { myModMask|ShiftMask,   XK_p,         CHAIN(swapCurrClientA, ARG_CSF(oldC))           } };
+static const Key key09[] = { { myModMask|ShiftMask,   XK_m,         CHAIN(swapCurrClientA, ARG_CSF(headC))          } };
+static const Key key10[] = { { myModMask,             XK_Up,        CHAIN(moveFocusCurrClientA, ARG_CSF(upC))       } };
+static const Key key11[] = { { myModMask,             XK_Down,      CHAIN(moveFocusCurrClientA, ARG_CSF(downC))     } };
+static const Key key12[] = { { myModMask,             XK_Left,      CHAIN(moveFocusCurrClientA, ARG_CSF(leftC))     } };
+static const Key key13[] = { { myModMask,             XK_Right,     CHAIN(moveFocusCurrClientA, ARG_CSF(rightC))    } };
+static const Key key14[] = { { myModMask|ShiftMask,   XK_Up,        CHAIN(swapCurrClientA, ARG_CSF(upC))            } };
+static const Key key15[] = { { myModMask|ShiftMask,   XK_Down,      CHAIN(swapCurrClientA, ARG_CSF(downC))          } };
+static const Key key16[] = { { myModMask|ShiftMask,   XK_Left,      CHAIN(swapCurrClientA, ARG_CSF(leftC))          } };
+static const Key key17[] = { { myModMask|ShiftMask,   XK_Right,     CHAIN(swapCurrClientA, ARG_CSF(rightC))         } };
+static const Key key18[] = { { myModMask,             XK_space,     CHAIN_NULL(changeLayoutA)                       } };
+static const Key key19[] = { { myModMask,             XK_t,         CHAIN_NULL(toggleFreeCurrClientA)               } };
+static const Key key20[] = { { myModMask,             XK_z,         CHAIN(toggleLayoutModA, ARG_UINT(mirrModL))     } };
+static const Key key21[] = { { myModMask,             XK_x,         CHAIN(toggleLayoutModA, ARG_UINT(reflXModL))    } };
+static const Key key22[] = { { myModMask,             XK_y,         CHAIN(toggleLayoutModA, ARG_UINT(reflYModL))    } };
+static const Key key23[] = { { myModMask,             XK_f,         CHAIN(toggleLayoutA, ARG_INT(0))                } };
+static const Key key24[] = { { myModMask,             XK_o,         CHAIN(toggleLayoutA, ARG_INT(1))                } };
+static const Key key25[] = { { myModMask|ShiftMask,   XK_f,         CHAIN_NULL(toggleFullScreenCurrClientA)         } };
+static const Key key26[] = { { myModMask,             XK_comma,     CHAIN_NULL(increaseMasterLayoutA)               } };
+static const Key key27[] = { { myModMask,             XK_period,    CHAIN(increaseMasterLayoutA, ARG_INT(-1))       } };
+static const Key key28[] = { { myModMask,             XK_l,         CHAIN_NULL(resizeMasterLayoutA)                 } };
+static const Key key29[] = { { myModMask,             XK_h,         CHAIN(resizeMasterLayoutA, ARG_FLOAT(-1.0f))    } };
+static const Key key30[] = { { myModMask,             XK_1,         CHAIN(changeToWorkspaceA, ARG_INT(0))           } };
+static const Key key31[] = { { myModMask,             XK_2,         CHAIN(changeToWorkspaceA, ARG_INT(1))           } };
+static const Key key32[] = { { myModMask,             XK_3,         CHAIN(changeToWorkspaceA, ARG_INT(2))           } };
+static const Key key33[] = { { myModMask,             XK_4,         CHAIN(changeToWorkspaceA, ARG_INT(3))           } };
+static const Key key34[] = { { myModMask,             XK_5,         CHAIN(changeToWorkspaceA, ARG_INT(4))           } };
+static const Key key35[] = { { myModMask,             XK_6,         CHAIN(changeToWorkspaceA, ARG_INT(5))           } };
+static const Key key36[] = { { myModMask,             XK_7,         CHAIN(changeToWorkspaceA, ARG_INT(6))           } };
+static const Key key37[] = { { myModMask,             XK_8,         CHAIN(changeToWorkspaceA, ARG_INT(7))           } };
+static const Key key38[] = { { myModMask,             XK_9,         CHAIN(changeToWorkspaceA, ARG_INT(8))           } };
+static const Key key39[] = { { myModMask,             XK_0,         CHAIN(changeToWorkspaceA, ARG_INT(9))           } };
+static const Key key40[] = { { ControlMask|Mod1Mask,  XK_Left,      CHAIN(changeToRelWorkspaceA, ARG_WSF(nextW))    } };
+static const Key key41[] = { { ControlMask|Mod1Mask,  XK_Right,     CHAIN(changeToRelWorkspaceA, ARG_WSF(prevW))    } };
+static const Key key42[] = { { myModMask|ShiftMask,   XK_Tab,       CHAIN(changeToRelWorkspaceA, ARG_WSF(oldW))     } };
+static const Key key43[] = { { myModMask|ShiftMask,   XK_1,         CHAIN(moveClientToWorkspaceA, ARG_INT(0))       } };
+static const Key key44[] = { { myModMask|ShiftMask,   XK_2,         CHAIN(moveClientToWorkspaceA, ARG_INT(1))       } };
+static const Key key45[] = { { myModMask|ShiftMask,   XK_3,         CHAIN(moveClientToWorkspaceA, ARG_INT(2))       } };
+static const Key key46[] = { { myModMask|ShiftMask,   XK_4,         CHAIN(moveClientToWorkspaceA, ARG_INT(3))       } };
+static const Key key47[] = { { myModMask|ShiftMask,   XK_5,         CHAIN(moveClientToWorkspaceA, ARG_INT(4))       } };
+static const Key key48[] = { { myModMask|ShiftMask,   XK_6,         CHAIN(moveClientToWorkspaceA, ARG_INT(5))       } };
+static const Key key49[] = { { myModMask|ShiftMask,   XK_7,         CHAIN(moveClientToWorkspaceA, ARG_INT(6))       } };
+static const Key key50[] = { { myModMask|ShiftMask,   XK_8,         CHAIN(moveClientToWorkspaceA, ARG_INT(7))       } };
+static const Key key51[] = { { myModMask|ShiftMask,   XK_9,         CHAIN(moveClientToWorkspaceA, ARG_INT(8))       } };
+static const Key key52[] = { { myModMask|ShiftMask,   XK_0,         CHAIN(moveClientToWorkspaceA, ARG_INT(9))       } };
+static const Key key53[] = { { myModMask|ControlMask, XK_1,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(0)) } };
+static const Key key54[] = { { myModMask|ControlMask, XK_2,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(1)) } };
+static const Key key55[] = { { myModMask|ControlMask, XK_3,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(2)) } };
+static const Key key56[] = { { myModMask|ControlMask, XK_4,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(3)) } };
+static const Key key57[] = { { myModMask|ControlMask, XK_5,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(4)) } };
+static const Key key58[] = { { myModMask|ControlMask, XK_6,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(5)) } };
+static const Key key59[] = { { myModMask|ControlMask, XK_7,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(6)) } };
+static const Key key60[] = { { myModMask|ControlMask, XK_8,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(7)) } };
+static const Key key61[] = { { myModMask|ControlMask, XK_9,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(8)) } };
+static const Key key62[] = { { myModMask|ControlMask, XK_0,         CHAIN(moveClientToWorkspaceFollowA, ARG_INT(9)) } };
+static const Key key63[] = { { myModMask|ShiftMask,   XK_q,         CHAIN_NULL(quitNeurowmA)                        } };
+static const Key key64[] = { { myModMask,             XK_q,         CHAIN_NULL(reloadNeurowmA)                      } };
+static const Key key65[] = { { Mod1Mask,              XK_F2,        CHAIN(spawnA, ARG_CMD(lchrcmd))                 } };
+static const Key key66[] = { { myModMask|ShiftMask,   XK_space,     CHAIN_NULL(resetLayoutA)                        } };
+static const Key key67[] = { { myModMask,             XK_n,         CHAIN(minimizeCurrClientA, ARG_CSF(selfC))      } };
+static const Key key68[] = { { myModMask|ShiftMask,   XK_n,         CHAIN_NULL(restoreLastMinimizedA)               } };
+static const Key key69[] = { { myModMask|ShiftMask,   XK_t,         CHAIN(freeCurrClientA, ARG_FLF(bigCenterFreeR)) } };
+static const Key key70[] = { { myModMask,             XK_grave,     CHAIN(toggleNSPA, ARG_CMD(nspcmd))              } };
+static const Key key71[] = { { myModMask,             XK_masculine, CHAIN(toggleNSPA, ARG_CMD(nspcmd))              } };
+static const Key key72[] = { { Mod1Mask,              XK_Up,        CHAIN(spawnA, ARG_CMD(volupcmd))                } };
+static const Key key73[] = { { Mod1Mask,              XK_Down,      CHAIN(spawnA, ARG_CMD(voldocmd))                } };
+static const Key key74[] = { { Mod1Mask,              XK_Right,     CHAIN(spawnA, ARG_CMD(songncmd))                } };
+static const Key key75[] = { { Mod1Mask,              XK_Left,      CHAIN(spawnA, ARG_CMD(songpcmd))                } };
 
 // KEYS
 static const Key *myKeys[] = {
@@ -287,7 +296,8 @@ static const Key *myKeys[] = {
   key30, key31, key32, key33, key34, key35, key36, key37, key38, key39,
   key40, key41, key42, key43, key44, key45, key46, key47, key48, key49,
   key50, key51, key52, key53, key54, key55, key56, key57, key58, key59,
-  key60, key61, key62, key63, key64, key65, NULL
+  key60, key61, key62, key63, key64, key65, key66, key67, key68, key69,
+  key70, key71, key72, key73, key74, key75, NULL
 };
 
 
@@ -295,14 +305,14 @@ static const Key *myKeys[] = {
 // BUTTONS (GRABBED TO EACH WINDOW)
 //----------------------------------------------------------------------------------------------------------------------
 
-// BUTTON (MOD, BUTTON, ACTION, UNWRAPONFOCUS)
-static const Button button00[] = { { noModMask,           Button1, { moveFocusPtrClientA, ARG_SCF(selfC) },        True  } };
-static const Button button01[] = { { myModMask,           Button1, { freeMovePtrClientA, ARG_SCF(selfC) },         False } };
-static const Button button02[] = { { myModMask,           Button2, { toggleFreePtrClientA, ARG_FLF(defFreeR) },    False } };
-static const Button button03[] = { { myModMask,           Button3, { freeResizePtrClientA, ARG_SCF(selfC) },       False } };
-static const Button button04[] = { { myModMask|ShiftMask, Button1, { movePtrClientA, ARG_SCF(selfC) },             False } };
-static const Button button05[] = { { myModMask|ShiftMask, Button2, { toggleFullScreenPtrClientA, ARG_SCF(selfC) }, False } };
-static const Button button06[] = { { myModMask|ShiftMask, Button3, { resizePtrClientA, ARG_SCF(selfC) },           False } };
+// BUTTON (MOD, BUTTON, ACTIONCHAIN, UNWRAPONFOCUS)
+static const Button button00[] = { { noModMask,           Button1, CHAIN_NULL(moveFocusPtrClientA),        True  } };
+static const Button button01[] = { { myModMask,           Button1, CHAIN_NULL(freeMovePtrClientA),         False } };
+static const Button button02[] = { { myModMask,           Button2, CHAIN_NULL(toggleFreePtrClientA),       False } };
+static const Button button03[] = { { myModMask,           Button3, CHAIN_NULL(freeResizePtrClientA),       False } };
+static const Button button04[] = { { myModMask|ShiftMask, Button1, CHAIN_NULL(movePtrClientA),             False } };
+static const Button button05[] = { { myModMask|ShiftMask, Button2, CHAIN_NULL(toggleFullScreenPtrClientA), False } };
+static const Button button06[] = { { myModMask|ShiftMask, Button3, CHAIN_NULL(resizePtrClientA),           False } };
 
 // BUTTONS
 static const Button *myButtons[] = { button00, button01, button02, button03, button04, button05, button06, NULL };

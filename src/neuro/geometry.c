@@ -30,7 +30,7 @@ Rectangle *getRelativeRectangleG(Rectangle *dst, const Rectangle *src, const flo
   return dst;
 }
 
-Rectangle *getGapsRectangleG(Rectangle *dst, const Rectangle *src, const int *gaps) {
+Rectangle *getAbsoluteRelativeRectangleG(Rectangle *dst, const Rectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);
@@ -47,25 +47,25 @@ Rectangle *setRectangleG(Rectangle *r, int x, int y, int w, int h) {
   return r;
 }
 
-Rectangle *setRectangleBorderG(Rectangle *r, int bs) {
+Rectangle *setRectangleBorderWidthG(Rectangle *r, int width) {
   assert(r);
-  r->w -= bs * 2;
-  r->h -= bs * 2;
+  r->w -= width * 2;
+  r->h -= width * 2;
   return r;
 }
 
-Rectangle *setRectangleSpaceG(Rectangle *r, int sp) {
+Rectangle *setRectangleBorderGapG(Rectangle *r, int gap) {
   assert(r);
-  r->x += sp;
-  r->y += sp;
-  r->w -= sp * 2;
-  r->h -= sp * 2;
+  r->x += gap;
+  r->y += gap;
+  r->w -= gap * 2;
+  r->h -= gap * 2;
   return r;
 }
 
-Rectangle *setRectangleBorderAndSpaceG(Rectangle *r, int bs, int s) {
+Rectangle *setRectangleBorderWidthAndGapG(Rectangle *r, int width, int gap) {
   assert(r);
-  return setRectangleSpaceG(setRectangleBorderG(r, bs), s);
+  return setRectangleBorderGapG(setRectangleBorderWidthG(r, width), gap);
 }
 
 Rectangle *mirrorRectangleG(Rectangle *rect, const Rectangle *reg) {

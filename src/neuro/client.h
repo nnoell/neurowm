@@ -33,8 +33,8 @@ void unsetUrgentC(CliPtr c, const void *data);
 void killC(CliPtr c, const void *data);
 void minimizeC(CliPtr c, const void *data);
 void tileC(CliPtr c, const void *data);
-void freeC(CliPtr c, const void *freeLocFn);
-void toggleFreeC(CliPtr c, const void *freeLocFn);
+void freeC(CliPtr c, const void *freeSetterFn);
+void toggleFreeC(CliPtr c, const void *freeSetterFn);
 void normalC(CliPtr c, const void *data);
 void fullScreenC(CliPtr c, const void *data);
 void toggleFullScreenC(CliPtr c, const void *data);
@@ -43,7 +43,7 @@ void resizeC(CliPtr c, const void *data);
 void freeMoveC(CliPtr c, const void *data);
 void freeResizeC(CliPtr c, const void *data);
 
-// Select Functions
+// Client Selectors
 CliPtr selfC(const CliPtr c);     // Client c itself
 CliPtr nextC(const CliPtr c);     // The next client of c
 CliPtr prevC(const CliPtr c);     // The previous client of c
@@ -55,22 +55,22 @@ CliPtr downC(const CliPtr c);     // The lower client (layout position) of c
 CliPtr leftC(const CliPtr c);     // The left client (layout position) of c
 CliPtr rightC(const CliPtr c);    // The right client (layout position) of c
 
-// Test Functions
+// Client Testers
 Bool testWindowC(const CliPtr c, const void *w);
 Bool testIsUrgentC(const CliPtr c, const void *p);
 Bool testIsFixedC(const CliPtr c, const void *p);
 
-// Border Color
+// Color Setters
 Color onlyCurrBorderColorC(const CliPtr c);
 Color allBorderColorC(const CliPtr c);
 Color noBorderColorC(const CliPtr c);
 
-// Border Width
+// Border Width Setters
 int alwaysBorderWidthC(const CliPtr c);
 int smartBorderWidthC(const CliPtr c);
 int onlyCurrBorderWidthC(const CliPtr c);
 
-// Border Gap
+// Border Gap Setters
 int alwaysBorderGapC(const CliPtr c);
 int smartBorderGapC(const CliPtr c);
 int onlyCurrBorderGapC(const CliPtr c);

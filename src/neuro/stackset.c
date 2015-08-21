@@ -60,7 +60,7 @@ typedef struct StackSet StackSet;
 struct StackSet {
   Stack *stacks;
   int curr;
-  int last;  // Previouse selected workspace
+  int old;   // Previouse selected workspace
   int size;  // Number of stacks the stackset has
 };
 
@@ -247,14 +247,14 @@ static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
   assert(lc);
   size_t i;
   for (i = 0; i < size; ++i) {
-    *(ArrangeFn *)&l[ i ].arrangeFn = lc[ i ]->arrangeFn;
-    *(ColorFn *)&l[ i ].borderColorFn = lc[ i ]->borderColorFn;
-    *(BorderFn *)&l[ i ].borderWidthFn = lc[ i ]->borderWidthFn;
-    *(BorderFn *)&l[ i ].borderGapFn = lc[ i ]->borderGapFn;
+    *(ArrangerFn *)&l[ i ].arrangerFn = lc[ i ]->arrangerFn;
+    *(ColorSetterFn *)&l[ i ].borderColorSetterFn = lc[ i ]->borderColorSetterFn;
+    *(BorderSetterFn *)&l[ i ].borderWidthSetterFn = lc[ i ]->borderWidthSetterFn;
+    *(BorderSetterFn *)&l[ i ].borderGapSetterFn = lc[ i ]->borderGapSetterFn;
     *(const float **)&l[ i ].region = lc[ i ]->region;
     l[ i ].mod = lc[ i ]->mod;
     l[ i ].followMouse = lc[ i ]->followMouse;
-    memmove(l[ i ].as, lc[ i ]->as, sizeof(ActionAr)*ARRSET_MAX);
+    memmove(l[ i ].arrangeSettings, lc[ i ]->arrangeSettings, sizeof(ActionAr)*ARRSET_MAX);
   }
 }
 
@@ -323,7 +323,7 @@ Bool initSS() {
     s->name = ws->name;
     s->curr = NULL; s->prev = NULL; s->head = NULL; s->last = NULL; s->nsp = NULL;
     s->size = 0;
-    getGapsRectangleG(&s->region, &screenRegion, ws->gaps);
+    getAbsoluteRelativeRectangleG(&s->region, &screenRegion, ws->gaps);
     s->currLayoutIdx = 0;
     s->currTogLayoutIdx = -1;  // No toggled layout by default
     *(int *)&(s->numLayouts) = sizel;
@@ -332,7 +332,7 @@ Bool initSS() {
     initLayoutsSS(s->togLayouts, ws->togLayouts, sizetl);
   }
   SS.curr = 0;
-  SS.last = 0;
+  SS.old = 0;
   SS.size = size;
   return True;
 }
@@ -357,8 +357,8 @@ int getNextStackSS() {
   return SS.curr + 1 >= SS.size ? 0 : SS.curr + 1;
 }
 
-int getLastStackSS() {
-  return SS.last;
+int getOldStackSS() {
+  return SS.old;
 }
 
 int getNSPStackSS() {
@@ -382,7 +382,7 @@ CliPtr getCurrClientNSPStackSS() {
 }
 
 void setCurrStackSS(int ws) {
-  SS.last = SS.curr;
+  SS.old = SS.curr;
   SS.curr = ws % SS.size;
 }
 
@@ -393,15 +393,15 @@ void setCurrClientSS(const CliPtr c) {
 }
 
 // First off, search in the current stack, if it is not there, search in the other stacks
-CliPtr findClientSS(const TestCliPtrFn tcfn, const void *p) {
-  CliPtr c = findClientStackSS(SS.curr, tcfn, p);
+CliPtr findClientSS(const ClientTesterFn ctf, const void *p) {
+  CliPtr c = findClientStackSS(SS.curr, ctf, p);
   if (c)
     return c;
   int i;
   for (i = 0; i < SS.size; ++i) {
     if (i == SS.curr)
       continue;
-    c = findClientStackSS(i, tcfn, p);
+    c = findClientStackSS(i, ctf, p);
     if (c)
       return c;
   }
@@ -613,12 +613,12 @@ CliPtr getLastClientStackSS(int ws) {
   return (CliPtr)(SS.stacks[ ws % SS.size ].last);
 }
 
-CliPtr findClientStackSS(int ws, const TestCliPtrFn tcfn, const void *data) {
+CliPtr findClientStackSS(int ws, const ClientTesterFn ctf, const void *data) {
   assert(tcfn);
   Stack *s = SS.stacks + (ws % SS.size);
   Node *n;
   for (n=s->head; n; n=n->next)
-    if (tcfn((CliPtr)n, data))
+    if (ctf((CliPtr)n, data))
       return (CliPtr)n;
   return NULL;
 }

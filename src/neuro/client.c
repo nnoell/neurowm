@@ -67,7 +67,6 @@ static CliPtr queryPointC(int ws, int x, int y) {
   return c;
 }
 
-
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
@@ -78,8 +77,8 @@ void updateC(CliPtr c, const void *data) {
     return;
 
   // Free windows
-  if (CLIVAL(c).freeLocFn != notFreeR)
-    CLIVAL(c).freeLocFn(getRegionClientSS(c), &screenRegion);
+  if (CLIVAL(c).freeSetterFn != notFreeR)
+    CLIVAL(c).freeSetterFn(getRegionClientSS(c), &screenRegion);
 
   // Fullscreen windows
   Rectangle r;
@@ -88,17 +87,20 @@ void updateC(CliPtr c, const void *data) {
   else
     memmove(&r, getRegionClientSS(c), sizeof(Rectangle));
 
+  // Set border width and border gap
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
-  int borderWidth = l->borderWidthFn(c);
-  int borderGap = l->borderGapFn(c);
-  if ((!CLIVAL(c).isFullScreen && !CLIVAL(c).freeLocFn && l->arrangeFn != floatArrL) || CLIVAL(c).isNSP)
-    setRectangleBorderAndSpaceG(&r, borderWidth, borderGap);
+  int borderWidth = l->borderWidthSetterFn(c);
+  int borderGap = l->borderGapSetterFn(c);
+  setRectangleBorderWidthG(&r, borderWidth);
+  if (!CLIVAL(c).isFullScreen && CLIVAL(c).freeSetterFn == notFreeR && l->arrangerFn != floatArrangerL)
+    setRectangleBorderGapG(&r, borderGap);
   if (r.w < 1)
     r.w = 1;
   if (r.h < 1)
     r.h = 1;
 
-  XSetWindowBorder(display, CLIVAL(c).win, l->borderColorFn(c));
+  // Draw
+  XSetWindowBorder(display, CLIVAL(c).win, l->borderColorSetterFn(c));
   XSetWindowBorderWidth(display, CLIVAL(c).win, borderWidth);
   XMoveResizeWindow(display, CLIVAL(c).win, r.x, r.y, r.w, r.h);
 }
@@ -210,33 +212,33 @@ void tileC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  if (CLIVAL(c).freeLocFn == notFreeR)
+  if (CLIVAL(c).freeSetterFn == notFreeR)
     return;
-  CLIVAL(c).freeLocFn = notFreeR;
+  CLIVAL(c).freeSetterFn = notFreeR;
   applyRuleR(c);
   runCurrLayoutL(CLIVAL(c).ws);
   updateFocusW(CLIVAL(c).ws);
 }
 
-void freeC(CliPtr c, const void *freeLocFn) {
+void freeC(CliPtr c, const void *freeSetterFn) {
   if (!c)
     return;
-  const ArgFn *argfn = (const ArgFn *)freeLocFn;
-  if (CLIVAL(c).freeLocFn == argfn->freeLocFn)
+  const ArgFn *argfn = (const ArgFn *)freeSetterFn;
+  if (CLIVAL(c).freeSetterFn == argfn->FreeSetterFn_)
     return;
-  CLIVAL(c).freeLocFn = argfn->freeLocFn;
+  CLIVAL(c).freeSetterFn = argfn->FreeSetterFn_;
   unapplyRuleR(c);
   runCurrLayoutL(CLIVAL(c).ws);
   updateFocusW(CLIVAL(c).ws);
 }
 
-void toggleFreeC(CliPtr c, const void *freeLocFn) {
+void toggleFreeC(CliPtr c, const void *freeSetterFn) {
   if (!c)
     return;
-  if (CLIVAL(c).freeLocFn != notFreeR)
+  if (CLIVAL(c).freeSetterFn != notFreeR)
     tileC(c, NULL);
   else
-    freeC(c, freeLocFn);
+    freeC(c, freeSetterFn);
 }
 
 void normalC(CliPtr c, const void *data) {
@@ -334,9 +336,9 @@ void freeMoveC(CliPtr c, const void *data) {
     return;
   int rx, ry;
   getPtrClientW(&rx, &ry);
-  if (CLIVAL(c).freeLocFn == notFreeR)
+  if (CLIVAL(c).freeSetterFn == notFreeR)
     unapplyRuleR(c);
-  CLIVAL(c).freeLocFn = defFreeR;
+  CLIVAL(c).freeSetterFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
   moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
@@ -364,9 +366,9 @@ void freeResizeC(CliPtr c, const void *data) {
     return;
   int rx, ry;
   getPtrClientW(&rx, &ry);
-  if (CLIVAL(c).freeLocFn == notFreeR)
+  if (CLIVAL(c).freeSetterFn == notFreeR)
     unapplyRuleR(c);
-  CLIVAL(c).freeLocFn = defFreeR;
+  CLIVAL(c).freeSetterFn = defFreeR;
   runCurrLayoutL(CLIVAL(c).ws);
   moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
@@ -483,7 +485,7 @@ Color allBorderColorC(const CliPtr c) {
     return currBorderColorS;
   else if (CLIVAL(c).isUrgent)
     return urgtBorderColorS;
-  else if (CLIVAL(c).freeLocFn != notFreeR)
+  else if (CLIVAL(c).freeSetterFn != notFreeR)
     return freeBorderColorS;
   else if (isPrevClientSS(c))
     return prevBorderColorS;
@@ -505,10 +507,10 @@ int smartBorderWidthC(const CliPtr c) {
   assert(c);
   if (CLIVAL(c).isFullScreen)
     return 0;
-  if (CLIVAL(c).freeLocFn != notFreeR)
+  if (CLIVAL(c).freeSetterFn != notFreeR)
     return borderWidthS;
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
-  if (l->arrangeFn == floatArrL)
+  if (l->arrangerFn == floatArrangerL)
     return borderWidthS;
   if (findFixedClientW(CLIVAL(c).ws))
     return borderWidthS;

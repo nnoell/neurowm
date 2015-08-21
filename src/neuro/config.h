@@ -36,13 +36,18 @@
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
+// Default commands
+extern const char* defTerminalCommand[];
+extern const char* defLauncherCommand[];
+extern const char *defNSPCommand[];
+
 // Default layoutSets
 extern const LayoutConf *defLayoutSet[];
 extern const LayoutConf *defTogLayoutSet[];
 
 // Default WMConfig fields fields
-extern const Action *defStartUpHook[];
-extern const Action *defEndUpHook[];
+extern const ActionChain defStartUpHook[];
+extern const ActionChain defEndUpHook[];
 extern const Button *defButtons[];
 extern const Key *defKeys[];
 extern const DzenPanel *defDzenPanelSet[];
