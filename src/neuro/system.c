@@ -84,7 +84,8 @@ static int XErrorHandlerS(Display *d, XErrorEvent *ee) {
       || (ee->request_code == X_ConfigureWindow   && ee->error_code == BadMatch)
       || (ee->request_code == X_GrabButton        && ee->error_code == BadAccess)
       || (ee->request_code == X_GrabKey           && ee->error_code == BadAccess)
-      || (ee->request_code == X_CopyArea          && ee->error_code == BadDrawable))
+      || (ee->request_code == X_CopyArea          && ee->error_code == BadDrawable)
+      || (ee->request_code == X_KillClient        && ee->error_code == BadValue))
     return 0;
   printf("error: request code=%d, error code=%d\n", ee->request_code, ee->error_code);
   return -1;

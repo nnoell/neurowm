@@ -89,11 +89,9 @@ void updateC(CliPtr c, const void *data) {
 
   // Set border width and border gap
   Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
-  int borderWidth = l->borderWidthSetterFn(c);
-  int borderGap = l->borderGapSetterFn(c);
-  setRectangleBorderWidthG(&r, borderWidth);
-  if (!CLIVAL(c).isFullScreen && CLIVAL(c).freeSetterFn == notFreeR && l->arrangerFn != floatArrangerL)
-    setRectangleBorderGapG(&r, borderGap);
+  const int borderWidth = l->borderWidthSetterFn(c);
+  const int borderGap = l->borderGapSetterFn(c);
+  setRectangleBorderWidthAndGapG(&r, borderWidth, borderGap);
   if (r.w < 1)
     r.w = 1;
   if (r.h < 1)
@@ -509,14 +507,9 @@ int smartBorderWidthC(const CliPtr c) {
     return 0;
   if (CLIVAL(c).freeSetterFn != notFreeR)
     return borderWidthS;
-  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
-  if (l->arrangerFn == floatArrangerL)
-    return borderWidthS;
-  if (findFixedClientW(CLIVAL(c).ws))
-    return borderWidthS;
   Rectangle *a = getRegionClientSS(c);
   Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
-  if (a->w == as->w && a->h == as->h)
+  if ((a->w == as->w && a->h == as->h) || (a->w == screenRegion.w && a->h == screenRegion.h))
     return 0;
   return borderWidthS;
 }
@@ -530,23 +523,31 @@ int onlyCurrBorderWidthC(const CliPtr c) {
 
 // Border Gap
 int alwaysBorderGapC(const CliPtr c) {
-  (void)c;
+  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
+  if (CLIVAL(c).isFullScreen || CLIVAL(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
+    return 0;
   return borderGapS;
 }
 
 int smartBorderGapC(const CliPtr c) {
   assert(c);
+  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
+  if (CLIVAL(c).isFullScreen || CLIVAL(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
+    return 0;
   Rectangle *a = getRegionClientSS(c);
   Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
-  if (a->w == as->w && a->h == as->h)
+  if ((a->w == as->w && a->h == as->h) || (a->w == screenRegion.w && a->h == screenRegion.h))
     return 0;
   return borderGapS;
 }
 
 int onlyCurrBorderGapC(const CliPtr c) {
   assert(c);
-  if (isCurrClientSS(c))
-    return borderGapS;
-  return 0;
+  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
+  if (CLIVAL(c).isFullScreen || CLIVAL(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
+    return 0;
+  if (!isCurrClientSS(c))
+    return 0;
+  return borderGapS;
 }
 

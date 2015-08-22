@@ -280,7 +280,8 @@ void swapCurrClientHandlerA(ActionAr selectCliFn_arg) {
 
 void killCurrClientHandlerA(ActionAr selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(killClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  killClientW(getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  // processCliActionA(killClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
 }
 
 void tileCurrClientHandlerA(ActionAr selectCliFn_arg) {
