@@ -67,11 +67,13 @@ Color noBorderColorC(const CliPtr c);
 
 // Border Width Setters
 int alwaysBorderWidthC(const CliPtr c);
+int neverBorderWidthC(const CliPtr c);
 int smartBorderWidthC(const CliPtr c);
 int onlyCurrBorderWidthC(const CliPtr c);
 
 // Border Gap Setters
 int alwaysBorderGapC(const CliPtr c);
+int neverBorderGapC(const CliPtr c);
 int smartBorderGapC(const CliPtr c);
 int onlyCurrBorderGapC(const CliPtr c);
 
