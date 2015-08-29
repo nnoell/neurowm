@@ -179,16 +179,16 @@ struct GenericMaybeArg {
   const GenericArg value;
 };
 
+// GenericFn
+typedef void (*GenericFn)(GenericArg arg);
+
 
 // ACTION TYPES --------------------------------------------------------------------------------------------------------
-
-// ActionFn
-typedef void (*ActionFn)(GenericArg arg);
 
 // Action
 typedef struct Action Action;
 struct Action {
-  const ActionFn handler;
+  const GenericFn handler;
   const GenericArg arg;
 };
 
