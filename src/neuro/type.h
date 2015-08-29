@@ -77,7 +77,7 @@
 
 // Chainned Actions
 #define CHAIN_NULL(X)     {.chain = (X), .arg = MAYBE_ARG_NOTHING}
-#define CHAIN(X,Y)        {.chain = (X), .arg = MAYBE_ARG_JUST(Y)}
+#define CHAIN(X, Y)       {.chain = (X), .arg = MAYBE_ARG_JUST(Y)}
 
 // Default sizes
 #define NAME_MAX    256
@@ -211,11 +211,11 @@ typedef int (*BorderSetterFn)(ClientPtrPtr c);
 // Arrange
 typedef struct Arrange Arrange;
 struct Arrange {
-  int size;                    // Number of tiled clients
-  Rectangle region;            // Tiled layout region
-  Rectangle **cliRegions;      // Region of each client
-  Rectangle **cliFloatRegions; // Float region of each client
-  GenericArg *arrangeSettings;   // Settings of the arrange
+  int size;                     // Number of tiled clients
+  Rectangle region;             // Tiled layout region
+  Rectangle **cliRegions;       // Region of each client
+  Rectangle **cliFloatRegions;  // Float region of each client
+  GenericArg *arrangeSettings;  // Settings of the arrange
 };
 
 // ArrangerFn
