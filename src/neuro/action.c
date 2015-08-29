@@ -84,16 +84,16 @@ const Action const normalCurrClientActionA[] = { { normalCurrClientHandlerA, ARG
 const Action const fullScreenCurrClientActionA[] = { { fullScreenCurrClientHandlerA, ARG_CSF(selfC) } };
 const Action const toggleFullScreenCurrClientActionA[] = { { toggleFullScreenCurrClientHandlerA, ARG_CSF(selfC) } };
 const Action const minimizeCurrClientActionA[] = { { minimizeCurrClientHandlerA, ARG_CSF(selfC) } };
-const Action const freeCurrClientActionA[] = { { freeCurrClientHandlerA, ARG_FLF(defFreeR) } };
-const Action const toggleFreeCurrClientActionA[] = { { toggleFreeCurrClientHandlerA, ARG_FLF(defFreeR) } };
+const Action const freeCurrClientActionA[] = { { freeCurrClientHandlerA, ARG_FSF(defFreeR) } };
+const Action const toggleFreeCurrClientActionA[] = { { toggleFreeCurrClientHandlerA, ARG_FSF(defFreeR) } };
 const Action const moveFocusPtrClientActionA[] = { { moveFocusPtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const freeMovePtrClientActionA[] = { { freeMovePtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const freeResizePtrClientActionA[] = { { freeResizePtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const movePtrClientActionA[] = { { movePtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const resizePtrClientActionA[] = { { resizePtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const toggleFullScreenPtrClientActionA[] = { { toggleFullScreenPtrClientHandlerA, ARG_CSF(selfC) } };
-const Action const freePtrClientActionA[] = { { freePtrClientHandlerA, ARG_FLF(defFreeR) } };
-const Action const toggleFreePtrClientActionA[] = { { toggleFreePtrClientHandlerA, ARG_FLF(defFreeR) } };
+const Action const freePtrClientActionA[] = { { freePtrClientHandlerA, ARG_FSF(defFreeR) } };
+const Action const toggleFreePtrClientActionA[] = { { toggleFreePtrClientHandlerA, ARG_FSF(defFreeR) } };
 
 // Action Chains
 const Action *const nothingA[] = { nothingActionA, NULL };
@@ -342,14 +342,16 @@ void moveFocusPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
 
 void freeMovePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
+  GenericArg fsf = (GenericArg)ARG_FSF(defFreeR);
   int rx, ry;
-  processCliActionA(freeMoveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processCliActionA(freeMoveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), (const void *)&fsf);
 }
 
 void freeResizePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
+  GenericArg fsf = (GenericArg)ARG_FSF(defFreeR);
   int rx, ry;
-  processCliActionA(freeResizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processCliActionA(freeResizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), (const void *)&fsf);
 }
 
 void movePtrClientHandlerA(GenericArg clientSelectorFn_arg) {

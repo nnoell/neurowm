@@ -328,23 +328,17 @@ void resizeC(ClientPtrPtr c, const void *data) {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeMoveC(ClientPtrPtr c, const void *data) {
-  (void)data;
-  if (!c)
+void freeMoveC(ClientPtrPtr c, const void *freeSetterFn) {
+  if (!c || !freeSetterFn)
     return;
-  int rx, ry;
-  getPtrClientW(&rx, &ry);
-  if (CLI_GET(c).freeSetterFn == notFreeR)
-    unapplyRuleR(c);
-  CLI_GET(c).freeSetterFn = defFreeR;
-  runCurrLayoutL(CLI_GET(c).ws);
   moveFocusClientW(c, selfC, NULL);
+  freeC(c, freeSetterFn);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
-
   Rectangle *r = getRegionClientSS(c);
-  int cx = r->x, cy = r->y;
+  int cx = r->x, cy = r->y, rx = 0, ry = 0;
+  getPtrClientW(&rx, &ry);
   XEvent ev;
   do {
     XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
@@ -358,24 +352,18 @@ void freeMoveC(ClientPtrPtr c, const void *data) {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeResizeC(ClientPtrPtr c, const void *data) {
-  (void)data;
-  if (!c)
+void freeResizeC(ClientPtrPtr c, const void *freeSetterFn) {
+  if (!c || !freeSetterFn)
     return;
-  int rx, ry;
-  getPtrClientW(&rx, &ry);
-  if (CLI_GET(c).freeSetterFn == notFreeR)
-    unapplyRuleR(c);
-  CLI_GET(c).freeSetterFn = defFreeR;
-  runCurrLayoutL(CLI_GET(c).ws);
   moveFocusClientW(c, selfC, NULL);
+  freeC(c, freeSetterFn);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurResize ], CurrentTime) != GrabSuccess)
     return;
-
   Rectangle *r = getRegionClientSS(c);
   XWarpPointer(display, None, CLI_GET(c).win, 0, 0, 0, 0, r->w, r->h);
-  int cw = r->w, ch = r->h;
+  int cw = r->w, ch = r->h, rx = 0, ry = 0;
+  getPtrClientW(&rx, &ry);
   XEvent ev;
   do {
     XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);

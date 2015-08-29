@@ -40,8 +40,8 @@ void fullScreenC(ClientPtrPtr c, const void *data);
 void toggleFullScreenC(ClientPtrPtr c, const void *data);
 void moveC(ClientPtrPtr c, const void *data);
 void resizeC(ClientPtrPtr c, const void *data);
-void freeMoveC(ClientPtrPtr c, const void *data);
-void freeResizeC(ClientPtrPtr c, const void *data);
+void freeMoveC(ClientPtrPtr c, const void *freeSetterFn);
+void freeResizeC(ClientPtrPtr c, const void *freeSetterFn);
 
 // Client Selectors
 ClientPtrPtr selfC(const ClientPtrPtr c);     // Client c itself

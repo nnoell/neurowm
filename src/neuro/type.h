@@ -50,7 +50,7 @@
 #define ARG_FLOAT(X) {.float_ = (X)}
 #define ARG_STR(X)   {.string_ = (X)}
 #define ARG_CMD(X)   {.command_ = (X)}
-#define ARG_FLF(X)   {.GenericArgFn_.FreeSetterFn_ = (X)}
+#define ARG_FSF(X)   {.GenericArgFn_.FreeSetterFn_ = (X)}
 #define ARG_CSF(X)   {.GenericArgFn_.ClientSelectorFn_ = (X)}
 #define ARG_WSF(X)   {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
 
