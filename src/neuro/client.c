@@ -501,9 +501,14 @@ int smartBorderWidthC(const ClientPtrPtr c) {
     return 0;
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return borderWidthS;
-  Rectangle *a = getRegionClientSS(c);
-  Rectangle *as = getRegionStackSS(CLI_GET(c).ws);
-  if ((a->w == as->w && a->h == as->h) || (a->w == screenRegion.w && a->h == screenRegion.h))
+  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  if (l->arrangerFn == floatArrangerL)
+    return borderWidthS;
+  if (findFixedClientW(CLI_GET(c).ws))
+    return borderWidthS;
+  Rectangle *rc = getRegionClientSS(c);
+  Rectangle *rs = getRegionStackSS(CLI_GET(c).ws);
+  if ((rc->w == rs->w && rc->h == rs->h) || (rc->w == screenRegion.w && rc->h == screenRegion.h))
     return 0;
   return borderWidthS;
 }
