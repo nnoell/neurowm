@@ -30,27 +30,27 @@ void showW(int ws, Bool doRules);
 void tileW(int ws);
 void freeW(int ws, const void *freeSetterFn);
 void changeToWorkspaceW(int ws);
-void moveClientToWorkspaceW(CliPtr c, int ws);
+void moveClientToWorkspaceW(ClientPtrPtr c, int ws);
 void minimizeW(int ws);
 void restoreLastMinimizedW(int ws);
 void addEnterNotifyMaskW(int ws);
 void rmvEnterNotifyMaskW(int ws);
 
 // Client
-void moveFocusClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void swapClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void killClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void minimizeClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void tileClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void freeClientW(CliPtr c, const ClientSelectorFn csf, const void *freeSetterFn);
-void toggleFreeClientW(CliPtr c, const ClientSelectorFn csf, const void *freeSetterFn);
-void normalClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void fullScreenClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void toggleFullScreenClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void moveClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void resizeClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void freeMoveClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
-void freeResizeClientW(CliPtr c, const ClientSelectorFn csf, const void *data);
+void moveFocusClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void swapClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void killClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void minimizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void tileClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void freeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn);
+void toggleFreeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn);
+void normalClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void fullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void toggleFullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void moveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void resizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void freeMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void freeResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 
 // Workspace Selectors
 int prevW();
@@ -58,13 +58,13 @@ int nextW();
 int oldW();
 
 // Get functions
-CliPtr getPtrClientW(int *x, int *y);
+ClientPtrPtr getPtrClientW(int *x, int *y);
 
 // Find functions
-CliPtr findWindowClientAllW(Window w);
-CliPtr findWindowClientW(int ws, Window w);
-CliPtr findUrgentClientW(int ws);
-CliPtr findFixedClientW(int ws);
+ClientPtrPtr findWindowClientAllW(Window w);
+ClientPtrPtr findWindowClientW(int ws, Window w);
+ClientPtrPtr findUrgentClientW(int ws);
+ClientPtrPtr findFixedClientW(int ws);
 
 #endif  // NEURO_WORKSPACE_H_
 

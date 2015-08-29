@@ -173,7 +173,7 @@ void nnoellCurrWSLoggerP(char *str) {
 
 void nnoellCurrTitleLoggerP(char *str) {
   assert(str);
-  CliPtr c = getCurrClientStackSS(getCurrStackSS());
+  ClientPtrPtr c = getCurrClientStackSS(getCurrStackSS());
   if (c) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     wrapDzenBoxDP(tmp, CLI_GET(c).title, &WhiteBoxPP);

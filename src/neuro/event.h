@@ -34,7 +34,7 @@ extern const EventHandler const eventsE[ LASTEvent ];
 //----------------------------------------------------------------------------------------------------------------------
 
 void manageWindowE(Window w);
-void unmanageCliE(CliPtr c);
+void unmanageCliE(ClientPtrPtr c);
 void loadWindowsE();
 
 

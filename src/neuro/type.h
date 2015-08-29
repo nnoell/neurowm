@@ -81,9 +81,8 @@
 // Reload
 #define EXIT_RELOAD ((int)'R')
 
-// Client
-#define CLI(X)      (*(X))
-#define CLI_GET(X)   (**(X))
+// ClientPtrPtr
+#define CLI_GET(X)  (**(X))
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -125,17 +124,17 @@ struct Client {
   Bool isUrgent;
 };
 
-// CliPtr
-typedef Client *const *CliPtr;
+// ClientPtrPtr
+typedef Client *const *ClientPtrPtr;
 
 // ClientTesterFn
-typedef Bool (*ClientTesterFn)(CliPtr c, const void *p);
+typedef Bool (*ClientTesterFn)(ClientPtrPtr c, const void *p);
 
 // ClientSelectorFn
-typedef CliPtr (*ClientSelectorFn)(CliPtr c);
+typedef ClientPtrPtr (*ClientSelectorFn)(ClientPtrPtr c);
 
 // GenericClientFn
-typedef void (*GenericClientFn)(CliPtr c, const void *data);
+typedef void (*GenericClientFn)(ClientPtrPtr c, const void *data);
 
 
 // WORKSPACE TYPES -----------------------------------------------------------------------------------------------------
@@ -147,7 +146,7 @@ typedef int (*WorkspaceSelectorFn)();
 // ACTION TYPES --------------------------------------------------------------------------------------------------------
 
 // GenericCliActionFn
-typedef void (*GenericCliActionFn)(CliPtr c, ClientSelectorFn gcf, const void *data);
+typedef void (*GenericCliActionFn)(ClientPtrPtr c, ClientSelectorFn gcf, const void *data);
 
 // GenericWSActionFn
 typedef void (*GenericWSActionFn)(int ws);
@@ -204,10 +203,10 @@ struct ActionChain {
 typedef unsigned long Color;
 
 // ColorSetterFn
-typedef Color (*ColorSetterFn)(CliPtr c);
+typedef Color (*ColorSetterFn)(ClientPtrPtr c);
 
 // BorderSetterFn
-typedef int (*BorderSetterFn)(CliPtr c);
+typedef int (*BorderSetterFn)(ClientPtrPtr c);
 
 // Arrange
 typedef struct Arrange Arrange;

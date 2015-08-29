@@ -59,8 +59,8 @@ static Bool setTitleAtomC(Client *c, Atom atom) {
   return True;
 }
 
-static CliPtr queryPointC(int ws, int x, int y) {
-  CliPtr c;
+static ClientPtrPtr queryPointC(int ws, int x, int y) {
+  ClientPtrPtr c;
   for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c))
     if (isPointInRectangleG(getRegionClientSS(c), x, y))
       break;
@@ -71,7 +71,7 @@ static CliPtr queryPointC(int ws, int x, int y) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-void updateC(CliPtr c, const void *data) {
+void updateC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -103,7 +103,7 @@ void updateC(CliPtr c, const void *data) {
   XMoveResizeWindow(display, CLI_GET(c).win, r.x, r.y, r.w, r.h);
 }
 
-void updateClassAndNameC(CliPtr c, const void *data) {
+void updateClassAndNameC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -120,16 +120,16 @@ void updateClassAndNameC(CliPtr c, const void *data) {
     XFree(ch.res_name);
 }
 
-void updateTitleC(CliPtr c, const void *data) {
+void updateTitleC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   CLI_GET(c).title[ 0 ] = '\0';
-  if (!setTitleAtomC(CLI(c), netatoms[ NET_WM_NAME ]))
-    setTitleAtomC(CLI(c), XA_WM_NAME);
+  if (!setTitleAtomC(*c, netatoms[ NET_WM_NAME ]))
+    setTitleAtomC(*c, XA_WM_NAME);
 }
 
-void hideC(CliPtr c, const void *doRules) {  // Move off screen
+void hideC(ClientPtrPtr c, const void *doRules) {  // Move off screen
   if (!c)
     return;
   if (CLI_GET(c).isHidden)
@@ -143,7 +143,7 @@ void hideC(CliPtr c, const void *doRules) {  // Move off screen
   CLI_GET(c).isHidden = True;
 }
 
-void showC(CliPtr c, const void *doRules) {  // Move back to screen
+void showC(ClientPtrPtr c, const void *doRules) {  // Move back to screen
   if (!c)
     return;
   if (!CLI_GET(c).isHidden)
@@ -157,21 +157,21 @@ void showC(CliPtr c, const void *doRules) {  // Move back to screen
   CLI_GET(c).isHidden = False;
 }
 
-void setUrgentC(CliPtr c, const void *data) {
+void setUrgentC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   CLI_GET(c).isUrgent = True;
 }
 
-void unsetUrgentC(CliPtr c, const void *data) {
+void unsetUrgentC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   CLI_GET(c).isUrgent = False;
 }
 
-void killC(CliPtr c, const void *data) {
+void killC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -190,7 +190,7 @@ void killC(CliPtr c, const void *data) {
   }
 }
 
-void minimizeC(CliPtr c, const void *data) {
+void minimizeC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -206,7 +206,7 @@ void minimizeC(CliPtr c, const void *data) {
   updateFocusW(cli->ws);
 }
 
-void tileC(CliPtr c, const void *data) {
+void tileC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -218,7 +218,7 @@ void tileC(CliPtr c, const void *data) {
   updateFocusW(CLI_GET(c).ws);
 }
 
-void freeC(CliPtr c, const void *freeSetterFn) {
+void freeC(ClientPtrPtr c, const void *freeSetterFn) {
   if (!c)
     return;
   const GenericArgFn *gaf = (const GenericArgFn *)freeSetterFn;
@@ -230,7 +230,7 @@ void freeC(CliPtr c, const void *freeSetterFn) {
   updateFocusW(CLI_GET(c).ws);
 }
 
-void toggleFreeC(CliPtr c, const void *freeSetterFn) {
+void toggleFreeC(ClientPtrPtr c, const void *freeSetterFn) {
   if (!c)
     return;
   if (CLI_GET(c).freeSetterFn != notFreeR)
@@ -239,7 +239,7 @@ void toggleFreeC(CliPtr c, const void *freeSetterFn) {
     freeC(c, freeSetterFn);
 }
 
-void normalC(CliPtr c, const void *data) {
+void normalC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -251,7 +251,7 @@ void normalC(CliPtr c, const void *data) {
   updateFocusW(CLI_GET(c).ws);
 }
 
-void fullScreenC(CliPtr c, const void *data) {
+void fullScreenC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -263,7 +263,7 @@ void fullScreenC(CliPtr c, const void *data) {
   updateFocusW(CLI_GET(c).ws);
 }
 
-void toggleFullScreenC(CliPtr c, const void *data) {
+void toggleFullScreenC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -273,7 +273,7 @@ void toggleFullScreenC(CliPtr c, const void *data) {
     fullScreenC(c, NULL);
 }
 
-void moveC(CliPtr c, const void *data) {
+void moveC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -300,7 +300,7 @@ void moveC(CliPtr c, const void *data) {
   XUngrabPointer(display, CurrentTime);
 }
 
-void resizeC(CliPtr c, const void *data) {
+void resizeC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -328,7 +328,7 @@ void resizeC(CliPtr c, const void *data) {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeMoveC(CliPtr c, const void *data) {
+void freeMoveC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -358,7 +358,7 @@ void freeMoveC(CliPtr c, const void *data) {
   XUngrabPointer(display, CurrentTime);
 }
 
-void freeResizeC(CliPtr c, const void *data) {
+void freeResizeC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -390,94 +390,94 @@ void freeResizeC(CliPtr c, const void *data) {
 }
 
 // Select Functions
-CliPtr selfC(const CliPtr c) {
+ClientPtrPtr selfC(const ClientPtrPtr c) {
   assert(c);
   return c;
 }
 
-CliPtr nextC(const CliPtr c) {
+ClientPtrPtr nextC(const ClientPtrPtr c) {
   assert(c);
-  CliPtr n = getNextClientSS(c);
+  ClientPtrPtr n = getNextClientSS(c);
   if (!n)
     n = getHeadClientStackSS(CLI_GET(c).ws);
   return n;
 }
 
-CliPtr prevC(const CliPtr c) {
+ClientPtrPtr prevC(const ClientPtrPtr c) {
   assert(c);
-  CliPtr p = getPrevClientSS(c);
+  ClientPtrPtr p = getPrevClientSS(c);
   if (!p)
     p = getLastClientStackSS(CLI_GET(c).ws);
   return p;
 }
 
-CliPtr oldC(const CliPtr c) {
+ClientPtrPtr oldC(const ClientPtrPtr c) {
   assert(c);
   return getPrevClientStackSS(CLI_GET(c).ws);
 }
 
-CliPtr headC(const CliPtr c) {
+ClientPtrPtr headC(const ClientPtrPtr c) {
   assert(c);
   return getHeadClientStackSS(CLI_GET(c).ws);
 }
 
-CliPtr lastC(const CliPtr c) {
+ClientPtrPtr lastC(const ClientPtrPtr c) {
   assert(c);
   return getLastClientStackSS(CLI_GET(c).ws);
 }
 
-CliPtr upC(const CliPtr c) {
+ClientPtrPtr upC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLI_GET(c).ws, r->x+1, r->y-1);
 }
 
-CliPtr downC(const CliPtr c) {
+ClientPtrPtr downC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLI_GET(c).ws, r->x+1, r->y + r->h + 1);
 }
 
-CliPtr leftC(const CliPtr c) {
+ClientPtrPtr leftC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLI_GET(c).ws, r->x-1, r->y+1);
 }
 
-CliPtr rightC(const CliPtr c) {
+ClientPtrPtr rightC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
   return queryPointC(CLI_GET(c).ws, r->x + r->w + 1, r->y+1);
 }
 
 // Test functions
-Bool testWindowC(const CliPtr c, const void *w) {
+Bool testWindowC(const ClientPtrPtr c, const void *w) {
   assert(c);
   assert(w);
   return CLI_GET(c).win == *((Window *)w);
 }
 
-Bool testIsUrgentC(const CliPtr c, const void *p) {
+Bool testIsUrgentC(const ClientPtrPtr c, const void *p) {
   assert(c);
   (void)p;
   return CLI_GET(c).isUrgent;
 }
 
-Bool testIsFixedC(const CliPtr c, const void *p) {
+Bool testIsFixedC(const ClientPtrPtr c, const void *p) {
   assert(c);
   (void)p;
   return CLI_GET(c).fixPos != notFixedR;
 }
 
 // Border Color
-Color onlyCurrBorderColorC(const CliPtr c) {
+Color onlyCurrBorderColorC(const ClientPtrPtr c) {
   assert(c);
   if (isCurrClientSS(c))
     return currBorderColorS;
   return normBorderColorS;
 }
 
-Color allBorderColorC(const CliPtr c) {
+Color allBorderColorC(const ClientPtrPtr c) {
   assert(c);
   if (isCurrClientSS(c))
     return currBorderColorS;
@@ -490,23 +490,23 @@ Color allBorderColorC(const CliPtr c) {
   return normBorderColorS;
 }
 
-Color noBorderColorC(const CliPtr c) {
+Color noBorderColorC(const ClientPtrPtr c) {
   (void)c;
   return normBorderColorS;
 }
 
 // Border Width
-int alwaysBorderWidthC(const CliPtr c) {
+int alwaysBorderWidthC(const ClientPtrPtr c) {
   (void)c;
   return borderWidthS;
 }
 
-int neverBorderWidthC(const CliPtr c) {
+int neverBorderWidthC(const ClientPtrPtr c) {
   (void)c;
   return 0;
 }
 
-int smartBorderWidthC(const CliPtr c) {
+int smartBorderWidthC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).isFullScreen)
     return 0;
@@ -519,7 +519,7 @@ int smartBorderWidthC(const CliPtr c) {
   return borderWidthS;
 }
 
-int onlyCurrBorderWidthC(const CliPtr c) {
+int onlyCurrBorderWidthC(const ClientPtrPtr c) {
   assert(c);
   if (isCurrClientSS(c))
     return borderWidthS;
@@ -528,7 +528,7 @@ int onlyCurrBorderWidthC(const CliPtr c) {
 
 
 // Border Gap
-int alwaysBorderGapC(const CliPtr c) {
+int alwaysBorderGapC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
@@ -538,12 +538,12 @@ int alwaysBorderGapC(const CliPtr c) {
   return borderGapS;
 }
 
-int neverBorderGapC(const CliPtr c) {
+int neverBorderGapC(const ClientPtrPtr c) {
   (void)c;
   return 0;
 }
 
-int smartBorderGapC(const CliPtr c) {
+int smartBorderGapC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
@@ -557,7 +557,7 @@ int smartBorderGapC(const CliPtr c) {
   return borderGapS;
 }
 
-int onlyCurrBorderGapC(const CliPtr c) {
+int onlyCurrBorderGapC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;

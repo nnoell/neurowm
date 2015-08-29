@@ -373,12 +373,12 @@ int getSizeNSPSS() {
   return SS.stacks[ SS.size ].size;
 }
 
-CliPtr getCurrClientCurrStackSS() {
-  return (CliPtr)SS.stacks[ SS.curr ].curr;
+ClientPtrPtr getCurrClientCurrStackSS() {
+  return (ClientPtrPtr)SS.stacks[ SS.curr ].curr;
 }
 
-CliPtr getCurrClientNSPStackSS() {
-  return (CliPtr)SS.stacks[ SS.size ].curr;
+ClientPtrPtr getCurrClientNSPStackSS() {
+  return (ClientPtrPtr)SS.stacks[ SS.size ].curr;
 }
 
 void setCurrStackSS(int ws) {
@@ -386,15 +386,15 @@ void setCurrStackSS(int ws) {
   SS.curr = ws % SS.size;
 }
 
-void setCurrClientSS(const CliPtr c) {
+void setCurrClientSS(const ClientPtrPtr c) {
   if (!c)
     return;
   setCurrNodeSS((Node *)c);
 }
 
 // First off, search in the current stack, if it is not there, search in the other stacks
-CliPtr findClientSS(const ClientTesterFn ctf, const void *p) {
-  CliPtr c = findClientStackSS(SS.curr, ctf, p);
+ClientPtrPtr findClientSS(const ClientTesterFn ctf, const void *p) {
+  ClientPtrPtr c = findClientStackSS(SS.curr, ctf, p);
   if (c)
     return c;
   int i;
@@ -409,22 +409,22 @@ CliPtr findClientSS(const ClientTesterFn ctf, const void *p) {
 }
 
 // First, search in the current stack, if is not there, search in the other stacks
-CliPtr findNSPClientSS() {
+ClientPtrPtr findNSPClientSS() {
   Node *n = SS.stacks[ SS.curr ].nsp;
   if (n)
-    return (CliPtr)n;
+    return (ClientPtrPtr)n;
   int i;
   for (i = 0; i < SS.size; ++i) {
     if (i == SS.curr)
       continue;
     n = SS.stacks[ i ].nsp;
     if (n)
-      return (CliPtr)n;
+      return (ClientPtrPtr)n;
   }
   return NULL;
 }
 
-CliPtr addClientEndSS(const Client *c) {
+ClientPtrPtr addClientEndSS(const Client *c) {
   if (!c)
     return NULL;
   Stack *s = SS.stacks + c->ws;
@@ -448,10 +448,10 @@ CliPtr addClientEndSS(const Client *c) {
     setCurrNodeSS(n);
   }
   s->size++;
-  return (CliPtr)n;
+  return (ClientPtrPtr)n;
 }
 
-CliPtr addClientStartSS(const Client *c) {
+ClientPtrPtr addClientStartSS(const Client *c) {
   if (!c)
     return NULL;
   Stack *s = SS.stacks + c->ws;
@@ -475,11 +475,11 @@ CliPtr addClientStartSS(const Client *c) {
     setCurrNodeSS(n);
   }
   s->size++;
-  return (CliPtr)n;
+  return (ClientPtrPtr)n;
 }
 
 // NOTE: it only removes the Node, you must eventually free the return value with freeClientSS
-Client *rmvClientSS(CliPtr c) {
+Client *rmvClientSS(ClientPtrPtr c) {
   if (!c)
     return NULL;
   if (isLastClientSS(c))
@@ -597,64 +597,64 @@ Rectangle *getRegionStackSS(int ws) {
   return &(SS.stacks[ ws % SS.size ].region);
 }
 
-CliPtr getCurrClientStackSS(int ws) {
-  return (CliPtr)(SS.stacks[ ws % SS.size ].curr);
+ClientPtrPtr getCurrClientStackSS(int ws) {
+  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].curr);
 }
 
-CliPtr getPrevClientStackSS(int ws) {
-  return (CliPtr)(SS.stacks[ ws % SS.size ].prev);
+ClientPtrPtr getPrevClientStackSS(int ws) {
+  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].prev);
 }
 
-CliPtr getHeadClientStackSS(int ws) {
-  return (CliPtr)(SS.stacks[ ws % SS.size ].head);
+ClientPtrPtr getHeadClientStackSS(int ws) {
+  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].head);
 }
 
-CliPtr getLastClientStackSS(int ws) {
-  return (CliPtr)(SS.stacks[ ws % SS.size ].last);
+ClientPtrPtr getLastClientStackSS(int ws) {
+  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].last);
 }
 
-CliPtr findClientStackSS(int ws, const ClientTesterFn ctf, const void *data) {
+ClientPtrPtr findClientStackSS(int ws, const ClientTesterFn ctf, const void *data) {
   assert(tcfn);
   Stack *s = SS.stacks + (ws % SS.size);
   Node *n;
   for (n=s->head; n; n=n->next)
-    if (ctf((CliPtr)n, data))
-      return (CliPtr)n;
+    if (ctf((ClientPtrPtr)n, data))
+      return (ClientPtrPtr)n;
   return NULL;
 }
 
 
-// CliPtr
-Bool isCurrClientSS(const CliPtr c) {
+// ClientPtrPtr
+Bool isCurrClientSS(const ClientPtrPtr c) {
   return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].curr;
 }
 
-Bool isPrevClientSS(const CliPtr c) {
+Bool isPrevClientSS(const ClientPtrPtr c) {
   return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].prev;
 }
 
-Bool isHeadClientSS(const CliPtr c) {
+Bool isHeadClientSS(const ClientPtrPtr c) {
   return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].head;
 }
 
-Bool isLastClientSS(const CliPtr c) {
+Bool isLastClientSS(const ClientPtrPtr c) {
   return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].last;
 }
 
-Rectangle *getRegionClientSS(const CliPtr c) {
+Rectangle *getRegionClientSS(const ClientPtrPtr c) {
   Node *n = (Node *)c;
   return !c ? NULL : &n->region;
 }
 
-CliPtr getNextClientSS(const CliPtr c) {
-  return !c ? NULL : (CliPtr)(((Node *)c)->next);
+ClientPtrPtr getNextClientSS(const ClientPtrPtr c) {
+  return !c ? NULL : (ClientPtrPtr)(((Node *)c)->next);
 }
 
-CliPtr getPrevClientSS(const CliPtr c) {
-  return !c ? NULL : (CliPtr)(((Node *)c)->prev);
+ClientPtrPtr getPrevClientSS(const ClientPtrPtr c) {
+  return !c ? NULL : (ClientPtrPtr)(((Node *)c)->prev);
 }
 
-CliPtr swpClientSS(const CliPtr c1, const CliPtr c2) {
+ClientPtrPtr swpClientSS(const ClientPtrPtr c1, const ClientPtrPtr c2) {
   if (!c1 || !c2)
     return NULL;
   if (c1 == c2)

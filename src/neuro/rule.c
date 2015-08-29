@@ -108,7 +108,7 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
   return c;
 }
 
-void applyRuleR(const CliPtr c) {
+void applyRuleR(const ClientPtrPtr c) {
   assert(c);
   Rectangle *reg = getRegionStackSS(CLI_GET(c).ws);
   Rectangle *regc = getRegionClientSS(c);
@@ -162,7 +162,7 @@ void applyRuleR(const CliPtr c) {
   }
 }
 
-void unapplyRuleR(const CliPtr c) {
+void unapplyRuleR(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return;

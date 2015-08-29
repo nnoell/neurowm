@@ -33,8 +33,8 @@
 
 // Main Functions
 Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa);
-void applyRuleR(const CliPtr c);
-void unapplyRuleR(const CliPtr c);
+void applyRuleR(const ClientPtrPtr c);
+void unapplyRuleR(const ClientPtrPtr c);
 
 // Free Setters
 void defFreeR(Rectangle *a, const Rectangle *r);

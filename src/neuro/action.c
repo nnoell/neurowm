@@ -31,7 +31,7 @@ static void processWSActionA(const GenericWSActionFn gwsaf, int ws) {
   addEnterNotifyMaskW(ws);
 }
 
-static void processCliActionA(const GenericCliActionFn gcaf, CliPtr c, const ClientSelectorFn csf, const void *data) {
+static void processCliActionA(const GenericCliActionFn gcaf, ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   assert(gcaf);
   assert(csf);
   if (!c)
@@ -230,7 +230,7 @@ void changeToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
 }
 
 void moveClientToWorkspaceHandlerA(GenericArg int_arg) {
-  CliPtr c = getCurrClientCurrStackSS();
+  ClientPtrPtr c = getCurrClientCurrStackSS();
   rmvEnterNotifyMaskW(CLI_GET(c).ws);
   moveClientToWorkspaceW(c, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(CLI_GET(c).ws);
@@ -238,7 +238,7 @@ void moveClientToWorkspaceHandlerA(GenericArg int_arg) {
 
 void moveClientToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
-  CliPtr c = getCurrClientCurrStackSS();
+  ClientPtrPtr c = getCurrClientCurrStackSS();
   const int dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
   rmvEnterNotifyMaskW(CLI_GET(c).ws);
   moveClientToWorkspaceW(c, dst);
@@ -254,7 +254,7 @@ void toggleNSPHandlerA(GenericArg command_arg) {
   assert(ARG_CMD_GET(command_arg));
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  CliPtr c = findNSPClientSS();
+  ClientPtrPtr c = findNSPClientSS();
   if (c && CLI_GET(c).ws == ws) {
     moveClientToWorkspaceW(c, getNSPStackSS());
   } else if (c) {

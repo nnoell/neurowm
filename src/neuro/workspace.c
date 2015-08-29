@@ -24,12 +24,12 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool isAboveTiledClientW(const CliPtr c) {
+static Bool isAboveTiledClientW(const ClientPtrPtr c) {
   assert(c);
   return (CLI_GET(c).freeSetterFn != notFreeR) || CLI_GET(c).isFullScreen;
 }
 
-static void focusClientW(CliPtr c) {
+static void focusClientW(ClientPtrPtr c) {
   assert(c);
   unsetUrgentC(c, NULL);
   ungrabButtonsS(CLI_GET(c).win);
@@ -39,16 +39,16 @@ static void focusClientW(CliPtr c) {
   updateC(c, NULL);
 }
 
-static void unfocusClientW(CliPtr c) {
+static void unfocusClientW(ClientPtrPtr c) {
   assert(c);
   grabButtonsS(CLI_GET(c).win);
   updateC(c, NULL);
 }
 
-static void processClientW(const GenericClientFn gcf, const CliPtr c, const ClientSelectorFn csf, const void *data) {
+static void processClientW(const GenericClientFn gcf, const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   if (!c || !csf)
     return;
-  CliPtr dst = csf(c);
+  ClientPtrPtr dst = csf(c);
   if (!dst)
     return;
   gcf(dst, data);
@@ -60,7 +60,7 @@ static void processClientW(const GenericClientFn gcf, const CliPtr c, const Clie
 //----------------------------------------------------------------------------------------------------------------------
 
 void updateW(int ws) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     updateC(c, NULL);
 }
@@ -75,7 +75,7 @@ void updateFocusW(int ws) {
   Window windows[ n ], d1, d2, *wins = NULL;
   unsigned int i, num;
   int atc = 0;
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     if (isAboveTiledClientW(c))
       ++atc;
@@ -89,7 +89,7 @@ void updateFocusW(int ws) {
       exitErrorS("updateFocusW - could not get windows");
     int n2 = n;
     for (i = 0; i < num; ++i) {
-      CliPtr c = findWindowClientW(ws, wins[ i ]);
+      ClientPtrPtr c = findWindowClientW(ws, wins[ i ]);
       if (!c)
         continue;
       if (isCurrClientSS(c))
@@ -105,25 +105,25 @@ void updateFocusW(int ws) {
 }
 
 void hideW(int ws, Bool doRules) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c=getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     hideC(c, (const void *)&doRules);
 }
 
 void showW(int ws, Bool doRules) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     showC(c, (const void *)&doRules);
 }
 
 void tileW(int ws) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     tileC(c, NULL);
 }
 
 void freeW(int ws, const void *freeSetterFn) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     freeC(c, freeSetterFn);
 }
@@ -140,7 +140,7 @@ void changeToWorkspaceW(int ws) {
   updateFocusW(new);
 }
 
-void moveClientToWorkspaceW(CliPtr c, int ws) {
+void moveClientToWorkspaceW(ClientPtrPtr c, int ws) {
   if (!c)
     return;
   if (ws < 0 || ws >= getSizeSS() + 1)
@@ -157,7 +157,7 @@ void moveClientToWorkspaceW(CliPtr c, int ws) {
     memmove(&oldRegion, getRegionClientSS(c), sizeof(Rectangle));
   Client *cli = rmvClientSS(c);
   cli->ws = ws;
-  CliPtr c2 = addClientStartSS(cli);
+  ClientPtrPtr c2 = addClientStartSS(cli);
   if (!c2)
     exitErrorS("moveCliToWorkspaceW - could not add client");
   if (isFree)
@@ -169,7 +169,7 @@ void moveClientToWorkspaceW(CliPtr c, int ws) {
 }
 
 void minimizeW(int ws) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     minimizeC(c, NULL);
 }
@@ -180,7 +180,7 @@ void restoreLastMinimizedW(int ws) {
   Client *cli = popMinimizedClientSS(ws);
   if (!cli)
     exitErrorS("restoreLastMinimizedW - could not restore last minimized client");
-  CliPtr c = addClientStartSS(cli);
+  ClientPtrPtr c = addClientStartSS(cli);
   if (!c)
     exitErrorS("restoreLastMinimizedW - could not add client");
   applyRuleR(c);
@@ -190,35 +190,35 @@ void restoreLastMinimizedW(int ws) {
 }
 
 void addEnterNotifyMaskW(int ws) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     XSelectInput(display, CLI_GET(c).win, CLIENT_MASK);
 }
 
 void rmvEnterNotifyMaskW(int ws) {
-  CliPtr c;
+  ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     XSelectInput(display, CLI_GET(c).win, CLIENT_MASK_NO_ENTER);
 }
 
 
 // Clients
-void moveFocusClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
+void moveFocusClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   (void)data;
   if (!c || !csf)
     return;
-  CliPtr dst = csf(c);
+  ClientPtrPtr dst = csf(c);
   if (!dst)
     return;
   setCurrClientSS(dst);
   updateFocusW(CLI_GET(dst).ws);
 }
 
-void swapClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
+void swapClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   (void)data;
   if (!c || !csf)
     return;
-  CliPtr dst = csf(c);
+  ClientPtrPtr dst = csf(c);
   if (!dst)
     return;
   if (!swpClientSS(c, dst))
@@ -227,51 +227,51 @@ void swapClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
   moveFocusClientW(c, csf, NULL);
 }
 
-void killClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
+void killClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(killC, c, csf, data);
 }
 
-void minimizeClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
+void minimizeClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(minimizeC, c, csf, data);
 }
 
-void tileClientW(CliPtr c, const ClientSelectorFn csf, const void *data) {
+void tileClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(tileC, c, csf, data);
 }
 
-void freeClientW(CliPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
+void freeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
   processClientW(freeC, c, csf, freeSetterFn);
 }
 
-void toggleFreeClientW(CliPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
+void toggleFreeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
   processClientW(toggleFreeC, c, csf, freeSetterFn);
 }
 
-void normalClientW(CliPtr c, const ClientSelectorFn csf, const void *data) {
+void normalClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(normalC, c, csf, data);
 }
 
-void fullScreenClientW(CliPtr c, const ClientSelectorFn csf, const void *data) {
+void fullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(fullScreenC, c, csf, data);
 }
 
-void toggleFullScreenClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
+void toggleFullScreenClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(toggleFullScreenC, c, csf, data);
 }
 
-void moveClientW(CliPtr c, const ClientSelectorFn csf, const void *data) {
+void moveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(moveC, c, csf, data);
 }
 
-void resizeClientW(CliPtr c, const ClientSelectorFn csf, const void *data) {
+void resizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(resizeC, c, csf, data);
 }
 
-void freeMoveClientW(CliPtr c, const ClientSelectorFn csf, const void *data) {
+void freeMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(freeMoveC, c, csf, data);
 }
 
-void freeResizeClientW(CliPtr c, const ClientSelectorFn csf, const void *data) {
+void freeResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClientW(freeResizeC, c, csf, data);
 }
 
@@ -291,7 +291,7 @@ int oldW() {
 
 
 // Get functions
-CliPtr getPtrClientW(int *x, int *y) {
+ClientPtrPtr getPtrClientW(int *x, int *y) {
   assert(x);
   assert(y);
   Window rootw, childw;
@@ -304,19 +304,19 @@ CliPtr getPtrClientW(int *x, int *y) {
 
 
 // Find functions
-CliPtr findWindowClientAllW(Window w) {
+ClientPtrPtr findWindowClientAllW(Window w) {
   return findClientSS(testWindowC, (const void *)&w);
 }
 
-CliPtr findWindowClientW(int ws, Window w) {
+ClientPtrPtr findWindowClientW(int ws, Window w) {
   return findClientStackSS(ws, testWindowC, (const void *)&w);
 }
 
-CliPtr findUrgentClientW(int ws) {
+ClientPtrPtr findUrgentClientW(int ws) {
   return findClientStackSS(ws, testIsUrgentC, NULL);
 }
 
-CliPtr findFixedClientW(int ws) {
+ClientPtrPtr findFixedClientW(int ws) {
   return findClientStackSS(ws, testIsFixedC, NULL);
 }
 

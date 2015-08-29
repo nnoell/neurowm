@@ -68,7 +68,7 @@ static void mapRequestE(XEvent *e) {
 static void destroyNotifyE(XEvent *e) {
   assert(e);
   Window w = e->xdestroywindow.window;
-  CliPtr c = findWindowClientAllW(w);
+  ClientPtrPtr c = findWindowClientAllW(w);
   if (c) {
     unmanageCliE(c);
   } else {
@@ -82,7 +82,7 @@ static void destroyNotifyE(XEvent *e) {
 static void unmapNotifyE(XEvent *e) {
   assert(e);
   Window w = e->xdestroywindow.window;
-  CliPtr c = findWindowClientAllW(w);
+  ClientPtrPtr c = findWindowClientAllW(w);
   if (c) {
     unmanageCliE(c);
   } else {
@@ -103,7 +103,7 @@ static void enterNotifyE(XEvent *e) {
     return;
   if (!getCurrLayoutStackSS(ws)->followMouse)
     return;
-  CliPtr c = findWindowClientAllW(ev->window);
+  ClientPtrPtr c = findWindowClientAllW(ev->window);
   if (!c)
     return;
   if (isCurrClientSS(c))
@@ -123,7 +123,7 @@ static void configureRequestE(XEvent *e) {
   wc.sibling = ev->above;
   wc.stack_mode = ev->detail;
   XConfigureWindow(display, ev->window, ev->value_mask, &wc);
-  CliPtr c = findWindowClientAllW(ev->window);
+  ClientPtrPtr c = findWindowClientAllW(ev->window);
   if (c) {
     runCurrLayoutL(CLI_GET(c).ws);
     updateW(CLI_GET(c).ws);
@@ -133,7 +133,7 @@ static void configureRequestE(XEvent *e) {
 
 static void focusInE(XEvent *e) {
   assert(e);
-  CliPtr c = getCurrClientCurrStackSS();
+  ClientPtrPtr c = getCurrClientCurrStackSS();
   if (!c)
     return;
   if (CLI_GET(c).win == e->xfocus.window)
@@ -144,7 +144,7 @@ static void focusInE(XEvent *e) {
 
 static void clientMessageE(XEvent *e) {
   assert(e);
-  CliPtr c = findWindowClientAllW(e->xclient.window);
+  ClientPtrPtr c = findWindowClientAllW(e->xclient.window);
   if (!c)
     return;
   if (e->xclient.message_type == netatoms[ NET_WM_STATE ] &&
@@ -166,13 +166,13 @@ static void propertyNotifyE(XEvent *e) {
   assert(e);
   XPropertyEvent *ev = &e->xproperty;
   if (ev->atom == XA_WM_NAME || ev->atom == netatoms[ NET_WM_NAME ]) {  // Window title
-    CliPtr c = findWindowClientAllW(ev->window);
+    ClientPtrPtr c = findWindowClientAllW(ev->window);
     if (!c)
       return;
     updateTitleC(c, NULL);
     updateDP(True);
   } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
-    CliPtr c = findWindowClientAllW(ev->window);
+    ClientPtrPtr c = findWindowClientAllW(ev->window);
     if (!c)
       return;
     if (isCurrClientSS(c) && isCurrStackSS(CLI_GET(c).ws))
@@ -223,7 +223,7 @@ void manageWindowE(Window w) {
   Client *cli = allocCliAndSetRulesR(w, &wa);
   if (!cli)
     exitErrorS("manageWindowE - could not alloc Client and set rules");
-  CliPtr c = addClientStartSS(cli);
+  ClientPtrPtr c = addClientStartSS(cli);
   if (!c)
     exitErrorS("manageWindowE - could not add client");
 
@@ -231,7 +231,7 @@ void manageWindowE(Window w) {
   Window trans = None;
   if (XGetTransientForHint(display, CLI_GET(c).win, &trans)) {
     CLI_GET(c).freeSetterFn = defFreeR;
-    CliPtr t = findWindowClientAllW(trans);
+    ClientPtrPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
       centerRectangleInRegionG(getRegionClientSS(c), getRegionClientSS(t));
     else
@@ -257,7 +257,7 @@ void manageWindowE(Window w) {
   addEnterNotifyMaskW(ws);
 }
 
-void unmanageCliE(CliPtr c) {
+void unmanageCliE(ClientPtrPtr c) {
   assert(c);
   const int ws = CLI_GET(c).ws;
   rmvEnterNotifyMaskW(ws);

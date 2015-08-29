@@ -31,7 +31,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   assert(l);
   Rectangle **rs = NULL, **frs = NULL;
   int i = 0, size = 0;
-  CliPtr c;
+  ClientPtrPtr c;
   for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c)) {
     if (CLI_GET(c).freeSetterFn == notFreeR && !CLI_GET(c).fixPos && !CLI_GET(c).isHidden && !CLI_GET(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
