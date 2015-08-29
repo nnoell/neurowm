@@ -143,7 +143,7 @@ typedef void (*GenericClientFn)(ClientPtrPtr c, const void *data);
 typedef int (*WorkspaceSelectorFn)();
 
 
-// ACTION TYPES --------------------------------------------------------------------------------------------------------
+// GENERIC TYPES -------------------------------------------------------------------------------------------------------
 
 // GenericCliActionFn
 typedef void (*GenericCliActionFn)(ClientPtrPtr c, ClientSelectorFn gcf, const void *data);
@@ -171,6 +171,9 @@ union GenericArg {
   const char *const *const command_;
   const GenericArgFn GenericArgFn_;
 };
+
+
+// ACTION TYPES --------------------------------------------------------------------------------------------------------
 
 // ActionFn
 typedef void (*ActionFn)(GenericArg arg);
