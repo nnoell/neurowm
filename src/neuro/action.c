@@ -373,7 +373,7 @@ void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg)  {
 
 
 // Main
-void runActionA(const Action *a, const ActionChainAr *arg) {
+void runActionA(const Action *a, const ActionChainArg *arg) {
   if (!a)
     return;
   if (arg && arg->use)

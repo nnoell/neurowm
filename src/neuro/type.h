@@ -185,9 +185,9 @@ struct Action {
   const GenericArg arg;
 };
 
-// ActionChainAr
-typedef struct ActionChainAr ActionChainAr;
-struct ActionChainAr {
+// ActionChainArg
+typedef struct ActionChainArg ActionChainArg;
+struct ActionChainArg {
   const Bool use;
   const GenericArg arg;
 };
@@ -196,7 +196,7 @@ struct ActionChainAr {
 typedef struct ActionChain ActionChain;
 struct ActionChain {
   const Action *const *const chain;
-  const ActionChainAr arg;
+  const ActionChainArg arg;
 };
 
 
