@@ -41,7 +41,7 @@
 #define WM_SCRATCHPAD_NAME "neurowm_scratchpad"
 #define WM_EVENT           0
 
-// Action
+// Arg constructors
 #define ARG_NULL     {.pointer_ = NULL}
 #define ARG_PTR(X)   {.pointer_ = (X)}
 #define ARG_CHAR(X)  {.char_ = (X)}
@@ -53,6 +53,19 @@
 #define ARG_FLF(X)   {.GenericArgFn_.FreeSetterFn_ = (X)}
 #define ARG_CSF(X)   {.GenericArgFn_.ClientSelectorFn_ = (X)}
 #define ARG_WSF(X)   {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
+
+// Arg getters
+#define ARG_PTR_GET(X)   (X).pointer_
+#define ARG_CHAR_GET(X)  (X).char_
+#define ARG_INT_GET(X)   (X).int_
+#define ARG_UINT_GET(X)  (X).uint_
+#define ARG_FLOAT_GET(X) (X).float_
+#define ARG_STR_GET(X)   (X).string_
+#define ARG_CMD_GET(X)   (X).command_
+#define ARG_GAF_GET(X)   (X).GenericArgFn_
+#define ARG_FLF_GET(X)   (X).GenericArgFn_.FreeSetterFn_
+#define ARG_CSF_GET(X)   (X).GenericArgFn_.ClientSelectorFn_
+#define ARG_WSF_GET(X)   (X).GenericArgFn_.WorkspaceSelectorFn_
 
 // Chainned Actions
 #define CHAIN_ARG_NULL {.use = False, .arg = ARG_NULL}

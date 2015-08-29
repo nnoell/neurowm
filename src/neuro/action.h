@@ -137,7 +137,7 @@ void endCpuCalcHandlerA(GenericArg null_arg);
 void changeLayoutHandlerA(GenericArg int_arg);
 void resetLayoutHandlerA(GenericArg null_arg);
 void toggleLayoutHandlerA(GenericArg int_arg);
-void toggleLayoutModHandlerA(GenericArg int_arg);
+void toggleLayoutModHandlerA(GenericArg uint_arg);
 void increaseMasterLayoutHandlerA(GenericArg int_arg);
 void resizeMasterLayoutHandlerA(GenericArg float_arg);
 
