@@ -110,53 +110,53 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
 
 void applyRuleR(const CliPtr c) {
   assert(c);
-  Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
+  Rectangle *reg = getRegionStackSS(CLI_GET(c).ws);
   Rectangle *regc = getRegionClientSS(c);
-  switch (CLIVAL(c).fixPos) {
+  switch (CLI_GET(c).fixPos) {
     case upFixedR: {
       regc->x = reg->x;
       regc->y = reg->y;
       regc->w = reg->w;
-      regc->h = CLIVAL(c).fixSize;
-      if (CLIVAL(c).freeSetterFn != notFreeR)
+      regc->h = CLI_GET(c).fixSize;
+      if (CLI_GET(c).freeSetterFn != notFreeR)
         break;
-      reg->y += CLIVAL(c).fixSize;
-      reg->h -= CLIVAL(c).fixSize;
-      XMoveResizeWindow(display, CLIVAL(c).win, regc->x, regc->y, regc->w, regc->h);
+      reg->y += CLI_GET(c).fixSize;
+      reg->h -= CLI_GET(c).fixSize;
+      XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
       break;
     }
     case downFixedR: {
       regc->x = reg->x;
-      regc->y = reg->h - CLIVAL(c).fixSize;
+      regc->y = reg->h - CLI_GET(c).fixSize;
       regc->w = reg->w;
-      regc->h = CLIVAL(c).fixSize;
-      if (CLIVAL(c).freeSetterFn != notFreeR)
+      regc->h = CLI_GET(c).fixSize;
+      if (CLI_GET(c).freeSetterFn != notFreeR)
         break;
-      reg->h -= CLIVAL(c).fixSize;
-      XMoveResizeWindow(display, CLIVAL(c).win, regc->x, regc->y, regc->w, regc->h);
+      reg->h -= CLI_GET(c).fixSize;
+      XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
       break;
     }
     case leftFixedR: {
       regc->x = reg->x;
       regc->y = reg->y;
-      regc->w = CLIVAL(c).fixSize;
+      regc->w = CLI_GET(c).fixSize;
       regc->h = reg->h;
-      if (CLIVAL(c).freeSetterFn != notFreeR)
+      if (CLI_GET(c).freeSetterFn != notFreeR)
         break;
-      reg->x += CLIVAL(c).fixSize;
-      reg->w -= CLIVAL(c).fixSize;
-      XMoveResizeWindow(display, CLIVAL(c).win, regc->x, regc->y, regc->w, regc->h);
+      reg->x += CLI_GET(c).fixSize;
+      reg->w -= CLI_GET(c).fixSize;
+      XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
       break;
     }
     case rightFixedR: {
-      regc->x = reg->w - CLIVAL(c).fixSize;
+      regc->x = reg->w - CLI_GET(c).fixSize;
       regc->y = reg->y;
-      regc->w = CLIVAL(c).fixSize;
+      regc->w = CLI_GET(c).fixSize;
       regc->h = reg->h;
-      if (CLIVAL(c).freeSetterFn != notFreeR)
+      if (CLI_GET(c).freeSetterFn != notFreeR)
         break;
-      reg->w -= CLIVAL(c).fixSize;
-      XMoveResizeWindow(display, CLIVAL(c).win, regc->x, regc->y, regc->w, regc->h);
+      reg->w -= CLI_GET(c).fixSize;
+      XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
       break;
     }
   }
@@ -164,26 +164,26 @@ void applyRuleR(const CliPtr c) {
 
 void unapplyRuleR(const CliPtr c) {
   assert(c);
-  if (CLIVAL(c).freeSetterFn != notFreeR)
+  if (CLI_GET(c).freeSetterFn != notFreeR)
     return;
-  Rectangle *reg = getRegionStackSS(CLIVAL(c).ws);
-  switch (CLIVAL(c).fixPos) {
+  Rectangle *reg = getRegionStackSS(CLI_GET(c).ws);
+  switch (CLI_GET(c).fixPos) {
     case upFixedR: {
-      reg->y -= CLIVAL(c).fixSize;
-      reg->h += CLIVAL(c).fixSize;
+      reg->y -= CLI_GET(c).fixSize;
+      reg->h += CLI_GET(c).fixSize;
       break;
     }
     case downFixedR: {
-      reg->h += CLIVAL(c).fixSize;
+      reg->h += CLI_GET(c).fixSize;
       break;
     }
     case leftFixedR: {
-      reg->x -= CLIVAL(c).fixSize;
-      reg->w += CLIVAL(c).fixSize;
+      reg->x -= CLI_GET(c).fixSize;
+      reg->w += CLI_GET(c).fixSize;
       break;
     }
     case rightFixedR: {
-      reg->w += CLIVAL(c).fixSize;
+      reg->w += CLI_GET(c).fixSize;
       break;
     }
   }

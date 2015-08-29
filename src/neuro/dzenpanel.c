@@ -279,7 +279,7 @@ void currTitleLoggerDP(char *str) {
   assert(str);
   CliPtr c = getCurrClientStackSS(getCurrStackSS());
   if (c)
-    strncpy(str, CLIVAL(c).title, LOGGER_MAX);
+    strncpy(str, CLI_GET(c).title, LOGGER_MAX);
 }
 
 

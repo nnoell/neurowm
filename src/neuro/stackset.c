@@ -483,7 +483,7 @@ Client *rmvClientSS(CliPtr c) {
   if (!c)
     return NULL;
   if (isLastClientSS(c))
-    return rmvLastNodeSS(SS.stacks + CLIVAL(c).ws);
+    return rmvLastNodeSS(SS.stacks + CLI_GET(c).ws);
   return rmvNoLastNodeSS((Node *)c);
 }
 
@@ -626,19 +626,19 @@ CliPtr findClientStackSS(int ws, const ClientTesterFn ctf, const void *data) {
 
 // CliPtr
 Bool isCurrClientSS(const CliPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLIVAL(c).ws ].curr;
+  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].curr;
 }
 
 Bool isPrevClientSS(const CliPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLIVAL(c).ws ].prev;
+  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].prev;
 }
 
 Bool isHeadClientSS(const CliPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLIVAL(c).ws ].head;
+  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].head;
 }
 
 Bool isLastClientSS(const CliPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLIVAL(c).ws ].last;
+  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].last;
 }
 
 Rectangle *getRegionClientSS(const CliPtr c) {

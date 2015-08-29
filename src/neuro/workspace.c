@@ -26,22 +26,22 @@
 
 static Bool isAboveTiledClientW(const CliPtr c) {
   assert(c);
-  return (CLIVAL(c).freeSetterFn != notFreeR) || CLIVAL(c).isFullScreen;
+  return (CLI_GET(c).freeSetterFn != notFreeR) || CLI_GET(c).isFullScreen;
 }
 
 static void focusClientW(CliPtr c) {
   assert(c);
   unsetUrgentC(c, NULL);
-  ungrabButtonsS(CLIVAL(c).win);
-  XSetInputFocus(display, CLIVAL(c).win, RevertToPointerRoot, CurrentTime);
+  ungrabButtonsS(CLI_GET(c).win);
+  XSetInputFocus(display, CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(display, root, netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
-      (unsigned char *)&(CLIVAL(c).win), 1);
+      (unsigned char *)&(CLI_GET(c).win), 1);
   updateC(c, NULL);
 }
 
 static void unfocusClientW(CliPtr c) {
   assert(c);
-  grabButtonsS(CLIVAL(c).win);
+  grabButtonsS(CLI_GET(c).win);
   updateC(c, NULL);
 }
 
@@ -81,7 +81,7 @@ void updateFocusW(int ws) {
       ++atc;
 
   c = getCurrClientStackSS(ws);
-  windows[ isAboveTiledClientW(c) ? 0 : atc ] = CLIVAL(c).win;
+  windows[ isAboveTiledClientW(c) ? 0 : atc ] = CLI_GET(c).win;
   focusClientW(c);
 
   if (n > 1) {
@@ -94,7 +94,7 @@ void updateFocusW(int ws) {
         continue;
       if (isCurrClientSS(c))
         continue;
-      windows[ isAboveTiledClientW(c) ? --atc : --n2 ] = CLIVAL(c).win;
+      windows[ isAboveTiledClientW(c) ? --atc : --n2 ] = CLI_GET(c).win;
       unfocusClientW(c);
     }
     if (wins)
@@ -145,11 +145,11 @@ void moveClientToWorkspaceW(CliPtr c, int ws) {
     return;
   if (ws < 0 || ws >= getSizeSS() + 1)
     return;
-  int oldws = CLIVAL(c).ws, currws = getCurrStackSS();
+  int oldws = CLI_GET(c).ws, currws = getCurrStackSS();
   if (oldws == ws)
     return;
   Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  const Bool isFree = CLIVAL(c).freeSetterFn != notFreeR;
+  const Bool isFree = CLI_GET(c).freeSetterFn != notFreeR;
   const Bool doRules = True;
   if (oldws == currws)
     hideC(c, (const void *)&doRules);
@@ -185,20 +185,20 @@ void restoreLastMinimizedW(int ws) {
     exitErrorS("restoreLastMinimizedW - could not add client");
   applyRuleR(c);
   setCurrClientSS(c);
-  runCurrLayoutL(CLIVAL(c).ws);
-  updateFocusW(CLIVAL(c).ws);
+  runCurrLayoutL(CLI_GET(c).ws);
+  updateFocusW(CLI_GET(c).ws);
 }
 
 void addEnterNotifyMaskW(int ws) {
   CliPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    XSelectInput(display, CLIVAL(c).win, CLIENT_MASK);
+    XSelectInput(display, CLI_GET(c).win, CLIENT_MASK);
 }
 
 void rmvEnterNotifyMaskW(int ws) {
   CliPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    XSelectInput(display, CLIVAL(c).win, CLIENT_MASK_NO_ENTER);
+    XSelectInput(display, CLI_GET(c).win, CLIENT_MASK_NO_ENTER);
 }
 
 
@@ -211,7 +211,7 @@ void moveFocusClientW(const CliPtr c, const ClientSelectorFn csf, const void *da
   if (!dst)
     return;
   setCurrClientSS(dst);
-  updateFocusW(CLIVAL(dst).ws);
+  updateFocusW(CLI_GET(dst).ws);
 }
 
 void swapClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
@@ -223,7 +223,7 @@ void swapClientW(const CliPtr c, const ClientSelectorFn csf, const void *data) {
     return;
   if (!swpClientSS(c, dst))
     return;
-  updateW(CLIVAL(c).ws);
+  updateW(CLI_GET(c).ws);
   moveFocusClientW(c, csf, NULL);
 }
 

@@ -176,7 +176,7 @@ void nnoellCurrTitleLoggerP(char *str) {
   CliPtr c = getCurrClientStackSS(getCurrStackSS());
   if (c) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-    wrapDzenBoxDP(tmp, CLIVAL(c).title, &WhiteBoxPP);
+    wrapDzenBoxDP(tmp, CLI_GET(c).title, &WhiteBoxPP);
     wrapDzenBoxDP(tmp2, "FOCUS", &White2BBoxPP);
     wrapDzenClickAreaDP(str, tmp2, &titleCA);
     strncat(str, tmp, LOGGER_MAX - strlen(str) - 1);

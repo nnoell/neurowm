@@ -77,18 +77,18 @@ void updateC(CliPtr c, const void *data) {
     return;
 
   // Free windows
-  if (CLIVAL(c).freeSetterFn != notFreeR)
-    CLIVAL(c).freeSetterFn(getRegionClientSS(c), &screenRegion);
+  if (CLI_GET(c).freeSetterFn != notFreeR)
+    CLI_GET(c).freeSetterFn(getRegionClientSS(c), &screenRegion);
 
   // Fullscreen windows
   Rectangle r;
-  if (CLIVAL(c).isFullScreen)
+  if (CLI_GET(c).isFullScreen)
     memmove(&r, &screenRegion, sizeof(Rectangle));
   else
     memmove(&r, getRegionClientSS(c), sizeof(Rectangle));
 
   // Set border width and border gap
-  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
+  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
   const int borderWidth = l->borderWidthSetterFn(c);
   const int borderGap = l->borderGapSetterFn(c);
   setRectangleBorderWidthAndGapG(&r, borderWidth, borderGap);
@@ -98,22 +98,22 @@ void updateC(CliPtr c, const void *data) {
     r.h = 1;
 
   // Draw
-  XSetWindowBorder(display, CLIVAL(c).win, l->borderColorSetterFn(c));
-  XSetWindowBorderWidth(display, CLIVAL(c).win, borderWidth);
-  XMoveResizeWindow(display, CLIVAL(c).win, r.x, r.y, r.w, r.h);
+  XSetWindowBorder(display, CLI_GET(c).win, l->borderColorSetterFn(c));
+  XSetWindowBorderWidth(display, CLI_GET(c).win, borderWidth);
+  XMoveResizeWindow(display, CLI_GET(c).win, r.x, r.y, r.w, r.h);
 }
 
 void updateClassAndNameC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  CLIVAL(c).class[ 0 ] = '\0';
-  CLIVAL(c).name[ 0 ] = '\0';
+  CLI_GET(c).class[ 0 ] = '\0';
+  CLI_GET(c).name[ 0 ] = '\0';
   XClassHint ch = (XClassHint){.res_name = NULL, .res_class = NULL};
-  if (!XGetClassHint(display, CLIVAL(c).win, &ch))
+  if (!XGetClassHint(display, CLI_GET(c).win, &ch))
     return;
-  strncpy(CLIVAL(c).class, ch.res_class, NAME_MAX);
-  strncpy(CLIVAL(c).name, ch.res_name, NAME_MAX);
+  strncpy(CLI_GET(c).class, ch.res_class, NAME_MAX);
+  strncpy(CLI_GET(c).name, ch.res_name, NAME_MAX);
   if (ch.res_class)
     XFree(ch.res_class);
   if (ch.res_name)
@@ -124,7 +124,7 @@ void updateTitleC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  CLIVAL(c).title[ 0 ] = '\0';
+  CLI_GET(c).title[ 0 ] = '\0';
   if (!setTitleAtomC(CLI(c), netatoms[ NET_WM_NAME ]))
     setTitleAtomC(CLI(c), XA_WM_NAME);
 }
@@ -132,60 +132,60 @@ void updateTitleC(CliPtr c, const void *data) {
 void hideC(CliPtr c, const void *doRules) {  // Move off screen
   if (!c)
     return;
-  if (CLIVAL(c).isHidden)
+  if (CLI_GET(c).isHidden)
     return;
   if (*(Bool *)doRules)
     unapplyRuleR(c);
   Rectangle *regc = getRegionClientSS(c);
   regc->x += xRes;
   regc->y += yRes;
-  XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
-  CLIVAL(c).isHidden = True;
+  XMoveWindow(display, CLI_GET(c).win, regc->x, regc->y);
+  CLI_GET(c).isHidden = True;
 }
 
 void showC(CliPtr c, const void *doRules) {  // Move back to screen
   if (!c)
     return;
-  if (!CLIVAL(c).isHidden)
+  if (!CLI_GET(c).isHidden)
     return;
   Rectangle *regc = getRegionClientSS(c);
   regc->x -= xRes;
   regc->y -= yRes;
   if (*(Bool *)doRules)
     applyRuleR(c);
-  XMoveWindow(display, CLIVAL(c).win, regc->x, regc->y);
-  CLIVAL(c).isHidden = False;
+  XMoveWindow(display, CLI_GET(c).win, regc->x, regc->y);
+  CLI_GET(c).isHidden = False;
 }
 
 void setUrgentC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  CLIVAL(c).isUrgent = True;
+  CLI_GET(c).isUrgent = True;
 }
 
 void unsetUrgentC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  CLIVAL(c).isUrgent = False;
+  CLI_GET(c).isUrgent = False;
 }
 
 void killC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  if (isProtocolDelete(CLIVAL(c).win)) {
+  if (isProtocolDelete(CLI_GET(c).win)) {
     XEvent ke;
     ke.type = ClientMessage;
-    ke.xclient.window = CLIVAL(c).win;
+    ke.xclient.window = CLI_GET(c).win;
     ke.xclient.message_type = wmatoms[ WM_PROTOCOLS ];
     ke.xclient.format = 32;
     ke.xclient.data.l[ 0 ] = wmatoms[ WM_DELETE_WINDOW ];
     ke.xclient.data.l[ 1 ] = CurrentTime;
-    XSendEvent(display, CLIVAL(c).win, False, NoEventMask, &ke);
+    XSendEvent(display, CLI_GET(c).win, False, NoEventMask, &ke);
   } else {
-    XKillClient(display, CLIVAL(c).win);
+    XKillClient(display, CLI_GET(c).win);
     unmanageCliE(c);
   }
 }
@@ -210,30 +210,30 @@ void tileC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  if (CLIVAL(c).freeSetterFn == notFreeR)
+  if (CLI_GET(c).freeSetterFn == notFreeR)
     return;
-  CLIVAL(c).freeSetterFn = notFreeR;
+  CLI_GET(c).freeSetterFn = notFreeR;
   applyRuleR(c);
-  runCurrLayoutL(CLIVAL(c).ws);
-  updateFocusW(CLIVAL(c).ws);
+  runCurrLayoutL(CLI_GET(c).ws);
+  updateFocusW(CLI_GET(c).ws);
 }
 
 void freeC(CliPtr c, const void *freeSetterFn) {
   if (!c)
     return;
   const GenericArgFn *gaf = (const GenericArgFn *)freeSetterFn;
-  if (CLIVAL(c).freeSetterFn == gaf->FreeSetterFn_)
+  if (CLI_GET(c).freeSetterFn == gaf->FreeSetterFn_)
     return;
-  CLIVAL(c).freeSetterFn = gaf->FreeSetterFn_;
+  CLI_GET(c).freeSetterFn = gaf->FreeSetterFn_;
   unapplyRuleR(c);
-  runCurrLayoutL(CLIVAL(c).ws);
-  updateFocusW(CLIVAL(c).ws);
+  runCurrLayoutL(CLI_GET(c).ws);
+  updateFocusW(CLI_GET(c).ws);
 }
 
 void toggleFreeC(CliPtr c, const void *freeSetterFn) {
   if (!c)
     return;
-  if (CLIVAL(c).freeSetterFn != notFreeR)
+  if (CLI_GET(c).freeSetterFn != notFreeR)
     tileC(c, NULL);
   else
     freeC(c, freeSetterFn);
@@ -243,31 +243,31 @@ void normalC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  if (!CLIVAL(c).isFullScreen)
+  if (!CLI_GET(c).isFullScreen)
     return;
-  CLIVAL(c).isFullScreen = False;
+  CLI_GET(c).isFullScreen = False;
   applyRuleR(c);
-  runCurrLayoutL(CLIVAL(c).ws);
-  updateFocusW(CLIVAL(c).ws);
+  runCurrLayoutL(CLI_GET(c).ws);
+  updateFocusW(CLI_GET(c).ws);
 }
 
 void fullScreenC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  if (CLIVAL(c).isFullScreen)
+  if (CLI_GET(c).isFullScreen)
     return;
-  CLIVAL(c).isFullScreen = True;
+  CLI_GET(c).isFullScreen = True;
   unapplyRuleR(c);
-  runCurrLayoutL(CLIVAL(c).ws);
-  updateFocusW(CLIVAL(c).ws);
+  runCurrLayoutL(CLI_GET(c).ws);
+  updateFocusW(CLI_GET(c).ws);
 }
 
 void toggleFullScreenC(CliPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  if (CLIVAL(c).isFullScreen)
+  if (CLI_GET(c).isFullScreen)
     normalC(c, NULL);
   else
     fullScreenC(c, NULL);
@@ -284,7 +284,7 @@ void moveC(CliPtr c, const void *data) {
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
 
-  Rectangle *r = &(CLIVAL(c).floatRegion);
+  Rectangle *r = &(CLI_GET(c).floatRegion);
   int cx = r->x, cy = r->y;
   XEvent ev;
   do {
@@ -292,10 +292,10 @@ void moveC(CliPtr c, const void *data) {
     if (ev.type == MotionNotify) {
       r->x = cx + (ev.xmotion.x - rx);
       r->y = cy + (ev.xmotion.y - ry);
-      runCurrLayoutL(CLIVAL(c).ws);
-      updateW(CLIVAL(c).ws);
+      runCurrLayoutL(CLI_GET(c).ws);
+      updateW(CLI_GET(c).ws);
     }
-    XRaiseWindow(display, CLIVAL(c).win);
+    XRaiseWindow(display, CLI_GET(c).win);
   } while (ev.type != ButtonRelease);
   XUngrabPointer(display, CurrentTime);
 }
@@ -311,8 +311,8 @@ void resizeC(CliPtr c, const void *data) {
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
     return;
 
-  Rectangle *r = &(CLIVAL(c).floatRegion);
-  XWarpPointer(display, None, CLIVAL(c).win, 0, 0, 0, 0, r->w, r->h);
+  Rectangle *r = &(CLI_GET(c).floatRegion);
+  XWarpPointer(display, None, CLI_GET(c).win, 0, 0, 0, 0, r->w, r->h);
   int cw = r->w, ch = r->h;
   XEvent ev;
   do {
@@ -320,10 +320,10 @@ void resizeC(CliPtr c, const void *data) {
     if (ev.type == MotionNotify) {
       r->w = cw + (ev.xmotion.x - (cw + r->x));
       r->h = ch + (ev.xmotion.y - (ch + r->y));
-      runCurrLayoutL(CLIVAL(c).ws);
-      updateW(CLIVAL(c).ws);
+      runCurrLayoutL(CLI_GET(c).ws);
+      updateW(CLI_GET(c).ws);
     }
-    XRaiseWindow(display, CLIVAL(c).win);
+    XRaiseWindow(display, CLI_GET(c).win);
   } while (ev.type != ButtonRelease);
   XUngrabPointer(display, CurrentTime);
 }
@@ -334,10 +334,10 @@ void freeMoveC(CliPtr c, const void *data) {
     return;
   int rx, ry;
   getPtrClientW(&rx, &ry);
-  if (CLIVAL(c).freeSetterFn == notFreeR)
+  if (CLI_GET(c).freeSetterFn == notFreeR)
     unapplyRuleR(c);
-  CLIVAL(c).freeSetterFn = defFreeR;
-  runCurrLayoutL(CLIVAL(c).ws);
+  CLI_GET(c).freeSetterFn = defFreeR;
+  runCurrLayoutL(CLI_GET(c).ws);
   moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
@@ -351,9 +351,9 @@ void freeMoveC(CliPtr c, const void *data) {
     if (ev.type == MotionNotify) {
       r->x = cx + (ev.xmotion.x - rx);
       r->y = cy + (ev.xmotion.y - ry);
-      updateW(CLIVAL(c).ws);
+      updateW(CLI_GET(c).ws);
     }
-    XRaiseWindow(display, CLIVAL(c).win);
+    XRaiseWindow(display, CLI_GET(c).win);
   } while (ev.type != ButtonRelease);
   XUngrabPointer(display, CurrentTime);
 }
@@ -364,17 +364,17 @@ void freeResizeC(CliPtr c, const void *data) {
     return;
   int rx, ry;
   getPtrClientW(&rx, &ry);
-  if (CLIVAL(c).freeSetterFn == notFreeR)
+  if (CLI_GET(c).freeSetterFn == notFreeR)
     unapplyRuleR(c);
-  CLIVAL(c).freeSetterFn = defFreeR;
-  runCurrLayoutL(CLIVAL(c).ws);
+  CLI_GET(c).freeSetterFn = defFreeR;
+  runCurrLayoutL(CLI_GET(c).ws);
   moveFocusClientW(c, selfC, NULL);
   if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
       GrabModeAsync, GrabModeAsync, None, cursors[ CurResize ], CurrentTime) != GrabSuccess)
     return;
 
   Rectangle *r = getRegionClientSS(c);
-  XWarpPointer(display, None, CLIVAL(c).win, 0, 0, 0, 0, r->w, r->h);
+  XWarpPointer(display, None, CLI_GET(c).win, 0, 0, 0, 0, r->w, r->h);
   int cw = r->w, ch = r->h;
   XEvent ev;
   do {
@@ -382,9 +382,9 @@ void freeResizeC(CliPtr c, const void *data) {
     if (ev.type == MotionNotify) {
       r->w = cw + (ev.xmotion.x - (cw + r->x));
       r->h = ch + (ev.xmotion.y - (ch + r->y));
-      updateW(CLIVAL(c).ws);
+      updateW(CLI_GET(c).ws);
     }
-    XRaiseWindow(display, CLIVAL(c).win);
+    XRaiseWindow(display, CLI_GET(c).win);
   } while (ev.type != ButtonRelease);
   XUngrabPointer(display, CurrentTime);
 }
@@ -399,7 +399,7 @@ CliPtr nextC(const CliPtr c) {
   assert(c);
   CliPtr n = getNextClientSS(c);
   if (!n)
-    n = getHeadClientStackSS(CLIVAL(c).ws);
+    n = getHeadClientStackSS(CLI_GET(c).ws);
   return n;
 }
 
@@ -407,66 +407,66 @@ CliPtr prevC(const CliPtr c) {
   assert(c);
   CliPtr p = getPrevClientSS(c);
   if (!p)
-    p = getLastClientStackSS(CLIVAL(c).ws);
+    p = getLastClientStackSS(CLI_GET(c).ws);
   return p;
 }
 
 CliPtr oldC(const CliPtr c) {
   assert(c);
-  return getPrevClientStackSS(CLIVAL(c).ws);
+  return getPrevClientStackSS(CLI_GET(c).ws);
 }
 
 CliPtr headC(const CliPtr c) {
   assert(c);
-  return getHeadClientStackSS(CLIVAL(c).ws);
+  return getHeadClientStackSS(CLI_GET(c).ws);
 }
 
 CliPtr lastC(const CliPtr c) {
   assert(c);
-  return getLastClientStackSS(CLIVAL(c).ws);
+  return getLastClientStackSS(CLI_GET(c).ws);
 }
 
 CliPtr upC(const CliPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLIVAL(c).ws, r->x+1, r->y-1);
+  return queryPointC(CLI_GET(c).ws, r->x+1, r->y-1);
 }
 
 CliPtr downC(const CliPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLIVAL(c).ws, r->x+1, r->y + r->h + 1);
+  return queryPointC(CLI_GET(c).ws, r->x+1, r->y + r->h + 1);
 }
 
 CliPtr leftC(const CliPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLIVAL(c).ws, r->x-1, r->y+1);
+  return queryPointC(CLI_GET(c).ws, r->x-1, r->y+1);
 }
 
 CliPtr rightC(const CliPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLIVAL(c).ws, r->x + r->w + 1, r->y+1);
+  return queryPointC(CLI_GET(c).ws, r->x + r->w + 1, r->y+1);
 }
 
 // Test functions
 Bool testWindowC(const CliPtr c, const void *w) {
   assert(c);
   assert(w);
-  return CLIVAL(c).win == *((Window *)w);
+  return CLI_GET(c).win == *((Window *)w);
 }
 
 Bool testIsUrgentC(const CliPtr c, const void *p) {
   assert(c);
   (void)p;
-  return CLIVAL(c).isUrgent;
+  return CLI_GET(c).isUrgent;
 }
 
 Bool testIsFixedC(const CliPtr c, const void *p) {
   assert(c);
   (void)p;
-  return CLIVAL(c).fixPos != notFixedR;
+  return CLI_GET(c).fixPos != notFixedR;
 }
 
 // Border Color
@@ -481,9 +481,9 @@ Color allBorderColorC(const CliPtr c) {
   assert(c);
   if (isCurrClientSS(c))
     return currBorderColorS;
-  else if (CLIVAL(c).isUrgent)
+  else if (CLI_GET(c).isUrgent)
     return urgtBorderColorS;
-  else if (CLIVAL(c).freeSetterFn != notFreeR)
+  else if (CLI_GET(c).freeSetterFn != notFreeR)
     return freeBorderColorS;
   else if (isPrevClientSS(c))
     return prevBorderColorS;
@@ -508,12 +508,12 @@ int neverBorderWidthC(const CliPtr c) {
 
 int smartBorderWidthC(const CliPtr c) {
   assert(c);
-  if (CLIVAL(c).isFullScreen)
+  if (CLI_GET(c).isFullScreen)
     return 0;
-  if (CLIVAL(c).freeSetterFn != notFreeR)
+  if (CLI_GET(c).freeSetterFn != notFreeR)
     return borderWidthS;
   Rectangle *a = getRegionClientSS(c);
-  Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
+  Rectangle *as = getRegionStackSS(CLI_GET(c).ws);
   if ((a->w == as->w && a->h == as->h) || (a->w == screenRegion.w && a->h == screenRegion.h))
     return 0;
   return borderWidthS;
@@ -530,10 +530,10 @@ int onlyCurrBorderWidthC(const CliPtr c) {
 // Border Gap
 int alwaysBorderGapC(const CliPtr c) {
   assert(c);
-  if (CLIVAL(c).freeSetterFn != notFreeR)
+  if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
-  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
-  if (CLIVAL(c).isFullScreen || CLIVAL(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
+  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  if (CLI_GET(c).isFullScreen || CLI_GET(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
     return 0;
   return borderGapS;
 }
@@ -545,13 +545,13 @@ int neverBorderGapC(const CliPtr c) {
 
 int smartBorderGapC(const CliPtr c) {
   assert(c);
-  if (CLIVAL(c).freeSetterFn != notFreeR)
+  if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
-  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
-  if (CLIVAL(c).isFullScreen || CLIVAL(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
+  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  if (CLI_GET(c).isFullScreen || CLI_GET(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
     return 0;
   Rectangle *a = getRegionClientSS(c);
-  Rectangle *as = getRegionStackSS(CLIVAL(c).ws);
+  Rectangle *as = getRegionStackSS(CLI_GET(c).ws);
   if ((a->w == as->w && a->h == as->h) || (a->w == screenRegion.w && a->h == screenRegion.h))
     return 0;
   return borderGapS;
@@ -559,10 +559,10 @@ int smartBorderGapC(const CliPtr c) {
 
 int onlyCurrBorderGapC(const CliPtr c) {
   assert(c);
-  if (CLIVAL(c).freeSetterFn != notFreeR)
+  if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
-  Layout *l = getCurrLayoutStackSS(CLIVAL(c).ws);
-  if (CLIVAL(c).isFullScreen || CLIVAL(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
+  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  if (CLI_GET(c).isFullScreen || CLI_GET(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
     return 0;
   if (!isCurrClientSS(c))
     return 0;

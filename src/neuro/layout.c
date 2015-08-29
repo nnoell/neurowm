@@ -33,7 +33,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   int i = 0, size = 0;
   CliPtr c;
   for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c)) {
-    if (CLIVAL(c).freeSetterFn == notFreeR && !CLIVAL(c).fixPos && !CLIVAL(c).isHidden && !CLIVAL(c).isFullScreen) {
+    if (CLI_GET(c).freeSetterFn == notFreeR && !CLI_GET(c).fixPos && !CLI_GET(c).isHidden && !CLI_GET(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
         rs = (Rectangle **)realloc(rs, size*sizeof(void *));
@@ -42,7 +42,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
           return NULL;
       }
       rs[ i ] = getRegionClientSS(c);
-      frs[ i ] = &(CLIVAL(c).floatRegion);
+      frs[ i ] = &(CLI_GET(c).floatRegion);
       ++i;
     }
   }

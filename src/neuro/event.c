@@ -125,8 +125,8 @@ static void configureRequestE(XEvent *e) {
   XConfigureWindow(display, ev->window, ev->value_mask, &wc);
   CliPtr c = findWindowClientAllW(ev->window);
   if (c) {
-    runCurrLayoutL(CLIVAL(c).ws);
-    updateW(CLIVAL(c).ws);
+    runCurrLayoutL(CLI_GET(c).ws);
+    updateW(CLI_GET(c).ws);
   }
   updateDP(True);
 }
@@ -136,7 +136,7 @@ static void focusInE(XEvent *e) {
   CliPtr c = getCurrClientCurrStackSS();
   if (!c)
     return;
-  if (CLIVAL(c).win == e->xfocus.window)
+  if (CLI_GET(c).win == e->xfocus.window)
     return;
   moveFocusClientW(c, selfC, NULL);
   updateDP(True);
@@ -175,9 +175,9 @@ static void propertyNotifyE(XEvent *e) {
     CliPtr c = findWindowClientAllW(ev->window);
     if (!c)
       return;
-    if (isCurrClientSS(c) && isCurrStackSS(CLIVAL(c).ws))
+    if (isCurrClientSS(c) && isCurrStackSS(CLI_GET(c).ws))
       return;
-    XWMHints *wmh = XGetWMHints(display, CLIVAL(c).win);
+    XWMHints *wmh = XGetWMHints(display, CLI_GET(c).win);
     if (wmh && (wmh->flags & XUrgencyHint))
       setUrgentC(c, NULL);
     if (wmh)
@@ -229,8 +229,8 @@ void manageWindowE(Window w) {
 
   // Transient windows
   Window trans = None;
-  if (XGetTransientForHint(display, CLIVAL(c).win, &trans)) {
-    CLIVAL(c).freeSetterFn = defFreeR;
+  if (XGetTransientForHint(display, CLI_GET(c).win, &trans)) {
+    CLI_GET(c).freeSetterFn = defFreeR;
     CliPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
       centerRectangleInRegionG(getRegionClientSS(c), getRegionClientSS(t));
@@ -239,14 +239,14 @@ void manageWindowE(Window w) {
   }
 
   // Set event mask
-  XSelectInput(display, CLIVAL(c).win, CLIENT_MASK);
+  XSelectInput(display, CLI_GET(c).win, CLIENT_MASK);
 
   // Map window
   Bool doRules = False;
   hideC(c, (const void*)&doRules);
-  XMapWindow(display, CLIVAL(c).win);
-  grabButtonsS(CLIVAL(c).win);
-  const int ws = CLIVAL(c).ws;
+  XMapWindow(display, CLI_GET(c).win);
+  grabButtonsS(CLI_GET(c).win);
+  const int ws = CLI_GET(c).ws;
   if (!isCurrStackSS(ws))
     return;
   rmvEnterNotifyMaskW(ws);
@@ -259,7 +259,7 @@ void manageWindowE(Window w) {
 
 void unmanageCliE(CliPtr c) {
   assert(c);
-  const int ws = CLIVAL(c).ws;
+  const int ws = CLI_GET(c).ws;
   rmvEnterNotifyMaskW(ws);
   unapplyRuleR(c);
   Client *cli = rmvClientSS(c);
