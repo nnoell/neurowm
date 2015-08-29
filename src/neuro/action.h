@@ -172,7 +172,7 @@ void freePtrClientHandlerA(GenericArg freeSetterFn_arg);
 void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg);
 
 // Main
-void runActionA(const Action *a, const ActionChainArg *arg);
+void runActionA(const Action *a, const GenericMaybeArg *arg);
 void runActionChainA(const ActionChain *ac);
 
 

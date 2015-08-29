@@ -54,24 +54,30 @@
 #define ARG_CSF(X)   {.GenericArgFn_.ClientSelectorFn_ = (X)}
 #define ARG_WSF(X)   {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
 
-// Arg getters
-#define ARG_PTR_GET(X)   (X).pointer_
-#define ARG_CHAR_GET(X)  (X).char_
-#define ARG_INT_GET(X)   (X).int_
-#define ARG_UINT_GET(X)  (X).uint_
-#define ARG_FLOAT_GET(X) (X).float_
-#define ARG_STR_GET(X)   (X).string_
-#define ARG_CMD_GET(X)   (X).command_
-#define ARG_GAF_GET(X)   (X).GenericArgFn_
-#define ARG_FLF_GET(X)   (X).GenericArgFn_.FreeSetterFn_
-#define ARG_CSF_GET(X)   (X).GenericArgFn_.ClientSelectorFn_
-#define ARG_WSF_GET(X)   (X).GenericArgFn_.WorkspaceSelectorFn_
+// Arg functions
+#define ARG_PTR_GET(X)   ((X).pointer_)
+#define ARG_CHAR_GET(X)  ((X).char_)
+#define ARG_INT_GET(X)   ((X).int_)
+#define ARG_UINT_GET(X)  ((X).uint_)
+#define ARG_FLOAT_GET(X) ((X).float_)
+#define ARG_STR_GET(X)   ((X).string_)
+#define ARG_CMD_GET(X)   ((X).command_)
+#define ARG_GAF_GET(X)   ((X).GenericArgFn_)
+#define ARG_FLF_GET(X)   ((X).GenericArgFn_.FreeSetterFn_)
+#define ARG_CSF_GET(X)   ((X).GenericArgFn_.ClientSelectorFn_)
+#define ARG_WSF_GET(X)   ((X).GenericArgFn_.WorkspaceSelectorFn_)
+
+// Maybe Arg constructors
+#define MAYBE_ARG_NOTHING       {.isNothing = True, .value = ARG_NULL}
+#define MAYBE_ARG_JUST(X)       {.isNothing = False, .value = X}
+
+// Maybe Arg functions
+#define MAYBE_ARG_IS_NOTHING(X) ((X).isNothing)
+#define MAYBE_ARG_GET_JUST(X)   ((X).value)
 
 // Chainned Actions
-#define CHAIN_ARG_NULL {.use = False, .arg = ARG_NULL}
-#define CHAIN_ARG(X)   {.use = True, .arg = X}
-#define CHAIN_NULL(X)  {.chain = (X), .arg = CHAIN_ARG_NULL}
-#define CHAIN(X,Y)     {.chain = (X), .arg = CHAIN_ARG(Y)}
+#define CHAIN_NULL(X)     {.chain = (X), .arg = MAYBE_ARG_NOTHING}
+#define CHAIN(X,Y)        {.chain = (X), .arg = MAYBE_ARG_JUST(Y)}
 
 // Default sizes
 #define NAME_MAX    256
@@ -172,6 +178,13 @@ union GenericArg {
   const GenericArgFn GenericArgFn_;
 };
 
+// GenericMaybeArg
+typedef struct GenericMaybeArg GenericMaybeArg;
+struct GenericMaybeArg {
+  const Bool isNothing;
+  const GenericArg value;
+};
+
 
 // ACTION TYPES --------------------------------------------------------------------------------------------------------
 
@@ -185,18 +198,11 @@ struct Action {
   const GenericArg arg;
 };
 
-// ActionChainArg
-typedef struct ActionChainArg ActionChainArg;
-struct ActionChainArg {
-  const Bool use;
-  const GenericArg arg;
-};
-
 // ActionChain
 typedef struct ActionChain ActionChain;
 struct ActionChain {
   const Action *const *const chain;
-  const ActionChainArg arg;
+  const GenericMaybeArg arg;
 };
 
 

@@ -373,11 +373,11 @@ void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg)  {
 
 
 // Main
-void runActionA(const Action *a, const ActionChainArg *arg) {
+void runActionA(const Action *a, const GenericMaybeArg *arg) {
   if (!a)
     return;
-  if (arg && arg->use)
-    a->handler(arg->arg);
+  if (arg && !MAYBE_ARG_IS_NOTHING(*arg))
+    a->handler(MAYBE_ARG_GET_JUST(*arg));
   else
     a->handler(a->arg);
 }
