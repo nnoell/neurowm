@@ -224,8 +224,9 @@ void freeC(ClientPtrPtr c, const void *freeSetterFn) {
   const GenericArgFn *gaf = (const GenericArgFn *)freeSetterFn;
   if (CLI_GET(c).freeSetterFn == gaf->FreeSetterFn_)
     return;
+  if (CLI_GET(c).freeSetterFn == notFreeR)
+    unapplyRuleR(c);
   CLI_GET(c).freeSetterFn = gaf->FreeSetterFn_;
-  unapplyRuleR(c);
   runCurrLayoutL(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
 }
