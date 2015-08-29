@@ -21,6 +21,14 @@
 
 
 //----------------------------------------------------------------------------------------------------------------------
+// PRIVATE VARIABLE DECLARATION
+//----------------------------------------------------------------------------------------------------------------------
+
+// ClientFn
+typedef void (*WorkspaceClientFn)(ClientPtrPtr c, const void *data);
+
+
+//----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -45,13 +53,13 @@ static void unfocusClientW(ClientPtrPtr c) {
   updateC(c, NULL);
 }
 
-static void processClientW(const ClientFn gcf, const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+static void processClientW(const WorkspaceClientFn wcf, const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   if (!c || !csf)
     return;
   ClientPtrPtr dst = csf(c);
   if (!dst)
     return;
-  gcf(dst, data);
+  wcf(dst, data);
 }
 
 

@@ -139,9 +139,6 @@ typedef Bool (*ClientTesterFn)(ClientPtrPtr c, const void *p);
 // ClientSelectorFn
 typedef ClientPtrPtr (*ClientSelectorFn)(ClientPtrPtr c);
 
-// ClientFn
-typedef void (*ClientFn)(ClientPtrPtr c, const void *data);
-
 
 // WORKSPACE TYPES -----------------------------------------------------------------------------------------------------
 
