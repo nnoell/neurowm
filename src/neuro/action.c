@@ -21,17 +21,28 @@
 
 
 //----------------------------------------------------------------------------------------------------------------------
+// PRIVATE VARIABLE DECLARATION
+//----------------------------------------------------------------------------------------------------------------------
+
+// ActionClientFn
+typedef void (*ActionClientFn)(ClientPtrPtr c, ClientSelectorFn gcf, const void *data);
+
+// ActionWorkspaceFn
+typedef void (*ActionWorkspaceFn)(int ws);
+
+
+//----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static void processWSActionA(const GenericWSActionFn gwsaf, int ws) {
+static void processWSActionA(const ActionWorkspaceFn gwsaf, int ws) {
   assert(gwsaf);
   rmvEnterNotifyMaskW(ws);
   gwsaf(ws);
   addEnterNotifyMaskW(ws);
 }
 
-static void processCliActionA(const GenericCliActionFn gcaf, ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+static void processCliActionA(const ActionClientFn gcaf, ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   assert(gcaf);
   assert(csf);
   if (!c)

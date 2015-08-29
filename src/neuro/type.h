@@ -151,12 +151,6 @@ typedef int (*WorkspaceSelectorFn)();
 
 // GENERIC TYPES -------------------------------------------------------------------------------------------------------
 
-// GenericCliActionFn
-typedef void (*GenericCliActionFn)(ClientPtrPtr c, ClientSelectorFn gcf, const void *data);
-
-// GenericWSActionFn
-typedef void (*GenericWSActionFn)(int ws);
-
 // GenericArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
 typedef union GenericArgFn GenericArgFn;
 union GenericArgFn {
