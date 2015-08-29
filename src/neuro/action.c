@@ -225,7 +225,7 @@ void changeToWorkspaceHandlerA(GenericArg int_arg) {
 
 void changeToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
-  processWSActionA(changeToWorkspaceW, WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_());
+  processWSActionA(changeToWorkspaceW, WorkspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_());
 }
 
 void moveClientToWorkspaceHandlerA(GenericArg int_arg) {
@@ -239,7 +239,7 @@ void moveClientToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
   CliPtr c = getCurrClientCurrStackSS();
   rmvEnterNotifyMaskW(CLIVAL(c).ws);
-  moveClientToWorkspaceW(c, WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_());
+  moveClientToWorkspaceW(c, WorkspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_());
   addEnterNotifyMaskW(CLIVAL(c).ws);
 }
 
@@ -270,51 +270,51 @@ void toggleNSPHandlerA(GenericArg command_arg) {
 // Curr Client
 void moveFocusCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(moveFocusClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(moveFocusClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void swapCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(swapClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(swapClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void killCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  killClientW(getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
-  // processCliActionA(killClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  killClientW(getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
+  // processCliActionA(killClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void tileCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(tileClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(tileClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void normalCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(normalClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(normalClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void fullScreenCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(fullScreenClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(fullScreenClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void toggleFullScreenCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(toggleFullScreenClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(toggleFullScreenClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void minimizeCurrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
-  processCliActionA(minimizeClientW, getCurrClientCurrStackSS(), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(minimizeClientW, getCurrClientCurrStackSS(), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void freeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
-  processCliActionA(freeClientW, getCurrClientCurrStackSS(), selfC, (const void *)&freeSetterFn_arg.ArgFn_);
+  processCliActionA(freeClientW, getCurrClientCurrStackSS(), selfC, (const void *)&freeSetterFn_arg.GenericArgFn_);
 }
 
 void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
-  processCliActionA(toggleFreeClientW, getCurrClientCurrStackSS(), selfC, (const void *)&freeSetterFn_arg.ArgFn_);
+  processCliActionA(toggleFreeClientW, getCurrClientCurrStackSS(), selfC, (const void *)&freeSetterFn_arg.GenericArgFn_);
 }
 
 
@@ -322,47 +322,47 @@ void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
 void moveFocusPtrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(moveFocusClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(moveFocusClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void freeMovePtrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(freeMoveClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(freeMoveClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void freeResizePtrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(freeResizeClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(freeResizeClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void movePtrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(moveClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(moveClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void resizePtrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(resizeClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(resizeClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void toggleFullScreenPtrClientHandlerA(GenericArg selectCliFn_arg) {
   assert(selectCliFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(toggleFullScreenClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.ArgFn_.ClientSelectorFn_, NULL);
+  processCliActionA(toggleFullScreenClientW, getPtrClientW(&rx, &ry), selectCliFn_arg.GenericArgFn_.ClientSelectorFn_, NULL);
 }
 
 void freePtrClientHandlerA(GenericArg freeSetterFn_arg) {
   int rx, ry;
-  processCliActionA(freeClientW, getPtrClientW(&rx, &ry), selfC, (const void *)&freeSetterFn_arg.ArgFn_);
+  processCliActionA(freeClientW, getPtrClientW(&rx, &ry), selfC, (const void *)&freeSetterFn_arg.GenericArgFn_);
 }
 
 void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg)  {
   int rx, ry;
-  processCliActionA(toggleFreeClientW, getPtrClientW(&rx, &ry), selfC, (const void *)&freeSetterFn_arg.ArgFn_);
+  processCliActionA(toggleFreeClientW, getPtrClientW(&rx, &ry), selfC, (const void *)&freeSetterFn_arg.GenericArgFn_);
 }
 
 

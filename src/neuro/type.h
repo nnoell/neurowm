@@ -50,9 +50,9 @@
 #define ARG_FLOAT(X) {.float_ = (X)}
 #define ARG_STR(X)   {.string_ = (X)}
 #define ARG_CMD(X)   {.command_ = (X)}
-#define ARG_FLF(X)   {.ArgFn_.FreeSetterFn_ = (X)}
-#define ARG_CSF(X)   {.ArgFn_.ClientSelectorFn_ = (X)}
-#define ARG_WSF(X)   {.ArgFn_.WorkspaceSelectorFn_ = (X)}
+#define ARG_FLF(X)   {.GenericArgFn_.FreeSetterFn_ = (X)}
+#define ARG_CSF(X)   {.GenericArgFn_.ClientSelectorFn_ = (X)}
+#define ARG_WSF(X)   {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
 
 // Chainned Actions
 #define CHAIN_ARG_NULL {.use = False, .arg = ARG_NULL}
@@ -139,9 +139,9 @@ typedef void (*GenericCliActionFn)(CliPtr c, ClientSelectorFn gcf, const void *d
 // GenericWSActionFn
 typedef void (*GenericWSActionFn)(int ws);
 
-// ArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
-typedef union ArgFn ArgFn;
-union ArgFn {
+// GenericArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
+typedef union GenericArgFn GenericArgFn;
+union GenericArgFn {
   const FreeSetterFn FreeSetterFn_;
   const ClientSelectorFn ClientSelectorFn_;
   const WorkspaceSelectorFn WorkspaceSelectorFn_;
@@ -157,7 +157,7 @@ union GenericArg {
   const float float_;
   const char *const string_;
   const char *const *const command_;
-  const ArgFn ArgFn_;
+  const GenericArgFn GenericArgFn_;
 };
 
 // ActionFn

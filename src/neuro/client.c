@@ -221,10 +221,10 @@ void tileC(CliPtr c, const void *data) {
 void freeC(CliPtr c, const void *freeSetterFn) {
   if (!c)
     return;
-  const ArgFn *argfn = (const ArgFn *)freeSetterFn;
-  if (CLIVAL(c).freeSetterFn == argfn->FreeSetterFn_)
+  const GenericArgFn *gaf = (const GenericArgFn *)freeSetterFn;
+  if (CLIVAL(c).freeSetterFn == gaf->FreeSetterFn_)
     return;
-  CLIVAL(c).freeSetterFn = argfn->FreeSetterFn_;
+  CLIVAL(c).freeSetterFn = gaf->FreeSetterFn_;
   unapplyRuleR(c);
   runCurrLayoutL(CLIVAL(c).ws);
   updateFocusW(CLIVAL(c).ws);
