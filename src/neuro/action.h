@@ -150,24 +150,24 @@ void restoreLastMinimizedHandlerA(GenericArg null_arg);
 void toggleNSPHandlerA(GenericArg command_arg);
 
 // CurrClient (Handlers)
-void moveFocusCurrClientHandlerA(GenericArg selectCliFn_arg);
-void swapCurrClientHandlerA(GenericArg selectCliFn_arg);
-void killCurrClientHandlerA(GenericArg selectCliFn_arg);
-void tileCurrClientHandlerA(GenericArg selectCliFn_arg);
-void normalCurrClientHandlerA(GenericArg selectCliFn_arg);
-void fullScreenCurrClientHandlerA(GenericArg selectCliFn_arg);
-void toggleFullScreenCurrClientHandlerA(GenericArg selectCliFn_arg);
-void minimizeCurrClientHandlerA(GenericArg selectCliFn_arg);
+void moveFocusCurrClientHandlerA(GenericArg clientSelectorFn_arg);
+void swapCurrClientHandlerA(GenericArg clientSelectorFn_arg);
+void killCurrClientHandlerA(GenericArg clientSelectorFn_arg);
+void tileCurrClientHandlerA(GenericArg clientSelectorFn_arg);
+void normalCurrClientHandlerA(GenericArg clientSelectorFn_arg);
+void fullScreenCurrClientHandlerA(GenericArg clientSelectorFn_arg);
+void toggleFullScreenCurrClientHandlerA(GenericArg clientSelectorFn_arg);
+void minimizeCurrClientHandlerA(GenericArg clientSelectorFn_arg);
 void freeCurrClientHandlerA(GenericArg freeSetterFn_arg);
 void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg);
 
 // PtrClient (Handlers)
-void moveFocusPtrClientHandlerA(GenericArg selectCliFn_arg);
-void freeMovePtrClientHandlerA(GenericArg selectCliFn_arg);
-void freeResizePtrClientHandlerA(GenericArg selectCliFn_arg);
-void movePtrClientHandlerA(GenericArg selectCliFn_arg);
-void resizePtrClientHandlerA(GenericArg selectCliFn_arg);
-void toggleFullScreenPtrClientHandlerA(GenericArg selectCliFn_arg);
+void moveFocusPtrClientHandlerA(GenericArg clientSelectorFn_arg);
+void freeMovePtrClientHandlerA(GenericArg clientSelectorFn_arg);
+void freeResizePtrClientHandlerA(GenericArg clientSelectorFn_arg);
+void movePtrClientHandlerA(GenericArg clientSelectorFn_arg);
+void resizePtrClientHandlerA(GenericArg clientSelectorFn_arg);
+void toggleFullScreenPtrClientHandlerA(GenericArg clientSelectorFn_arg);
 void freePtrClientHandlerA(GenericArg freeSetterFn_arg);
 void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg);
 
