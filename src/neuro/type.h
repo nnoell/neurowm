@@ -147,9 +147,9 @@ union ArgFn {
   const WorkspaceSelectorFn WorkspaceSelectorFn_;
 };
 
-// ActionAr
-typedef union ActionAr ActionAr;
-union ActionAr {
+// GenericArg
+typedef union GenericArg GenericArg;
+union GenericArg {
   const void *const pointer_;
   const char char_;
   const int int_;
@@ -161,20 +161,20 @@ union ActionAr {
 };
 
 // ActionFn
-typedef void (*ActionFn)(ActionAr arg);
+typedef void (*ActionFn)(GenericArg arg);
 
 // Action
 typedef struct Action Action;
 struct Action {
   const ActionFn handler;
-  const ActionAr arg;
+  const GenericArg arg;
 };
 
 // ActionChainAr
 typedef struct ActionChainAr ActionChainAr;
 struct ActionChainAr {
   const Bool use;
-  const ActionAr arg;
+  const GenericArg arg;
 };
 
 // ActionChain
@@ -203,7 +203,7 @@ struct Arrange {
   Rectangle region;            // Tiled layout region
   Rectangle **cliRegions;      // Region of each client
   Rectangle **cliFloatRegions; // Float region of each client
-  ActionAr *arrangeSettings;   // Settings of the arrange
+  GenericArg *arrangeSettings;   // Settings of the arrange
 };
 
 // ArrangerFn
@@ -219,7 +219,7 @@ struct Layout {
   const float *const region;
   unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   Bool followMouse;
-  ActionAr arrangeSettings[ ARRSET_MAX ];
+  GenericArg arrangeSettings[ ARRSET_MAX ];
 };
 
 
@@ -236,7 +236,7 @@ struct LayoutConf {
   const float region[ 4 ];
   const unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
   const Bool followMouse;
-  const ActionAr arrangeSettings[ ARRSET_MAX ];
+  const GenericArg arrangeSettings[ ARRSET_MAX ];
 };
 
 // Workspace

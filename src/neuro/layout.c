@@ -184,7 +184,7 @@ void resetLayoutL(int ws) {
     lc = getLayoutConfStackSS(ws, i);
     l->mod = lc->mod;
     l->followMouse = lc->followMouse;
-    memmove(l->arrangeSettings, lc->arrangeSettings, sizeof(ActionAr)*ARRSET_MAX);
+    memmove(l->arrangeSettings, lc->arrangeSettings, sizeof(GenericArg)*ARRSET_MAX);
   }
   tileW(ws);
   setLayoutStackSS(ws, 0);
@@ -193,7 +193,7 @@ void resetLayoutL(int ws) {
 }
 
 void increaseMasterL(int ws, int size) {
-  ActionAr *as = getCurrLayoutStackSS(ws)->arrangeSettings;
+  GenericArg *as = getCurrLayoutStackSS(ws)->arrangeSettings;
   const int res = as[ 0 ].int_ + size;
   if (res < 1)
     return;
@@ -203,7 +203,7 @@ void increaseMasterL(int ws, int size) {
 }
 
 void resizeMasterL(int ws, float factor) {
-  ActionAr *as = getCurrLayoutStackSS(ws)->arrangeSettings;
+  GenericArg *as = getCurrLayoutStackSS(ws)->arrangeSettings;
   const float newmsize = factor * as[ 2 ].float_ + as[ 1 ].float_;
   if (newmsize <= 0.0f || newmsize >= 1.0f)
     return;

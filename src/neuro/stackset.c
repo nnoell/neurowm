@@ -254,7 +254,7 @@ static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
     *(const float **)&l[ i ].region = lc[ i ]->region;
     l[ i ].mod = lc[ i ]->mod;
     l[ i ].followMouse = lc[ i ]->followMouse;
-    memmove(l[ i ].arrangeSettings, lc[ i ]->arrangeSettings, sizeof(ActionAr)*ARRSET_MAX);
+    memmove(l[ i ].arrangeSettings, lc[ i ]->arrangeSettings, sizeof(GenericArg)*ARRSET_MAX);
   }
 }
 

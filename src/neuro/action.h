@@ -124,52 +124,52 @@ extern const Action *const toggleFreePtrClientA[];
 //----------------------------------------------------------------------------------------------------------------------
 
 // Window Manager (Handlers)
-void nothingHandlerA(ActionAr null_arg);
-void quitNeurowmHandlerA(ActionAr null_arg);
-void reloadNeurowmHandlerA(ActionAr null_arg);
-void changeNeurowmNameHandlerA(ActionAr string_arg);
-void spawnHandlerA(ActionAr command_arg);
-void sleepHandlerA(ActionAr int_arg);
-void startCpuCalcHandlerA(ActionAr null_arg);
-void endCpuCalcHandlerA(ActionAr null_arg);
+void nothingHandlerA(GenericArg null_arg);
+void quitNeurowmHandlerA(GenericArg null_arg);
+void reloadNeurowmHandlerA(GenericArg null_arg);
+void changeNeurowmNameHandlerA(GenericArg string_arg);
+void spawnHandlerA(GenericArg command_arg);
+void sleepHandlerA(GenericArg int_arg);
+void startCpuCalcHandlerA(GenericArg null_arg);
+void endCpuCalcHandlerA(GenericArg null_arg);
 
 // Layout (Handlers)
-void changeLayoutHandlerA(ActionAr int_arg);
-void resetLayoutHandlerA(ActionAr null_arg);
-void toggleLayoutHandlerA(ActionAr int_arg);
-void toggleLayoutModHandlerA(ActionAr int_arg);
-void increaseMasterLayoutHandlerA(ActionAr int_arg);
-void resizeMasterLayoutHandlerA(ActionAr float_arg);
+void changeLayoutHandlerA(GenericArg int_arg);
+void resetLayoutHandlerA(GenericArg null_arg);
+void toggleLayoutHandlerA(GenericArg int_arg);
+void toggleLayoutModHandlerA(GenericArg int_arg);
+void increaseMasterLayoutHandlerA(GenericArg int_arg);
+void resizeMasterLayoutHandlerA(GenericArg float_arg);
 
 // Workspace (Handlers)
-void changeToWorkspaceHandlerA(ActionAr int_arg);
-void changeToRelWorkspaceHandlerA(ActionAr WorkspaceSelectorFn_arg);
-void moveClientToWorkspaceHandlerA(ActionAr int_arg);
-void moveClientToRelWorkspaceHandlerA(ActionAr WorkspaceSelectorFn_arg);
-void restoreLastMinimizedHandlerA(ActionAr null_arg);
-void toggleNSPHandlerA(ActionAr command_arg);
+void changeToWorkspaceHandlerA(GenericArg int_arg);
+void changeToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg);
+void moveClientToWorkspaceHandlerA(GenericArg int_arg);
+void moveClientToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg);
+void restoreLastMinimizedHandlerA(GenericArg null_arg);
+void toggleNSPHandlerA(GenericArg command_arg);
 
 // CurrClient (Handlers)
-void moveFocusCurrClientHandlerA(ActionAr selectCliFn_arg);
-void swapCurrClientHandlerA(ActionAr selectCliFn_arg);
-void killCurrClientHandlerA(ActionAr selectCliFn_arg);
-void tileCurrClientHandlerA(ActionAr selectCliFn_arg);
-void normalCurrClientHandlerA(ActionAr selectCliFn_arg);
-void fullScreenCurrClientHandlerA(ActionAr selectCliFn_arg);
-void toggleFullScreenCurrClientHandlerA(ActionAr selectCliFn_arg);
-void minimizeCurrClientHandlerA(ActionAr selectCliFn_arg);
-void freeCurrClientHandlerA(ActionAr freeSetterFn_arg);
-void toggleFreeCurrClientHandlerA(ActionAr freeSetterFn_arg);
+void moveFocusCurrClientHandlerA(GenericArg selectCliFn_arg);
+void swapCurrClientHandlerA(GenericArg selectCliFn_arg);
+void killCurrClientHandlerA(GenericArg selectCliFn_arg);
+void tileCurrClientHandlerA(GenericArg selectCliFn_arg);
+void normalCurrClientHandlerA(GenericArg selectCliFn_arg);
+void fullScreenCurrClientHandlerA(GenericArg selectCliFn_arg);
+void toggleFullScreenCurrClientHandlerA(GenericArg selectCliFn_arg);
+void minimizeCurrClientHandlerA(GenericArg selectCliFn_arg);
+void freeCurrClientHandlerA(GenericArg freeSetterFn_arg);
+void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg);
 
 // PtrClient (Handlers)
-void moveFocusPtrClientHandlerA(ActionAr selectCliFn_arg);
-void freeMovePtrClientHandlerA(ActionAr selectCliFn_arg);
-void freeResizePtrClientHandlerA(ActionAr selectCliFn_arg);
-void movePtrClientHandlerA(ActionAr selectCliFn_arg);
-void resizePtrClientHandlerA(ActionAr selectCliFn_arg);
-void toggleFullScreenPtrClientHandlerA(ActionAr selectCliFn_arg);
-void freePtrClientHandlerA(ActionAr freeSetterFn_arg);
-void toggleFreePtrClientHandlerA(ActionAr freeSetterFn_arg);
+void moveFocusPtrClientHandlerA(GenericArg selectCliFn_arg);
+void freeMovePtrClientHandlerA(GenericArg selectCliFn_arg);
+void freeResizePtrClientHandlerA(GenericArg selectCliFn_arg);
+void movePtrClientHandlerA(GenericArg selectCliFn_arg);
+void resizePtrClientHandlerA(GenericArg selectCliFn_arg);
+void toggleFullScreenPtrClientHandlerA(GenericArg selectCliFn_arg);
+void freePtrClientHandlerA(GenericArg freeSetterFn_arg);
+void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg);
 
 // Main
 void runActionA(const Action *a, const ActionChainAr *arg);
