@@ -24,7 +24,7 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int isFreeSizeHintsR(Client *c) {
+static int isFreeSizeHints(Client *c) {
   assert(c);
   int maxw = 0, maxh = 0, minw = 0, minh = 0;
   long msize;
@@ -45,7 +45,7 @@ static int isFreeSizeHintsR(Client *c) {
   return maxw && minw && maxh && minh && maxw == minw && maxh == minh;
 }
 
-static Bool hasRuleR(const Client *c, const Rule *r) {
+static Bool hasRule(const Client *c, const Rule *r) {
   assert(c);
   assert(r);
   if (!c)
@@ -62,7 +62,7 @@ static Bool hasRuleR(const Client *c, const Rule *r) {
   return res_class && res_name && res_title;
 }
 
-static void setRuleR(Client *c, const Rule *r) {
+static void setRule(Client *c, const Rule *r) {
   assert(c);
   assert(r);
   if (r->workspace != currWSR)
@@ -89,7 +89,7 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
   Client *c = allocClientT(w, wa);
   if (!c)
     return NULL;
-  if (isFreeSizeHintsR(c))
+  if (isFreeSizeHints(c))
     c->freeSetterFn = defFreeR;
   c->ws = getCurrStackSS();
   updateClassAndNameC(&c, NULL);
@@ -98,8 +98,8 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
   int i;
   for (i = 0; ruleSetS[ i ]; ++i) {
     r = ruleSetS[ i ];
-    if (hasRuleR(c, r)) {
-      setRuleR(c, r);
+    if (hasRule(c, r)) {
+      setRule(c, r);
       break;
     }
   }

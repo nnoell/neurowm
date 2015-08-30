@@ -73,34 +73,21 @@ static StackSet SS;
 
 
 //----------------------------------------------------------------------------------------------------------------------
-// PRIVATE FUNCTION DECLARATION
-//----------------------------------------------------------------------------------------------------------------------
-
-// Allocs and frees
-static Node *allocNodeSS(const Client *c);
-static void freeNodeSS(Node *n);
-static Stack *allocStackSS(Stack *s, size_t sizel, size_t sizetl);
-static void freeStackSS(Stack *s);
-static Stack *allocStackSetSS(size_t s);
-static void freeStackSetSS(Stack *s);
-static Bool reallocMinimizedClientsIfNecessarySS(Stack *s, int newCount);
-
-// Node
-static void setCurrNodeSS(Node *n);
-static Client *rmvLastNodeSS(Stack *s);
-static Client *rmvNoLastNodeSS(Node *n);
-
-// Minimized
-static Client *rmvMinimizedCliStackSS(Stack *s, Window w);
-static Client *pushMinimizedCliStackSS(Stack *s, Client *c);
-static Client *popMinimizedCliStackSS(Stack *s);
-
-
-//----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Node *allocNodeSS(const Client *c) {
+static void updateNSPStack(Stack *s) {
+  assert(s);
+  Node *n;
+  for (n=s->head; n; n=n->next)
+    if (n->cli->isNSP) {
+      s->nsp = n;
+      return;
+    }
+  s->nsp = NULL;
+}
+
+static Node *allocNode(const Client *c) {
   assert(c);
   Node *n = (Node *)malloc(sizeof(Node));
   if (!n)
@@ -112,14 +99,121 @@ static Node *allocNodeSS(const Client *c) {
   return n;
 }
 
-static void freeNodeSS(Node *n) {
+static void freeNode(Node *n) {
   if (!n)
     return;
   free(n);
   n = NULL;
 }
 
-static Stack *allocStackSS(Stack *s, size_t sizel, size_t sizetl) {
+static void setCurrNode(Node *n) {
+  assert(n);
+  Stack *s = SS.stacks + n->cli->ws;
+  if (n == s->curr)
+    return;
+  s->prev = s->curr;
+  s->curr = n;
+}
+
+static Client *rmvLastNode(Stack *s) {
+  assert(s);
+  if (s->size < 1)
+    return NULL;
+  Node *t = s->last;
+  Bool updateNSP = t->cli->isNSP;
+  if (s->size == 1) {
+    s->head = NULL;
+    s->last = NULL;
+    s->curr = NULL;
+  } else {
+    setCurrNode(s->last->prev);
+    s->last->prev->next = NULL;
+    s->last = t->prev;
+  }
+  Client *ret = t->cli;
+  freeNode(t);
+  s->size--;
+  if (updateNSP)
+    updateNSPStack(s);
+  return ret;
+}
+
+static Client *rmvNoLastNode(Node *n) {
+  assert(n);
+  Stack *s = SS.stacks + n->cli->ws;
+  if (s->size == 0 || s->last == n)
+    return NULL;
+  Bool updateNSP = n->cli->isNSP;
+  setCurrNode(n->next);
+  if (n == s->head) {
+    s->head = n->next;
+    n->next->prev = NULL;
+  } else {
+    n->prev->next = n->next;
+    n->next->prev = n->prev;
+  }
+  Client *ret = n->cli;
+  freeNode(n);
+  s->size--;
+  if (updateNSP)
+    updateNSPStack(s);
+  return ret;
+}
+
+static Bool reallocMinimizedClientsIfNecessary(Stack *s, int newCount) {
+  assert(s);
+  int newsize = STEP_SIZE_REALLOC;
+  while (newsize < newCount)
+    newsize += STEP_SIZE_REALLOC;
+  if (newsize != s->minimizedSize) {
+    s->minimizedClients = (Client **)realloc(s->minimizedClients, (size_t)newsize*sizeof(void *));
+    if (!s->minimizedClients)
+      return False;
+    s->minimizedSize = newsize;
+  }
+  return True;
+}
+
+Client *pushMinimizedCliStack(Stack *s, Client *c) {
+  assert(s);
+  assert(c);
+  int newCount = s->minimizedNum + 1;
+  if (!reallocMinimizedClientsIfNecessary(s, newCount))
+    return NULL;
+  s->minimizedNum = newCount;
+  s->minimizedClients[ newCount - 1 ] = c;
+  return c;
+}
+
+Client *popMinimizedCliStack(Stack *s) {
+  assert(s);
+  if (s->minimizedNum == 0)
+    return NULL;
+  int newCount = s->minimizedNum - 1;
+  Client *cli = s->minimizedClients[ newCount ];
+  if (!reallocMinimizedClientsIfNecessary(s, newCount))
+    return NULL;
+  s->minimizedNum = newCount;
+  return cli;
+}
+
+static Client *rmvMinimizedCliStack(Stack *s, Window w) {
+  assert(s);
+  Client *c, *found = NULL;
+  int i;
+  for (i = 0; i < s->minimizedNum; ++i) {
+    c = s->minimizedClients[ i ];
+    if (found)
+      s->minimizedClients[ i-1 ] = c;
+    if (c->win == w)
+      found = c;
+  }
+  if (found)
+    s->minimizedNum--;
+  return found;
+}
+
+static Stack *allocStack(Stack *s, size_t sizel, size_t sizetl) {
   assert(s);
   s->layouts = (Layout *)calloc(sizel, sizeof(Layout));
   if (!s->layouts)
@@ -136,113 +230,34 @@ static Stack *allocStackSS(Stack *s, size_t sizel, size_t sizetl) {
   return s;
 }
 
-static void freeStackSS(Stack *s) {
+static void freeStack(Stack *s) {
   if (!s)
     return;
   Client *c;
-  while ((c=rmvLastNodeSS(s)))
+  while ((c=rmvLastNode(s)))
     freeClientT(c);
   free(s->layouts);
   s->layouts = NULL;
   free(s->togLayouts);
   s->togLayouts = NULL;
-  while ((c = popMinimizedCliStackSS(s)))
+  while ((c = popMinimizedCliStack(s)))
     freeClientT(c);
   free(s->minimizedClients);
   s->minimizedClients = NULL;
 }
 
-static Stack *allocStackSetSS(size_t size) {
+static Stack *allocStackSet(size_t size) {
   return (Stack *)calloc(size, sizeof(Stack));
 }
 
-static void freeStackSetSS(Stack *s) {
+static void freeStackSet(Stack *s) {
   if (!s)
     return;
   free(s);
   s = NULL;
 }
 
-static Bool reallocMinimizedClientsIfNecessarySS(Stack *s, int newCount) {
-  assert(s);
-  int newsize = STEP_SIZE_REALLOC;
-  while (newsize < newCount)
-    newsize += STEP_SIZE_REALLOC;
-  if (newsize != s->minimizedSize) {
-    s->minimizedClients = (Client **)realloc(s->minimizedClients, (size_t)newsize*sizeof(void *));
-    if (!s->minimizedClients)
-      return False;
-    s->minimizedSize = newsize;
-  }
-  return True;
-}
-
-static void setCurrNodeSS(Node *n) {
-  assert(n);
-  Stack *s = SS.stacks + n->cli->ws;
-  if (n == s->curr)
-    return;
-  s->prev = s->curr;
-  s->curr = n;
-}
-
-static void updateNSPStackSS(Stack *s) {
-  assert(s);
-  Node *n;
-  for (n=s->head; n; n=n->next)
-    if (n->cli->isNSP) {
-      s->nsp = n;
-      return;
-    }
-  s->nsp = NULL;
-}
-
-static Client *rmvLastNodeSS(Stack *s) {
-  assert(s);
-  if (s->size < 1)
-    return NULL;
-  Node *t = s->last;
-  Bool updateNSP = t->cli->isNSP;
-  if (s->size == 1) {
-    s->head = NULL;
-    s->last = NULL;
-    s->curr = NULL;
-  } else {
-    setCurrNodeSS(s->last->prev);
-    s->last->prev->next = NULL;
-    s->last = t->prev;
-  }
-  Client *ret = t->cli;
-  freeNodeSS(t);
-  s->size--;
-  if (updateNSP)
-    updateNSPStackSS(s);
-  return ret;
-}
-
-static Client *rmvNoLastNodeSS(Node *n) {
-  assert(n);
-  Stack *s = SS.stacks + n->cli->ws;
-  if (s->size == 0 || s->last == n)
-    return NULL;
-  Bool updateNSP = n->cli->isNSP;
-  setCurrNodeSS(n->next);
-  if (n == s->head) {
-    s->head = n->next;
-    n->next->prev = NULL;
-  } else {
-    n->prev->next = n->next;
-    n->next->prev = n->prev;
-  }
-  Client *ret = n->cli;
-  freeNodeSS(n);
-  s->size--;
-  if (updateNSP)
-    updateNSPStackSS(s);
-  return ret;
-}
-
-static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
+static void initLayouts(Layout *l, const LayoutConf *const *lc, size_t size) {
   assert(l);
   assert(lc);
   size_t i;
@@ -258,45 +273,6 @@ static void initLayoutsSS(Layout *l, const LayoutConf *const *lc, size_t size) {
   }
 }
 
-static Client *rmvMinimizedCliStackSS(Stack *s, Window w) {
-  assert(s);
-  Client *c, *found = NULL;
-  int i;
-  for (i = 0; i < s->minimizedNum; ++i) {
-    c = s->minimizedClients[ i ];
-    if (found)
-      s->minimizedClients[ i-1 ] = c;
-    if (c->win == w)
-      found = c;
-  }
-  if (found)
-    s->minimizedNum--;
-  return found;
-}
-
-Client *pushMinimizedCliStackSS(Stack *s, Client *c) {
-  assert(s);
-  assert(c);
-  int newCount = s->minimizedNum + 1;
-  if (!reallocMinimizedClientsIfNecessarySS(s, newCount))
-    return NULL;
-  s->minimizedNum = newCount;
-  s->minimizedClients[ newCount - 1 ] = c;
-  return c;
-}
-
-Client *popMinimizedCliStackSS(Stack *s) {
-  assert(s);
-  if (s->minimizedNum == 0)
-    return NULL;
-  int newCount = s->minimizedNum - 1;
-  Client *cli = s->minimizedClients[ newCount ];
-  if (!reallocMinimizedClientsIfNecessarySS(s, newCount))
-    return NULL;
-  s->minimizedNum = newCount;
-  return cli;
-}
-
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
@@ -306,7 +282,7 @@ Client *popMinimizedCliStackSS(Stack *s) {
 Bool initSS() {
   assert(workspaceSetS);
   size_t size = ptrArrayLengthT((const void *const *const)workspaceSetS);
-  SS.stacks = allocStackSetSS(size + 1);  // We need on extra stack for NSP
+  SS.stacks = allocStackSet(size + 1);  // We need on extra stack for NSP
   if (!SS.stacks)
     return False;
   const Workspace *ws;
@@ -317,7 +293,7 @@ Bool initSS() {
     if (!sizel)
       return False;
     sizetl = ptrArrayLengthT((const void *const *const)(ws->togLayouts));
-    Stack *s = allocStackSS(SS.stacks + i, sizel, sizetl);
+    Stack *s = allocStack(SS.stacks + i, sizel, sizetl);
     if (!s)
       return False;
     s->name = ws->name;
@@ -328,8 +304,8 @@ Bool initSS() {
     s->currTogLayoutIdx = -1;  // No toggled layout by default
     *(int *)&(s->numLayouts) = sizel;
     *(int *)&(s->numTogLayouts) = sizetl;
-    initLayoutsSS(s->layouts, ws->layouts, sizel);
-    initLayoutsSS(s->togLayouts, ws->togLayouts, sizetl);
+    initLayouts(s->layouts, ws->layouts, sizel);
+    initLayouts(s->togLayouts, ws->togLayouts, sizetl);
   }
   SS.curr = 0;
   SS.old = 0;
@@ -340,8 +316,8 @@ Bool initSS() {
 void endSS() {
   int i;
   for (i = 0; i < SS.size; ++i)
-    freeStackSS(SS.stacks + i);
-  freeStackSetSS(SS.stacks);
+    freeStack(SS.stacks + i);
+  freeStackSet(SS.stacks);
   SS.stacks = NULL;
 }
 
@@ -389,7 +365,7 @@ void setCurrStackSS(int ws) {
 void setCurrClientSS(const ClientPtrPtr c) {
   if (!c)
     return;
-  setCurrNodeSS((Node *)c);
+  setCurrNode((Node *)c);
 }
 
 // First off, search in the current stack, if it is not there, search in the other stacks
@@ -428,7 +404,7 @@ ClientPtrPtr addClientEndSS(const Client *c) {
   if (!c)
     return NULL;
   Stack *s = SS.stacks + c->ws;
-  Node *n = allocNodeSS(c);
+  Node *n = allocNode(c);
   if (!n)
     return NULL;
   if (c->isNSP)
@@ -436,7 +412,7 @@ ClientPtrPtr addClientEndSS(const Client *c) {
   if (s->size < 1) {
     s->head = n;
     s->last = n;
-    setCurrNodeSS(n);
+    setCurrNode(n);
   } else {
     n->prev = s->curr;
     if (s->curr->next)
@@ -445,7 +421,7 @@ ClientPtrPtr addClientEndSS(const Client *c) {
       s->last = n;
     n->next = s->curr->next;
     s->curr->next = n;
-    setCurrNodeSS(n);
+    setCurrNode(n);
   }
   s->size++;
   return (ClientPtrPtr)n;
@@ -455,7 +431,7 @@ ClientPtrPtr addClientStartSS(const Client *c) {
   if (!c)
     return NULL;
   Stack *s = SS.stacks + c->ws;
-  Node *n = allocNodeSS(c);
+  Node *n = allocNode(c);
   if (!n)
     return NULL;
   if (c->isNSP)
@@ -463,7 +439,7 @@ ClientPtrPtr addClientStartSS(const Client *c) {
   if (s->size < 1) {
     s->head = n;
     s->last = n;
-    setCurrNodeSS(n);
+    setCurrNode(n);
   } else {
     n->next = s->curr;
     if (s->curr->prev)
@@ -472,7 +448,7 @@ ClientPtrPtr addClientStartSS(const Client *c) {
       s->head = n;
     n->prev = s->curr->prev;
     s->curr->prev = n;
-    setCurrNodeSS(n);
+    setCurrNode(n);
   }
   s->size++;
   return (ClientPtrPtr)n;
@@ -483,32 +459,32 @@ Client *rmvClientSS(ClientPtrPtr c) {
   if (!c)
     return NULL;
   if (isLastClientSS(c))
-    return rmvLastNodeSS(SS.stacks + CLI_GET(c).ws);
-  return rmvNoLastNodeSS((Node *)c);
+    return rmvLastNode(SS.stacks + CLI_GET(c).ws);
+  return rmvNoLastNode((Node *)c);
 }
 
 Client *pushMinimizedClientSS(Client *c) {
   assert(c);
   Stack *s = SS.stacks + (c->ws % SS.size);
-  return pushMinimizedCliStackSS(s, c);
+  return pushMinimizedCliStack(s, c);
 }
 
 Client *popMinimizedClientSS(int ws) {
   Stack *s = SS.stacks + (ws % SS.size);
-  return popMinimizedCliStackSS(s);
+  return popMinimizedCliStack(s);
 }
 
 // First, search in the current stack, if is not there, search in the other stacks
 Client *rmvMinimizedClientSS(Window w) {
   Stack *s = SS.stacks + SS.curr;
-  Client *c = rmvMinimizedCliStackSS(s, w);
+  Client *c = rmvMinimizedCliStack(s, w);
   if (c)
     return c;
   int i;
   for (i = 0; i < SS.size; ++i) {
     if (i == SS.curr)
       continue;
-    c = rmvMinimizedCliStackSS(SS.stacks + i, w);
+    c = rmvMinimizedCliStack(SS.stacks + i, w);
     if (c)
       return c;
   }

@@ -32,12 +32,12 @@ typedef void (*WorkspaceClientFn)(ClientPtrPtr c, const void *data);
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool isAboveTiledClientW(const ClientPtrPtr c) {
+static Bool isAboveTiledClient(const ClientPtrPtr c) {
   assert(c);
   return (CLI_GET(c).freeSetterFn != notFreeR) || CLI_GET(c).isFullScreen;
 }
 
-static void focusClientW(ClientPtrPtr c) {
+static void focusClient(ClientPtrPtr c) {
   assert(c);
   unsetUrgentC(c, NULL);
   ungrabButtonsS(CLI_GET(c).win);
@@ -47,13 +47,13 @@ static void focusClientW(ClientPtrPtr c) {
   updateC(c, NULL);
 }
 
-static void unfocusClientW(ClientPtrPtr c) {
+static void unfocusClient(ClientPtrPtr c) {
   assert(c);
   grabButtonsS(CLI_GET(c).win);
   updateC(c, NULL);
 }
 
-static void processClientW(const WorkspaceClientFn wcf, const ClientPtrPtr c, const ClientSelectorFn csf,
+static void processClient(const WorkspaceClientFn wcf, const ClientPtrPtr c, const ClientSelectorFn csf,
     const void *data) {
   if (!c || !csf)
     return;
@@ -86,12 +86,12 @@ void updateFocusW(int ws) {
   int atc = 0;
   ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
-    if (isAboveTiledClientW(c))
+    if (isAboveTiledClient(c))
       ++atc;
 
   c = getCurrClientStackSS(ws);
-  windows[ isAboveTiledClientW(c) ? 0 : atc ] = CLI_GET(c).win;
-  focusClientW(c);
+  windows[ isAboveTiledClient(c) ? 0 : atc ] = CLI_GET(c).win;
+  focusClient(c);
 
   if (n > 1) {
     if (!XQueryTree(display, root, &d1, &d2, &wins, &num))  // XQueryTree gets windows by stacking order
@@ -103,8 +103,8 @@ void updateFocusW(int ws) {
         continue;
       if (isCurrClientSS(c))
         continue;
-      windows[ isAboveTiledClientW(c) ? --atc : --n2 ] = CLI_GET(c).win;
-      unfocusClientW(c);
+      windows[ isAboveTiledClient(c) ? --atc : --n2 ] = CLI_GET(c).win;
+      unfocusClient(c);
     }
     if (wins)
       XFree(wins);
@@ -237,51 +237,51 @@ void swapClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *d
 }
 
 void killClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(killC, c, csf, data);
+  processClient(killC, c, csf, data);
 }
 
 void minimizeClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(minimizeC, c, csf, data);
+  processClient(minimizeC, c, csf, data);
 }
 
 void tileClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(tileC, c, csf, data);
+  processClient(tileC, c, csf, data);
 }
 
 void freeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
-  processClientW(freeC, c, csf, freeSetterFn);
+  processClient(freeC, c, csf, freeSetterFn);
 }
 
 void toggleFreeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
-  processClientW(toggleFreeC, c, csf, freeSetterFn);
+  processClient(toggleFreeC, c, csf, freeSetterFn);
 }
 
 void normalClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(normalC, c, csf, data);
+  processClient(normalC, c, csf, data);
 }
 
 void fullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(fullScreenC, c, csf, data);
+  processClient(fullScreenC, c, csf, data);
 }
 
 void toggleFullScreenClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(toggleFullScreenC, c, csf, data);
+  processClient(toggleFullScreenC, c, csf, data);
 }
 
 void moveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(moveC, c, csf, data);
+  processClient(moveC, c, csf, data);
 }
 
 void resizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(resizeC, c, csf, data);
+  processClient(resizeC, c, csf, data);
 }
 
 void freeMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(freeMoveC, c, csf, data);
+  processClient(freeMoveC, c, csf, data);
 }
 
 void freeResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClientW(freeResizeC, c, csf, data);
+  processClient(freeResizeC, c, csf, data);
 }
 
 

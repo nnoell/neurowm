@@ -49,7 +49,7 @@ static Bool stopUpdateWhile = False;
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static char **strToCmdDP(char **cmd, char *str, const char *sep) {
+static char **strToCmd(char **cmd, char *str, const char *sep) {
   assert(cmd);
   assert(str);
   assert(sep);
@@ -64,16 +64,16 @@ static char **strToCmdDP(char **cmd, char *str, const char *sep) {
   return cmd;
 }
 
-static char **getDzenCmdDP(char **cmd, char *line, const DzenFlags *df) {
+static char **getDzenCmd(char **cmd, char *line, const DzenFlags *df) {
   assert(cmd);
   assert(line);
   assert(df);
   snprintf(line, DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
       df->x, df->y, df->w, df->h, df->fgColor, df->bgColor, df->align, df->font, df->event, df->extras);
-  return strToCmdDP(cmd, line, " \t\n");
+  return strToCmd(cmd, line, " \t\n");
 }
 
-static void updateDzenPanelDP(const DzenPanel *dp, int fd) {
+static void updateDzenPanel(const DzenPanel *dp, int fd) {
   assert(dp);
   char line[ DZEN_LINE_MAX ] = "\0";
   int i;
@@ -88,7 +88,7 @@ static void updateDzenPanelDP(const DzenPanel *dp, int fd) {
   write(fd, line, strlen(line));
 }
 
-static void *updateThreadDP(void *args) {
+static void *updateThread(void *args) {
   (void)args;
   const DzenPanel *dp;
   int i = 0, j;
@@ -99,7 +99,7 @@ static void *updateThreadDP(void *args) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
-        updateDzenPanelDP(dp, PIP.pi[ j ].output);
+        updateDzenPanel(dp, PIP.pi[ j ].output);
     }
     ++i;
     i %= PIP.resetRate;
@@ -108,15 +108,15 @@ static void *updateThreadDP(void *args) {
   pthread_exit(NULL);
 }
 
-static Bool initUpdateThreadDP() {
+static Bool initUpdateThread() {
   if (PIP.resetRate <= 0)
     return True;
   pthread_attr_init(&PIP.attr);
   pthread_attr_setdetachstate(&PIP.attr, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&PIP.updateThread, &PIP.attr, updateThreadDP, NULL) == 0;
+  return pthread_create(&PIP.updateThread, &PIP.attr, updateThread, NULL) == 0;
 }
 
-static void endUpdateThreadDP() {
+static void endUpdateThread() {
   if (PIP.resetRate <= 0)
     return;
   pthread_attr_destroy(&PIP.attr);
@@ -146,19 +146,19 @@ Bool initDP() {
     dp = dzenPanelSetS[ i ];
     if (dp->refreshRate > PIP.resetRate)
       PIP.resetRate *= dp->refreshRate;
-    getDzenCmdDP(dzenCmd, line, dp->df);
+    getDzenCmd(dzenCmd, line, dp->df);
     PIP.pi[ i ].output = spawnPipeS((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
     if (PIP.pi[ i ].output == -1)
       return False;
   }
-  if (!initUpdateThreadDP())
+  if (!initUpdateThread())
     exitErrorS("initDP - could not init thread to update panels");
   updateDP(False);
   return True;
 }
 
 void endDP() {
-  endUpdateThreadDP();
+  endUpdateThread();
   int i;
   for (i = 0; i < PIP.numPanels; ++i)
     if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)
@@ -174,9 +174,9 @@ void updateDP(Bool onlyEvent) {
     dp = dzenPanelSetS[ i ];
     if (onlyEvent) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
-        updateDzenPanelDP(dp, PIP.pi[ i ].output);
+        updateDzenPanel(dp, PIP.pi[ i ].output);
     } else {
-      updateDzenPanelDP(dp, PIP.pi[ i ].output);
+      updateDzenPanel(dp, PIP.pi[ i ].output);
     }
   }
 }

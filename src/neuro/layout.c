@@ -27,7 +27,7 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Arrange *allocArrangeL(int ws, Layout *l) {
+static Arrange *allocArrange(int ws, Layout *l) {
   assert(l);
   Rectangle **rs = NULL, **frs = NULL;
   int i = 0, size = 0;
@@ -57,7 +57,7 @@ static Arrange *allocArrangeL(int ws, Layout *l) {
   return a;
 }
 
-static void freeArrangeL(Arrange *a) {
+static void freeArrange(Arrange *a) {
   if (!a)
     return;
   free(a->cliRegions);
@@ -68,7 +68,7 @@ static void freeArrangeL(Arrange *a) {
   a = NULL;
 }
 
-static void getLengthSizesL(int n, int length, int *xs, int *ws) {
+static void getLengthSizes(int n, int length, int *xs, int *ws) {
   assert(xs);
   assert(ws);
   assert(n > 0);
@@ -85,14 +85,14 @@ static void getLengthSizesL(int n, int length, int *xs, int *ws) {
 }
 
 // Arrange runners
-static Arrange *normalArrangeL(Arrange *a, ArrangerFn af) {
+static Arrange *normalArrange(Arrange *a, ArrangerFn af) {
   assert(a);
   assert(af);
   af(a);
   return a;
 }
 
-static Arrange *mirrorArrangeL(Arrange *a, ArrangerFn af) {
+static Arrange *mirrorArrange(Arrange *a, ArrangerFn af) {
   assert(a);
   assert(af);
   transpRectangleG(&a->region);
@@ -105,7 +105,7 @@ static Arrange *mirrorArrangeL(Arrange *a, ArrangerFn af) {
 }
 
 // Mods
-static Arrange *reflXArrModL(Arrange *a) {
+static Arrange *reflectXMod(Arrange *a) {
   assert(a);
   int i;
   for (i = 0; i < a->size; ++i)
@@ -113,7 +113,7 @@ static Arrange *reflXArrModL(Arrange *a) {
   return a;
 }
 
-static Arrange *reflYArrModL(Arrange *a) {
+static Arrange *reflectYMod(Arrange *a) {
   assert(a);
   int i;
   for (i = 0; i < a->size; ++i)
@@ -128,20 +128,20 @@ static Arrange *reflYArrModL(Arrange *a) {
 
 void runLayoutL(int ws, int i) {
   Layout *l = getLayoutStackSS(ws, i);
-  Arrange *a = allocArrangeL(ws, l);
+  Arrange *a = allocArrange(ws, l);
   if (!a)
     exitErrorS("runLayoutL - could not run layout");
   if (a->size) {  // Then run layout
     if (l->mod & mirrModL)
-      mirrorArrangeL(a, l->arrangerFn);
+      mirrorArrange(a, l->arrangerFn);
     else
-      normalArrangeL(a, l->arrangerFn);
+      normalArrange(a, l->arrangerFn);
     if (l->mod & reflXModL)
-      reflXArrModL(a);
+      reflectXMod(a);
     if (l->mod & reflYModL)
-      reflYArrModL(a);
+      reflectYMod(a);
   }
-  freeArrangeL(a);
+  freeArrange(a);
 }
 
 void runCurrLayoutL(int ws) {
@@ -221,13 +221,13 @@ Arrange *tallArrangerL(Arrange *a) {
   int ys[ n ], hs[ n ];
   memset(ys, 0, sizeof(ys));
   memset(hs, 0, sizeof(hs));
-  getLengthSizesL(nwindows, a->region.h, ys, hs);
+  getLengthSizes(nwindows, a->region.h, ys, hs);
   int i;
   for (i = 0; i < nwindows; ++i)  // Master area
     setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ] , n > mn ? ms : a->region.w, hs[ i ]);
   if (n - nwindows == 0)
     return a;
-  getLengthSizesL(n - nwindows, a->region.h, ys, hs);
+  getLengthSizes(n - nwindows, a->region.h, ys, hs);
   for (; i < n; ++i)  // Stacking area
     setRectangleG(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms,
         hs[ i-nwindows ]);
@@ -244,7 +244,7 @@ Arrange *gridArrangerL(Arrange *a) {
   int xs[ cols ], ws[ cols ];
   memset(xs, 0, sizeof(xs));
   memset(ws, 0, sizeof(ws));
-  getLengthSizesL(cols, a->region.w, xs, ws);
+  getLengthSizes(cols, a->region.w, xs, ws);
   int i, cn = 0, rn = 0;
   for (i = 0; i < n; ++i) {
     if (i/rows + 1 > cols - n%cols)
@@ -252,7 +252,7 @@ Arrange *gridArrangerL(Arrange *a) {
     int ys[ rows ], hs[ rows ];
     memset(ys, 0, sizeof(ys));
     memset(hs, 0, sizeof(hs));
-    getLengthSizesL(rows, a->region.h, ys, hs);
+    getLengthSizes(rows, a->region.h, ys, hs);
     setRectangleG(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
     if (++rn >= rows) {
       rn = 0;

@@ -28,7 +28,7 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static void keyPressE(XEvent *e) {
+static void processKeyPress(XEvent *e) {
   assert(e);
   XKeyEvent ke = e->xkey;
   int ks;
@@ -45,7 +45,7 @@ static void keyPressE(XEvent *e) {
   XFree(keysym);
 }
 
-static void buttonPressE(XEvent *e) {
+static void processButtonPress(XEvent *e) {
   assert(e);
   XButtonPressedEvent *ev = &e->xbutton;
   const Button *b;
@@ -59,13 +59,13 @@ static void buttonPressE(XEvent *e) {
   }
 }
 
-static void mapRequestE(XEvent *e) {
+static void processMapRequest(XEvent *e) {
   assert(e);
   manageWindowE(e->xmaprequest.window);
   updateDP(True);
 }
 
-static void destroyNotifyE(XEvent *e) {
+static void processDestroyNotify(XEvent *e) {
   assert(e);
   Window w = e->xdestroywindow.window;
   ClientPtrPtr c = findWindowClientAllW(w);
@@ -79,7 +79,7 @@ static void destroyNotifyE(XEvent *e) {
   updateDP(True);
 }
 
-static void unmapNotifyE(XEvent *e) {
+static void processUnmapNotify(XEvent *e) {
   assert(e);
   Window w = e->xdestroywindow.window;
   ClientPtrPtr c = findWindowClientAllW(w);
@@ -93,7 +93,7 @@ static void unmapNotifyE(XEvent *e) {
   updateDP(True);
 }
 
-static void enterNotifyE(XEvent *e) {
+static void processEnterNotify(XEvent *e) {
   assert(e);
   XCrossingEvent *ev = &e->xcrossing;
   if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != (unsigned int)root)
@@ -112,7 +112,7 @@ static void enterNotifyE(XEvent *e) {
   updateDP(True);
 }
 
-static void configureRequestE(XEvent *e) {
+static void processConfigureRequest(XEvent *e) {
   assert(e);
   XConfigureRequestEvent *ev = &e->xconfigurerequest;
   XWindowChanges wc;
@@ -131,7 +131,7 @@ static void configureRequestE(XEvent *e) {
   updateDP(True);
 }
 
-static void focusInE(XEvent *e) {
+static void processFocusIn(XEvent *e) {
   assert(e);
   ClientPtrPtr c = getCurrClientCurrStackSS();
   if (!c)
@@ -142,7 +142,7 @@ static void focusInE(XEvent *e) {
   updateDP(True);
 }
 
-static void clientMessageE(XEvent *e) {
+static void processClientMessage(XEvent *e) {
   assert(e);
   ClientPtrPtr c = findWindowClientAllW(e->xclient.window);
   if (!c)
@@ -162,7 +162,7 @@ static void clientMessageE(XEvent *e) {
   updateDP(True);
 }
 
-static void propertyNotifyE(XEvent *e) {
+static void processPropertyNotify(XEvent *e) {
   assert(e);
   XPropertyEvent *ev = &e->xproperty;
   if (ev->atom == XA_WM_NAME || ev->atom == netatoms[ NET_WM_NAME ]) {  // Window title
@@ -192,16 +192,16 @@ static void propertyNotifyE(XEvent *e) {
 //----------------------------------------------------------------------------------------------------------------------
 
 const EventHandler const eventsE[ LASTEvent ] = {
-  [ KeyPress ]         = keyPressE,
-  [ ButtonPress ]      = buttonPressE,
-  [ MapRequest ]       = mapRequestE,
-  [ UnmapNotify ]      = unmapNotifyE,
-  [ DestroyNotify ]    = destroyNotifyE,
-  [ EnterNotify ]      = enterNotifyE,
-  [ ConfigureRequest ] = configureRequestE,
-  [ FocusIn ]          = focusInE,
-  [ ClientMessage ]    = clientMessageE,
-  [ PropertyNotify ]   = propertyNotifyE
+  [ KeyPress ]         = processKeyPress,
+  [ ButtonPress ]      = processButtonPress,
+  [ MapRequest ]       = processMapRequest,
+  [ UnmapNotify ]      = processUnmapNotify,
+  [ DestroyNotify ]    = processDestroyNotify,
+  [ EnterNotify ]      = processEnterNotify,
+  [ ConfigureRequest ] = processConfigureRequest,
+  [ FocusIn ]          = processFocusIn,
+  [ ClientMessage ]    = processClientMessage,
+  [ PropertyNotify ]   = processPropertyNotify
 };
 
 

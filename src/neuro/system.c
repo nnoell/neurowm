@@ -65,7 +65,7 @@ const Atom netatoms[ NET_COUNT ];
 //----------------------------------------------------------------------------------------------------------------------
 
 // Starting error handler, used to check if another window manager is already running
-static int XErrorStartHandlerS(Display *d, XErrorEvent *ee) {
+static int XErrorStartWindowManagerHandler(Display *d, XErrorEvent *ee) {
   (void)d;
   (void)ee;
   exitErrorS("XErrorStartHandlerS - another window manager is already running");
@@ -73,7 +73,7 @@ static int XErrorStartHandlerS(Display *d, XErrorEvent *ee) {
 }
 
 // Default error handler, which might call exit
-static int XErrorHandlerS(Display *d, XErrorEvent *ee) {
+static int XErrorWindowManagerHandler(Display *d, XErrorEvent *ee) {
   (void)d;
   (void)ee;
   if (ee->error_code == BadWindow \
@@ -157,7 +157,7 @@ Bool initS() {
   setCursorsAndAtomsS();
 
   // Check if other window manager is already running
-  XSetErrorHandler(XErrorStartHandlerS);
+  XSetErrorHandler(XErrorStartWindowManagerHandler);
 
   // Setup root window mask
   XSetWindowAttributes wa;
@@ -168,7 +168,7 @@ Bool initS() {
   XSync(display, False);
 
   // Set custom X error handler
-  XSetErrorHandler(XErrorHandlerS);
+  XSetErrorHandler(XErrorWindowManagerHandler);
   XSync(display, False);
 
   // Grab key bindings

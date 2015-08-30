@@ -30,7 +30,7 @@ static Bool stopWhile = False;
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int recompileNeurowmN(pid_t *pid) {
+static int recompileNeurowm(pid_t *pid) {
   char out[ NAME_MAX ] = "", src[ NAME_MAX ] = "";
   snprintf(out, NAME_MAX, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
   snprintf(src, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
@@ -39,25 +39,25 @@ static int recompileNeurowmN(pid_t *pid) {
   return spawnS(cmd, pid);
 }
 
-static void endNeurowmN() {
+static void endNeurowm() {
   runActionChainA(endUpHookS);
   endDP();
   endSS();
   endS();
 }
 
-static void signalHandlerN(int signo) {
+static void signalHandler(int signo) {
   if (signo == SIGUSR1) {
-    endNeurowmN();
+    endNeurowm();
     pid_t pid;
-    if (recompileNeurowmN(&pid) == -1)
+    if (recompileNeurowm(&pid) == -1)
       perror("signalHandler - Could not recompile neurowm");
     waitpid(pid, NULL, WUNTRACED);
     exit(EXIT_RELOAD);
   }
 }
 
-static void initNeurowmN(const WMConfig *c) {
+static void initNeurowm(const WMConfig *c) {
   if (!c)
     exitErrorS("initNeurowm - could not set configuration");
 
@@ -87,7 +87,7 @@ static void initNeurowmN(const WMConfig *c) {
 
 int runNeurowmN(const WMConfig *c) {
   // Init window manager
-  initNeurowmN(c);
+  initNeurowm(c);
 
   // Main loop
   XEvent ev;
@@ -96,7 +96,7 @@ int runNeurowmN(const WMConfig *c) {
       eventsE[ ev.type ](&ev);
 
   // End window manager
-  endNeurowmN();
+  endNeurowm();
 
   return EXIT_SUCCESS;
 }
@@ -106,6 +106,6 @@ void quitNeurowmN() {
 }
 
 void reloadNeurowmN() {
-  signalHandlerN(SIGUSR1);
+  signalHandler(SIGUSR1);
 }
 

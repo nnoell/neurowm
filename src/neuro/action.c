@@ -35,14 +35,15 @@ typedef void (*ActionWorkspaceFn)(int ws);
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static void processWSActionA(const ActionWorkspaceFn gwsaf, int ws) {
+static void processWorkspaceAction(const ActionWorkspaceFn gwsaf, int ws) {
   assert(gwsaf);
   rmvEnterNotifyMaskW(ws);
   gwsaf(ws);
   addEnterNotifyMaskW(ws);
 }
 
-static void processCliActionA(const ActionClientFn gcaf, ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+static void processClientAction(const ActionClientFn gcaf, ClientPtrPtr c, const ClientSelectorFn csf,
+    const void *data) {
   assert(gcaf);
   assert(csf);
   if (!c)
@@ -231,13 +232,13 @@ void resizeMasterLayoutHandlerA(GenericArg float_arg) {
 
 // Workspace
 void changeToWorkspaceHandlerA(GenericArg int_arg) {
-  processWSActionA(changeToWorkspaceW, ARG_INT_GET(int_arg));
+  processWorkspaceAction(changeToWorkspaceW, ARG_INT_GET(int_arg));
 }
 
 void changeToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
   const int dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
-  processWSActionA(changeToWorkspaceW, dst);
+  processWorkspaceAction(changeToWorkspaceW, dst);
 }
 
 void moveClientToWorkspaceHandlerA(GenericArg int_arg) {
@@ -258,7 +259,7 @@ void moveClientToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
 
 void restoreLastMinimizedHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  processWSActionA(restoreLastMinimizedW, getCurrStackSS());
+  processWorkspaceAction(restoreLastMinimizedW, getCurrStackSS());
 }
 
 void toggleNSPHandlerA(GenericArg command_arg) {
@@ -283,53 +284,53 @@ void toggleNSPHandlerA(GenericArg command_arg) {
 // Curr Client
 void moveFocusCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processCliActionA(moveFocusClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(moveFocusClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void swapCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processCliActionA(swapClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(swapClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void killCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   killClientW(getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
-  // processCliActionA(killClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  // processClientAction(killClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void tileCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processCliActionA(tileClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(tileClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void normalCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processCliActionA(normalClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(normalClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void fullScreenCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processCliActionA(fullScreenClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(fullScreenClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void toggleFullScreenCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processCliActionA(toggleFullScreenClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(toggleFullScreenClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void minimizeCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processCliActionA(minimizeClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(minimizeClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void freeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
-  processCliActionA(freeClientW, getCurrClientCurrStackSS(), selfC, p);
+  processClientAction(freeClientW, getCurrClientCurrStackSS(), selfC, p);
 }
 
 void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
-  processCliActionA(toggleFreeClientW, getCurrClientCurrStackSS(), selfC, p);
+  processClientAction(toggleFreeClientW, getCurrClientCurrStackSS(), selfC, p);
 }
 
 
@@ -337,51 +338,51 @@ void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
 void moveFocusPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(moveFocusClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(moveFocusClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void freeMovePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   GenericArg fsf = (GenericArg)ARG_FSF(defFreeR);
   int rx, ry;
-  processCliActionA(freeMoveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), (const void *)&fsf);
+  processClientAction(freeMoveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), (const void *)&fsf);
 }
 
 void freeResizePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   GenericArg fsf = (GenericArg)ARG_FSF(defFreeR);
   int rx, ry;
-  processCliActionA(freeResizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), (const void *)&fsf);
+  processClientAction(freeResizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), (const void *)&fsf);
 }
 
 void movePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(moveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(moveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void resizePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(resizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(resizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void toggleFullScreenPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processCliActionA(toggleFullScreenClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(toggleFullScreenClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void freePtrClientHandlerA(GenericArg freeSetterFn_arg) {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
   int rx, ry;
-  processCliActionA(freeClientW, getPtrClientW(&rx, &ry), selfC, p);
+  processClientAction(freeClientW, getPtrClientW(&rx, &ry), selfC, p);
 }
 
 void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg)  {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
   int rx, ry;
-  processCliActionA(toggleFreeClientW, getPtrClientW(&rx, &ry), selfC, p);
+  processClientAction(toggleFreeClientW, getPtrClientW(&rx, &ry), selfC, p);
 }
 
 
