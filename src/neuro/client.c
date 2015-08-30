@@ -21,6 +21,13 @@
 #include "workspace.h"
 #include "event.h"
 
+//----------------------------------------------------------------------------------------------------------------------
+// PRIVATE VARIABLE DECLARATION
+//----------------------------------------------------------------------------------------------------------------------
+
+// MotionProcesserFn
+typedef void (*XMotionUpdaterFn)(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py);
+
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
@@ -39,7 +46,7 @@ static Bool isProtocolDelete(Window w) {
   return ret;
 }
 
-static Bool setTitleAtomC(Client *c, Atom atom) {
+static Bool setTitleAtom(Client *c, Atom atom) {
   assert(c);
   XTextProperty tp;
   XGetTextProperty(display, c->win, &tp, atom);
@@ -59,13 +66,48 @@ static Bool setTitleAtomC(Client *c, Atom atom) {
   return True;
 }
 
-static ClientPtrPtr queryPointC(int ws, int x, int y) {
+static ClientPtrPtr queryPoint(int ws, int x, int y) {
   ClientPtrPtr c;
   for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c))
     if (isPointInRectangleG(getRegionClientSS(c), x, y))
       break;
   return c;
 }
+
+static void processXMotion(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int px, int py, XMotionUpdaterFn mpf) {
+  const Bool res = XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
+      GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime);
+  if (res != GrabSuccess)
+    return;
+  XEvent ev;
+  do {
+    XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
+    if (ev.type == MotionNotify)
+      mpf(r, ws, cx, cy, cw, ch, ev.xmotion.x, ev.xmotion.y, px, py);
+  } while (ev.type != ButtonRelease);
+  XUngrabPointer(display, CurrentTime);
+}
+
+static void XMotionMove(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+  (void)cw;
+  (void)ch;
+  r->x = cx + (ex - px);
+  r->y = cy + (ey - py);
+  runCurrLayoutL(ws);
+  updateW(ws);
+}
+
+static void XMotionResize(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+  (void)cx;
+  (void)cy;
+  (void)px;
+  (void)py;
+  r->w = cw + (ex - (cw + r->x));
+  r->h = ch + (ey - (ch + r->y));
+  runCurrLayoutL(ws);
+  updateW(ws);
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
@@ -125,8 +167,8 @@ void updateTitleC(ClientPtrPtr c, const void *data) {
   if (!c)
     return;
   CLI_GET(c).title[ 0 ] = '\0';
-  if (!setTitleAtomC(*c, netatoms[ NET_WM_NAME ]))
-    setTitleAtomC(*c, XA_WM_NAME);
+  if (!setTitleAtom(*c, netatoms[ NET_WM_NAME ]))
+    setTitleAtom(*c, XA_WM_NAME);
 }
 
 void hideC(ClientPtrPtr c, const void *doRules) {  // Move off screen
@@ -278,55 +320,22 @@ void moveC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  int rx, ry;
-  getPtrClientW(&rx, &ry);
   moveFocusClientW(c, selfC, NULL);
-  if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
-    return;
-
   Rectangle *r = &(CLI_GET(c).floatRegion);
-  int cx = r->x, cy = r->y;
-  XEvent ev;
-  do {
-    XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
-    if (ev.type == MotionNotify) {
-      r->x = cx + (ev.xmotion.x - rx);
-      r->y = cy + (ev.xmotion.y - ry);
-      runCurrLayoutL(CLI_GET(c).ws);
-      updateW(CLI_GET(c).ws);
-    }
-    XRaiseWindow(display, CLI_GET(c).win);
-  } while (ev.type != ButtonRelease);
-  XUngrabPointer(display, CurrentTime);
+  int px = 0, py = 0;
+  getPtrClientW(&px, &py);
+  processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionMove);
 }
 
 void resizeC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  int rx, ry;
-  getPtrClientW(&rx, &ry);
   moveFocusClientW(c, selfC, NULL);
-  if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
-    return;
-
   Rectangle *r = &(CLI_GET(c).floatRegion);
-  XWarpPointer(display, None, CLI_GET(c).win, 0, 0, 0, 0, r->w, r->h);
-  int cw = r->w, ch = r->h;
-  XEvent ev;
-  do {
-    XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
-    if (ev.type == MotionNotify) {
-      r->w = cw + (ev.xmotion.x - (cw + r->x));
-      r->h = ch + (ev.xmotion.y - (ch + r->y));
-      runCurrLayoutL(CLI_GET(c).ws);
-      updateW(CLI_GET(c).ws);
-    }
-    XRaiseWindow(display, CLI_GET(c).win);
-  } while (ev.type != ButtonRelease);
-  XUngrabPointer(display, CurrentTime);
+  int px = 0, py = 0;
+  getPtrClientW(&px, &py);
+  processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionResize);
 }
 
 void freeMoveC(ClientPtrPtr c, const void *freeSetterFn) {
@@ -334,23 +343,10 @@ void freeMoveC(ClientPtrPtr c, const void *freeSetterFn) {
     return;
   moveFocusClientW(c, selfC, NULL);
   freeC(c, freeSetterFn);
-  if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime) != GrabSuccess)
-    return;
   Rectangle *r = getRegionClientSS(c);
-  int cx = r->x, cy = r->y, rx = 0, ry = 0;
-  getPtrClientW(&rx, &ry);
-  XEvent ev;
-  do {
-    XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
-    if (ev.type == MotionNotify) {
-      r->x = cx + (ev.xmotion.x - rx);
-      r->y = cy + (ev.xmotion.y - ry);
-      updateW(CLI_GET(c).ws);
-    }
-    XRaiseWindow(display, CLI_GET(c).win);
-  } while (ev.type != ButtonRelease);
-  XUngrabPointer(display, CurrentTime);
+  int px = 0, py = 0;
+  getPtrClientW(&px, &py);
+  processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionMove);
 }
 
 void freeResizeC(ClientPtrPtr c, const void *freeSetterFn) {
@@ -358,24 +354,10 @@ void freeResizeC(ClientPtrPtr c, const void *freeSetterFn) {
     return;
   moveFocusClientW(c, selfC, NULL);
   freeC(c, freeSetterFn);
-  if (XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, cursors[ CurResize ], CurrentTime) != GrabSuccess)
-    return;
   Rectangle *r = getRegionClientSS(c);
-  XWarpPointer(display, None, CLI_GET(c).win, 0, 0, 0, 0, r->w, r->h);
-  int cw = r->w, ch = r->h, rx = 0, ry = 0;
-  getPtrClientW(&rx, &ry);
-  XEvent ev;
-  do {
-    XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
-    if (ev.type == MotionNotify) {
-      r->w = cw + (ev.xmotion.x - (cw + r->x));
-      r->h = ch + (ev.xmotion.y - (ch + r->y));
-      updateW(CLI_GET(c).ws);
-    }
-    XRaiseWindow(display, CLI_GET(c).win);
-  } while (ev.type != ButtonRelease);
-  XUngrabPointer(display, CurrentTime);
+  int px = 0, py = 0;
+  getPtrClientW(&px, &py);
+  processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionResize);
 }
 
 // Select Functions
@@ -418,25 +400,25 @@ ClientPtrPtr lastC(const ClientPtrPtr c) {
 ClientPtrPtr upC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLI_GET(c).ws, r->x+1, r->y-1);
+  return queryPoint(CLI_GET(c).ws, r->x+1, r->y-1);
 }
 
 ClientPtrPtr downC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLI_GET(c).ws, r->x+1, r->y + r->h + 1);
+  return queryPoint(CLI_GET(c).ws, r->x+1, r->y + r->h + 1);
 }
 
 ClientPtrPtr leftC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLI_GET(c).ws, r->x-1, r->y+1);
+  return queryPoint(CLI_GET(c).ws, r->x-1, r->y+1);
 }
 
 ClientPtrPtr rightC(const ClientPtrPtr c) {
   assert(c);
   Rectangle *r = getRegionClientSS(c);
-  return queryPointC(CLI_GET(c).ws, r->x + r->w + 1, r->y+1);
+  return queryPoint(CLI_GET(c).ws, r->x + r->w + 1, r->y+1);
 }
 
 // Test functions
