@@ -68,20 +68,18 @@ static void freeArrange(Arrange *a) {
   a = NULL;
 }
 
-static void getLengthSizes(int n, int length, int *xs, int *ws) {
-  assert(xs);
-  assert(ws);
+static void getBestPositionsAndSizes(int n, int total, int *positions, int *sizes) {
+  assert(positions);
+  assert(sizes);
   assert(n > 0);
-  int a = (float)length / (float)n + 0.5f;
-  int countx = 0;
-  int i;
+  int position = 0, size, i;
   for (i = 0; i < n; ++i) {
-    xs[ i ] = countx;
-    ws[ i ] = a;
-    countx += a;
+    size = total / (n - i);
+    positions[ i ] = position;
+    sizes[ i ] = size;
+    position += size;
+    total -= size;
   }
-  if ((ws[ n-1 ] + xs[ n-1 ]) != length)
-    ws[ n-1 ] = length - xs[ n-1 ];
 }
 
 // Arrange runners
@@ -221,13 +219,13 @@ Arrange *tallArrangerL(Arrange *a) {
   int ys[ n ], hs[ n ];
   memset(ys, 0, sizeof(ys));
   memset(hs, 0, sizeof(hs));
-  getLengthSizes(nwindows, a->region.h, ys, hs);
+  getBestPositionsAndSizes(nwindows, a->region.h, ys, hs);
   int i;
   for (i = 0; i < nwindows; ++i)  // Master area
     setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ] , n > mn ? ms : a->region.w, hs[ i ]);
   if (n - nwindows == 0)
     return a;
-  getLengthSizes(n - nwindows, a->region.h, ys, hs);
+  getBestPositionsAndSizes(n - nwindows, a->region.h, ys, hs);
   for (; i < n; ++i)  // Stacking area
     setRectangleG(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms,
         hs[ i-nwindows ]);
@@ -244,7 +242,7 @@ Arrange *gridArrangerL(Arrange *a) {
   int xs[ cols ], ws[ cols ];
   memset(xs, 0, sizeof(xs));
   memset(ws, 0, sizeof(ws));
-  getLengthSizes(cols, a->region.w, xs, ws);
+  getBestPositionsAndSizes(cols, a->region.w, xs, ws);
   int i, cn = 0, rn = 0;
   for (i = 0; i < n; ++i) {
     if (i/rows + 1 > cols - n%cols)
@@ -252,7 +250,7 @@ Arrange *gridArrangerL(Arrange *a) {
     int ys[ rows ], hs[ rows ];
     memset(ys, 0, sizeof(ys));
     memset(hs, 0, sizeof(hs));
-    getLengthSizes(rows, a->region.h, ys, hs);
+    getBestPositionsAndSizes(rows, a->region.h, ys, hs);
     setRectangleG(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
     if (++rn >= rows) {
       rn = 0;
