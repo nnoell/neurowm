@@ -268,11 +268,11 @@ void toggleFullScreenClientW(const ClientPtrPtr c, const ClientSelectorFn csf, c
   processClient(toggleFullScreenC, c, csf, data);
 }
 
-void moveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+void floatMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClient(moveC, c, csf, data);
 }
 
-void resizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+void floatResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   processClient(resizeC, c, csf, data);
 }
 

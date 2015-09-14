@@ -47,8 +47,8 @@ void toggleFreeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *f
 void normalClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 void fullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 void toggleFullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void moveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void resizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void floatMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void floatResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 void freeMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 void freeResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 

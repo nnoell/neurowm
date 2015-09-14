@@ -358,13 +358,13 @@ void freeResizePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
 void movePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processClientAction(moveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(floatMoveClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void resizePtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processClientAction(resizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(floatResizeClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void toggleFullScreenPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
