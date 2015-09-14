@@ -320,7 +320,7 @@ void moveC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  moveFocusClientW(c, selfC, NULL);
+  focusClientW(c, selfC, NULL);
   Rectangle *r = &(CLI_GET(c).floatRegion);
   int px = 0, py = 0;
   getPtrClientW(&px, &py);
@@ -331,7 +331,7 @@ void resizeC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  moveFocusClientW(c, selfC, NULL);
+  focusClientW(c, selfC, NULL);
   Rectangle *r = &(CLI_GET(c).floatRegion);
   int px = 0, py = 0;
   getPtrClientW(&px, &py);
@@ -341,7 +341,7 @@ void resizeC(ClientPtrPtr c, const void *data) {
 void freeMoveC(ClientPtrPtr c, const void *freeSetterFn) {
   if (!c || !freeSetterFn)
     return;
-  moveFocusClientW(c, selfC, NULL);
+  focusClientW(c, selfC, NULL);
   freeC(c, freeSetterFn);
   Rectangle *r = getRegionClientSS(c);
   int px = 0, py = 0;
@@ -352,7 +352,7 @@ void freeMoveC(ClientPtrPtr c, const void *freeSetterFn) {
 void freeResizeC(ClientPtrPtr c, const void *freeSetterFn) {
   if (!c || !freeSetterFn)
     return;
-  moveFocusClientW(c, selfC, NULL);
+  focusClientW(c, selfC, NULL);
   freeC(c, freeSetterFn);
   Rectangle *r = getRegionClientSS(c);
   int px = 0, py = 0;

@@ -37,7 +37,7 @@ void addEnterNotifyMaskW(int ws);
 void rmvEnterNotifyMaskW(int ws);
 
 // Client
-void moveFocusClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void focusClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 void swapClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 void killClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
 void minimizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);

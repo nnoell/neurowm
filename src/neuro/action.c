@@ -284,7 +284,7 @@ void toggleNSPHandlerA(GenericArg command_arg) {
 // Curr Client
 void moveFocusCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  processClientAction(moveFocusClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(focusClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void swapCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
@@ -338,7 +338,7 @@ void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
 void moveFocusPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  processClientAction(moveFocusClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  processClientAction(focusClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void freeMovePtrClientHandlerA(GenericArg clientSelectorFn_arg) {

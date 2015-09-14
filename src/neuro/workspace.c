@@ -212,7 +212,7 @@ void rmvEnterNotifyMaskW(int ws) {
 
 
 // Clients
-void moveFocusClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+void focusClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
   (void)data;
   if (!c || !csf)
     return;
@@ -233,7 +233,7 @@ void swapClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *d
   if (!swpClientSS(c, dst))
     return;
   updateW(CLI_GET(c).ws);
-  moveFocusClientW(c, csf, NULL);
+  focusClientW(c, csf, NULL);
 }
 
 void killClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
