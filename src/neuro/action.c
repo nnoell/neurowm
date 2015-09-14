@@ -232,13 +232,13 @@ void resizeMasterLayoutHandlerA(GenericArg float_arg) {
 
 // Workspace
 void changeToWorkspaceHandlerA(GenericArg int_arg) {
-  processWorkspaceAction(changeToWorkspaceW, ARG_INT_GET(int_arg));
+  processWorkspaceAction(changeW, ARG_INT_GET(int_arg));
 }
 
 void changeToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
   const int dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
-  processWorkspaceAction(changeToWorkspaceW, dst);
+  processWorkspaceAction(changeW, dst);
 }
 
 void moveClientToWorkspaceHandlerA(GenericArg int_arg) {

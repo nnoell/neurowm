@@ -97,6 +97,18 @@ static void sendClient(ClientPtrPtr c, const void *data) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
+void changeW(int ws) {
+  int old = getCurrStackSS();
+  setCurrStackSS(ws);
+  int new = getCurrStackSS();
+  if (old == new)
+    return;
+  hideW(old, True);
+  showW(new, True);
+  runCurrLayoutL(new);
+  updateFocusW(new);
+}
+
 void updateW(int ws) {
   ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
@@ -164,18 +176,6 @@ void freeW(int ws, const void *freeSetterFn) {
   ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
     freeC(c, freeSetterFn);
-}
-
-void changeToWorkspaceW(int ws) {
-  int old = getCurrStackSS();
-  setCurrStackSS(ws);
-  int new = getCurrStackSS();
-  if (old == new)
-    return;
-  hideW(old, True);
-  showW(new, True);
-  runCurrLayoutL(new);
-  updateFocusW(new);
 }
 
 void minimizeW(int ws) {

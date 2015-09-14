@@ -76,7 +76,7 @@ static void setRule(Client *c, const Rule *r) {
   else if (c->fixPos == leftFixedR || c->fixPos == rightFixedR)
     c->fixSize = r->fixSize * reg->w;
   if (r->goWorkspace)
-    changeToWorkspaceW(c->ws);
+    changeW(c->ws);
 }
 
 

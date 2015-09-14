@@ -23,13 +23,13 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Workspace
+void changeW(int ws);
 void updateW(int ws);
 void updateFocusW(int ws);
 void hideW(int ws, Bool doRules);
 void showW(int ws, Bool doRules);
 void tileW(int ws);
 void freeW(int ws, const void *freeSetterFn);
-void changeToWorkspaceW(int ws);
 void minimizeW(int ws);
 void restoreLastMinimizedW(int ws);
 void addEnterNotifyMaskW(int ws);
