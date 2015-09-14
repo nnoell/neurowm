@@ -243,18 +243,15 @@ void changeToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
 
 void moveClientToWorkspaceHandlerA(GenericArg int_arg) {
   ClientPtrPtr c = getCurrClientCurrStackSS();
-  rmvEnterNotifyMaskW(CLI_GET(c).ws);
-  moveClientToWorkspaceW(c, ARG_INT_GET(int_arg));
-  addEnterNotifyMaskW(CLI_GET(c).ws);
+  const int ws = ARG_INT_GET(int_arg);
+  processClientAction(sendClientW, c, selfC, (const void *)&ws);
 }
 
 void moveClientToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
   ClientPtrPtr c = getCurrClientCurrStackSS();
-  const int dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
-  rmvEnterNotifyMaskW(CLI_GET(c).ws);
-  moveClientToWorkspaceW(c, dst);
-  addEnterNotifyMaskW(CLI_GET(c).ws);
+  const int ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
+  processClientAction(sendClientW, c, selfC, (const void *)&ws);
 }
 
 void restoreLastMinimizedHandlerA(GenericArg null_arg) {
@@ -264,20 +261,20 @@ void restoreLastMinimizedHandlerA(GenericArg null_arg) {
 
 void toggleNSPHandlerA(GenericArg command_arg) {
   assert(ARG_CMD_GET(command_arg));
+  ClientPtrPtr c = getCurrClientNSPStackSS();
+  ClientPtrPtr nspc = findNSPClientSS();
   const int ws = getCurrStackSS();
-  rmvEnterNotifyMaskW(ws);
-  ClientPtrPtr c = findNSPClientSS();
-  if (c && CLI_GET(c).ws == ws) {
-    moveClientToWorkspaceW(c, getNSPStackSS());
-  } else if (c) {
-    moveClientToWorkspaceW(c, ws);
+  const int nspws = getNSPStackSS();
+  if (nspc && CLI_GET(nspc).ws == ws) {
+    processClientAction(sendClientW, nspc, selfC, (const void *)&nspws);
+  } else if (nspc) {
+    processClientAction(sendClientW, nspc, selfC, (const void *)&ws);
   } else {
     if (!getSizeNSPSS())
       spawnS(ARG_CMD_GET(command_arg), NULL);
     else
-      moveClientToWorkspaceW(getCurrClientNSPStackSS(), ws);
+      processClientAction(sendClientW, c, selfC, (const void *)&ws);
   }
-  addEnterNotifyMaskW(ws);
 }
 
 

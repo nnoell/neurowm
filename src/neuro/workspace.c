@@ -63,6 +63,35 @@ static void processClient(const WorkspaceClientFn wcf, const ClientPtrPtr c, con
   wcf(dst, data);
 }
 
+static void sendClient(ClientPtrPtr c, const void *data) {
+  if (!c || !data)
+    return;
+  const int ws = *(const int *)data;
+  if (ws < 0 || ws >= getSizeSS() + 1)
+    return;
+  int oldws = CLI_GET(c).ws, currws = getCurrStackSS();
+  if (oldws == ws)
+    return;
+  Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
+  const Bool isFree = CLI_GET(c).freeSetterFn != notFreeR;
+  const Bool doRules = True;
+  if (oldws == currws)
+    hideC(c, (const void *)&doRules);
+  if (isFree)
+    memmove(&oldRegion, getRegionClientSS(c), sizeof(Rectangle));
+  Client *cli = rmvClientSS(c);
+  cli->ws = ws;
+  ClientPtrPtr c2 = addClientStartSS(cli);
+  if (!c2)
+    exitErrorS("moveCliToWorkspaceW - could not add client");
+  if (isFree)
+    memmove(getRegionClientSS(c2), &oldRegion, sizeof(Rectangle));
+  if (ws == currws)
+    showC(c2, (const void *)&doRules);
+  runCurrLayoutL(currws);
+  updateFocusW(currws);
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
@@ -149,34 +178,6 @@ void changeToWorkspaceW(int ws) {
   updateFocusW(new);
 }
 
-void moveClientToWorkspaceW(ClientPtrPtr c, int ws) {
-  if (!c)
-    return;
-  if (ws < 0 || ws >= getSizeSS() + 1)
-    return;
-  int oldws = CLI_GET(c).ws, currws = getCurrStackSS();
-  if (oldws == ws)
-    return;
-  Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  const Bool isFree = CLI_GET(c).freeSetterFn != notFreeR;
-  const Bool doRules = True;
-  if (oldws == currws)
-    hideC(c, (const void *)&doRules);
-  if (isFree)
-    memmove(&oldRegion, getRegionClientSS(c), sizeof(Rectangle));
-  Client *cli = rmvClientSS(c);
-  cli->ws = ws;
-  ClientPtrPtr c2 = addClientStartSS(cli);
-  if (!c2)
-    exitErrorS("moveCliToWorkspaceW - could not add client");
-  if (isFree)
-    memmove(getRegionClientSS(c2), &oldRegion, sizeof(Rectangle));
-  if (ws == currws)
-    showC(c2, (const void *)&doRules);
-  runCurrLayoutL(currws);
-  updateFocusW(currws);
-}
-
 void minimizeW(int ws) {
   ClientPtrPtr c;
   for (c = getHeadClientStackSS(ws); c; c = getNextClientSS(c))
@@ -234,6 +235,10 @@ void swapClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *d
     return;
   updateW(CLI_GET(c).ws);
   focusClientW(c, csf, NULL);
+}
+
+void sendClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *ws) {
+  processClient(sendClient, c, csf, ws);
 }
 
 void killClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
