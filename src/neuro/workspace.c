@@ -53,14 +53,14 @@ static void unfocusClient(ClientPtrPtr c) {
   updateC(c, NULL);
 }
 
-static void processClient(const WorkspaceClientFn wcf, const ClientPtrPtr c, const ClientSelectorFn csf,
+static void processClient(const WorkspaceClientFn wcf, const ClientPtrPtr ref, const ClientSelectorFn csf,
     const void *data) {
-  if (!c || !csf)
+  if (!ref || !csf)
     return;
-  ClientPtrPtr dst = csf(c);
-  if (!dst)
+  ClientPtrPtr c = csf(ref);
+  if (!c)
     return;
-  wcf(dst, data);
+  wcf(c, data);
 }
 
 static void sendClient(ClientPtrPtr c, const void *data) {
@@ -213,80 +213,80 @@ void rmvEnterNotifyMaskW(int ws) {
 
 
 // Clients
-void focusClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+void focusClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
   (void)data;
-  if (!c || !csf)
+  if (!ref || !csf)
     return;
-  ClientPtrPtr dst = csf(c);
-  if (!dst)
+  ClientPtrPtr c = csf(ref);
+  if (!c)
     return;
-  setCurrClientSS(dst);
-  updateFocusW(CLI_GET(dst).ws);
+  setCurrClientSS(c);
+  updateFocusW(CLI_GET(c).ws);
 }
 
-void swapClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
+void swapClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
   (void)data;
-  if (!c || !csf)
+  if (!ref || !csf)
     return;
-  ClientPtrPtr dst = csf(c);
-  if (!dst)
+  ClientPtrPtr c = csf(ref);
+  if (!c)
     return;
-  if (!swpClientSS(c, dst))
+  if (!swpClientSS(ref, c))
     return;
   updateW(CLI_GET(c).ws);
-  focusClientW(c, csf, NULL);
+  focusClientW(ref, csf, NULL);
 }
 
-void sendClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *ws) {
-  processClient(sendClient, c, csf, ws);
+void sendClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *ws) {
+  processClient(sendClient, ref, csf, ws);
 }
 
-void killClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(killC, c, csf, data);
+void killClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(killC, ref, csf, data);
 }
 
-void minimizeClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(minimizeC, c, csf, data);
+void minimizeClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(minimizeC, ref, csf, data);
 }
 
-void tileClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(tileC, c, csf, data);
+void tileClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(tileC, ref, csf, data);
 }
 
-void freeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
-  processClient(freeC, c, csf, freeSetterFn);
+void freeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn) {
+  processClient(freeC, ref, csf, freeSetterFn);
 }
 
-void toggleFreeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn) {
-  processClient(toggleFreeC, c, csf, freeSetterFn);
+void toggleFreeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn) {
+  processClient(toggleFreeC, ref, csf, freeSetterFn);
 }
 
-void normalClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(normalC, c, csf, data);
+void normalClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(normalC, ref, csf, data);
 }
 
-void fullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(fullScreenC, c, csf, data);
+void fullScreenClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(fullScreenC, ref, csf, data);
 }
 
-void toggleFullScreenClientW(const ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(toggleFullScreenC, c, csf, data);
+void toggleFullScreenClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(toggleFullScreenC, ref, csf, data);
 }
 
-void floatMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(moveC, c, csf, data);
+void floatMoveClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(moveC, ref, csf, data);
 }
 
-void floatResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(resizeC, c, csf, data);
+void floatResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(resizeC, ref, csf, data);
 }
 
-void freeMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(freeMoveC, c, csf, data);
+void freeMoveClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(freeMoveC, ref, csf, data);
 }
 
-void freeResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data) {
-  processClient(freeResizeC, c, csf, data);
+void freeResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+  processClient(freeResizeC, ref, csf, data);
 }
 
 

@@ -36,21 +36,21 @@ void addEnterNotifyMaskW(int ws);
 void rmvEnterNotifyMaskW(int ws);
 
 // Client
-void focusClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void swapClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void sendClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *ws);
-void killClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void minimizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void tileClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void freeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn);
-void toggleFreeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *freeSetterFn);
-void normalClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void fullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void toggleFullScreenClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void floatMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void floatResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void freeMoveClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
-void freeResizeClientW(ClientPtrPtr c, const ClientSelectorFn csf, const void *data);
+void focusClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void swapClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void sendClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *ws);
+void killClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void minimizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void tileClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void freeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn);
+void toggleFreeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn);
+void normalClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void fullScreenClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void toggleFullScreenClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void floatMoveClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void floatResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void freeMoveClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+void freeResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
 
 // Workspace Selectors
 int prevW();
