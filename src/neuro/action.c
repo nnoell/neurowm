@@ -68,17 +68,17 @@ const Action const endCpuCalcActionA[] = { { endCpuCalcHandlerA, ARG_NULL } };
 const Action const changeLayoutActionA[] = { { changeLayoutHandlerA, ARG_INT(1) } };
 const Action const resetLayoutActionA[] = { { resetLayoutHandlerA, ARG_NULL } };
 const Action const toggleLayoutActionA[] = { { toggleLayoutHandlerA, ARG_INT(0) } };
-const Action const toggleLayoutModActionA[] = { { toggleLayoutModHandlerA, ARG_UINT(notModL) } };
+const Action const toggleModLayoutActionA[] = { { toggleModLayoutHandlerA, ARG_UINT(notModL) } };
 const Action const increaseMasterLayoutActionA[] = { { increaseMasterLayoutHandlerA, ARG_INT(1) } };
 const Action const resizeMasterLayoutActionA[] = { { resizeMasterLayoutHandlerA, ARG_FLOAT(1.0f) } };
-const Action const changeToWorkspaceActionA[] = { { changeToWorkspaceHandlerA, ARG_INT(0) } };
-const Action const changeToRelWorkspaceActionA[] = { { changeToRelWorkspaceHandlerA, ARG_WSF(nextW) } };
-const Action const moveClientToWorkspaceActionA[] = { { moveClientToWorkspaceHandlerA, ARG_INT(0) } };
-const Action const moveClientToRelWorkspaceActionA[] = { { moveClientToRelWorkspaceHandlerA, ARG_WSF(nextW) } };
+const Action const changeWorkspaceActionA[] = { { changeWorkspaceHandlerA, ARG_INT(0) } };
+const Action const changeRelWorkspaceActionA[] = { { changeRelWorkspaceHandlerA, ARG_WSF(nextW) } };
 const Action const restoreLastMinimizedActionA[] = { { restoreLastMinimizedHandlerA, ARG_NULL } };
 const Action const toggleNSPActionA[] = { { toggleNSPHandlerA, ARG_CMD(defNSPCommand) } };
-const Action const moveFocusCurrClientActionA[] = { { moveFocusCurrClientHandlerA, ARG_CSF(nextC) } };
+const Action const focusCurrClientActionA[] = { { focusCurrClientHandlerA, ARG_CSF(nextC) } };
 const Action const swapCurrClientActionA[] = { { swapCurrClientHandlerA, ARG_CSF(nextC) } };
+const Action const sendCurrClientActionA[] = { { sendCurrClientHandlerA, ARG_INT(0) } };
+const Action const sendCurrClientRelativeActionA[] = { { sendCurrClientRelativeHandlerA, ARG_WSF(nextW) } };
 const Action const killCurrClientActionA[] = { { killCurrClientHandlerA, ARG_CSF(selfC) } };
 const Action const tileCurrClientActionA[] = { { tileCurrClientHandlerA, ARG_CSF(selfC) } };
 const Action const normalCurrClientActionA[] = { { normalCurrClientHandlerA, ARG_CSF(selfC) } };
@@ -87,7 +87,7 @@ const Action const toggleFullScreenCurrClientActionA[] = { { toggleFullScreenCur
 const Action const minimizeCurrClientActionA[] = { { minimizeCurrClientHandlerA, ARG_CSF(selfC) } };
 const Action const freeCurrClientActionA[] = { { freeCurrClientHandlerA, ARG_FSF(defFreeR) } };
 const Action const toggleFreeCurrClientActionA[] = { { toggleFreeCurrClientHandlerA, ARG_FSF(defFreeR) } };
-const Action const moveFocusPtrClientActionA[] = { { moveFocusPtrClientHandlerA, ARG_CSF(selfC) } };
+const Action const focusPtrClientActionA[] = { { focusPtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const freeMovePtrClientActionA[] = { { freeMovePtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const freeResizePtrClientActionA[] = { { freeResizePtrClientHandlerA, ARG_CSF(selfC) } };
 const Action const movePtrClientActionA[] = { { movePtrClientHandlerA, ARG_CSF(selfC) } };
@@ -107,21 +107,20 @@ const Action *const endCpuCalcA[] = { endCpuCalcActionA, NULL };
 const Action *const changeLayoutA[] = { changeLayoutActionA, NULL };
 const Action *const resetLayoutA[] = { resetLayoutActionA, NULL };
 const Action *const toggleLayoutA[] = { toggleLayoutActionA, NULL };
-const Action *const toggleLayoutModA[] = { toggleLayoutModActionA, NULL };
+const Action *const toggleModLayoutA[] = { toggleModLayoutActionA, NULL };
 const Action *const increaseMasterLayoutA[] = { increaseMasterLayoutActionA, NULL };
 const Action *const resizeMasterLayoutA[] = { resizeMasterLayoutActionA, NULL };
-const Action *const changeToWorkspaceA[] = { changeToWorkspaceActionA, NULL };
-const Action *const changeToRelWorkspaceA[] = { changeToRelWorkspaceActionA, NULL };
-const Action *const moveClientToWorkspaceA[] = { moveClientToWorkspaceActionA, NULL };
-const Action *const moveClientToRelWorkspaceA[] = { moveClientToRelWorkspaceActionA, NULL };
-const Action *const moveClientToWorkspaceFollowA[] = { moveClientToWorkspaceActionA, changeToWorkspaceActionA, NULL };
-const Action *const moveClientToRelWorkspaceFollowA[] = {
-  moveClientToRelWorkspaceActionA, changeToRelWorkspaceActionA, NULL
-};
+const Action *const changeWorkspaceA[] = { changeWorkspaceActionA, NULL };
+const Action *const changeRelWorkspaceA[] = { changeRelWorkspaceActionA, NULL };
 const Action *const restoreLastMinimizedA[] = { restoreLastMinimizedActionA, NULL };
 const Action *const toggleNSPA[] = { toggleNSPActionA, NULL };
-const Action *const moveFocusCurrClientA[] = { moveFocusCurrClientActionA, NULL };
+const Action *const focusCurrClientA[] = { focusCurrClientActionA, NULL };
 const Action *const swapCurrClientA[] = { swapCurrClientActionA, NULL };
+const Action *const sendCurrClientA[] = { sendCurrClientActionA, NULL };
+const Action *const sendCurrClientRelativeA[] = { sendCurrClientRelativeActionA, NULL };
+const Action *const sendCurrClientFollowA[] = { sendCurrClientActionA, changeWorkspaceActionA, NULL };
+const Action *const sendCurrClientRelativeFollowA[] = {
+    sendCurrClientRelativeActionA, changeRelWorkspaceActionA, NULL };
 const Action *const killCurrClientA[] = { killCurrClientActionA, NULL };
 const Action *const tileCurrClientA[] = { tileCurrClientActionA, NULL };
 const Action *const normalCurrClientA[] = { normalCurrClientActionA, NULL };
@@ -130,7 +129,7 @@ const Action *const toggleFullScreenCurrClientA[] = { toggleFullScreenCurrClient
 const Action *const minimizeCurrClientA[] = { minimizeCurrClientActionA, NULL };
 const Action *const freeCurrClientA[] = { freeCurrClientActionA, NULL };
 const Action *const toggleFreeCurrClientA[] = { toggleFreeCurrClientActionA, NULL };
-const Action *const moveFocusPtrClientA[] = { moveFocusPtrClientActionA, NULL };
+const Action *const focusPtrClientA[] = { focusPtrClientActionA, NULL };
 const Action *const freeMovePtrClientA[] = { freeMovePtrClientActionA, NULL };
 const Action *const freeResizePtrClientA[] = { freeResizePtrClientActionA, NULL };
 const Action *const movePtrClientA[] = { movePtrClientActionA, NULL };
@@ -189,7 +188,7 @@ void endCpuCalcHandlerA(GenericArg null_arg) {
 void changeLayoutHandlerA(GenericArg int_arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  changeLayoutL(ws, ARG_INT_GET(int_arg));
+  changeL(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
 }
 
@@ -197,21 +196,21 @@ void resetLayoutHandlerA(GenericArg null_arg) {
   (void)null_arg;
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  resetLayoutL(ws);
+  resetL(ws);
   addEnterNotifyMaskW(ws);
 }
 
 void toggleLayoutHandlerA(GenericArg int_arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  togLayoutL(ws, ARG_INT_GET(int_arg));
+  toggleL(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
 }
 
-void toggleLayoutModHandlerA(GenericArg uint_arg) {
+void toggleModLayoutHandlerA(GenericArg uint_arg) {
   const int ws = getCurrStackSS();
   rmvEnterNotifyMaskW(ws);
-  togModCurrLayoutL(ws, ARG_INT_GET(uint_arg));
+  toggleModCurrL(ws, ARG_INT_GET(uint_arg));
   addEnterNotifyMaskW(ws);
 }
 
@@ -231,27 +230,14 @@ void resizeMasterLayoutHandlerA(GenericArg float_arg) {
 
 
 // Workspace
-void changeToWorkspaceHandlerA(GenericArg int_arg) {
+void changeWorkspaceHandlerA(GenericArg int_arg) {
   processWorkspaceAction(changeW, ARG_INT_GET(int_arg));
 }
 
-void changeToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
+void changeRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
   const int dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
   processWorkspaceAction(changeW, dst);
-}
-
-void moveClientToWorkspaceHandlerA(GenericArg int_arg) {
-  ClientPtrPtr c = getCurrClientCurrStackSS();
-  const int ws = ARG_INT_GET(int_arg);
-  processClientAction(sendClientW, c, selfC, (const void *)&ws);
-}
-
-void moveClientToRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
-  assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
-  ClientPtrPtr c = getCurrClientCurrStackSS();
-  const int ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
-  processClientAction(sendClientW, c, selfC, (const void *)&ws);
 }
 
 void restoreLastMinimizedHandlerA(GenericArg null_arg) {
@@ -279,7 +265,7 @@ void toggleNSPHandlerA(GenericArg command_arg) {
 
 
 // Curr Client
-void moveFocusCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
+void focusCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   processClientAction(focusClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
@@ -287,6 +273,19 @@ void moveFocusCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
 void swapCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   processClientAction(swapClientW, getCurrClientCurrStackSS(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+}
+
+void sendCurrClientHandlerA(GenericArg int_arg) {
+  ClientPtrPtr c = getCurrClientCurrStackSS();
+  const int ws = ARG_INT_GET(int_arg);
+  processClientAction(sendClientW, c, selfC, (const void *)&ws);
+}
+
+void sendCurrClientRelativeHandlerA(GenericArg WorkspaceSelectorFn_arg) {
+  assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
+  ClientPtrPtr c = getCurrClientCurrStackSS();
+  const int ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
+  processClientAction(sendClientW, c, selfC, (const void *)&ws);
 }
 
 void killCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
@@ -332,7 +331,7 @@ void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
 
 
 // Ptr Client
-void moveFocusPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
+void focusPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
   processClientAction(focusClientW, getPtrClientW(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);

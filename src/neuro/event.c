@@ -125,7 +125,7 @@ static void processConfigureRequest(XEvent *e) {
   XConfigureWindow(display, ev->window, ev->value_mask, &wc);
   ClientPtrPtr c = findWindowClientAllW(ev->window);
   if (c) {
-    runCurrLayoutL(CLI_GET(c).ws);
+    runCurrL(CLI_GET(c).ws);
     updateW(CLI_GET(c).ws);
   }
   updateDP(True);
@@ -252,7 +252,7 @@ void manageWindowE(Window w) {
   rmvEnterNotifyMaskW(ws);
   doRules = True;
   showC(c, (const void*)&doRules);
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateFocusW(ws);
   addEnterNotifyMaskW(ws);
 }
@@ -264,7 +264,7 @@ void unmanageCliE(ClientPtrPtr c) {
   unapplyRuleR(c);
   Client *cli = rmvClientSS(c);
   freeClientT(cli);
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateFocusW(ws);
   addEnterNotifyMaskW(ws);
 }

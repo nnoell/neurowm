@@ -93,7 +93,7 @@ static void XMotionMove(Rectangle *r, int ws, int cx, int cy, int cw, int ch, in
   (void)ch;
   r->x = cx + (ex - px);
   r->y = cy + (ey - py);
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateW(ws);
 }
 
@@ -104,7 +104,7 @@ static void XMotionResize(Rectangle *r, int ws, int cx, int cy, int cw, int ch, 
   (void)py;
   r->w = cw + (ex - (cw + r->x));
   r->h = ch + (ey - (ch + r->y));
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateW(ws);
 }
 
@@ -244,7 +244,7 @@ void minimizeC(ClientPtrPtr c, const void *data) {
   if (!pushMinimizedClientSS(cli))
     exitErrorS("minimizeC - could not minimize client");
   XMoveWindow(display, cli->win, xRes + 1, yRes + 1);  // Move client off screen
-  runCurrLayoutL(cli->ws);
+  runCurrL(cli->ws);
   updateFocusW(cli->ws);
 }
 
@@ -256,7 +256,7 @@ void tileC(ClientPtrPtr c, const void *data) {
     return;
   CLI_GET(c).freeSetterFn = notFreeR;
   applyRuleR(c);
-  runCurrLayoutL(CLI_GET(c).ws);
+  runCurrL(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
 }
 
@@ -269,7 +269,7 @@ void freeC(ClientPtrPtr c, const void *freeSetterFn) {
   if (CLI_GET(c).freeSetterFn == notFreeR)
     unapplyRuleR(c);
   CLI_GET(c).freeSetterFn = gaf->FreeSetterFn_;
-  runCurrLayoutL(CLI_GET(c).ws);
+  runCurrL(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
 }
 
@@ -290,7 +290,7 @@ void normalC(ClientPtrPtr c, const void *data) {
     return;
   CLI_GET(c).isFullScreen = False;
   applyRuleR(c);
-  runCurrLayoutL(CLI_GET(c).ws);
+  runCurrL(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
 }
 
@@ -302,7 +302,7 @@ void fullScreenC(ClientPtrPtr c, const void *data) {
     return;
   CLI_GET(c).isFullScreen = True;
   unapplyRuleR(c);
-  runCurrLayoutL(CLI_GET(c).ws);
+  runCurrL(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
 }
 

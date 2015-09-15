@@ -124,7 +124,7 @@ static Arrange *reflectYMod(Arrange *a) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-void runLayoutL(int ws, int i) {
+void runL(int ws, int i) {
   Layout *l = getLayoutStackSS(ws, i);
   Arrange *a = allocArrange(ws, l);
   if (!a)
@@ -142,38 +142,38 @@ void runLayoutL(int ws, int i) {
   freeArrange(a);
 }
 
-void runCurrLayoutL(int ws) {
-  runLayoutL(ws, getLayoutIdxStackSS(ws));
+void runCurrL(int ws) {
+  runL(ws, getLayoutIdxStackSS(ws));
 }
 
-void togModLayoutL(int ws, int i, unsigned int mod) {
+void toggleModL(int ws, int i, unsigned int mod) {
   Layout *l = getLayoutStackSS(ws, i);
   l->mod ^= mod;
-  runLayoutL(ws, i);
+  runL(ws, i);
   updateW(ws);
 }
 
-void togModCurrLayoutL(int ws, unsigned int mod) {
-  togModLayoutL(ws, getLayoutIdxStackSS(ws), mod);
+void toggleModCurrL(int ws, unsigned int mod) {
+  toggleModL(ws, getLayoutIdxStackSS(ws), mod);
 }
 
-void togLayoutL(int ws, int i) {
+void toggleL(int ws, int i) {
   int tl = i;
   if (isCurrTogLayoutStackSS(ws))
     tl = -1;
   setTogLayoutStackSS(ws, tl);
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateFocusW(ws);
 }
 
-void changeLayoutL(int ws, int s) {
+void changeL(int ws, int s) {
   int val = getLayoutIdxStackSS(ws) + s;
   setLayoutStackSS(ws, val);
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateFocusW(ws);
 }
 
-void resetLayoutL(int ws) {
+void resetL(int ws) {
   Layout *l;
   const LayoutConf *lc;
   int i;
@@ -186,7 +186,7 @@ void resetLayoutL(int ws) {
   }
   tileW(ws);
   setLayoutStackSS(ws, 0);
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateFocusW(ws);
 }
 
@@ -196,7 +196,7 @@ void increaseMasterL(int ws, int size) {
   if (res < 1)
     return;
   *(int *)&(as[ 0 ].int_) = res;
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateFocusW(ws);
 }
 
@@ -206,7 +206,7 @@ void resizeMasterL(int ws, float factor) {
   if (newmsize <= 0.0f || newmsize >= 1.0f)
     return;
   *(float *)&(as[ 1 ].float_) = newmsize;
-  runCurrLayoutL(ws);
+  runCurrL(ws);
   updateFocusW(ws);
 }
 

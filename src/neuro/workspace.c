@@ -88,7 +88,7 @@ static void sendClient(ClientPtrPtr c, const void *data) {
     memmove(getRegionClientSS(c2), &oldRegion, sizeof(Rectangle));
   if (ws == currws)
     showC(c2, (const void *)&doRules);
-  runCurrLayoutL(currws);
+  runCurrL(currws);
   updateFocusW(currws);
 }
 
@@ -105,7 +105,7 @@ void changeW(int ws) {
     return;
   hideW(old, True);
   showW(new, True);
-  runCurrLayoutL(new);
+  runCurrL(new);
   updateFocusW(new);
 }
 
@@ -195,7 +195,7 @@ void restoreLastMinimizedW(int ws) {
     exitErrorS("restoreLastMinimizedW - could not add client");
   applyRuleR(c);
   setCurrClientSS(c);
-  runCurrLayoutL(CLI_GET(c).ws);
+  runCurrL(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
 }
 

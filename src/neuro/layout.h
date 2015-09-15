@@ -28,13 +28,13 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-void runLayoutL(int ws, int i);
-void runCurrLayoutL(int ws);
-void togModLayoutL(int ws, int i, unsigned int mod);
-void togModCurrLayoutL(int ws, unsigned int mod);
-void togLayoutL(int ws, int l);
-void changeLayoutL(int ws, int s);
-void resetLayoutL(int ws);
+void runL(int ws, int i);
+void runCurrL(int ws);
+void toggleModL(int ws, int i, unsigned int mod);
+void toggleModCurrL(int ws, unsigned int mod);
+void toggleL(int ws, int l);
+void changeL(int ws, int s);
+void resetL(int ws);
 
 void increaseMasterL(int ws, int size);
 void resizeMasterL(int ws, float factor);
