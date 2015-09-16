@@ -304,19 +304,6 @@ int oldW() {
 }
 
 
-// Get functions
-ClientPtrPtr getPtrClientW(int *x, int *y) {
-  assert(x);
-  assert(y);
-  Window rootw, childw;
-  int xc, yc;
-  unsigned state;
-  if (!XQueryPointer(display, root, &rootw, &childw, x, y, &xc, &yc, &state))
-    return NULL;
-  return findWindowClientAllW(childw);
-}
-
-
 // Find functions
 ClientPtrPtr findWindowClientAllW(Window w) {
   return findClientSS(testWindowC, (const void *)&w);

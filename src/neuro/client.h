@@ -43,17 +43,21 @@ void resizeC(ClientPtrPtr c, const void *data);
 void freeMoveC(ClientPtrPtr c, const void *freeSetterFn);
 void freeResizeC(ClientPtrPtr c, const void *freeSetterFn);
 
+// Client getters
+ClientPtrPtr getFocusedC();
+ClientPtrPtr getPointerC(int *x, int *y);
+
 // Client Selectors
-ClientPtrPtr selfC(const ClientPtrPtr c);     // Client c itself
-ClientPtrPtr nextC(const ClientPtrPtr c);     // The next client of c
-ClientPtrPtr prevC(const ClientPtrPtr c);     // The previous client of c
-ClientPtrPtr oldC(const ClientPtrPtr c);      // The previous selected client
-ClientPtrPtr headC(const ClientPtrPtr c);     // The first client of the stack
-ClientPtrPtr lastC(const ClientPtrPtr c);     // The last client of the stack
-ClientPtrPtr upC(const ClientPtrPtr c);       // The upper client (layout position) of c
-ClientPtrPtr downC(const ClientPtrPtr c);     // The lower client (layout position) of c
-ClientPtrPtr leftC(const ClientPtrPtr c);     // The left client (layout position) of c
-ClientPtrPtr rightC(const ClientPtrPtr c);    // The right client (layout position) of c
+ClientPtrPtr selfC(const ClientPtrPtr c);  // Client c itself
+ClientPtrPtr nextC(const ClientPtrPtr c);  // The next client of c
+ClientPtrPtr prevC(const ClientPtrPtr c);  // The previous client of c
+ClientPtrPtr oldC(const ClientPtrPtr c);   // The previous selected client
+ClientPtrPtr headC(const ClientPtrPtr c);  // The first client of the stack
+ClientPtrPtr lastC(const ClientPtrPtr c);  // The last client of the stack
+ClientPtrPtr upC(const ClientPtrPtr c);    // The upper client (layout position) of c
+ClientPtrPtr downC(const ClientPtrPtr c);  // The lower client (layout position) of c
+ClientPtrPtr leftC(const ClientPtrPtr c);  // The left client (layout position) of c
+ClientPtrPtr rightC(const ClientPtrPtr c); // The right client (layout position) of c
 
 // Client Testers
 Bool testWindowC(const ClientPtrPtr c, const void *w);

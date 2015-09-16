@@ -57,9 +57,6 @@ int prevW();
 int nextW();
 int oldW();
 
-// Get functions
-ClientPtrPtr getPtrClientW(int *x, int *y);
-
 // Find functions
 ClientPtrPtr findWindowClientAllW(Window w);
 ClientPtrPtr findWindowClientW(int ws, Window w);

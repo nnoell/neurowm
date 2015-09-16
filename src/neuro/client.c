@@ -323,7 +323,7 @@ void moveC(ClientPtrPtr c, const void *data) {
   focusClientW(c, selfC, NULL);
   Rectangle *r = &(CLI_GET(c).floatRegion);
   int px = 0, py = 0;
-  getPtrClientW(&px, &py);
+  getPointerC(&px, &py);
   processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionMove);
 }
 
@@ -334,7 +334,7 @@ void resizeC(ClientPtrPtr c, const void *data) {
   focusClientW(c, selfC, NULL);
   Rectangle *r = &(CLI_GET(c).floatRegion);
   int px = 0, py = 0;
-  getPtrClientW(&px, &py);
+  getPointerC(&px, &py);
   processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionResize);
 }
 
@@ -345,7 +345,7 @@ void freeMoveC(ClientPtrPtr c, const void *freeSetterFn) {
   freeC(c, freeSetterFn);
   Rectangle *r = getRegionClientSS(c);
   int px = 0, py = 0;
-  getPtrClientW(&px, &py);
+  getPointerC(&px, &py);
   processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionMove);
 }
 
@@ -356,11 +356,29 @@ void freeResizeC(ClientPtrPtr c, const void *freeSetterFn) {
   freeC(c, freeSetterFn);
   Rectangle *r = getRegionClientSS(c);
   int px = 0, py = 0;
-  getPtrClientW(&px, &py);
+  getPointerC(&px, &py);
   processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionResize);
 }
 
-// Select Functions
+
+// Client getters
+ClientPtrPtr getFocusedC() {
+  return getCurrClientStackSS(getCurrStackSS());
+}
+
+ClientPtrPtr getPointerC(int *x, int *y) {
+  assert(x);
+  assert(y);
+  Window rootw, childw;
+  int xc, yc;
+  unsigned state;
+  if (!XQueryPointer(display, root, &rootw, &childw, x, y, &xc, &yc, &state))
+    return NULL;
+  return findWindowClientAllW(childw);
+}
+
+
+// Client Selectors
 ClientPtrPtr selfC(const ClientPtrPtr c) {
   assert(c);
   return c;
@@ -421,7 +439,7 @@ ClientPtrPtr rightC(const ClientPtrPtr c) {
   return queryPoint(CLI_GET(c).ws, r->x + r->w + 1, r->y+1);
 }
 
-// Test functions
+// Client Testers
 Bool testWindowC(const ClientPtrPtr c, const void *w) {
   assert(c);
   assert(w);
@@ -440,7 +458,7 @@ Bool testIsFixedC(const ClientPtrPtr c, const void *p) {
   return CLI_GET(c).fixPos != notFixedR;
 }
 
-// Border Color
+// Color Setters
 Color onlyCurrBorderColorC(const ClientPtrPtr c) {
   assert(c);
   if (isCurrClientSS(c))
@@ -466,7 +484,8 @@ Color noBorderColorC(const ClientPtrPtr c) {
   return normBorderColorS;
 }
 
-// Border Width
+
+// Border Width Setters
 int alwaysBorderWidthC(const ClientPtrPtr c) {
   (void)c;
   return borderWidthS;
@@ -503,7 +522,7 @@ int onlyCurrBorderWidthC(const ClientPtrPtr c) {
 }
 
 
-// Border Gap
+// Border Gap Setters
 int alwaysBorderGapC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)

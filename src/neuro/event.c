@@ -133,7 +133,7 @@ static void processConfigureRequest(XEvent *e) {
 
 static void processFocusIn(XEvent *e) {
   assert(e);
-  ClientPtrPtr c = getCurrClientCurrStackSS();
+  ClientPtrPtr c = getFocusedC();
   if (!c)
     return;
   if (CLI_GET(c).win == e->xfocus.window)

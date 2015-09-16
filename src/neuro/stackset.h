@@ -32,7 +32,6 @@ int getOldStackSS();
 int getNSPStackSS();
 int getSizeSS();
 int getSizeNSPSS();
-ClientPtrPtr getCurrClientCurrStackSS();
 ClientPtrPtr getCurrClientNSPStackSS();
 void setCurrStackSS(int ws);
 void setCurrClientSS(const ClientPtrPtr c);
