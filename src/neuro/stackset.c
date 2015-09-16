@@ -349,10 +349,6 @@ int getSizeNSPSS() {
   return SS.stacks[ SS.size ].size;
 }
 
-ClientPtrPtr getCurrClientCurrStackSS() {
-  return (ClientPtrPtr)SS.stacks[ SS.curr ].curr;
-}
-
 ClientPtrPtr getCurrClientNSPStackSS() {
   return (ClientPtrPtr)SS.stacks[ SS.size ].curr;
 }
