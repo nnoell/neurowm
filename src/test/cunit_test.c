@@ -43,7 +43,7 @@ void add_remove_client(void) {
   // Create a fake client
   const Window w = 0;
   const XWindowAttributes wa = (XWindowAttributes){.x = 0, .y = 0, .width = 500, .height = 500};
-  Client *cli = allocClientT(w, &wa);
+  Client *cli = NeuroTypeNewClient(w, &wa);
   CU_ASSERT_PTR_NOT_NULL(cli);
 
   // Add it to the stackset
@@ -56,7 +56,7 @@ void add_remove_client(void) {
   CU_ASSERT(cli == cli2);
 
   // Free the fake client
-  freeClientT(cli2);
+  NeuroTypeDeleteClient(cli2);
 }
 
 void set_curr_stack(void) {

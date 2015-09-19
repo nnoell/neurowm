@@ -27,7 +27,7 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Arrange *alloc_arrange(int ws, Layout *l) {
+static Arrange *new_arrange(int ws, Layout *l) {
   assert(l);
   Rectangle **rs = NULL, **frs = NULL;
   int i = 0, size = 0;
@@ -57,7 +57,7 @@ static Arrange *alloc_arrange(int ws, Layout *l) {
   return a;
 }
 
-static void free_arrange(Arrange *a) {
+static void delete_arrange(Arrange *a) {
   if (!a)
     return;
   free(a->cliRegions);
@@ -126,7 +126,7 @@ static Arrange *reflect_y_mod(Arrange *a) {
 
 void NeuroLayoutRun(int ws, int i) {
   Layout *l = NeuroCoreStackGetLayout(ws, i);
-  Arrange *a = alloc_arrange(ws, l);
+  Arrange *a = new_arrange(ws, l);
   if (!a)
     NeuroSystemError("NeuroLayoutRun - Could not run layout");
   if (a->size) {  // Then run layout
@@ -139,7 +139,7 @@ void NeuroLayoutRun(int ws, int i) {
     if (l->mod & reflYModL)
       reflect_y_mod(a);
   }
-  free_arrange(a);
+  delete_arrange(a);
 }
 
 void NeuroLayoutRunCurr(int ws) {

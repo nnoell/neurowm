@@ -83,9 +83,9 @@ static void set_rule(Client *c, const Rule *r) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-Client *NeuroRuleAllocClient(Window w, const XWindowAttributes *wa) {
+Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   assert(wa);
-  Client *c = allocClientT(w, wa);
+  Client *c = NeuroTypeNewClient(w, wa);
   if (!c)
     return NULL;
   if (is_free_size_hints(c))

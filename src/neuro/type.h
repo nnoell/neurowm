@@ -363,12 +363,12 @@ struct Configuration {
 // PUBLIC FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Allocs and Frees
-Client *allocClientT(Window w, const XWindowAttributes *wa);
-void freeClientT(Client *c);
+// Creation and Destruction
+Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa);
+void NeuroTypeDeleteClient(Client *c);
 
-// Useful type functions
-size_t ptrArrayLengthT(const void *const *arrayPtr);
+// Basic Functions
+size_t NeuroTypeArrayLength(const void *const *arrayPtr);
 
 #endif  // NEURO_TYPE_H_
 

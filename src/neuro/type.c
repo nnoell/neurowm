@@ -22,7 +22,8 @@
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-Client *allocClientT(Window w, const XWindowAttributes *wa) {
+// Creation and Destruction
+Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
   Client *c = (Client *)malloc(sizeof(Client));
   if (!c)
     return NULL;
@@ -42,14 +43,15 @@ Client *allocClientT(Window w, const XWindowAttributes *wa) {
   return c;
 }
 
-void freeClientT(Client *c) {
+void NeuroTypeDeleteClient(Client *c) {
   if (!c)
     return;
   free(c);
   c = NULL;
 }
 
-size_t ptrArrayLengthT(const void *const *arrayPtr) {
+// Basic Functions
+size_t NeuroTypeArrayLength(const void *const *arrayPtr) {
   assert(arrayPtr);
   size_t size;
   for (size = 0; arrayPtr[ size ]; ++size)

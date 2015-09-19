@@ -114,6 +114,7 @@ static void xmotion_resize(Rectangle *r, int ws, int cx, int cy, int cw, int ch,
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
+// Basic Functions
 void NeuroClientUpdate(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)

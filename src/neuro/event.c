@@ -73,8 +73,7 @@ static void do_destroy_notify(XEvent *e) {
     NeuroEventUnmanageClient(c);
   } else {
     Client *cli = NeuroCoreRemoveMinimizedClient(w);
-    if (cli)
-      freeClientT(cli);
+    NeuroTypeDeleteClient(cli);
   }
   NeuroDzenUpdate(True);
 }
@@ -87,8 +86,7 @@ static void do_unmap_notify(XEvent *e) {
     NeuroEventUnmanageClient(c);
   } else {
     Client *cli = NeuroCoreRemoveMinimizedClient(w);
-    if (cli)
-      freeClientT(cli);
+    NeuroTypeDeleteClient(cli);
   }
   NeuroDzenUpdate(True);
 }
@@ -220,7 +218,7 @@ void NeuroEventManageWindow(Window w) {
     return;
 
   // Add client to the stackset
-  Client *cli = NeuroRuleAllocClient(w, &wa);
+  Client *cli = NeuroRuleNewClient(w, &wa);
   if (!cli)
     NeuroSystemError("NeuroEventManageWindow - Could not alloc Client and set rules");
   ClientPtrPtr c = NeuroCoreAddClientStart(cli);
@@ -263,7 +261,7 @@ void NeuroEventUnmanageClient(ClientPtrPtr c) {
   rmvEnterNotifyMaskW(ws);
   NeuroRuleUnapply(c);
   Client *cli = NeuroCoreRemoveClient(c);
-  freeClientT(cli);
+  NeuroTypeDeleteClient(cli);
   NeuroLayoutRunCurr(ws);
   updateFocusW(ws);
   addEnterNotifyMaskW(ws);

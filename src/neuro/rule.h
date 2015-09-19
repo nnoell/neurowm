@@ -31,7 +31,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-Client *NeuroRuleAllocClient(Window w, const XWindowAttributes *wa);
+Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa);
 void NeuroRuleApply(const ClientPtrPtr c);
 void NeuroRuleUnapply(const ClientPtrPtr c);
 

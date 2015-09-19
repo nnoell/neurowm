@@ -238,7 +238,7 @@ static void stop_update_thread() {
 
 // Dzen
 Bool NeuroDzenInit() {
-  PIP.numPanels = ptrArrayLengthT((const void const *const *)dzenPanelSetS);
+  PIP.numPanels = NeuroTypeArrayLength((const void const *const *)dzenPanelSetS);
   PIP.pi = (PipeInfo *)calloc(PIP.numPanels, sizeof(PipeInfo));
   PIP.updateThread = -1;
   PIP.resetRate = 1;
