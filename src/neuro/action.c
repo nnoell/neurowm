@@ -183,7 +183,6 @@ void stopCpuCalcHandlerA(GenericArg null_arg) {
   stopCpuCalcD();
 }
 
-
 // Layout
 void changeLayoutHandlerA(GenericArg int_arg) {
   const int ws = getCurrStackSS();
@@ -228,7 +227,6 @@ void resizeMasterLayoutHandlerA(GenericArg float_arg) {
   addEnterNotifyMaskW(ws);
 }
 
-
 // Workspace
 void changeWorkspaceHandlerA(GenericArg int_arg) {
   processWorkspaceAction(changeW, ARG_INT_GET(int_arg));
@@ -262,7 +260,6 @@ void toggleNSPHandlerA(GenericArg command_arg) {
       processClientAction(sendClientW, c, selfC, (const void *)&ws);
   }
 }
-
 
 // Curr Client
 void focusCurrClientHandlerA(GenericArg clientSelectorFn_arg) {
@@ -327,7 +324,6 @@ void toggleFreeCurrClientHandlerA(GenericArg freeSetterFn_arg) {
   processClientAction(toggleFreeClientW, getFocusedC(), selfC, p);
 }
 
-
 // Ptr Client
 void focusPtrClientHandlerA(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
@@ -378,7 +374,6 @@ void toggleFreePtrClientHandlerA(GenericArg freeSetterFn_arg)  {
   int rx, ry;
   processClientAction(toggleFreeClientW, getPointerC(&rx, &ry), selfC, p);
 }
-
 
 // Main
 void runActionA(const Action *a, const GenericMaybeArg *arg) {
