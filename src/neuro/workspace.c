@@ -34,7 +34,7 @@ typedef void (*WorkspaceClientFn)(ClientPtrPtr c, const void *data);
 
 static Bool isAboveTiledClient(const ClientPtrPtr c) {
   assert(c);
-  return (CLI_GET(c).freeSetterFn != notFreeR) || CLI_GET(c).isFullScreen;
+  return (CLI_GET(c).freeSetterFn != NeuroRuleFreeSetterNull) || CLI_GET(c).isFullScreen;
 }
 
 static void focusClient(ClientPtrPtr c) {
@@ -73,7 +73,7 @@ static void sendClient(ClientPtrPtr c, const void *data) {
   if (oldws == ws)
     return;
   Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  const Bool isFree = CLI_GET(c).freeSetterFn != notFreeR;
+  const Bool isFree = CLI_GET(c).freeSetterFn != NeuroRuleFreeSetterNull;
   const Bool doRules = True;
   if (oldws == currws)
     NeuroClientHide(c, (const void *)&doRules);
@@ -193,7 +193,7 @@ void restoreLastMinimizedW(int ws) {
   ClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
     exitErrorS("restoreLastMinimizedW - could not add client");
-  applyRuleR(c);
+  NeuroRuleApply(c);
   NeuroCoreSetCurrClient(c);
   NeuroLayoutRunCurr(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
@@ -291,6 +291,50 @@ void freeResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void 
 
 
 // Workspace Selectors
+int idx0W() {
+  return 0;
+}
+
+int idx1W() {
+  return 1;
+}
+
+int idx2W() {
+  return 2;
+}
+
+int idx3W() {
+  return 3;
+}
+
+int idx4W() {
+  return 4;
+}
+
+int idx5W() {
+  return 5;
+}
+
+int idx6W() {
+  return 6;
+}
+
+int idx7W() {
+  return 7;
+}
+
+int idx8W() {
+  return 8;
+}
+
+int idx9W() {
+  return 9;
+}
+
+int currW() {
+  return NeuroCoreGetCurrStack();
+}
+
 int prevW() {
   return NeuroCoreGetPrevStack();
 }

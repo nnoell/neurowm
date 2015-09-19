@@ -220,7 +220,7 @@ void NeuroEventManageWindow(Window w) {
     return;
 
   // Add client to the stackset
-  Client *cli = allocCliAndSetRulesR(w, &wa);
+  Client *cli = NeuroRuleAllocClient(w, &wa);
   if (!cli)
     exitErrorS("NeuroEventManageWindow - could not alloc Client and set rules");
   ClientPtrPtr c = NeuroCoreAddClientStart(cli);
@@ -230,7 +230,7 @@ void NeuroEventManageWindow(Window w) {
   // Transient windows
   Window trans = None;
   if (XGetTransientForHint(display, CLI_GET(c).win, &trans)) {
-    CLI_GET(c).freeSetterFn = defFreeR;
+    CLI_GET(c).freeSetterFn = NeuroRuleFreeSetterDefault;
     ClientPtrPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
       NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
@@ -261,7 +261,7 @@ void NeuroEventUnmanageClient(ClientPtrPtr c) {
   assert(c);
   const int ws = CLI_GET(c).ws;
   rmvEnterNotifyMaskW(ws);
-  unapplyRuleR(c);
+  NeuroRuleUnapply(c);
   Client *cli = NeuroCoreRemoveClient(c);
   freeClientT(cli);
   NeuroLayoutRunCurr(ws);

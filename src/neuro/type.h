@@ -128,7 +128,7 @@ struct Client {
   Bool isHidden;
   Bool isFullScreen;
   FreeSetterFn freeSetterFn;
-  unsigned int fixPos;  // Can be: notFixedR | upFixedR | downFixedR | leftFixedR | rightFixedR
+  unsigned int fixPos;  // Can be: NeuroRuleFixedPositionNull | NeuroRuleFixedPositionUp | NeuroRuleFixedPositionDown | NeuroRuleFixedPositionLeft | NeuroRuleFixedPositionRigth
   int fixSize;
   Bool isUrgent;
 };
@@ -290,7 +290,7 @@ struct Rule {
   const FreeSetterFn freeSetterFn;
   const unsigned int fixPos;
   const float fixSize;
-  const int workspace;
+  const WorkspaceSelectorFn workspaceSelectorFn;
   const Bool goWorkspace;
 };
 

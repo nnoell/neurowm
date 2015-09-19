@@ -117,40 +117,40 @@ static const Workspace *myWorkspaceSet[] = { ws0, ws1, ws2, ws3, ws4, ws5, ws6, 
 
 // RULES (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
 static const Rule rule00[] = { {
-  "URxvt", WM_SCRATCHPAD_NAME, "urxvt", False, scratchpadFreeR, notFixedR, 0.0f, currWSR, False
+  "URxvt", WM_SCRATCHPAD_NAME, "urxvt", False, NeuroRuleFreeSetterScratchpad, NeuroRuleFixedPositionNull, 0.0f, currW, False
 } };
 static const Rule rule01[] = { {
-  NULL, NULL, "Firefox Preferences", False, centerFreeR, notFixedR, 0.0f, currWSR, False
+  NULL, NULL, "Firefox Preferences", False, NeuroRuleFreeSetterCenter, NeuroRuleFixedPositionNull, 0.0f, currW, False
 } };
 static const Rule rule02[] = { {
-  NULL, NULL, "Buddy List", False, notFreeR, leftFixedR, 0.2f, 4, False
+  NULL, NULL, "Buddy List", False, NeuroRuleFreeSetterNull, NeuroRuleFixedPositionLeft, 0.2f, idx4W, False
 } };
 static const Rule rule03[] = { {
-  "Pidgin", NULL, NULL, False, notFreeR, notFixedR, 0.0f, 4, False
+  "Pidgin", NULL, NULL, False, NeuroRuleFreeSetterNull, NeuroRuleFixedPositionNull, 0.0f, idx4W, False
 } };
 static const Rule rule04[] = { {
-  "Firefox", NULL, NULL, False, notFreeR, notFixedR, 0.0f, 1, False
+  "Firefox", NULL, NULL, False, NeuroRuleFreeSetterNull, NeuroRuleFixedPositionNull, 0.0f, idx1W, False
 } };
 static const Rule rule05[] = { {
-  "Chromium", NULL, NULL, False, notFreeR, notFixedR, 0.0f, 1, False
+  "Chromium", NULL, NULL, False, NeuroRuleFreeSetterNull, NeuroRuleFixedPositionNull, 0.0f, idx1W, False
 } };
 static const Rule rule06[] = { {
-  "MPlayer", NULL, NULL, False, centerFreeR, notFixedR, 0.0f, currWSR, False
+  "MPlayer", NULL, NULL, False, NeuroRuleFreeSetterCenter, NeuroRuleFixedPositionNull, 0.0f, currW, False
 } };
 static const Rule rule07[] = { {
-  "Gmrun", NULL, NULL, False, centerFreeR, notFixedR, 0.0f, currWSR, False
+  "Gmrun", NULL, NULL, False, NeuroRuleFreeSetterCenter, NeuroRuleFixedPositionNull, 0.0f, currW, False
 } };
 static const Rule rule08[] = { {
-  "Xephyr", NULL, NULL, True, bigCenterFreeR, notFixedR, 0.0f, currWSR, False
+  "Xephyr", NULL, NULL, True, NeuroRuleFreeSetterBigCenter, NeuroRuleFixedPositionNull, 0.0f, currW, False
 } };
 static const Rule rule09[] = { {
-  "Transmission-gtk", NULL, NULL, False, notFreeR, notFixedR, 0.0f, 9, True
+  "Transmission-gtk", NULL, NULL, False, NeuroRuleFreeSetterNull, NeuroRuleFixedPositionNull, 0.0f, idx9W, True
 } };
 static const Rule rule10[] = { {
-  "PPSSPPSDL", "PPSSPPSDL", NULL, False, centerFreeR, notFixedR, 0.0f, currWSR, False
+  "PPSSPPSDL", "PPSSPPSDL", NULL, False, NeuroRuleFreeSetterCenter, NeuroRuleFixedPositionNull, 0.0f, currW, False
 } };
 static const Rule rule11[] = { {
-  "XCalc", NULL, NULL, False, centerFreeR, notFixedR, 0.0f, currWSR, False
+  "XCalc", NULL, NULL, False, NeuroRuleFreeSetterCenter, NeuroRuleFixedPositionNull, 0.0f, currW, False
 } };
 
 // RULESET
@@ -241,46 +241,46 @@ static const Key key26[] = { { myModMask,             XK_comma,     CHAIN_NULL(N
 static const Key key27[] = { { myModMask,             XK_period,    CHAIN(NeuroActionChainIncreaseMasterLayout, ARG_INT(-1))       } };
 static const Key key28[] = { { myModMask,             XK_l,         CHAIN_NULL(NeuroActionChainResizeMasterLayout)                 } };
 static const Key key29[] = { { myModMask,             XK_h,         CHAIN(NeuroActionChainResizeMasterLayout, ARG_FLOAT(-1.0f))    } };
-static const Key key30[] = { { myModMask,             XK_1,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(0))             } };
-static const Key key31[] = { { myModMask,             XK_2,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(1))             } };
-static const Key key32[] = { { myModMask,             XK_3,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(2))             } };
-static const Key key33[] = { { myModMask,             XK_4,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(3))             } };
-static const Key key34[] = { { myModMask,             XK_5,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(4))             } };
-static const Key key35[] = { { myModMask,             XK_6,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(5))             } };
-static const Key key36[] = { { myModMask,             XK_7,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(6))             } };
-static const Key key37[] = { { myModMask,             XK_8,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(7))             } };
-static const Key key38[] = { { myModMask,             XK_9,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(8))             } };
-static const Key key39[] = { { myModMask,             XK_0,         CHAIN(NeuroActionChainChangeWorkspace, ARG_INT(9))             } };
-static const Key key40[] = { { ControlMask|Mod1Mask,  XK_Left,      CHAIN(NeuroActionChainRelativeChangeWorkspace, ARG_WSF(prevW)) } };
-static const Key key41[] = { { ControlMask|Mod1Mask,  XK_Right,     CHAIN(NeuroActionChainRelativeChangeWorkspace, ARG_WSF(nextW)) } };
-static const Key key42[] = { { myModMask|ShiftMask,   XK_Tab,       CHAIN(NeuroActionChainRelativeChangeWorkspace, ARG_WSF(oldW))  } };
-static const Key key43[] = { { myModMask|ShiftMask,   XK_1,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(0))              } };
-static const Key key44[] = { { myModMask|ShiftMask,   XK_2,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(1))              } };
-static const Key key45[] = { { myModMask|ShiftMask,   XK_3,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(2))              } };
-static const Key key46[] = { { myModMask|ShiftMask,   XK_4,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(3))              } };
-static const Key key47[] = { { myModMask|ShiftMask,   XK_5,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(4))              } };
-static const Key key48[] = { { myModMask|ShiftMask,   XK_6,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(5))              } };
-static const Key key49[] = { { myModMask|ShiftMask,   XK_7,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(6))              } };
-static const Key key50[] = { { myModMask|ShiftMask,   XK_8,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(7))              } };
-static const Key key51[] = { { myModMask|ShiftMask,   XK_9,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(8))              } };
-static const Key key52[] = { { myModMask|ShiftMask,   XK_0,         CHAIN(NeuroActionChainSendCurrClient, ARG_INT(9))              } };
-static const Key key53[] = { { myModMask|ControlMask, XK_1,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(0))        } };
-static const Key key54[] = { { myModMask|ControlMask, XK_2,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(1))        } };
-static const Key key55[] = { { myModMask|ControlMask, XK_3,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(2))        } };
-static const Key key56[] = { { myModMask|ControlMask, XK_4,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(3))        } };
-static const Key key57[] = { { myModMask|ControlMask, XK_5,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(4))        } };
-static const Key key58[] = { { myModMask|ControlMask, XK_6,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(5))        } };
-static const Key key59[] = { { myModMask|ControlMask, XK_7,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(6))        } };
-static const Key key60[] = { { myModMask|ControlMask, XK_8,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(7))        } };
-static const Key key61[] = { { myModMask|ControlMask, XK_9,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(8))        } };
-static const Key key62[] = { { myModMask|ControlMask, XK_0,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_INT(9))        } };
+static const Key key30[] = { { myModMask,             XK_1,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx0W)) } };
+static const Key key31[] = { { myModMask,             XK_2,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx1W)) } };
+static const Key key32[] = { { myModMask,             XK_3,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx2W)) } };
+static const Key key33[] = { { myModMask,             XK_4,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx3W)) } };
+static const Key key34[] = { { myModMask,             XK_5,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx4W)) } };
+static const Key key35[] = { { myModMask,             XK_6,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx5W)) } };
+static const Key key36[] = { { myModMask,             XK_7,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx6W)) } };
+static const Key key37[] = { { myModMask,             XK_8,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx7W)) } };
+static const Key key38[] = { { myModMask,             XK_9,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx8W)) } };
+static const Key key39[] = { { myModMask,             XK_0,         CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx9W)) } };
+static const Key key40[] = { { ControlMask|Mod1Mask,  XK_Left,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(prevW)) } };
+static const Key key41[] = { { ControlMask|Mod1Mask,  XK_Right,     CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(nextW)) } };
+static const Key key42[] = { { myModMask|ShiftMask,   XK_Tab,       CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(oldW))  } };
+static const Key key43[] = { { myModMask|ShiftMask,   XK_1,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx0W))  } };
+static const Key key44[] = { { myModMask|ShiftMask,   XK_2,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx1W))  } };
+static const Key key45[] = { { myModMask|ShiftMask,   XK_3,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx2W))  } };
+static const Key key46[] = { { myModMask|ShiftMask,   XK_4,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx3W))  } };
+static const Key key47[] = { { myModMask|ShiftMask,   XK_5,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx4W))  } };
+static const Key key48[] = { { myModMask|ShiftMask,   XK_6,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx5W))  } };
+static const Key key49[] = { { myModMask|ShiftMask,   XK_7,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx6W))  } };
+static const Key key50[] = { { myModMask|ShiftMask,   XK_8,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx7W))  } };
+static const Key key51[] = { { myModMask|ShiftMask,   XK_9,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx8W))  } };
+static const Key key52[] = { { myModMask|ShiftMask,   XK_0,         CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx9W))  } };
+static const Key key53[] = { { myModMask|ControlMask, XK_1,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx0W))        } };
+static const Key key54[] = { { myModMask|ControlMask, XK_2,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx1W))        } };
+static const Key key55[] = { { myModMask|ControlMask, XK_3,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx2W))        } };
+static const Key key56[] = { { myModMask|ControlMask, XK_4,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx3W))        } };
+static const Key key57[] = { { myModMask|ControlMask, XK_5,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx4W))        } };
+static const Key key58[] = { { myModMask|ControlMask, XK_6,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx5W))        } };
+static const Key key59[] = { { myModMask|ControlMask, XK_7,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx6W))        } };
+static const Key key60[] = { { myModMask|ControlMask, XK_8,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx7W))        } };
+static const Key key61[] = { { myModMask|ControlMask, XK_9,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx8W))        } };
+static const Key key62[] = { { myModMask|ControlMask, XK_0,         CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx9W))        } };
 static const Key key63[] = { { myModMask|ShiftMask,   XK_q,         CHAIN_NULL(NeuroActionChainQuit)                               } };
 static const Key key64[] = { { myModMask,             XK_q,         CHAIN_NULL(NeuroActionChainReload)                             } };
 static const Key key65[] = { { Mod1Mask,              XK_F2,        CHAIN(NeuroActionChainSpawn, ARG_CMD(lchrcmd))                 } };
 static const Key key66[] = { { myModMask|ShiftMask,   XK_space,     CHAIN_NULL(NeuroActionChainResetLayout)                        } };
 static const Key key67[] = { { myModMask,             XK_n,         CHAIN_NULL(NeuroActionChainMinimizeCurrClient)                 } };
 static const Key key68[] = { { myModMask|ShiftMask,   XK_n,         CHAIN_NULL(NeuroActionChainRestoreLastMinimized)               } };
-static const Key key69[] = { { myModMask|ShiftMask,   XK_t,         CHAIN(NeuroActionChainFreeCurrClient, ARG_FSF(bigCenterFreeR)) } };
+static const Key key69[] = { { myModMask|ShiftMask,   XK_t,         CHAIN(NeuroActionChainFreeCurrClient, ARG_FSF(NeuroRuleFreeSetterBigCenter)) } };
 static const Key key70[] = { { myModMask,             XK_grave,     CHAIN(NeuroActionChainToggleScratchpad, ARG_CMD(nspcmd))       } };
 static const Key key71[] = { { myModMask,             XK_masculine, CHAIN(NeuroActionChainToggleScratchpad, ARG_CMD(nspcmd))       } };
 static const Key key72[] = { { Mod1Mask,              XK_Up,        CHAIN(NeuroActionChainSpawn, ARG_CMD(volupcmd))                } };

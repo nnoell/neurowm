@@ -41,7 +41,6 @@ extern const Action const NeuroActionResizeMasterLayout[];
 
 // Workspace (Actions)
 extern const Action const NeuroActionChangeWorkspace[];
-extern const Action const NeuroActionRelativeChangeWorkspace[];
 extern const Action const NeuroActionRestoreLastMinimized[];
 extern const Action const NeuroActionToggleScatchpad[];
 
@@ -49,7 +48,6 @@ extern const Action const NeuroActionToggleScatchpad[];
 extern const Action const NeuroActionFocusCurrClient[];
 extern const Action const NeuroActionSwapCurrClient[];
 extern const Action const NeuroActionSendCurrClient[];
-extern const Action const NeuroActionRelativeSendCurrClient[];
 extern const Action const NeuroActionKillCurrClient[];
 extern const Action const NeuroActionTileCurrClient[];
 extern const Action const NeuroActionNormalCurrClient[];
@@ -88,7 +86,6 @@ extern const Action *const NeuroActionChainResizeMasterLayout[];
 
 // Workspace (Action Chains)
 extern const Action *const NeuroActionChainChangeWorkspace[];
-extern const Action *const NeuroActionChainRelativeChangeWorkspace[];
 extern const Action *const NeuroActionChainRestoreLastMinimized[];
 extern const Action *const NeuroActionChainToggleScratchpad[];
 
@@ -96,9 +93,7 @@ extern const Action *const NeuroActionChainToggleScratchpad[];
 extern const Action *const NeuroActionChainFocusCurrClient[];
 extern const Action *const NeuroActionChainSwapCurrClient[];
 extern const Action *const NeuroActionChainSendCurrClient[];
-extern const Action *const NeuroActionChainRelativeSendCurrClient[];
 extern const Action *const NeuroActionChainSendFollowCurrClient[];
-extern const Action *const NeuroActionChainRelativeSendFollowCurrClient[];
 extern const Action *const NeuroActionChainKillClient[];
 extern const Action *const NeuroActionChainTileCurrClient[];
 extern const Action *const NeuroActionChainNormalCurrClient[];
@@ -142,16 +137,14 @@ void NeuroActionHandlerIncreaseMasterLayout(GenericArg int_arg);
 void NeuroActionHandlerResizeMasterLayout(GenericArg float_arg);
 
 // Workspace (Handlers)
-void NeuroActionHandlerChangeWorkspace(GenericArg int_arg);
-void NeuroActionHandlerRelativeChangeWorkspace(GenericArg WorkspaceSelectorFn_arg);
+void NeuroActionHandlerChangeWorkspace(GenericArg WorkspaceSelectorFn_arg);
 void NeuroActionHandlerRestoreLastMinimized(GenericArg null_arg);
 void NeuroActionHandlerToggleScratchpad(GenericArg command_arg);
 
 // CurrClient (Handlers)
 void NeuroActionHandlerFocusCurrClient(GenericArg clientSelectorFn_arg);
 void NeuroActionHandlerSwapCurrClient(GenericArg clientSelectorFn_arg);
-void NeuroActionHandlerSendCurrClient(GenericArg int_arg);
-void NeuroActionHandlerRelativeSendCurrClient(GenericArg WorkspaceSelectorFn_arg);
+void NeuroActionHandlerSendCurrClient(GenericArg WorkspaceSelectorFn_arg);
 void NeuroActionHandlerKillCurrClient(GenericArg clientSelectorFn_arg);
 void NeuroActionHandlerTileCurrClient(GenericArg clientSelectorFn_arg);
 void NeuroActionHandlerNormalCurrClient(GenericArg clientSelectorFn_arg);

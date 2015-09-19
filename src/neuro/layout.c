@@ -33,7 +33,7 @@ static Arrange *alloc_arrange(int ws, Layout *l) {
   int i = 0, size = 0;
   ClientPtrPtr c;
   for (c=NeuroCoreStackGetHeadClient(ws); c; c=NeuroCoreClientGetNext(c)) {
-    if (CLI_GET(c).freeSetterFn == notFreeR && !CLI_GET(c).fixPos && !CLI_GET(c).isHidden && !CLI_GET(c).isFullScreen) {
+    if (CLI_GET(c).freeSetterFn == NeuroRuleFreeSetterNull && !CLI_GET(c).fixPos && !CLI_GET(c).isHidden && !CLI_GET(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
         rs = (Rectangle **)realloc(rs, size*sizeof(void *));

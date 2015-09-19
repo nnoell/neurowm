@@ -53,6 +53,17 @@ void freeMoveClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *d
 void freeResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
 
 // Workspace Selectors
+int idx0W();
+int idx1W();
+int idx2W();
+int idx3W();
+int idx4W();
+int idx5W();
+int idx6W();
+int idx7W();
+int idx8W();
+int idx9W();
+int currW();
 int prevW();
 int nextW();
 int oldW();

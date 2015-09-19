@@ -18,29 +18,28 @@
 #include "type.h"
 
 // Defines
-#define notFreeR     NULL
-#define notFixedR    0
-#define upFixedR     1
-#define downFixedR   2
-#define leftFixedR   3
-#define rightFixedR  4
-#define currWSR      (-1)
+#define NeuroRuleFreeSetterNull NULL
+#define NeuroRuleFixedPositionNull  0
+#define NeuroRuleFixedPositionUp    1
+#define NeuroRuleFixedPositionDown  2
+#define NeuroRuleFixedPositionLeft  3
+#define NeuroRuleFixedPositionRigth 4
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Main Functions
-Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa);
-void applyRuleR(const ClientPtrPtr c);
-void unapplyRuleR(const ClientPtrPtr c);
+// Basic Functions
+Client *NeuroRuleAllocClient(Window w, const XWindowAttributes *wa);
+void NeuroRuleApply(const ClientPtrPtr c);
+void NeuroRuleUnapply(const ClientPtrPtr c);
 
 // Free Setters
-void defFreeR(Rectangle *a, const Rectangle *r);
-void centerFreeR(Rectangle *a, const Rectangle *r);
-void bigCenterFreeR(Rectangle *a, const Rectangle *r);
-void scratchpadFreeR(Rectangle *a, const Rectangle *r);
+void NeuroRuleFreeSetterDefault(Rectangle *a, const Rectangle *r);
+void NeuroRuleFreeSetterCenter(Rectangle *a, const Rectangle *r);
+void NeuroRuleFreeSetterBigCenter(Rectangle *a, const Rectangle *r);
+void NeuroRuleFreeSetterScratchpad(Rectangle *a, const Rectangle *r);
 
 
 #endif  // NEURO_RULE_H_
