@@ -175,12 +175,12 @@ void sleepHandlerA(GenericArg int_arg) {
 
 void startCpuCalcHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  startCpuCalcDP();
+  startCpuCalcD();
 }
 
 void endCpuCalcHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  endCpuCalcDP();
+  endCpuCalcD();
 }
 
 

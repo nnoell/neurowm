@@ -28,30 +28,30 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-Bool initDP();
-void stopDP();
-void updateDP(int onlyEvent);
+Bool initD();
+void stopD();
+void updateD(int onlyEvent);
 
 // CPU Calculation
-void startCpuCalcDP();
-void endCpuCalcDP();
+void startCpuCalcD();
+void endCpuCalcD();
 
 // Loggers
-void timeLoggerDP(char *str);
-void dateLoggerDP(char *str);
-void dayLoggerDP(char *str);
-void uptimeLoggerDP(char *str);
-void memPercLoggerDP(char *str);
-void wifiStrengthDP(char *str);
-void currWSLoggerDP(char *str);
-void currLayoutLoggerDP(char *str);
-void currTitleLoggerDP(char *str);
-void cpuPercUsageLoggerDP(char *str);
+void timeLoggerD(char *str);
+void dateLoggerD(char *str);
+void dayLoggerD(char *str);
+void uptimeLoggerD(char *str);
+void ramPercLoggerD(char *str);
+void wifiStrengthD(char *str);
+void currWSLoggerD(char *str);
+void currLayoutLoggerD(char *str);
+void currTitleLoggerD(char *str);
+void cpuPercUsageLoggerD(char *str);
 
 // Logger Utils
-int readFileDP(char *buf, const char *fileName);
-void wrapDzenBoxDP(char *dst, const char *src, const BoxPP *b);
-void wrapDzenClickAreaDP(char *dst, const char *src, const CA *ca);
+int readFileD(char *buf, const char *fileName);
+void wrapDzenBoxD(char *dst, const char *src, const BoxPP *b);
+void wrapDzenClickAreaD(char *dst, const char *src, const CA *ca);
 
 #endif  // NEURO_DZEN_H_
 

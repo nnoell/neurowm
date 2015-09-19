@@ -131,7 +131,7 @@ static void endUpdateThread() {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-Bool initDP() {
+Bool initD() {
   PIP.numPanels = ptrArrayLengthT((const void const *const *)dzenPanelSetS);
   PIP.pi = (PipeInfo *)calloc(PIP.numPanels, sizeof(PipeInfo));
   PIP.updateThread = -1;
@@ -152,22 +152,22 @@ Bool initDP() {
       return False;
   }
   if (!initUpdateThread())
-    exitErrorS("initDP - could not init thread to update panels");
-  updateDP(False);
+    exitErrorS("initD - could not init thread to update panels");
+  updateD(False);
   return True;
 }
 
-void stopDP() {
+void stopD() {
   endUpdateThread();
   int i;
   for (i = 0; i < PIP.numPanels; ++i)
     if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)
-      perror("stopDP - could not kill panels");
+      perror("stopD - could not kill panels");
   free(PIP.pi);
   PIP.pi = NULL;
 }
 
-void updateDP(Bool onlyEvent) {
+void updateD(Bool onlyEvent) {
   const DzenPanel *dp;
   int i;
   for (i=0; i < PIP.numPanels; ++i) {
@@ -182,7 +182,7 @@ void updateDP(Bool onlyEvent) {
 }
 
 // Loggers
-void timeLoggerDP(char *str) {
+void timeLoggerD(char *str) {
   assert(str);
   struct tm res;
   time_t t = time(NULL);
@@ -191,7 +191,7 @@ void timeLoggerDP(char *str) {
 }
 
 
-void dateLoggerDP(char *str) {
+void dateLoggerD(char *str) {
   assert(str);
   struct tm res;
   time_t t = time(NULL);
@@ -199,7 +199,7 @@ void dateLoggerDP(char *str) {
   snprintf(str, LOGGER_MAX, "%d.%02d.%02d", res.tm_year + 1900, res.tm_mon + 1, res.tm_mday);
 }
 
-void dayLoggerDP(char *str) {
+void dayLoggerD(char *str) {
   assert(str);
   struct tm res;
   time_t t = time(NULL);
@@ -216,7 +216,7 @@ void dayLoggerDP(char *str) {
   }
 }
 
-void uptimeLoggerDP(char *str) {
+void uptimeLoggerD(char *str) {
   assert(str);
   struct sysinfo info;
   sysinfo(&info);
@@ -227,7 +227,7 @@ void uptimeLoggerDP(char *str) {
   snprintf(str, LOGGER_MAX, "%ih %im %is", hours, minutes, seconds);
 }
 
-void memPercLoggerDP(char *str) {
+void ramPercLoggerD(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
   unsigned long memTotal = 0UL, memAvailable = 0UL;
@@ -245,7 +245,7 @@ void memPercLoggerDP(char *str) {
   fclose(fd);
 }
 
-void wifiStrengthDP(char *str) {
+void wifiStrengthD(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
   FILE *fd = fopen("/proc/net/wireless", "r");
@@ -260,14 +260,14 @@ void wifiStrengthDP(char *str) {
   fclose(fd);
 }
 
-void currWSLoggerDP(char *str) {
+void currWSLoggerD(char *str) {
   assert(str);
   const char *name = getNameStackSS(getCurrStackSS());
   if (name)
     strncpy(str, name, LOGGER_MAX);
 }
 
-void currLayoutLoggerDP(char *str) {
+void currLayoutLoggerD(char *str) {
   assert(str);
   int ws = getCurrStackSS();
   const LayoutConf *lc = getCurrLayoutConfStackSS(ws);
@@ -275,7 +275,7 @@ void currLayoutLoggerDP(char *str) {
     strncpy(str, lc->name, LOGGER_MAX);
 }
 
-void currTitleLoggerDP(char *str) {
+void currTitleLoggerD(char *str) {
   assert(str);
   ClientPtrPtr c = getCurrClientStackSS(getCurrStackSS());
   if (c)
@@ -284,7 +284,7 @@ void currTitleLoggerDP(char *str) {
 
 
 // Logger utilities
-int readFileDP(char *buf, const char *fileName) {
+int readFileD(char *buf, const char *fileName) {
   assert(buf);
   assert(fileName);
   FILE *fd;
@@ -299,7 +299,7 @@ int readFileDP(char *buf, const char *fileName) {
   return 0;
 }
 
-void wrapDzenBoxDP(char *dst, const char *src, const BoxPP *b) {
+void wrapDzenBoxD(char *dst, const char *src, const BoxPP *b) {
   assert(dst);
   assert(src);
   assert(b);
@@ -308,7 +308,7 @@ void wrapDzenBoxDP(char *dst, const char *src, const BoxPP *b) {
       b->boxColor, b->leftIcon, b->boxHeight, b->fgColor, src, b->boxColor, b->rightIcon, b->bgColor, b->boxHeight);
 }
 
-void wrapDzenClickAreaDP(char *dst, const char *src, const CA *ca) {
+void wrapDzenClickAreaD(char *dst, const char *src, const CA *ca) {
   assert(dst);
   assert(src);
   assert(ca);
@@ -431,22 +431,22 @@ static void endCpuPercThreadDP() {
 
 
 // Public function definition
-void startCpuCalcDP() {
+void startCpuCalcD() {
   numCpus = getNumCpusDP(CPU_FILE_PATH);
   cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
   if (!cpusInfo)
-    exitErrorS("startCpuCalcDP - could not alloc cpusInfo");
+    exitErrorS("startCpuCalcD - could not alloc cpusInfo");
   if (initCpuPercThreadDP())
-    exitErrorS("startCpuCalcDP - could not init thread to update cpus");
+    exitErrorS("startCpuCalcD - could not init thread to update cpus");
 }
 
-void endCpuCalcDP() {
+void endCpuCalcD() {
   endCpuPercThreadDP();
   free(cpusInfo);
   cpusInfo = NULL;
 }
 
-void cpuPercUsageLoggerDP(char *str) {
+void cpuPercUsageLoggerD(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
   int i;

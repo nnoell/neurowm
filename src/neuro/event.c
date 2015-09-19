@@ -39,7 +39,7 @@ static void processKeyPress(XEvent *e) {
     k = keyBindingsS[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
       runActionChainA(&k->actionChain);
-      updateDP(True);
+      updateD(True);
     }
   }
   XFree(keysym);
@@ -54,7 +54,7 @@ static void processButtonPress(XEvent *e) {
     b = buttonBindingsS[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       runActionChainA(&b->actionChain);
-      updateDP(True);
+      updateD(True);
     }
   }
 }
@@ -62,7 +62,7 @@ static void processButtonPress(XEvent *e) {
 static void processMapRequest(XEvent *e) {
   assert(e);
   manageWindowE(e->xmaprequest.window);
-  updateDP(True);
+  updateD(True);
 }
 
 static void processDestroyNotify(XEvent *e) {
@@ -76,7 +76,7 @@ static void processDestroyNotify(XEvent *e) {
     if (cli)
       freeClientT(cli);
   }
-  updateDP(True);
+  updateD(True);
 }
 
 static void processUnmapNotify(XEvent *e) {
@@ -90,7 +90,7 @@ static void processUnmapNotify(XEvent *e) {
     if (cli)
       freeClientT(cli);
   }
-  updateDP(True);
+  updateD(True);
 }
 
 static void processEnterNotify(XEvent *e) {
@@ -109,7 +109,7 @@ static void processEnterNotify(XEvent *e) {
   if (isCurrClientSS(c))
     return;
   focusClientW(c, selfC, NULL);
-  updateDP(True);
+  updateD(True);
 }
 
 static void processConfigureRequest(XEvent *e) {
@@ -128,7 +128,7 @@ static void processConfigureRequest(XEvent *e) {
     runCurrL(CLI_GET(c).ws);
     updateW(CLI_GET(c).ws);
   }
-  updateDP(True);
+  updateD(True);
 }
 
 static void processFocusIn(XEvent *e) {
@@ -139,7 +139,7 @@ static void processFocusIn(XEvent *e) {
   if (CLI_GET(c).win == e->xfocus.window)
     return;
   focusClientW(c, selfC, NULL);
-  updateDP(True);
+  updateD(True);
 }
 
 static void processClientMessage(XEvent *e) {
@@ -159,7 +159,7 @@ static void processClientMessage(XEvent *e) {
   } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
     focusClientW(c, selfC, NULL);
   }
-  updateDP(True);
+  updateD(True);
 }
 
 static void processPropertyNotify(XEvent *e) {
@@ -170,7 +170,7 @@ static void processPropertyNotify(XEvent *e) {
     if (!c)
       return;
     updateTitleC(c, NULL);
-    updateDP(True);
+    updateD(True);
   } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
     ClientPtrPtr c = findWindowClientAllW(ev->window);
     if (!c)
@@ -183,7 +183,7 @@ static void processPropertyNotify(XEvent *e) {
     if (wmh)
       XFree(wmh);
     updateC(c, NULL);
-    updateDP(True);
+    updateD(True);
   }
 }
 
