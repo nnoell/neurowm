@@ -22,6 +22,6 @@
 int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
-  return runN(&defWMConfig);
+  return NeuroNeurowmRun(&defWMConfig);
 }
 

@@ -28,9 +28,9 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-int runN(const Configuration *c);
-void quitN();
-void reloadN();
+int NeuroNeurowmRun(const Configuration *c);
+void NeuroNeurowmQuit();
+void NeuroNeurowmReload();
 
 #endif  // NEURO_NEUROWM_H_
 

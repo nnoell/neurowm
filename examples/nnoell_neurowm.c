@@ -347,7 +347,7 @@ static const Configuration myConfiguration = {
 int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
-  return runN(&myConfiguration);
-  // return runN(&NeuroConfigConfiguration);
+  return NeuroNeurowmRun(&myConfiguration);
+  // return NeuroNeurowmRun(&NeuroConfigConfiguration);
 }
 

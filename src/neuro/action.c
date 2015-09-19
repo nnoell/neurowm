@@ -226,12 +226,12 @@ void NeuroActionHandlerNothing(GenericArg null_arg) {
 
 void NeuroActionHandlerQuit(GenericArg null_arg) {
   (void)null_arg;
-  quitN();
+  NeuroNeurowmQuit();
 }
 
 void NeuroActionHandlerReload(GenericArg null_arg) {
   (void)null_arg;
-  reloadN();
+  NeuroNeurowmReload();
 }
 
 void NeuroActionHandlerChangeNeurowmName(GenericArg string_arg) {
