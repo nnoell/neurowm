@@ -150,12 +150,12 @@ void nothingHandlerA(GenericArg null_arg) {
 
 void quitNeurowmHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  quitNeurowmN();
+  quitN();
 }
 
 void reloadNeurowmHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  reloadNeurowmN();
+  reloadN();
 }
 
 void changeNeurowmNameHandlerA(GenericArg string_arg) {

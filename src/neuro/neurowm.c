@@ -85,7 +85,7 @@ static void initNeurowm(const WMConfig *c) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-int runNeurowmN(const WMConfig *c) {
+int runN(const WMConfig *c) {
   // Init window manager
   initNeurowm(c);
 
@@ -101,11 +101,11 @@ int runNeurowmN(const WMConfig *c) {
   return EXIT_SUCCESS;
 }
 
-void quitNeurowmN() {
+void quitN() {
   stopWhile = True;
 }
 
-void reloadNeurowmN() {
+void reloadN() {
   signalHandler(SIGUSR1);
 }
 

@@ -347,7 +347,7 @@ static const WMConfig myWMConfig = {
 int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
-  return runNeurowmN(&myWMConfig);
-  // return runNeurowmN(&defWMConfig);
+  return runN(&myWMConfig);
+  // return runN(&defWMConfig);
 }
 
