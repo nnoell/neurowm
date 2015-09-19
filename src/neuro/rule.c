@@ -66,11 +66,11 @@ static void setRule(Client *c, const Rule *r) {
   assert(c);
   assert(r);
   if (r->workspace != currWSR)
-    c->ws = r->workspace % getSizeSS();
+    c->ws = r->workspace % NeuroCoreGetSize();
   c->isFullScreen = r->isFullScreen;
   c->freeSetterFn = r->freeSetterFn;
   c->fixPos = r->fixPos;
-  Rectangle *reg = getRegionStackSS(c->ws);
+  Rectangle *reg = NeuroCoreStackGetRegion(c->ws);
   if (c->fixPos == upFixedR || c->fixPos == downFixedR)
     c->fixSize = r->fixSize * reg->h;
   else if (c->fixPos == leftFixedR || c->fixPos == rightFixedR)
@@ -91,7 +91,7 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
     return NULL;
   if (isFreeSizeHints(c))
     c->freeSetterFn = defFreeR;
-  c->ws = getCurrStackSS();
+  c->ws = NeuroCoreGetCurrStack();
   updateClassAndNameC(&c, NULL);
   updateTitleC(&c, NULL);
   const Rule *r;
@@ -110,8 +110,8 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
 
 void applyRuleR(const ClientPtrPtr c) {
   assert(c);
-  Rectangle *reg = getRegionStackSS(CLI_GET(c).ws);
-  Rectangle *regc = getRegionClientSS(c);
+  Rectangle *reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
+  Rectangle *regc = NeuroCoreClientGetRegion(c);
   switch (CLI_GET(c).fixPos) {
     case upFixedR: {
       regc->x = reg->x;
@@ -166,7 +166,7 @@ void unapplyRuleR(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return;
-  Rectangle *reg = getRegionStackSS(CLI_GET(c).ws);
+  Rectangle *reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
   switch (CLI_GET(c).fixPos) {
     case upFixedR: {
       reg->y -= CLI_GET(c).fixSize;

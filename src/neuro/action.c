@@ -185,7 +185,7 @@ void stopCpuCalcHandlerA(GenericArg null_arg) {
 
 // Layout
 void changeLayoutHandlerA(GenericArg int_arg) {
-  const int ws = getCurrStackSS();
+  const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
   changeL(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
@@ -193,35 +193,35 @@ void changeLayoutHandlerA(GenericArg int_arg) {
 
 void resetLayoutHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  const int ws = getCurrStackSS();
+  const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
   resetL(ws);
   addEnterNotifyMaskW(ws);
 }
 
 void toggleLayoutHandlerA(GenericArg int_arg) {
-  const int ws = getCurrStackSS();
+  const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
   toggleL(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
 }
 
 void toggleModLayoutHandlerA(GenericArg uint_arg) {
-  const int ws = getCurrStackSS();
+  const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
   toggleModCurrL(ws, ARG_INT_GET(uint_arg));
   addEnterNotifyMaskW(ws);
 }
 
 void increaseMasterLayoutHandlerA(GenericArg int_arg) {
-  const int ws = getCurrStackSS();
+  const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
   increaseMasterL(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
 }
 
 void resizeMasterLayoutHandlerA(GenericArg float_arg) {
-  const int ws = getCurrStackSS();
+  const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
   resizeMasterL(ws, ARG_FLOAT_GET(float_arg));
   addEnterNotifyMaskW(ws);
@@ -240,21 +240,21 @@ void changeRelWorkspaceHandlerA(GenericArg WorkspaceSelectorFn_arg) {
 
 void restoreLastMinimizedHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  processWorkspaceAction(restoreLastMinimizedW, getCurrStackSS());
+  processWorkspaceAction(restoreLastMinimizedW, NeuroCoreGetCurrStack());
 }
 
 void toggleNSPHandlerA(GenericArg command_arg) {
   assert(ARG_CMD_GET(command_arg));
-  ClientPtrPtr c = getCurrClientNSPStackSS();
-  ClientPtrPtr nspc = findNSPClientSS();
-  const int ws = getCurrStackSS();
-  const int nspws = getNSPStackSS();
+  ClientPtrPtr c = NeuroCoreGetCurrClientNspStack();
+  ClientPtrPtr nspc = NeuroCoreFindNspClient();
+  const int ws = NeuroCoreGetCurrStack();
+  const int nspws = NeuroCoreGetNspStack();
   if (nspc && CLI_GET(nspc).ws == ws) {
     processClientAction(sendClientW, nspc, selfC, (const void *)&nspws);
   } else if (nspc) {
     processClientAction(sendClientW, nspc, selfC, (const void *)&ws);
   } else {
-    if (!getSizeNSPSS())
+    if (!NeuroCoreGetNspStackSize())
       spawnS(ARG_CMD_GET(command_arg), NULL);
     else
       processClientAction(sendClientW, c, selfC, (const void *)&ws);

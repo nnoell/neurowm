@@ -72,7 +72,7 @@ static void processDestroyNotify(XEvent *e) {
   if (c) {
     unmanageCliE(c);
   } else {
-    Client *cli = rmvMinimizedClientSS(w);
+    Client *cli = NeuroCoreRemoveMinimizedClient(w);
     if (cli)
       freeClientT(cli);
   }
@@ -86,7 +86,7 @@ static void processUnmapNotify(XEvent *e) {
   if (c) {
     unmanageCliE(c);
   } else {
-    Client *cli = rmvMinimizedClientSS(w);
+    Client *cli = NeuroCoreRemoveMinimizedClient(w);
     if (cli)
       freeClientT(cli);
   }
@@ -98,15 +98,15 @@ static void processEnterNotify(XEvent *e) {
   XCrossingEvent *ev = &e->xcrossing;
   if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != (unsigned int)root)
     return;
-  int ws = getCurrStackSS();  // Mouse is always in the current workspace
-  if (getSizeStackSS(ws) < 2)
+  int ws = NeuroCoreGetCurrStack();  // Mouse is always in the current workspace
+  if (NeuroCoreStackGetSize(ws) < 2)
     return;
-  if (!getCurrLayoutStackSS(ws)->followMouse)
+  if (!NeuroCoreStackGetCurrLayout(ws)->followMouse)
     return;
   ClientPtrPtr c = findWindowClientAllW(ev->window);
   if (!c)
     return;
-  if (isCurrClientSS(c))
+  if (NeuroCoreClientIsCurr(c))
     return;
   focusClientW(c, selfC, NULL);
   updateD(True);
@@ -175,7 +175,7 @@ static void processPropertyNotify(XEvent *e) {
     ClientPtrPtr c = findWindowClientAllW(ev->window);
     if (!c)
       return;
-    if (isCurrClientSS(c) && isCurrStackSS(CLI_GET(c).ws))
+    if (NeuroCoreClientIsCurr(c) && NeuroCoreStackIsCurr(CLI_GET(c).ws))
       return;
     XWMHints *wmh = XGetWMHints(display, CLI_GET(c).win);
     if (wmh && (wmh->flags & XUrgencyHint))
@@ -223,7 +223,7 @@ void manageWindowE(Window w) {
   Client *cli = allocCliAndSetRulesR(w, &wa);
   if (!cli)
     exitErrorS("manageWindowE - could not alloc Client and set rules");
-  ClientPtrPtr c = addClientStartSS(cli);
+  ClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
     exitErrorS("manageWindowE - could not add client");
 
@@ -233,9 +233,9 @@ void manageWindowE(Window w) {
     CLI_GET(c).freeSetterFn = defFreeR;
     ClientPtrPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
-      centerRectangleInRegionG(getRegionClientSS(c), getRegionClientSS(t));
+      centerRectangleInRegionG(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
     else
-      centerRectangleInRegionG(getRegionClientSS(c), &screenRegion);
+      centerRectangleInRegionG(NeuroCoreClientGetRegion(c), &screenRegion);
   }
 
   // Set event mask
@@ -247,7 +247,7 @@ void manageWindowE(Window w) {
   XMapWindow(display, CLI_GET(c).win);
   grabButtonsS(CLI_GET(c).win);
   const int ws = CLI_GET(c).ws;
-  if (!isCurrStackSS(ws))
+  if (!NeuroCoreStackIsCurr(ws))
     return;
   rmvEnterNotifyMaskW(ws);
   doRules = True;
@@ -262,7 +262,7 @@ void unmanageCliE(ClientPtrPtr c) {
   const int ws = CLI_GET(c).ws;
   rmvEnterNotifyMaskW(ws);
   unapplyRuleR(c);
-  Client *cli = rmvClientSS(c);
+  Client *cli = NeuroCoreRemoveClient(c);
   freeClientT(cli);
   runCurrL(ws);
   updateFocusW(ws);

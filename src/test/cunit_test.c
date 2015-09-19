@@ -24,13 +24,13 @@
 //----------------------------------------------------------------------------------------------------------------------
 int init_stackset_suite(void) {
   setConfigS(&defWMConfig);
-  if (!initSS())
+  if (!NeuroCoreInit())
     return -1;
   return 0;
 }
 
 int clean_stackset_suite(void) {
-  stopSS();
+  NeuroCoreStop();
   return 0;
 }
 
@@ -47,11 +47,11 @@ void add_remove_client(void) {
   CU_ASSERT_PTR_NOT_NULL(cli);
 
   // Add it to the stackset
-  ClientPtrPtr c = addClientStartSS(cli);
+  ClientPtrPtr c = NeuroCoreAddClientStart(cli);
   CU_ASSERT_PTR_NOT_NULL(c);
 
   // Remove it from the stackset
-  Client *cli2 = rmvClientSS(c);
+  Client *cli2 = NeuroCoreRemoveClient(c);
   CU_ASSERT_PTR_NOT_NULL(cli2);
   CU_ASSERT(cli == cli2);
 
@@ -60,8 +60,8 @@ void add_remove_client(void) {
 }
 
 void set_curr_stack(void) {
-  setCurrStackSS(1);
-  CU_ASSERT(getCurrStackSS() == 1);
+  NeuroCoreSetCurrStack(1);
+  CU_ASSERT(NeuroCoreGetCurrStack() == 1);
 }
 
 

@@ -32,7 +32,7 @@ static Arrange *allocArrange(int ws, Layout *l) {
   Rectangle **rs = NULL, **frs = NULL;
   int i = 0, size = 0;
   ClientPtrPtr c;
-  for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c)) {
+  for (c=NeuroCoreStackGetHeadClient(ws); c; c=NeuroCoreClientGetNext(c)) {
     if (CLI_GET(c).freeSetterFn == notFreeR && !CLI_GET(c).fixPos && !CLI_GET(c).isHidden && !CLI_GET(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
@@ -41,7 +41,7 @@ static Arrange *allocArrange(int ws, Layout *l) {
         if (!rs || !frs)
           return NULL;
       }
-      rs[ i ] = getRegionClientSS(c);
+      rs[ i ] = NeuroCoreClientGetRegion(c);
       frs[ i ] = &(CLI_GET(c).floatRegion);
       ++i;
     }
@@ -50,7 +50,7 @@ static Arrange *allocArrange(int ws, Layout *l) {
   if (!a)
     return NULL;
   a->size = i;
-  getRelativeRectangleG(&a->region, getRegionStackSS(ws), l->region);
+  getRelativeRectangleG(&a->region, NeuroCoreStackGetRegion(ws), l->region);
   a->cliRegions = rs;
   a->cliFloatRegions = frs;
   a->arrangeSettings = l->arrangeSettings;
@@ -125,7 +125,7 @@ static Arrange *reflectYMod(Arrange *a) {
 //----------------------------------------------------------------------------------------------------------------------
 
 void runL(int ws, int i) {
-  Layout *l = getLayoutStackSS(ws, i);
+  Layout *l = NeuroCoreStackGetLayout(ws, i);
   Arrange *a = allocArrange(ws, l);
   if (!a)
     exitErrorS("runLayoutL - could not run layout");
@@ -143,32 +143,32 @@ void runL(int ws, int i) {
 }
 
 void runCurrL(int ws) {
-  runL(ws, getLayoutIdxStackSS(ws));
+  runL(ws, NeuroCoreStackGetLayoutIdx(ws));
 }
 
 void toggleModL(int ws, int i, unsigned int mod) {
-  Layout *l = getLayoutStackSS(ws, i);
+  Layout *l = NeuroCoreStackGetLayout(ws, i);
   l->mod ^= mod;
   runL(ws, i);
   updateW(ws);
 }
 
 void toggleModCurrL(int ws, unsigned int mod) {
-  toggleModL(ws, getLayoutIdxStackSS(ws), mod);
+  toggleModL(ws, NeuroCoreStackGetLayoutIdx(ws), mod);
 }
 
 void toggleL(int ws, int i) {
   int tl = i;
-  if (isCurrTogLayoutStackSS(ws))
+  if (NeuroCoreStackIsCurrToggledLayout(ws))
     tl = -1;
-  setTogLayoutStackSS(ws, tl);
+  NeuroCoreStackSetToggledLayout(ws, tl);
   runCurrL(ws);
   updateFocusW(ws);
 }
 
 void changeL(int ws, int s) {
-  int val = getLayoutIdxStackSS(ws) + s;
-  setLayoutStackSS(ws, val);
+  int val = NeuroCoreStackGetLayoutIdx(ws) + s;
+  NeuroCoreStackSetLayoutIdx(ws, val);
   runCurrL(ws);
   updateFocusW(ws);
 }
@@ -177,21 +177,21 @@ void resetL(int ws) {
   Layout *l;
   const LayoutConf *lc;
   int i;
-  for (i = 0; i < getNumLayoutStackSS(ws); ++i) {
-    l = getLayoutStackSS(ws, i);
-    lc = getLayoutConfStackSS(ws, i);
+  for (i = 0; i < NeuroCoreStackGetNumLayouts(ws); ++i) {
+    l = NeuroCoreStackGetLayout(ws, i);
+    lc = NeuroCoreStackGetLayoutConf(ws, i);
     l->mod = lc->mod;
     l->followMouse = lc->followMouse;
     memmove(l->arrangeSettings, lc->arrangeSettings, sizeof(GenericArg)*ARRSET_MAX);
   }
   tileW(ws);
-  setLayoutStackSS(ws, 0);
+  NeuroCoreStackSetLayoutIdx(ws, 0);
   runCurrL(ws);
   updateFocusW(ws);
 }
 
 void increaseMasterL(int ws, int size) {
-  GenericArg *as = getCurrLayoutStackSS(ws)->arrangeSettings;
+  GenericArg *as = NeuroCoreStackGetCurrLayout(ws)->arrangeSettings;
   const int res = as[ 0 ].int_ + size;
   if (res < 1)
     return;
@@ -201,7 +201,7 @@ void increaseMasterL(int ws, int size) {
 }
 
 void resizeMasterL(int ws, float factor) {
-  GenericArg *as = getCurrLayoutStackSS(ws)->arrangeSettings;
+  GenericArg *as = NeuroCoreStackGetCurrLayout(ws)->arrangeSettings;
   const float newmsize = factor * as[ 2 ].float_ + as[ 1 ].float_;
   if (newmsize <= 0.0f || newmsize >= 1.0f)
     return;

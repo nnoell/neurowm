@@ -68,8 +68,8 @@ static Bool setTitleAtom(Client *c, Atom atom) {
 
 static ClientPtrPtr queryPoint(int ws, int x, int y) {
   ClientPtrPtr c;
-  for (c=getHeadClientStackSS(ws); c; c=getNextClientSS(c))
-    if (isPointInRectangleG(getRegionClientSS(c), x, y))
+  for (c=NeuroCoreStackGetHeadClient(ws); c; c=NeuroCoreClientGetNext(c))
+    if (isPointInRectangleG(NeuroCoreClientGetRegion(c), x, y))
       break;
   return c;
 }
@@ -120,17 +120,17 @@ void updateC(ClientPtrPtr c, const void *data) {
 
   // Free windows
   if (CLI_GET(c).freeSetterFn != notFreeR)
-    CLI_GET(c).freeSetterFn(getRegionClientSS(c), &screenRegion);
+    CLI_GET(c).freeSetterFn(NeuroCoreClientGetRegion(c), &screenRegion);
 
   // Fullscreen windows
   Rectangle r;
   if (CLI_GET(c).isFullScreen)
     memmove(&r, &screenRegion, sizeof(Rectangle));
   else
-    memmove(&r, getRegionClientSS(c), sizeof(Rectangle));
+    memmove(&r, NeuroCoreClientGetRegion(c), sizeof(Rectangle));
 
   // Set border width and border gap
-  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   const int borderWidth = l->borderWidthSetterFn(c);
   const int borderGap = l->borderGapSetterFn(c);
   setRectangleBorderWidthAndGapG(&r, borderWidth, borderGap);
@@ -178,7 +178,7 @@ void hideC(ClientPtrPtr c, const void *doRules) {  // Move off screen
     return;
   if (*(Bool *)doRules)
     unapplyRuleR(c);
-  Rectangle *regc = getRegionClientSS(c);
+  Rectangle *regc = NeuroCoreClientGetRegion(c);
   regc->x += xRes;
   regc->y += yRes;
   XMoveWindow(display, CLI_GET(c).win, regc->x, regc->y);
@@ -190,7 +190,7 @@ void showC(ClientPtrPtr c, const void *doRules) {  // Move back to screen
     return;
   if (!CLI_GET(c).isHidden)
     return;
-  Rectangle *regc = getRegionClientSS(c);
+  Rectangle *regc = NeuroCoreClientGetRegion(c);
   regc->x -= xRes;
   regc->y -= yRes;
   if (*(Bool *)doRules)
@@ -236,12 +236,12 @@ void minimizeC(ClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
-  setCurrClientSS(getNextClientSS(c));
+  NeuroCoreSetCurrClient(NeuroCoreClientGetNext(c));
   unapplyRuleR(c);
-  Client *cli = rmvClientSS(c);
+  Client *cli = NeuroCoreRemoveClient(c);
   if (!cli)
     return;
-  if (!pushMinimizedClientSS(cli))
+  if (!NeuroCorePushMinimizedClient(cli))
     exitErrorS("minimizeC - could not minimize client");
   XMoveWindow(display, cli->win, xRes + 1, yRes + 1);  // Move client off screen
   runCurrL(cli->ws);
@@ -343,7 +343,7 @@ void freeMoveC(ClientPtrPtr c, const void *freeSetterFn) {
     return;
   focusClientW(c, selfC, NULL);
   freeC(c, freeSetterFn);
-  Rectangle *r = getRegionClientSS(c);
+  Rectangle *r = NeuroCoreClientGetRegion(c);
   int px = 0, py = 0;
   getPointerC(&px, &py);
   processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionMove);
@@ -354,7 +354,7 @@ void freeResizeC(ClientPtrPtr c, const void *freeSetterFn) {
     return;
   focusClientW(c, selfC, NULL);
   freeC(c, freeSetterFn);
-  Rectangle *r = getRegionClientSS(c);
+  Rectangle *r = NeuroCoreClientGetRegion(c);
   int px = 0, py = 0;
   getPointerC(&px, &py);
   processXMotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, XMotionResize);
@@ -363,7 +363,7 @@ void freeResizeC(ClientPtrPtr c, const void *freeSetterFn) {
 
 // Client getters
 ClientPtrPtr getFocusedC() {
-  return getCurrClientStackSS(getCurrStackSS());
+  return NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
 }
 
 ClientPtrPtr getPointerC(int *x, int *y) {
@@ -386,56 +386,56 @@ ClientPtrPtr selfC(const ClientPtrPtr c) {
 
 ClientPtrPtr nextC(const ClientPtrPtr c) {
   assert(c);
-  ClientPtrPtr n = getNextClientSS(c);
+  ClientPtrPtr n = NeuroCoreClientGetNext(c);
   if (!n)
-    n = getHeadClientStackSS(CLI_GET(c).ws);
+    n = NeuroCoreStackGetHeadClient(CLI_GET(c).ws);
   return n;
 }
 
 ClientPtrPtr prevC(const ClientPtrPtr c) {
   assert(c);
-  ClientPtrPtr p = getPrevClientSS(c);
+  ClientPtrPtr p = NeuroCoreClientGetPrev(c);
   if (!p)
-    p = getLastClientStackSS(CLI_GET(c).ws);
+    p = NeuroCoreStackGetLastClient(CLI_GET(c).ws);
   return p;
 }
 
 ClientPtrPtr oldC(const ClientPtrPtr c) {
   assert(c);
-  return getPrevClientStackSS(CLI_GET(c).ws);
+  return NeuroCoreStackGetPrevClient(CLI_GET(c).ws);
 }
 
 ClientPtrPtr headC(const ClientPtrPtr c) {
   assert(c);
-  return getHeadClientStackSS(CLI_GET(c).ws);
+  return NeuroCoreStackGetHeadClient(CLI_GET(c).ws);
 }
 
 ClientPtrPtr lastC(const ClientPtrPtr c) {
   assert(c);
-  return getLastClientStackSS(CLI_GET(c).ws);
+  return NeuroCoreStackGetLastClient(CLI_GET(c).ws);
 }
 
 ClientPtrPtr upC(const ClientPtrPtr c) {
   assert(c);
-  Rectangle *r = getRegionClientSS(c);
+  Rectangle *r = NeuroCoreClientGetRegion(c);
   return queryPoint(CLI_GET(c).ws, r->x+1, r->y-1);
 }
 
 ClientPtrPtr downC(const ClientPtrPtr c) {
   assert(c);
-  Rectangle *r = getRegionClientSS(c);
+  Rectangle *r = NeuroCoreClientGetRegion(c);
   return queryPoint(CLI_GET(c).ws, r->x+1, r->y + r->h + 1);
 }
 
 ClientPtrPtr leftC(const ClientPtrPtr c) {
   assert(c);
-  Rectangle *r = getRegionClientSS(c);
+  Rectangle *r = NeuroCoreClientGetRegion(c);
   return queryPoint(CLI_GET(c).ws, r->x-1, r->y+1);
 }
 
 ClientPtrPtr rightC(const ClientPtrPtr c) {
   assert(c);
-  Rectangle *r = getRegionClientSS(c);
+  Rectangle *r = NeuroCoreClientGetRegion(c);
   return queryPoint(CLI_GET(c).ws, r->x + r->w + 1, r->y+1);
 }
 
@@ -461,20 +461,20 @@ Bool testIsFixedC(const ClientPtrPtr c, const void *p) {
 // Color Setters
 Color onlyCurrBorderColorC(const ClientPtrPtr c) {
   assert(c);
-  if (isCurrClientSS(c))
+  if (NeuroCoreClientIsCurr(c))
     return currBorderColorS;
   return normBorderColorS;
 }
 
 Color allBorderColorC(const ClientPtrPtr c) {
   assert(c);
-  if (isCurrClientSS(c))
+  if (NeuroCoreClientIsCurr(c))
     return currBorderColorS;
   else if (CLI_GET(c).isUrgent)
     return urgtBorderColorS;
   else if (CLI_GET(c).freeSetterFn != notFreeR)
     return freeBorderColorS;
-  else if (isPrevClientSS(c))
+  else if (NeuroCoreClientIsPrev(c))
     return prevBorderColorS;
   return normBorderColorS;
 }
@@ -502,13 +502,13 @@ int smartBorderWidthC(const ClientPtrPtr c) {
     return 0;
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return borderWidthS;
-  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (l->arrangerFn == floatArrangerL)
     return borderWidthS;
   if (findFixedClientW(CLI_GET(c).ws))
     return borderWidthS;
-  Rectangle *rc = getRegionClientSS(c);
-  Rectangle *rs = getRegionStackSS(CLI_GET(c).ws);
+  Rectangle *rc = NeuroCoreClientGetRegion(c);
+  Rectangle *rs = NeuroCoreStackGetRegion(CLI_GET(c).ws);
   if ((rc->w == rs->w && rc->h == rs->h) || (rc->w == screenRegion.w && rc->h == screenRegion.h))
     return 0;
   return borderWidthS;
@@ -516,7 +516,7 @@ int smartBorderWidthC(const ClientPtrPtr c) {
 
 int onlyCurrBorderWidthC(const ClientPtrPtr c) {
   assert(c);
-  if (isCurrClientSS(c))
+  if (NeuroCoreClientIsCurr(c))
     return borderWidthS;
   return 0;
 }
@@ -527,7 +527,7 @@ int alwaysBorderGapC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
-  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (CLI_GET(c).isFullScreen || CLI_GET(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
     return 0;
   return borderGapS;
@@ -542,11 +542,11 @@ int smartBorderGapC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
-  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (CLI_GET(c).isFullScreen || CLI_GET(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
     return 0;
-  Rectangle *a = getRegionClientSS(c);
-  Rectangle *as = getRegionStackSS(CLI_GET(c).ws);
+  Rectangle *a = NeuroCoreClientGetRegion(c);
+  Rectangle *as = NeuroCoreStackGetRegion(CLI_GET(c).ws);
   if ((a->w == as->w && a->h == as->h) || (a->w == screenRegion.w && a->h == screenRegion.h))
     return 0;
   return borderGapS;
@@ -556,10 +556,10 @@ int onlyCurrBorderGapC(const ClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).freeSetterFn != notFreeR)
     return 0;
-  Layout *l = getCurrLayoutStackSS(CLI_GET(c).ws);
+  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (CLI_GET(c).isFullScreen || CLI_GET(c).freeSetterFn != notFreeR || l->arrangerFn == floatArrangerL)
     return 0;
-  if (!isCurrClientSS(c))
+  if (!NeuroCoreClientIsCurr(c))
     return 0;
   return borderGapS;
 }

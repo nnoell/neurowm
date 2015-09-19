@@ -117,12 +117,12 @@ static const CA calendarCA = {
 // Nnoell Loggers
 void nnoellCurrLayoutLoggerT(char *str) {
   assert(str);
-  int ws = getCurrStackSS();
-  int idx = getLayoutIdxStackSS(ws);
-  const LayoutConf *lc = getCurrLayoutConfStackSS(ws);
+  int ws = NeuroCoreGetCurrStack();
+  int idx = NeuroCoreStackGetLayoutIdx(ws);
+  const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(ws);
   if (lc) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-    if (isCurrTogLayoutStackSS(ws))
+    if (NeuroCoreStackIsCurrToggledLayout(ws))
       snprintf(tmp2, LOGGER_MAX, "^fg(" NNOELL_colorRedP ")%i^fg(" NNOELL_colorGrayP ")|^fg()%s^fg()", idx + 1,
           lc->name);
     else
@@ -136,8 +136,8 @@ void nnoellCurrLayoutLoggerT(char *str) {
 
 void nnoellCurrLayoutModLoggerT(char *str) {
   assert(str);
-  int ws = getCurrStackSS();
-  Layout *l = getCurrLayoutStackSS(ws);
+  int ws = NeuroCoreGetCurrStack();
+  Layout *l = NeuroCoreStackGetCurrLayout(ws);
   if (l) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     tmp[ 0 ] = '\0';
@@ -159,12 +159,12 @@ void nnoellCurrLayoutModLoggerT(char *str) {
 
 void nnoellCurrWorkspaceLoggerT(char *str) {
   assert(str);
-  int ws = getCurrStackSS();
-  const char *name = getNameStackSS(ws);
+  int ws = NeuroCoreGetCurrStack();
+  const char *name = NeuroCoreStackGetName(ws);
   if (name) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     snprintf(tmp2, LOGGER_MAX, "^fg(" NNOELL_colorGreenP ")%i^fg(" NNOELL_colorGrayP ")|^fg()%s^fg()",
-        (ws + 1) % getSizeSS(), name);
+        (ws + 1) % NeuroCoreGetSize(), name);
     wrapDzenBoxD(tmp, tmp2, &WhiteBoxPP);
     wrapDzenBoxD(str, "WORKSPACE", &Blue2BoxPP);
     strncat(str, tmp, LOGGER_MAX - strlen(str) - 1);
@@ -173,7 +173,7 @@ void nnoellCurrWorkspaceLoggerT(char *str) {
 
 void nnoellCurrTitleLoggerT(char *str) {
   assert(str);
-  ClientPtrPtr c = getCurrClientStackSS(getCurrStackSS());
+  ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     wrapDzenBoxD(tmp, CLI_GET(c).title, &WhiteBoxPP);
@@ -185,18 +185,18 @@ void nnoellCurrTitleLoggerT(char *str) {
 
 void nnoellCurrWorkspaceListLoggerT(char *str) {
   assert(str);
-  int size = getSizeSS();
+  int size = NeuroCoreGetSize();
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   int i;
   for (i = 0; i < size; ++i) {
     snprintf(tmp, LOGGER_MAX, "%i", (i+1) % size);
     snprintf(tmp3, LOGGER_MAX, "/usr/bin/xdotool key super+%s", tmp);
     static const CA wslstCA = { tmp3, tmp3, tmp3, tmp3, tmp3 };
-    if (i == getCurrStackSS())
+    if (i == NeuroCoreGetCurrStack())
       wrapDzenBoxD(tmp2, tmp, &Blue2BBoxPP);
     else if (findUrgentClientW(i))
       wrapDzenBoxD(tmp2, tmp, &Green2BBoxPP);
-    else if (!isEmptyStackSS(i))
+    else if (!NeuroCoreStackIsEmpty(i))
       wrapDzenBoxD(tmp2, tmp, &White2BBoxPP);
     else
       wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);
@@ -264,7 +264,7 @@ void nnoellUptimeLoggerT(char *str) {
 
 void nnoellCurrStackSizeLoggerT(char *str) {
   assert(str);
-  int size = getSizeStackSS(getCurrStackSS());
+  int size = NeuroCoreStackGetSize(NeuroCoreGetCurrStack());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   snprintf(tmp, LOGGER_MAX, "%i", size);
   wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);
@@ -274,7 +274,7 @@ void nnoellCurrStackSizeLoggerT(char *str) {
 
 void nnoellCurrMinimizedCountLoggerT(char *str) {
   assert(str);
-  int count = getMinimizedNumStackSS(getCurrStackSS());
+  int count = NeuroCoreStackGetMinimizedNum(NeuroCoreGetCurrStack());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   snprintf(tmp, LOGGER_MAX, "%i", count);
   wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);

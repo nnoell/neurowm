@@ -395,22 +395,22 @@ void wifiStrengthD(char *str) {
 
 void currWSLoggerD(char *str) {
   assert(str);
-  const char *name = getNameStackSS(getCurrStackSS());
+  const char *name = NeuroCoreStackGetName(NeuroCoreGetCurrStack());
   if (name)
     strncpy(str, name, LOGGER_MAX);
 }
 
 void currLayoutLoggerD(char *str) {
   assert(str);
-  int ws = getCurrStackSS();
-  const LayoutConf *lc = getCurrLayoutConfStackSS(ws);
+  int ws = NeuroCoreGetCurrStack();
+  const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(ws);
   if (lc)
     strncpy(str, lc->name, LOGGER_MAX);
 }
 
 void currTitleLoggerD(char *str) {
   assert(str);
-  ClientPtrPtr c = getCurrClientStackSS(getCurrStackSS());
+  ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c)
     strncpy(str, CLI_GET(c).title, LOGGER_MAX);
 }
