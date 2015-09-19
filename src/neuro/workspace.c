@@ -88,7 +88,7 @@ static void sendClient(ClientPtrPtr c, const void *data) {
     memmove(NeuroCoreClientGetRegion(c2), &oldRegion, sizeof(Rectangle));
   if (ws == currws)
     NeuroClientShow(c2, (const void *)&doRules);
-  runCurrL(currws);
+  NeuroLayoutRunCurr(currws);
   updateFocusW(currws);
 }
 
@@ -105,7 +105,7 @@ void changeW(int ws) {
     return;
   hideW(old, True);
   showW(new, True);
-  runCurrL(new);
+  NeuroLayoutRunCurr(new);
   updateFocusW(new);
 }
 
@@ -195,7 +195,7 @@ void restoreLastMinimizedW(int ws) {
     exitErrorS("restoreLastMinimizedW - could not add client");
   applyRuleR(c);
   NeuroCoreSetCurrClient(c);
-  runCurrL(CLI_GET(c).ws);
+  NeuroLayoutRunCurr(CLI_GET(c).ws);
   updateFocusW(CLI_GET(c).ws);
 }
 

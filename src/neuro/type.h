@@ -232,7 +232,7 @@ struct Layout {
   const BorderSetterFn borderWidthSetterFn;
   const BorderSetterFn borderGapSetterFn;
   const float *const region;
-  unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
+  unsigned int mod;  // Can be: nullModL | mirrModL | reflXModL | reflYModL
   Bool followMouse;
   GenericArg arrangeSettings[ ARRSET_MAX ];
 };
@@ -249,7 +249,7 @@ struct LayoutConf {
   const BorderSetterFn borderWidthSetterFn;
   const BorderSetterFn borderGapSetterFn;
   const float region[ 4 ];
-  const unsigned int mod;  // Can be: notModL | mirrModL | reflXModL | reflYModL
+  const unsigned int mod;  // Can be: nullModL | mirrModL | reflXModL | reflYModL
   const Bool followMouse;
   const GenericArg arrangeSettings[ ARRSET_MAX ];
 };

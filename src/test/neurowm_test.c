@@ -64,24 +64,24 @@ static const ActionChain myEndUpHook[] = { CHAIN_NULL(NeuroActionChainStopCpuCal
 
 // LAYOUTCONFS (NAME, ARRANGERF, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
 static const LayoutConf tile[] = { {
-  "Tile", tallArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  "Tile", NeuroLayoutArrangerTall, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
+  nullModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf mirr[] = { {
-  "Mirr", tallArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
+  "Mirr", NeuroLayoutArrangerTall, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
   mirrModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf grid[] = { {
-  "Grid", gridArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
+  "Grid", NeuroLayoutArrangerGrid, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
   mirrModL|reflXModL|reflYModL, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf full[] = { {
-  "Full",  fullArrangerL,  NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart,  NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  "Full",  NeuroLayoutArrangerFull,  NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart,  NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
+  nullModL, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf floa[] = { {
-  "Float", floatArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterAlways, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
-  notModL, False, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  "Float", NeuroLayoutArrangerFloat, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterAlways, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
+  nullModL, False, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 
 // LAYOUTSET

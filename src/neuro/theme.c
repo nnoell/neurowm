@@ -141,7 +141,7 @@ void nnoellCurrLayoutModLoggerT(char *str) {
   if (l) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     tmp[ 0 ] = '\0';
-    if (l->mod == notModL) {
+    if (l->mod == nullModL) {
       strncpy(tmp, "Norm", LOGGER_MAX);
     } else {
       if (l->mod & mirrModL)

@@ -80,7 +80,7 @@ const Action const NeuroActionResetLayout[] = { {
 const Action const NeuroActionToggleLayout[] = { {
     NeuroActionHandlerToggleLayout, ARG_INT(0) } };
 const Action const NeuroActionToggleModLayout[] = { {
-    NeuroActionHandlerToggleModLayout, ARG_UINT(notModL) } };
+    NeuroActionHandlerToggleModLayout, ARG_UINT(nullModL) } };
 const Action const NeuroActionIncreaseMasterLayout[] = { {
     NeuroActionHandlerIncreaseMasterLayout, ARG_INT(1) } };
 const Action const NeuroActionResizeMasterLayout[] = { {
@@ -263,7 +263,7 @@ void NeuroActionHandlerStopCpuCalc(GenericArg null_arg) {
 void NeuroActionHandlerChangeLayout(GenericArg int_arg) {
   const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
-  changeL(ws, ARG_INT_GET(int_arg));
+  NeuroLayoutChange(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
 }
 
@@ -271,35 +271,35 @@ void NeuroActionHandlerResetLayout(GenericArg null_arg) {
   (void)null_arg;
   const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
-  resetL(ws);
+  NeuroLayoutReset(ws);
   addEnterNotifyMaskW(ws);
 }
 
 void NeuroActionHandlerToggleLayout(GenericArg int_arg) {
   const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
-  toggleL(ws, ARG_INT_GET(int_arg));
+  NeuroLayoutToggle(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
 }
 
 void NeuroActionHandlerToggleModLayout(GenericArg uint_arg) {
   const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
-  toggleModCurrL(ws, ARG_INT_GET(uint_arg));
+  NeuroLayoutToggleModCurr(ws, ARG_INT_GET(uint_arg));
   addEnterNotifyMaskW(ws);
 }
 
 void NeuroActionHandlerIncreaseMasterLayout(GenericArg int_arg) {
   const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
-  increaseMasterL(ws, ARG_INT_GET(int_arg));
+  NeuroLayoutIncreaseMaster(ws, ARG_INT_GET(int_arg));
   addEnterNotifyMaskW(ws);
 }
 
 void NeuroActionHandlerResizeMasterLayout(GenericArg float_arg) {
   const int ws = NeuroCoreGetCurrStack();
   rmvEnterNotifyMaskW(ws);
-  resizeMasterL(ws, ARG_FLOAT_GET(float_arg));
+  NeuroLayoutResizeMaster(ws, ARG_FLOAT_GET(float_arg));
   addEnterNotifyMaskW(ws);
 }
 
