@@ -70,7 +70,7 @@ static Bool stopUpdateWhile = False;
 //----------------------------------------------------------------------------------------------------------------------
 
 // CPU Calculation
-static int getNumCpus(const char *file) {
+static int get_num_cpus(const char *file) {
   assert(file);
   FILE *fd = fopen(file, "r");
   if (fd == NULL)
@@ -86,7 +86,7 @@ static int getNumCpus(const char *file) {
   return i;
 }
 
-static void getPercInfo(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, long prev_total) {
+static void get_perc_info(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, long prev_total) {
   assert(cpu_info);
   assert(cpu_vals);
   cpu_info->idle = cpu_vals[ 3 ];
@@ -99,7 +99,7 @@ static void getPercInfo(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, long 
   cpu_info->perc = (100 * (diffTotal - diffIdle)) / diffTotal;
 }
 
-static void updateCpuPerc(const char *file, int ncpus) {
+static void update_cpu_perc(const char *file, int ncpus) {
   assert(file);
   long cpusFileInfo[ ncpus ][ CPU_MAX_VALS ];
   long prevIdle[ ncpus ], prevTotal[ ncpus ];
@@ -123,7 +123,7 @@ static void updateCpuPerc(const char *file, int ncpus) {
           cpusFileInfo[ i ] + 6, cpusFileInfo[ i ] + 7,
           cpusFileInfo[ i ] + 8, cpusFileInfo[ i ] + 9))
         return;
-      getPercInfo(cpusInfo + i, cpusFileInfo[ i ], prevIdle[ i ], prevTotal[ i ]);
+      get_perc_info(cpusInfo + i, cpusFileInfo[ i ], prevIdle[ i ], prevTotal[ i ]);
       prevIdle[ i ] = cpusInfo[ i ].idle;
       prevTotal[ i ] = cpusInfo[ i ].total;
     }
@@ -133,19 +133,19 @@ static void updateCpuPerc(const char *file, int ncpus) {
   }
 }
 
-static void *updateCpuPercThread(void *args) {
+static void *update_cpu_perc_thread(void *args) {
   (void)args;
-  updateCpuPerc(CPU_FILE_PATH, numCpus);
+  update_cpu_perc(CPU_FILE_PATH, numCpus);
   pthread_exit(NULL);
 }
 
 static Bool initCpuPercThread() {
   pthread_attr_init(&threadAttr);
   pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&threadID, &threadAttr, updateCpuPercThread, NULL);
+  return pthread_create(&threadID, &threadAttr, update_cpu_perc_thread, NULL);
 }
 
-static void stopCpuPercThread() {
+static void stop_cpu_perc_thread() {
   pthread_attr_destroy(&threadAttr);
   stopUpdateCpuPercWhile = True;
   void *status;
@@ -154,7 +154,7 @@ static void stopCpuPercThread() {
 }
 
 // Dzen
-static char **strToCmd(char **cmd, char *str, const char *sep) {
+static char **str_to_cmd(char **cmd, char *str, const char *sep) {
   assert(cmd);
   assert(str);
   assert(sep);
@@ -169,16 +169,16 @@ static char **strToCmd(char **cmd, char *str, const char *sep) {
   return cmd;
 }
 
-static char **getDzenCmd(char **cmd, char *line, const DzenFlags *df) {
+static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df) {
   assert(cmd);
   assert(line);
   assert(df);
   snprintf(line, DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
       df->x, df->y, df->w, df->h, df->fgColor, df->bgColor, df->align, df->font, df->event, df->extras);
-  return strToCmd(cmd, line, " \t\n");
+  return str_to_cmd(cmd, line, " \t\n");
 }
 
-static void updateDzenPanel(const DzenPanel *dp, int fd) {
+static void update_dzen_panel(const DzenPanel *dp, int fd) {
   assert(dp);
   char line[ DZEN_LINE_MAX ] = "\0";
   int i;
@@ -193,7 +193,7 @@ static void updateDzenPanel(const DzenPanel *dp, int fd) {
   write(fd, line, strlen(line));
 }
 
-static void *updateThread(void *args) {
+static void *update_thread(void *args) {
   (void)args;
   const DzenPanel *dp;
   int i = 0, j;
@@ -204,7 +204,7 @@ static void *updateThread(void *args) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
-        updateDzenPanel(dp, PIP.pi[ j ].output);
+        update_dzen_panel(dp, PIP.pi[ j ].output);
     }
     ++i;
     i %= PIP.resetRate;
@@ -213,15 +213,15 @@ static void *updateThread(void *args) {
   pthread_exit(NULL);
 }
 
-static Bool initUpdateThread() {
+static Bool init_update_thread() {
   if (PIP.resetRate <= 0)
     return True;
   pthread_attr_init(&PIP.attr);
   pthread_attr_setdetachstate(&PIP.attr, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&PIP.updateThread, &PIP.attr, updateThread, NULL) == 0;
+  return pthread_create(&PIP.updateThread, &PIP.attr, update_thread, NULL) == 0;
 }
 
-static void stopUpdateThread() {
+static void stop_update_thread() {
   if (PIP.resetRate <= 0)
     return;
   pthread_attr_destroy(&PIP.attr);
@@ -236,35 +236,8 @@ static void stopUpdateThread() {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// CPU Calculation
-void startCpuCalcD() {
-  numCpus = getNumCpus(CPU_FILE_PATH);
-  cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
-  if (!cpusInfo)
-    exitErrorS("startCpuCalcD - could not alloc cpusInfo");
-  if (initCpuPercThread())
-    exitErrorS("startCpuCalcD - could not init thread to update cpus");
-}
-
-void stopCpuCalcD() {
-  stopCpuPercThread();
-  free(cpusInfo);
-  cpusInfo = NULL;
-}
-
-void cpuPercUsageLoggerD(char *str) {
-  assert(str);
-  char buf[ LOGGER_MAX ];
-  int i;
-  for (i = 0; i < numCpus; ++i) {
-    snprintf(buf, LOGGER_MAX, "%i%% ", cpusInfo[ i ].perc);
-    strncat(str, buf, LOGGER_MAX - strlen(str) - 1);
-  }
-  str[ strlen(str) - 1 ] = '\0';
-}
-
 // Dzen
-Bool initD() {
+Bool NeuroDzenInit() {
   PIP.numPanels = ptrArrayLengthT((const void const *const *)dzenPanelSetS);
   PIP.pi = (PipeInfo *)calloc(PIP.numPanels, sizeof(PipeInfo));
   PIP.updateThread = -1;
@@ -279,43 +252,90 @@ Bool initD() {
     dp = dzenPanelSetS[ i ];
     if (dp->refreshRate > PIP.resetRate)
       PIP.resetRate *= dp->refreshRate;
-    getDzenCmd(dzenCmd, line, dp->df);
+    get_dzen_cmd(dzenCmd, line, dp->df);
     PIP.pi[ i ].output = spawnPipeS((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
     if (PIP.pi[ i ].output == -1)
       return False;
   }
-  if (!initUpdateThread())
-    exitErrorS("initD - could not init thread to update panels");
-  updateD(False);
+  if (!init_update_thread())
+    exitErrorS("NeuroDzenInit - could not init thread to update panels");
+  NeuroDzenUpdate(False);
   return True;
 }
 
-void stopD() {
-  stopUpdateThread();
+void NeuroDzenStop() {
+  stop_update_thread();
   int i;
   for (i = 0; i < PIP.numPanels; ++i)
     if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)
-      perror("stopD - could not kill panels");
+      perror("NeuroDzenStop - could not kill panels");
   free(PIP.pi);
   PIP.pi = NULL;
 }
 
-void updateD(Bool onlyEvent) {
+void NeuroDzenUpdate(Bool onlyEvent) {
   const DzenPanel *dp;
   int i;
   for (i=0; i < PIP.numPanels; ++i) {
     dp = dzenPanelSetS[ i ];
     if (onlyEvent) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
-        updateDzenPanel(dp, PIP.pi[ i ].output);
+        update_dzen_panel(dp, PIP.pi[ i ].output);
     } else {
-      updateDzenPanel(dp, PIP.pi[ i ].output);
+      update_dzen_panel(dp, PIP.pi[ i ].output);
     }
   }
 }
 
+void NeuroDzenStartCpuCalc() {
+  numCpus = get_num_cpus(CPU_FILE_PATH);
+  cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
+  if (!cpusInfo)
+    exitErrorS("NeuroDzenStartCpuCalc - could not alloc cpusInfo");
+  if (initCpuPercThread())
+    exitErrorS("NeuroDzenStartCpuCalc - could not init thread to update cpus");
+}
+
+void NeuroDzenStopCpuCalc() {
+  stop_cpu_perc_thread();
+  free(cpusInfo);
+  cpusInfo = NULL;
+}
+
+void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b) {
+  assert(dst);
+  assert(src);
+  assert(b);
+  snprintf(dst, LOGGER_MAX,
+      "^fg(%s)^i(%s)^ib(1)^r(1920x%i)^p(-1920x)^fg(%s)%s^fg(%s)^i(%s)^fg(%s)^r(1920x%i)^p(-1920)^fg()^ib(0)",
+      b->boxColor, b->leftIcon, b->boxHeight, b->fgColor, src, b->boxColor, b->rightIcon, b->bgColor, b->boxHeight);
+}
+
+void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca) {
+  assert(dst);
+  assert(src);
+  assert(ca);
+  snprintf(dst, LOGGER_MAX, "^ca(1,%s)^ca(2,%s)^ca(3,%s)^ca(4,%s)^ca(5,%s)%s^ca()^ca()^ca()^ca()^ca()",
+      ca->leftClick, ca->middleClick, ca->rightClick, ca->wheelUp, ca->wheelDown, src);
+}
+
+int NeuroDzenReadFile(char *buf, const char *fileName) {
+  assert(buf);
+  assert(fileName);
+  FILE *fd;
+  fd = fopen(fileName, "r");
+  if (!fd)
+    return -1;
+  fgets(buf, LOGGER_MAX, fd);
+  char *last = buf + strlen(buf) - 1;
+  if (*last == '\n')
+    *last = '\0';
+  fclose(fd);
+  return 0;
+}
+
 // Loggers
-void timeLoggerD(char *str) {
+void NeuroDzenLoggerTime(char *str) {
   assert(str);
   struct tm res;
   time_t t = time(NULL);
@@ -324,7 +344,7 @@ void timeLoggerD(char *str) {
 }
 
 
-void dateLoggerD(char *str) {
+void NeuroDzenLoggerDate(char *str) {
   assert(str);
   struct tm res;
   time_t t = time(NULL);
@@ -332,7 +352,7 @@ void dateLoggerD(char *str) {
   snprintf(str, LOGGER_MAX, "%d.%02d.%02d", res.tm_year + 1900, res.tm_mon + 1, res.tm_mday);
 }
 
-void dayLoggerD(char *str) {
+void NeuroDzenLoggerDay(char *str) {
   assert(str);
   struct tm res;
   time_t t = time(NULL);
@@ -349,7 +369,7 @@ void dayLoggerD(char *str) {
   }
 }
 
-void uptimeLoggerD(char *str) {
+void NeuroDzenLoggerUptime(char *str) {
   assert(str);
   struct sysinfo info;
   sysinfo(&info);
@@ -360,7 +380,7 @@ void uptimeLoggerD(char *str) {
   snprintf(str, LOGGER_MAX, "%ih %im %is", hours, minutes, seconds);
 }
 
-void ramPercLoggerD(char *str) {
+void NeuroDzenLoggerRam(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
   unsigned long memTotal = 0UL, memAvailable = 0UL;
@@ -378,7 +398,7 @@ void ramPercLoggerD(char *str) {
   fclose(fd);
 }
 
-void wifiStrengthD(char *str) {
+void NeuroDzenLoggerWifiStrength(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
   FILE *fd = fopen("/proc/net/wireless", "r");
@@ -393,14 +413,14 @@ void wifiStrengthD(char *str) {
   fclose(fd);
 }
 
-void currWSLoggerD(char *str) {
+void NeuroDzenLoggerCurrWorkspace(char *str) {
   assert(str);
   const char *name = NeuroCoreStackGetName(NeuroCoreGetCurrStack());
   if (name)
     strncpy(str, name, LOGGER_MAX);
 }
 
-void currLayoutLoggerD(char *str) {
+void NeuroDzenLoggerCurrLayout(char *str) {
   assert(str);
   int ws = NeuroCoreGetCurrStack();
   const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(ws);
@@ -408,44 +428,21 @@ void currLayoutLoggerD(char *str) {
     strncpy(str, lc->name, LOGGER_MAX);
 }
 
-void currTitleLoggerD(char *str) {
+void NeuroDzenLoggerCurrTitle(char *str) {
   assert(str);
   ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c)
     strncpy(str, CLI_GET(c).title, LOGGER_MAX);
 }
 
-
-// Logger utilities
-int readFileD(char *buf, const char *fileName) {
-  assert(buf);
-  assert(fileName);
-  FILE *fd;
-  fd = fopen(fileName, "r");
-  if (!fd)
-    return -1;
-  fgets(buf, LOGGER_MAX, fd);
-  char *last = buf + strlen(buf) - 1;
-  if (*last == '\n')
-    *last = '\0';
-  fclose(fd);
-  return 0;
-}
-
-void wrapDzenBoxD(char *dst, const char *src, const BoxPP *b) {
-  assert(dst);
-  assert(src);
-  assert(b);
-  snprintf(dst, LOGGER_MAX,
-      "^fg(%s)^i(%s)^ib(1)^r(1920x%i)^p(-1920x)^fg(%s)%s^fg(%s)^i(%s)^fg(%s)^r(1920x%i)^p(-1920)^fg()^ib(0)",
-      b->boxColor, b->leftIcon, b->boxHeight, b->fgColor, src, b->boxColor, b->rightIcon, b->bgColor, b->boxHeight);
-}
-
-void wrapDzenClickAreaD(char *dst, const char *src, const CA *ca) {
-  assert(dst);
-  assert(src);
-  assert(ca);
-  snprintf(dst, LOGGER_MAX, "^ca(1,%s)^ca(2,%s)^ca(3,%s)^ca(4,%s)^ca(5,%s)%s^ca()^ca()^ca()^ca()^ca()",
-      ca->leftClick, ca->middleClick, ca->rightClick, ca->wheelUp, ca->wheelDown, src);
+void NeuroDzenLoggerCpuPercent(char *str) {
+  assert(str);
+  char buf[ LOGGER_MAX ];
+  int i;
+  for (i = 0; i < numCpus; ++i) {
+    snprintf(buf, LOGGER_MAX, "%i%% ", cpusInfo[ i ].perc);
+    strncat(str, buf, LOGGER_MAX - strlen(str) - 1);
+  }
+  str[ strlen(str) - 1 ] = '\0';
 }
 

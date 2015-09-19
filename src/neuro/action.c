@@ -251,12 +251,12 @@ void NeuroActionHandlerSleep(GenericArg int_arg) {
 
 void NeuroActionHandlerStartCpuCalc(GenericArg null_arg) {
   (void)null_arg;
-  startCpuCalcD();
+  NeuroDzenStartCpuCalc();
 }
 
 void NeuroActionHandlerStopCpuCalc(GenericArg null_arg) {
   (void)null_arg;
-  stopCpuCalcD();
+  NeuroDzenStopCpuCalc();
 }
 
 // Layout

@@ -41,7 +41,7 @@ static int recompileNeurowm(pid_t *pid) {
 
 static void endNeurowm() {
   NeuroActionUtilRunActionChain(endUpHookS);
-  stopD();
+  NeuroDzenStop();
   NeuroCoreStop();
   stopS();
 }
@@ -67,7 +67,7 @@ static void initNeurowm(const Configuration *c) {
     exitErrorS("initNeurowm - could not init Base");
   if (!NeuroCoreInit())
     exitErrorS("initNeurowm - could not init StackSet");
-  if (!initD())
+  if (!NeuroDzenInit())
     exitErrorS("initNeurowm - could not init Panels");
 
   NeuroActionUtilRunActionChain(startUpHookS);

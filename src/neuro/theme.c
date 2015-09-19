@@ -128,8 +128,8 @@ void nnoellCurrLayoutLoggerT(char *str) {
     else
       snprintf(tmp2, LOGGER_MAX, "^fg(" NNOELL_colorGreenP ")%i^fg(" NNOELL_colorGrayP ")|^fg()%s^fg()", idx + 1,
           lc->name);
-    wrapDzenBoxD(tmp, tmp2, &WhiteBoxPP);
-    wrapDzenBoxD(str, "LAYOUT", &Blue2BoxPP);
+    NeuroDzenWrapDzenBox(tmp, tmp2, &WhiteBoxPP);
+    NeuroDzenWrapDzenBox(str, "LAYOUT", &Blue2BoxPP);
     strncat(str, tmp, LOGGER_MAX - strlen(str) - 1);
   }
 }
@@ -151,8 +151,8 @@ void nnoellCurrLayoutModLoggerT(char *str) {
       if (l->mod & reflYModL)
         strncat(tmp, "^fg(" NNOELL_colorGreenP ")Y^fg()", LOGGER_MAX - strlen(tmp) - 1);
     }
-    wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);
-    wrapDzenBoxD(str, "MOD", &Blue2BoxPP);
+    NeuroDzenWrapDzenBox(tmp2, tmp, &WhiteBoxPP);
+    NeuroDzenWrapDzenBox(str, "MOD", &Blue2BoxPP);
     strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
   }
 }
@@ -165,8 +165,8 @@ void nnoellCurrWorkspaceLoggerT(char *str) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     snprintf(tmp2, LOGGER_MAX, "^fg(" NNOELL_colorGreenP ")%i^fg(" NNOELL_colorGrayP ")|^fg()%s^fg()",
         (ws + 1) % NeuroCoreGetSize(), name);
-    wrapDzenBoxD(tmp, tmp2, &WhiteBoxPP);
-    wrapDzenBoxD(str, "WORKSPACE", &Blue2BoxPP);
+    NeuroDzenWrapDzenBox(tmp, tmp2, &WhiteBoxPP);
+    NeuroDzenWrapDzenBox(str, "WORKSPACE", &Blue2BoxPP);
     strncat(str, tmp, LOGGER_MAX - strlen(str) - 1);
   }
 }
@@ -176,9 +176,9 @@ void nnoellCurrTitleLoggerT(char *str) {
   ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-    wrapDzenBoxD(tmp, CLI_GET(c).title, &WhiteBoxPP);
-    wrapDzenBoxD(tmp2, "FOCUS", &White2BBoxPP);
-    wrapDzenClickAreaD(str, tmp2, &titleCA);
+    NeuroDzenWrapDzenBox(tmp, CLI_GET(c).title, &WhiteBoxPP);
+    NeuroDzenWrapDzenBox(tmp2, "FOCUS", &White2BBoxPP);
+    NeuroDzenWrapClickArea(str, tmp2, &titleCA);
     strncat(str, tmp, LOGGER_MAX - strlen(str) - 1);
   }
 }
@@ -193,14 +193,14 @@ void nnoellCurrWorkspaceListLoggerT(char *str) {
     snprintf(tmp3, LOGGER_MAX, "/usr/bin/xdotool key super+%s", tmp);
     static const CA wslstCA = { tmp3, tmp3, tmp3, tmp3, tmp3 };
     if (i == NeuroCoreGetCurrStack())
-      wrapDzenBoxD(tmp2, tmp, &Blue2BBoxPP);
+      NeuroDzenWrapDzenBox(tmp2, tmp, &Blue2BBoxPP);
     else if (findUrgentClientW(i))
-      wrapDzenBoxD(tmp2, tmp, &Green2BBoxPP);
+      NeuroDzenWrapDzenBox(tmp2, tmp, &Green2BBoxPP);
     else if (!NeuroCoreStackIsEmpty(i))
-      wrapDzenBoxD(tmp2, tmp, &White2BBoxPP);
+      NeuroDzenWrapDzenBox(tmp2, tmp, &White2BBoxPP);
     else
-      wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);
-    wrapDzenClickAreaD(tmp4, tmp2, &wslstCA);
+      NeuroDzenWrapDzenBox(tmp2, tmp, &WhiteBoxPP);
+    NeuroDzenWrapClickArea(tmp4, tmp2, &wslstCA);
     strncat(str, tmp4, LOGGER_MAX - strlen(str) - 1);
   }
 }
@@ -214,7 +214,7 @@ void nnoellTimeLoggerT(char *str) {
   snprintf(tmp, LOGGER_MAX,
       "%02d^fg("NNOELL_colorGrayP"):^fg()%02d^fg("NNOELL_colorGrayP"):^fg("NNOELL_colorGreenP")%02d^fg()",
       res.tm_hour, res.tm_min, res.tm_sec);
-  wrapDzenBoxD(str, tmp, &WhiteBoxPP);
+  NeuroDzenWrapDzenBox(str, tmp, &WhiteBoxPP);
 }
 
 void nnoellDateLoggerT(char *str) {
@@ -226,21 +226,21 @@ void nnoellDateLoggerT(char *str) {
   snprintf(tmp, LOGGER_MAX,
       "%d^fg("NNOELL_colorGrayP").^fg()%02d^fg("NNOELL_colorGrayP").^fg("NNOELL_colorBlueP")%02d^fg()",
       res.tm_year+1900, res.tm_mon+1, res.tm_mday);
-  wrapDzenBoxD(str, tmp, &WhiteBoxPP);
+  NeuroDzenWrapDzenBox(str, tmp, &WhiteBoxPP);
 }
 
 void nnoellDayLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
-  dayLoggerD(tmp);
-  wrapDzenBoxD(str, tmp, &White2BBoxPP);
+  NeuroDzenLoggerDay(tmp);
+  NeuroDzenWrapDzenBox(str, tmp, &White2BBoxPP);
 }
 
 void nnoellCalendarLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
-  wrapDzenClickAreaD(tmp, "CALENDAR", &calendarCA);
-  wrapDzenBoxD(str, tmp, &BlueBoxPP);
+  NeuroDzenWrapClickArea(tmp, "CALENDAR", &calendarCA);
+  NeuroDzenWrapDzenBox(str, tmp, &BlueBoxPP);
 }
 
 void nnoellDateTimeLoggerT(char *str) {
@@ -256,9 +256,9 @@ void nnoellDateTimeLoggerT(char *str) {
 void nnoellUptimeLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-  uptimeLoggerD(tmp);
-  wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);
-  wrapDzenBoxD(str, "UPTIME", &Blue2BoxPP);
+  NeuroDzenLoggerUptime(tmp);
+  NeuroDzenWrapDzenBox(tmp2, tmp, &WhiteBoxPP);
+  NeuroDzenWrapDzenBox(str, "UPTIME", &Blue2BoxPP);
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
@@ -267,8 +267,8 @@ void nnoellCurrStackSizeLoggerT(char *str) {
   int size = NeuroCoreStackGetSize(NeuroCoreGetCurrStack());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   snprintf(tmp, LOGGER_MAX, "%i", size);
-  wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);
-  wrapDzenBoxD(str, "STACK", &Blue2BoxPP);
+  NeuroDzenWrapDzenBox(tmp2, tmp, &WhiteBoxPP);
+  NeuroDzenWrapDzenBox(str, "STACK", &Blue2BoxPP);
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
@@ -277,20 +277,20 @@ void nnoellCurrMinimizedCountLoggerT(char *str) {
   int count = NeuroCoreStackGetMinimizedNum(NeuroCoreGetCurrStack());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   snprintf(tmp, LOGGER_MAX, "%i", count);
-  wrapDzenBoxD(tmp2, tmp, &WhiteBoxPP);
-  wrapDzenBoxD(str, "MIN", &Blue2BoxPP);
+  NeuroDzenWrapDzenBox(tmp2, tmp, &WhiteBoxPP);
+  NeuroDzenWrapDzenBox(str, "MIN", &Blue2BoxPP);
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
 void nnoellCpuUsageLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-  cpuPercUsageLoggerD(tmp);
+  NeuroDzenLoggerCpuPercent(tmp);
   char *p = strchr(tmp, ' ');  // Skip general cpu usage
   if (!p)
     return;
-  wrapDzenBoxD(tmp2, p + 1, &BlueBoxPP);
-  wrapDzenBoxD(str, "CPU", &Gray2BoxPP);
+  NeuroDzenWrapDzenBox(tmp2, p + 1, &BlueBoxPP);
+  NeuroDzenWrapDzenBox(str, "CPU", &Gray2BoxPP);
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
   tmp[ 0 ] = '\0';
 }
@@ -298,24 +298,24 @@ void nnoellCpuUsageLoggerT(char *str) {
 void nnoellRamPercLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-  ramPercLoggerD(tmp);
-  wrapDzenBoxD(tmp2, tmp, &BlueBoxPP);
-  wrapDzenBoxD(str, "RAM", &Gray2BoxPP);
+  NeuroDzenLoggerRam(tmp);
+  NeuroDzenWrapDzenBox(tmp2, tmp, &BlueBoxPP);
+  NeuroDzenWrapDzenBox(str, "RAM", &Gray2BoxPP);
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
 void nnoellBatteryLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  if (-1 == readFileD(tmp, "/sys/class/power_supply/BAT0/capacity"))
+  if (-1 == NeuroDzenReadFile(tmp, "/sys/class/power_supply/BAT0/capacity"))
     strncpy(tmp, "N/A", LOGGER_MAX);
   else
     strncat(tmp, "%", LOGGER_MAX);
-  wrapDzenBoxD(tmp2, tmp, &BlueBoxPP);
-  if (-1 == readFileD(tmp3, "/sys/class/power_supply/BAT0/status"))
+  NeuroDzenWrapDzenBox(tmp2, tmp, &BlueBoxPP);
+  if (-1 == NeuroDzenReadFile(tmp3, "/sys/class/power_supply/BAT0/status"))
     strncpy(tmp3, "AC Conection", LOGGER_MAX);
-  wrapDzenBoxD(tmp4, tmp3, &WhiteBoxPP);
-  wrapDzenBoxD(str, "BATTERY", &Gray2BoxPP);
+  NeuroDzenWrapDzenBox(tmp4, tmp3, &WhiteBoxPP);
+  NeuroDzenWrapDzenBox(str, "BATTERY", &Gray2BoxPP);
   strncat(tmp2, tmp4, LOGGER_MAX - strlen(tmp2) - 1);
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
@@ -323,26 +323,26 @@ void nnoellBatteryLoggerT(char *str) {
 void nnoellWifiStrengthLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-  wifiStrengthD(tmp);
-  wrapDzenBoxD(tmp2, tmp, &BlueBoxPP);
-  wrapDzenBoxD(str, "WIFI", &Gray2BoxPP);
+  NeuroDzenLoggerWifiStrength(tmp);
+  NeuroDzenWrapDzenBox(tmp2, tmp, &BlueBoxPP);
+  NeuroDzenWrapDzenBox(str, "WIFI", &Gray2BoxPP);
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
 void nnoellTemperatureLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  if (-1 == readFileD(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))
+  if (-1 == NeuroDzenReadFile(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))
     strncpy(tmp, "N/A", LOGGER_MAX);
   else
     snprintf(tmp, LOGGER_MAX, "%i°C", atoi(tmp) / 1000);
-  if (-1 == readFileD(tmp2, "/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/temp"))
+  if (-1 == NeuroDzenReadFile(tmp2, "/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/temp"))
     strncpy(tmp2, "N/A", LOGGER_MAX);
   else
     snprintf(tmp2, LOGGER_MAX, "%i°C", atoi(tmp2) / 1000);
   snprintf(tmp3, LOGGER_MAX, "%s %s", tmp, tmp2);
-  wrapDzenBoxD(tmp4, tmp3, &BlueBoxPP);
-  wrapDzenBoxD(str, "TEMP", &Gray2BoxPP);
+  NeuroDzenWrapDzenBox(tmp4, tmp3, &BlueBoxPP);
+  NeuroDzenWrapDzenBox(str, "TEMP", &Gray2BoxPP);
   strncat(str, tmp4, LOGGER_MAX - strlen(str) - 1);
 }
 

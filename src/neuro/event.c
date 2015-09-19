@@ -39,7 +39,7 @@ static void processKeyPress(XEvent *e) {
     k = keyBindingsS[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
       NeuroActionUtilRunActionChain(&k->actionChain);
-      updateD(True);
+      NeuroDzenUpdate(True);
     }
   }
   XFree(keysym);
@@ -54,7 +54,7 @@ static void processButtonPress(XEvent *e) {
     b = buttonBindingsS[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       NeuroActionUtilRunActionChain(&b->actionChain);
-      updateD(True);
+      NeuroDzenUpdate(True);
     }
   }
 }
@@ -62,7 +62,7 @@ static void processButtonPress(XEvent *e) {
 static void processMapRequest(XEvent *e) {
   assert(e);
   manageWindowE(e->xmaprequest.window);
-  updateD(True);
+  NeuroDzenUpdate(True);
 }
 
 static void processDestroyNotify(XEvent *e) {
@@ -76,7 +76,7 @@ static void processDestroyNotify(XEvent *e) {
     if (cli)
       freeClientT(cli);
   }
-  updateD(True);
+  NeuroDzenUpdate(True);
 }
 
 static void processUnmapNotify(XEvent *e) {
@@ -90,7 +90,7 @@ static void processUnmapNotify(XEvent *e) {
     if (cli)
       freeClientT(cli);
   }
-  updateD(True);
+  NeuroDzenUpdate(True);
 }
 
 static void processEnterNotify(XEvent *e) {
@@ -109,7 +109,7 @@ static void processEnterNotify(XEvent *e) {
   if (NeuroCoreClientIsCurr(c))
     return;
   focusClientW(c, NeuroClientSelectorSelf, NULL);
-  updateD(True);
+  NeuroDzenUpdate(True);
 }
 
 static void processConfigureRequest(XEvent *e) {
@@ -128,7 +128,7 @@ static void processConfigureRequest(XEvent *e) {
     runCurrL(CLI_GET(c).ws);
     updateW(CLI_GET(c).ws);
   }
-  updateD(True);
+  NeuroDzenUpdate(True);
 }
 
 static void processFocusIn(XEvent *e) {
@@ -139,7 +139,7 @@ static void processFocusIn(XEvent *e) {
   if (CLI_GET(c).win == e->xfocus.window)
     return;
   focusClientW(c, NeuroClientSelectorSelf, NULL);
-  updateD(True);
+  NeuroDzenUpdate(True);
 }
 
 static void processClientMessage(XEvent *e) {
@@ -159,7 +159,7 @@ static void processClientMessage(XEvent *e) {
   } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
     focusClientW(c, NeuroClientSelectorSelf, NULL);
   }
-  updateD(True);
+  NeuroDzenUpdate(True);
 }
 
 static void processPropertyNotify(XEvent *e) {
@@ -170,7 +170,7 @@ static void processPropertyNotify(XEvent *e) {
     if (!c)
       return;
     NeuroClientUpdateTitle(c, NULL);
-    updateD(True);
+    NeuroDzenUpdate(True);
   } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
     ClientPtrPtr c = findWindowClientAllW(ev->window);
     if (!c)
@@ -183,7 +183,7 @@ static void processPropertyNotify(XEvent *e) {
     if (wmh)
       XFree(wmh);
     NeuroClientUpdate(c, NULL);
-    updateD(True);
+    NeuroDzenUpdate(True);
   }
 }
 

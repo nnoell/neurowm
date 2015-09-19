@@ -28,30 +28,26 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-Bool initD();
-void stopD();
-void updateD(int onlyEvent);
-
-// CPU Calculation
-void startCpuCalcD();
-void stopCpuCalcD();
+Bool NeuroDzenInit();
+void NeuroDzenStop();
+void NeuroDzenUpdate(int onlyEvent);
+void NeuroDzenStartCpuCalc();
+void NeuroDzenStopCpuCalc();
+void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b);
+void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca);
+int NeuroDzenReadFile(char *buf, const char *fileName);
 
 // Loggers
-void timeLoggerD(char *str);
-void dateLoggerD(char *str);
-void dayLoggerD(char *str);
-void uptimeLoggerD(char *str);
-void ramPercLoggerD(char *str);
-void wifiStrengthD(char *str);
-void currWSLoggerD(char *str);
-void currLayoutLoggerD(char *str);
-void currTitleLoggerD(char *str);
-void cpuPercUsageLoggerD(char *str);
-
-// Logger Utils
-int readFileD(char *buf, const char *fileName);
-void wrapDzenBoxD(char *dst, const char *src, const BoxPP *b);
-void wrapDzenClickAreaD(char *dst, const char *src, const CA *ca);
+void NeuroDzenLoggerTime(char *str);
+void NeuroDzenLoggerDate(char *str);
+void NeuroDzenLoggerDay(char *str);
+void NeuroDzenLoggerUptime(char *str);
+void NeuroDzenLoggerRam(char *str);
+void NeuroDzenLoggerWifiStrength(char *str);
+void NeuroDzenLoggerCurrWorkspace(char *str);
+void NeuroDzenLoggerCurrLayout(char *str);
+void NeuroDzenLoggerCurrTitle(char *str);
+void NeuroDzenLoggerCpuPercent(char *str);
 
 #endif  // NEURO_DZEN_H_
 
