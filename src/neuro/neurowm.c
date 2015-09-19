@@ -40,7 +40,7 @@ static int recompileNeurowm(pid_t *pid) {
 }
 
 static void endNeurowm() {
-  runActionChainA(endUpHookS);
+  NeuroActionUtilRunActionChain(endUpHookS);
   stopD();
   NeuroCoreStop();
   stopS();
@@ -70,7 +70,7 @@ static void initNeurowm(const WMConfig *c) {
   if (!initD())
     exitErrorS("initNeurowm - could not init Panels");
 
-  runActionChainA(startUpHookS);
+  NeuroActionUtilRunActionChain(startUpHookS);
 
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, signalHandler))

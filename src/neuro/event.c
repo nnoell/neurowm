@@ -38,7 +38,7 @@ static void processKeyPress(XEvent *e) {
   for (i = 0; keyBindingsS[ i ]; ++i) {
     k = keyBindingsS[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
-      runActionChainA(&k->actionChain);
+      NeuroActionUtilRunActionChain(&k->actionChain);
       updateD(True);
     }
   }
@@ -53,7 +53,7 @@ static void processButtonPress(XEvent *e) {
   for (i = 0; buttonBindingsS[ i ]; ++i) {
     b = buttonBindingsS[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
-      runActionChainA(&b->actionChain);
+      NeuroActionUtilRunActionChain(&b->actionChain);
       updateD(True);
     }
   }
