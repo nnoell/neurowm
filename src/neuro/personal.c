@@ -295,7 +295,7 @@ void nnoellCPUUsageLoggerP(char *str) {
   tmp[ 0 ] = '\0';
 }
 
-void nnoellMemPercLoggerP(char *str) {
+void nnoellRamPercLoggerP(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   ramPercLoggerD(tmp);

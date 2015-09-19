@@ -193,7 +193,7 @@ static const DzenFlags botRightDzenFlags[] = { {
   920, 1064, 1000, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'r', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn botRightLoggers[] = {
-  nnoellCPUUsageLoggerP, nnoellMemPercLoggerP, nnoellTempLoggerP, nnoellWifiStrengthLoggerP, NULL
+  nnoellCPUUsageLoggerP, nnoellRamPercLoggerP, nnoellTempLoggerP, nnoellWifiStrengthLoggerP, NULL
 };
 
 // DZENPANELS (DZENFLAGS, LOGGERS, SEP, REFRESH)

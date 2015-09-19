@@ -51,7 +51,7 @@ void nnoellUptimeLoggerP(char *str);
 void nnoellCurrSizeStackLoggerP(char *str);
 void nnoellCurrMinimizedCountLoggerP(char *str);
 void nnoellCPUUsageLoggerP(char *str);
-void nnoellMemPercLoggerP(char *str);
+void nnoellRamPercLoggerP(char *str);
 void nnoellBatteryLoggerP(char *str);
 void nnoellWifiStrengthLoggerP(char *str);
 void nnoellTempLoggerP(char *str);
