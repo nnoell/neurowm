@@ -83,7 +83,7 @@ static void sendClient(ClientPtrPtr c, const void *data) {
   cli->ws = ws;
   ClientPtrPtr c2 = NeuroCoreAddClientStart(cli);
   if (!c2)
-    exitErrorS("moveCliToWorkspaceW - could not add client");
+    exitErrorS("sendClient - could not add client");
   if (isFree)
     memmove(NeuroCoreClientGetRegion(c2), &oldRegion, sizeof(Rectangle));
   if (ws == currws)

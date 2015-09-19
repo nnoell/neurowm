@@ -128,7 +128,7 @@ void NeuroLayoutRun(int ws, int i) {
   Layout *l = NeuroCoreStackGetLayout(ws, i);
   Arrange *a = alloc_arrange(ws, l);
   if (!a)
-    exitErrorS("runLayoutL - could not run layout");
+    exitErrorS("NeuroLayoutRun - could not run layout");
   if (a->size) {  // Then run layout
     if (l->mod & mirrModL)
       mirror_arrange(a, l->arrangerFn);

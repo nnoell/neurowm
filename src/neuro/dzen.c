@@ -74,7 +74,7 @@ static int get_num_cpus(const char *file) {
   assert(file);
   FILE *fd = fopen(file, "r");
   if (fd == NULL)
-    exitErrorS("getNumCpusDP - could not open file");
+    exitErrorS("get_num_cpus - could not open file");
   int i = 0;
   char buf[ 256 ];
   while (fgets(buf, sizeof(buf), fd)) {

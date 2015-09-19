@@ -68,7 +68,7 @@ const Atom netatoms[ NET_COUNT ];
 static int XErrorStartWindowManagerHandler(Display *d, XErrorEvent *ee) {
   (void)d;
   (void)ee;
-  exitErrorS("XErrorStartHandlerS - another window manager is already running");
+  exitErrorS("XErrorStartWindowManagerHandler - another window manager is already running");
   return -1;
 }
 
