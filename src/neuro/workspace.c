@@ -40,7 +40,7 @@ static Bool isAboveTiledClient(const ClientPtrPtr c) {
 static void focusClient(ClientPtrPtr c) {
   assert(c);
   NeuroClientUnsetUrgent(c, NULL);
-  ungrabButtonsS(CLI_GET(c).win);
+  NeuroSystemUngrabButtons(CLI_GET(c).win);
   XSetInputFocus(display, CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(display, root, netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
       (unsigned char *)&(CLI_GET(c).win), 1);
@@ -49,7 +49,7 @@ static void focusClient(ClientPtrPtr c) {
 
 static void unfocusClient(ClientPtrPtr c) {
   assert(c);
-  grabButtonsS(CLI_GET(c).win);
+  NeuroSystemGrabButtons(CLI_GET(c).win);
   NeuroClientUpdate(c, NULL);
 }
 
@@ -83,7 +83,7 @@ static void sendClient(ClientPtrPtr c, const void *data) {
   cli->ws = ws;
   ClientPtrPtr c2 = NeuroCoreAddClientStart(cli);
   if (!c2)
-    exitErrorS("sendClient - could not add client");
+    NeuroSystemError("sendClient - Could not add client");
   if (isFree)
     memmove(NeuroCoreClientGetRegion(c2), &oldRegion, sizeof(Rectangle));
   if (ws == currws)
@@ -136,7 +136,7 @@ void updateFocusW(int ws) {
 
   if (n > 1) {
     if (!XQueryTree(display, root, &d1, &d2, &wins, &num))  // XQueryTree gets windows by stacking order
-      exitErrorS("updateFocusW - could not get windows");
+      NeuroSystemError("updateFocusW - Could not get windows");
     int n2 = n;
     for (i = 0; i < num; ++i) {
       ClientPtrPtr c = findWindowClientW(ws, wins[ i ]);
@@ -189,10 +189,10 @@ void restoreLastMinimizedW(int ws) {
     return;
   Client *cli = NeuroCorePopMinimizedClient(ws);
   if (!cli)
-    exitErrorS("restoreLastMinimizedW - could not restore last minimized client");
+    NeuroSystemError("restoreLastMinimizedW - Could not restore last minimized client");
   ClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
-    exitErrorS("restoreLastMinimizedW - could not add client");
+    NeuroSystemError("restoreLastMinimizedW - Could not add client");
   NeuroRuleApply(c);
   NeuroCoreSetCurrClient(c);
   NeuroLayoutRunCurr(CLI_GET(c).ws);

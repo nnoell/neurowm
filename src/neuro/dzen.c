@@ -74,7 +74,7 @@ static int get_num_cpus(const char *file) {
   assert(file);
   FILE *fd = fopen(file, "r");
   if (fd == NULL)
-    exitErrorS("get_num_cpus - could not open file");
+    NeuroSystemError("get_num_cpus - Could not open file");
   int i = 0;
   char buf[ 256 ];
   while (fgets(buf, sizeof(buf), fd)) {
@@ -150,7 +150,7 @@ static void stop_cpu_perc_thread() {
   stopUpdateCpuPercWhile = True;
   void *status;
   if (pthread_join(threadID, &status))  // Wait
-    perror("stopUpdateCpuPercThreadP - could not join thread");
+    perror("stopUpdateCpuPercThreadP - Could not join thread");
 }
 
 // Dzen
@@ -228,7 +228,7 @@ static void stop_update_thread() {
   stopUpdateWhile = True;
   void *status;
   if (pthread_join(PIP.updateThread, &status))  // Wait
-    perror("stopUpdateThreadDP - could not join thread");
+    perror("stopUpdateThreadDP - Could not join thread");
 }
 
 
@@ -253,12 +253,12 @@ Bool NeuroDzenInit() {
     if (dp->refreshRate > PIP.resetRate)
       PIP.resetRate *= dp->refreshRate;
     get_dzen_cmd(dzenCmd, line, dp->df);
-    PIP.pi[ i ].output = spawnPipeS((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
+    PIP.pi[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
     if (PIP.pi[ i ].output == -1)
       return False;
   }
   if (!init_update_thread())
-    exitErrorS("NeuroDzenInit - could not init thread to update panels");
+    NeuroSystemError("NeuroDzenInit - Could not init thread to update panels");
   NeuroDzenUpdate(False);
   return True;
 }
@@ -268,7 +268,7 @@ void NeuroDzenStop() {
   int i;
   for (i = 0; i < PIP.numPanels; ++i)
     if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)
-      perror("NeuroDzenStop - could not kill panels");
+      perror("NeuroDzenStop - Could not kill panels");
   free(PIP.pi);
   PIP.pi = NULL;
 }
@@ -291,9 +291,9 @@ void NeuroDzenStartCpuCalc() {
   numCpus = get_num_cpus(CPU_FILE_PATH);
   cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
   if (!cpusInfo)
-    exitErrorS("NeuroDzenStartCpuCalc - could not alloc cpusInfo");
+    NeuroSystemError("NeuroDzenStartCpuCalc - Could not alloc cpusInfo");
   if (initCpuPercThread())
-    exitErrorS("NeuroDzenStartCpuCalc - could not init thread to update cpus");
+    NeuroSystemError("NeuroDzenStartCpuCalc - Could not init thread to update cpus");
 }
 
 void NeuroDzenStopCpuCalc() {

@@ -36,14 +36,14 @@ static int recompile_wm(pid_t *pid) {
   snprintf(src, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
   char lib[ NAME_MAX ] = "/usr/lib/neuro/lib" WM_NAME ".a";
   const char *const cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
-  return spawnS(cmd, pid);
+  return NeuroSystemSpawn(cmd, pid);
 }
 
 static void stop_wm() {
   NeuroActionUtilRunActionChain(endUpHookS);
   NeuroDzenStop();
   NeuroCoreStop();
-  stopS();
+  NeuroSystemStop();
 }
 
 static void wm_signal_handler(int signo) {
@@ -59,22 +59,22 @@ static void wm_signal_handler(int signo) {
 
 static void init_wm(const Configuration *c) {
   if (!c)
-    exitErrorS("init_wm - could not set configuration");
+    NeuroSystemError("init_wm - Could not set configuration");
 
   // Set configuration and init base, stackset and panels
-  setConfigS(c);
-  if (!initS())
-    exitErrorS("init_wm - could not init Base");
+  NeuroSystemSetConfiguration(c);
+  if (!NeuroSystemInit())
+    NeuroSystemError("init_wm - Could not init Base");
   if (!NeuroCoreInit())
-    exitErrorS("init_wm - could not init StackSet");
+    NeuroSystemError("init_wm - Could not init StackSet");
   if (!NeuroDzenInit())
-    exitErrorS("init_wm - could not init Panels");
+    NeuroSystemError("init_wm - Could not init Panels");
 
   NeuroActionUtilRunActionChain(startUpHookS);
 
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, signalHandler))
-  //   exitErrorS("init_wm - could not set SIGHUP handler");
+  //   NeuroSystemError("init_wm - Could not set SIGHUP handler");
 
   // Load existing windows if Xsesion was not closed
   NeuroEventLoadWindows();

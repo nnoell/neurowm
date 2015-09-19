@@ -243,7 +243,7 @@ void NeuroClientMinimize(ClientPtrPtr c, const void *data) {
   if (!cli)
     return;
   if (!NeuroCorePushMinimizedClient(cli))
-    exitErrorS("NeuroClientMinimize - could not minimize client");
+    NeuroSystemError("NeuroClientMinimize - Could not minimize client");
   XMoveWindow(display, cli->win, xRes + 1, yRes + 1);  // Move client off screen
   NeuroLayoutRunCurr(cli->ws);
   updateFocusW(cli->ws);

@@ -222,10 +222,10 @@ void NeuroEventManageWindow(Window w) {
   // Add client to the stackset
   Client *cli = NeuroRuleAllocClient(w, &wa);
   if (!cli)
-    exitErrorS("NeuroEventManageWindow - could not alloc Client and set rules");
+    NeuroSystemError("NeuroEventManageWindow - Could not alloc Client and set rules");
   ClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
-    exitErrorS("NeuroEventManageWindow - could not add client");
+    NeuroSystemError("NeuroEventManageWindow - Could not add client");
 
   // Transient windows
   Window trans = None;
@@ -245,7 +245,7 @@ void NeuroEventManageWindow(Window w) {
   Bool doRules = False;
   NeuroClientHide(c, (const void*)&doRules);
   XMapWindow(display, CLI_GET(c).win);
-  grabButtonsS(CLI_GET(c).win);
+  NeuroSystemGrabButtons(CLI_GET(c).win);
   const int ws = CLI_GET(c).ws;
   if (!NeuroCoreStackIsCurr(ws))
     return;
@@ -274,7 +274,7 @@ void NeuroEventLoadWindows() {
   Window d1, d2, *wins = NULL;
   XWindowAttributes wa;
   if (!XQueryTree(display, root, &d1, &d2, &wins, &num))
-    exitErrorS("NeuroEventLoadWindows - could not get windows");
+    NeuroSystemError("NeuroEventLoadWindows - Could not get windows");
   for (i = 0; i < num; ++i) {
     if (!XGetWindowAttributes(display, wins[ i ], &wa))
       continue;

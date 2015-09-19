@@ -68,23 +68,21 @@ extern const Atom netatoms[ NET_COUNT ];
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-void setConfigS(const Configuration *c);
-Bool initS();
-void stopS();
+void NeuroSystemSetConfiguration(const Configuration *c);
+Bool NeuroSystemInit();
+void NeuroSystemStop();
+Color NeuroSystemGetColor(const char *color);
+void NeuroSystemChangeNeurowmName(const char *name);
+void NeuroSystemChangeProcName(const char *newname);
+int NeuroSystemSpawn(const char *const *cmd, pid_t *p);
+int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p);
+void NeuroSystemError(const char *msg);
 
 // Binding functions
-void grabKeysS(Window w);
-void ungrabKeysS(Window w);
-void grabButtonsS(Window w);
-void ungrabButtonsS(Window w);
-
-// Other useful functions
-Color getColorS(const char* color);
-void changeWMNameS(const char* name);
-void changeProcNameS(const char *newname);
-int spawnS(const char *const *cmd, pid_t *p);
-int spawnPipeS(const char *const *cmd, pid_t *p);
-void exitErrorS(const char *msg);
+void NeuroSystemGrabKeys(Window w);
+void NeuroSystemUngrabKeys(Window w);
+void NeuroSystemGrabButtons(Window w);
+void NeuroSystemUngrabButtons(Window w);
 
 #endif  // NEURO_SYSTEM_H_
 

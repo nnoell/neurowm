@@ -226,12 +226,12 @@ void NeuroActionHandlerReload(GenericArg null_arg) {
 
 void NeuroActionHandlerChangeNeurowmName(GenericArg string_arg) {
   assert(ARG_STR_GET(string_arg));
-  changeWMNameS(ARG_STR_GET(string_arg));
+  NeuroSystemChangeNeurowmName(ARG_STR_GET(string_arg));
 }
 
 void NeuroActionHandlerSpawn(GenericArg command_arg) {
   assert(ARG_CMD_GET(command_arg));
-  spawnS(ARG_CMD_GET(command_arg), NULL);
+  NeuroSystemSpawn(ARG_CMD_GET(command_arg), NULL);
 }
 
 void NeuroActionHandlerSleep(GenericArg int_arg) {
@@ -317,7 +317,7 @@ void NeuroActionHandlerToggleScratchpad(GenericArg command_arg) {
     process_client(sendClientW, nspc, NeuroClientSelectorSelf, (const void *)&ws);
   } else {
     if (!NeuroCoreGetNspStackSize())
-      spawnS(ARG_CMD_GET(command_arg), NULL);
+      NeuroSystemSpawn(ARG_CMD_GET(command_arg), NULL);
     else
       process_client(sendClientW, c, NeuroClientSelectorSelf, (const void *)&ws);
   }
