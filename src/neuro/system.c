@@ -119,7 +119,7 @@ static void setCursorsAndAtomsS() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-void setConfigS(const WMConfig *c) {
+void setConfigS(const Configuration *c) {
   assert(c);
   *(const char **)&normBorderColor = c->normBorderColor;
   *(const char **)&currBorderColor = c->currBorderColor;

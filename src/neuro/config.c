@@ -178,7 +178,7 @@ const Button *defButtons[] = { button00, button01, button02, button03, button04,
 // PUBLIC VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-const WMConfig defWMConfig = {
+const Configuration defConfiguration = {
   defNormBorderColor,
   defCurrBorderColor,
   defPrevBorderColor,

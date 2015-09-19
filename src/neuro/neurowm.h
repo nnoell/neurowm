@@ -28,7 +28,7 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-int runN(const WMConfig *c);
+int runN(const Configuration *c);
 void quitN();
 void reloadN();
 

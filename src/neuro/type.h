@@ -336,9 +336,9 @@ struct DzenPanel {
   const int refreshRate;
 };
 
-// WMConfig
-typedef struct WMConfig WMConfig;
-struct WMConfig {
+// Configuration
+typedef struct Configuration Configuration;
+struct Configuration {
   const char *const normBorderColor;
   const char *const currBorderColor;
   const char *const prevBorderColor;

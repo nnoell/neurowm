@@ -39,13 +39,13 @@
 // Default commands
 extern const char* defTerminalCommand[];
 extern const char* defLauncherCommand[];
-extern const char *defNSPCommand[];
+extern const char* defNSPCommand[];
 
 // Default layoutSets
 extern const LayoutConf *defLayoutSet[];
 extern const LayoutConf *defTogLayoutSet[];
 
-// Default WMConfig fields fields
+// Default Configuration fields
 extern const ActionChain defStartUpHook[];
 extern const ActionChain defEndUpHook[];
 extern const Button *defButtons[];
@@ -54,9 +54,8 @@ extern const DzenPanel *defDzenPanelSet[];
 extern const Rule *defRuleSet[];
 extern const Workspace *defWorkspaceSet[];
 
-// DefaultWMConfig
-extern const WMConfig defWMConfig;
-
+// Default Configuration
+extern const Configuration defConfiguration;
 
 #endif  // NEURO_CONFIG_H_
 

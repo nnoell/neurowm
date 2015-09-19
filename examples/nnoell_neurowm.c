@@ -322,7 +322,7 @@ static const Button *myButtons[] = { button00, button01, button02, button03, but
 // PUBLIC VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static const WMConfig myWMConfig = {
+static const Configuration myConfiguration = {
   defNormBorderColor,
   defCurrBorderColor,
   defPrevBorderColor,
@@ -347,7 +347,7 @@ static const WMConfig myWMConfig = {
 int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
-  return runN(&myWMConfig);
-  // return runN(&defWMConfig);
+  return runN(&myConfiguration);
+  // return runN(&defConfiguration);
 }
 

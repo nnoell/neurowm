@@ -57,7 +57,7 @@ static void signalHandler(int signo) {
   }
 }
 
-static void initNeurowm(const WMConfig *c) {
+static void initNeurowm(const Configuration *c) {
   if (!c)
     exitErrorS("initNeurowm - could not set configuration");
 
@@ -85,7 +85,7 @@ static void initNeurowm(const WMConfig *c) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-int runN(const WMConfig *c) {
+int runN(const Configuration *c) {
   // Init window manager
   initNeurowm(c);
 
