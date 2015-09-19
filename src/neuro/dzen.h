@@ -42,12 +42,12 @@ void NeuroDzenLoggerTime(char *str);
 void NeuroDzenLoggerDate(char *str);
 void NeuroDzenLoggerDay(char *str);
 void NeuroDzenLoggerUptime(char *str);
+void NeuroDzenLoggerCpu(char *str);
 void NeuroDzenLoggerRam(char *str);
 void NeuroDzenLoggerWifiStrength(char *str);
 void NeuroDzenLoggerCurrWorkspace(char *str);
 void NeuroDzenLoggerCurrLayout(char *str);
 void NeuroDzenLoggerCurrTitle(char *str);
-void NeuroDzenLoggerCpuPercent(char *str);
 
 #endif  // NEURO_DZEN_H_
 

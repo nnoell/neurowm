@@ -166,34 +166,34 @@ static const Rule *myRuleSet[] = {
 
 // TOP LEFT
 static const DzenFlags topLeftDzenFlags[] = { {
-  0, 0, 1500, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'l', DZENPANELFONT, "onstart=lower", "-p"
+  0, 0, 1500, 16, NeuroThemeNnoellColorWhiteAlt, NeuroThemeNnoellColorBlack, 'l', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn topLeftLoggers[] = {
-  nnoellCurrLayoutLoggerT, nnoellCurrLayoutModLoggerT, nnoellCurrWorkspaceLoggerT, nnoellCurrTitleLoggerT, NULL
+  NeuroThemeNnoellLoggerCurrLayout, NeuroThemeNnoellLoggerLayoutMod, NeuroThemeNnoellLoggerCurrWorkspace, NeuroThemeNnoellLoggerCurrTitle, NULL
 };
 
 // TOP RIGHT
 static const DzenFlags topRightDzenFlags[] = { {
-  1500, 0, 420, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'r', DZENPANELFONT, "onstart=lower", "-p"
+  1500, 0, 420, 16, NeuroThemeNnoellColorWhiteAlt, NeuroThemeNnoellColorBlack, 'r', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn topRightLoggers[] = {
-  nnoellUptimeLoggerT, nnoellDateTimeLoggerT, NULL
+  NeuroThemeNnoellLoggerUptime, NeuroThemeNnoellLoggerDateTime, NULL
 };
 
 // BOTTOM LEFT
 static const DzenFlags botLeftDzenFlags[] = { {
-  0, 1064, 920, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'l', DZENPANELFONT, "onstart=lower", "-p"
+  0, 1064, 920, 16, NeuroThemeNnoellColorWhiteAlt, NeuroThemeNnoellColorBlack, 'l', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn botLeftLoggers[] = {
-  nnoellCurrWorkspaceListLoggerT, nnoellCurrStackSizeLoggerT, nnoellCurrMinimizedCountLoggerT, NULL
+  NeuroThemeNnoellLoggerWorkspaceList, NeuroThemeNnoellLoggerStackSize, NeuroThemeNnoellLoggerMinimizedCount, NULL
 };
 
 // BOTTOM RIGHT
 static const DzenFlags botRightDzenFlags[] = { {
-  920, 1064, 1000, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'r', DZENPANELFONT, "onstart=lower", "-p"
+  920, 1064, 1000, 16, NeuroThemeNnoellColorWhiteAlt, NeuroThemeNnoellColorBlack, 'r', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn botRightLoggers[] = {
-  nnoellCpuUsageLoggerT, nnoellRamPercLoggerT, nnoellTemperatureLoggerT, nnoellWifiStrengthLoggerT, NULL
+  NeuroThemeNnoellLoggerCpu, NeuroThemeNnoellLoggerRam, NeuroThemeNnoellLoggerTemperature, NeuroThemeNnoellLoggerWifiStrength, NULL
 };
 
 // DZENPANELS (DZENFLAGS, LOGGERS, SEP, REFRESH)

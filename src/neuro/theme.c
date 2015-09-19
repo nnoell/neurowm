@@ -18,81 +18,76 @@
 #include "dzen.h"
 #include "workspace.h"
 
-// Nnoell paths
-#define NNOELL_dzenBoxLeftIconP  "/home/julian/.icons/xbm_icons/boxleft.xbm"
-#define NNOELL_dzenBoxLeftIcon2P "/home/julian/.icons/xbm_icons/boxleft2.xbm"
-#define NNOELL_dzenBoxRightIconP "/home/julian/.icons/xbm_icons/boxright.xbm"
-
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Nnoell BoxPP
+// Nnoell theme BoxPP
 static const BoxPP WhiteBoxPP = {
-  NNOELL_colorBlackP,
-  NNOELL_colorWhiteAltP,
-  NNOELL_colorGrayAltP,
-  NNOELL_dzenBoxLeftIconP,
-  NNOELL_dzenBoxRightIconP,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorWhiteAlt,
+  NeuroThemeNnoellColorGrayAlt,
+  NeuroThemeNnoellDzenBoxLeftIcon,
+  NeuroThemeNnoellDzenBoxRightIcon,
   14
 };
 
 static const BoxPP White2BBoxPP = {
-  NNOELL_colorBlackP,
-  NNOELL_colorBlackP,
-  NNOELL_colorWhiteAltP,
-  NNOELL_dzenBoxLeftIcon2P,
-  NNOELL_dzenBoxRightIconP,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorWhiteAlt,
+  NeuroThemeNnoellDzenBoxLeftIcon2,
+  NeuroThemeNnoellDzenBoxRightIcon,
   14
 };
 
 static const BoxPP BlueBoxPP = {
-  NNOELL_colorBlackP,
-  NNOELL_colorBlueP,
-  NNOELL_colorGrayAltP,
-  NNOELL_dzenBoxLeftIconP,
-  NNOELL_dzenBoxRightIconP,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorBlue,
+  NeuroThemeNnoellColorGrayAlt,
+  NeuroThemeNnoellDzenBoxLeftIcon,
+  NeuroThemeNnoellDzenBoxRightIcon,
   14
 };
 
 static const BoxPP Blue2BoxPP = {
-  NNOELL_colorBlackP,
-  NNOELL_colorBlueP,
-  NNOELL_colorGrayAltP,
-  NNOELL_dzenBoxLeftIcon2P,
-  NNOELL_dzenBoxRightIconP,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorBlue,
+  NeuroThemeNnoellColorGrayAlt,
+  NeuroThemeNnoellDzenBoxLeftIcon2,
+  NeuroThemeNnoellDzenBoxRightIcon,
   14
 };
 
 static const BoxPP Blue2BBoxPP = {
-  NNOELL_colorBlackP,
-  NNOELL_colorBlackP,
-  NNOELL_colorBlueP,
-  NNOELL_dzenBoxLeftIcon2P,
-  NNOELL_dzenBoxRightIconP,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorBlue,
+  NeuroThemeNnoellDzenBoxLeftIcon2,
+  NeuroThemeNnoellDzenBoxRightIcon,
   14
 };
 
 static const BoxPP Gray2BoxPP = {
-  NNOELL_colorBlackP,
-  NNOELL_colorGrayP,
-  NNOELL_colorGrayAltP,
-  NNOELL_dzenBoxLeftIcon2P,
-  NNOELL_dzenBoxRightIconP,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorGray,
+  NeuroThemeNnoellColorGrayAlt,
+  NeuroThemeNnoellDzenBoxLeftIcon2,
+  NeuroThemeNnoellDzenBoxRightIcon,
   14
 };
 
 static const BoxPP Green2BBoxPP = {
-  NNOELL_colorBlackP,
-  NNOELL_colorBlackP,
-  NNOELL_colorGreenP,
-  NNOELL_dzenBoxLeftIcon2P,
-  NNOELL_dzenBoxRightIconP,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorBlack,
+  NeuroThemeNnoellColorGreen,
+  NeuroThemeNnoellDzenBoxLeftIcon2,
+  NeuroThemeNnoellDzenBoxRightIcon,
   14
 };
 
-// Nnoell clickable areas
+// Nnoell theme clickable areas
 static const CA titleCA = {
   "/usr/bin/xdotool key super+j",
   "/usr/bin/xdotool key super+Tab",
@@ -114,8 +109,8 @@ static const CA calendarCA = {
 // PUBLIC FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Nnoell Loggers
-void nnoellCurrLayoutLoggerT(char *str) {
+// Nnoell theme loggers
+void NeuroThemeNnoellLoggerCurrLayout(char *str) {
   assert(str);
   int ws = NeuroCoreGetCurrStack();
   int idx = NeuroCoreStackGetLayoutIdx(ws);
@@ -123,10 +118,10 @@ void nnoellCurrLayoutLoggerT(char *str) {
   if (lc) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     if (NeuroCoreStackIsCurrToggledLayout(ws))
-      snprintf(tmp2, LOGGER_MAX, "^fg(" NNOELL_colorRedP ")%i^fg(" NNOELL_colorGrayP ")|^fg()%s^fg()", idx + 1,
+      snprintf(tmp2, LOGGER_MAX, "^fg(" NeuroThemeNnoellColorRed ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1,
           lc->name);
     else
-      snprintf(tmp2, LOGGER_MAX, "^fg(" NNOELL_colorGreenP ")%i^fg(" NNOELL_colorGrayP ")|^fg()%s^fg()", idx + 1,
+      snprintf(tmp2, LOGGER_MAX, "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1,
           lc->name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &WhiteBoxPP);
     NeuroDzenWrapDzenBox(str, "LAYOUT", &Blue2BoxPP);
@@ -134,7 +129,7 @@ void nnoellCurrLayoutLoggerT(char *str) {
   }
 }
 
-void nnoellCurrLayoutModLoggerT(char *str) {
+void NeuroThemeNnoellLoggerLayoutMod(char *str) {
   assert(str);
   int ws = NeuroCoreGetCurrStack();
   Layout *l = NeuroCoreStackGetCurrLayout(ws);
@@ -145,11 +140,11 @@ void nnoellCurrLayoutModLoggerT(char *str) {
       strncpy(tmp, "Norm", LOGGER_MAX);
     } else {
       if (l->mod & mirrModL)
-        strncat(tmp, "^fg(" NNOELL_colorGreenP ")M^fg()", LOGGER_MAX - strlen(tmp) - 1);
+        strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")M^fg()", LOGGER_MAX - strlen(tmp) - 1);
       if (l->mod & reflXModL)
-        strncat(tmp, "^fg(" NNOELL_colorGreenP ")X^fg()", LOGGER_MAX - strlen(tmp) - 1);
+        strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")X^fg()", LOGGER_MAX - strlen(tmp) - 1);
       if (l->mod & reflYModL)
-        strncat(tmp, "^fg(" NNOELL_colorGreenP ")Y^fg()", LOGGER_MAX - strlen(tmp) - 1);
+        strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")Y^fg()", LOGGER_MAX - strlen(tmp) - 1);
     }
     NeuroDzenWrapDzenBox(tmp2, tmp, &WhiteBoxPP);
     NeuroDzenWrapDzenBox(str, "MOD", &Blue2BoxPP);
@@ -157,13 +152,13 @@ void nnoellCurrLayoutModLoggerT(char *str) {
   }
 }
 
-void nnoellCurrWorkspaceLoggerT(char *str) {
+void NeuroThemeNnoellLoggerCurrWorkspace(char *str) {
   assert(str);
   int ws = NeuroCoreGetCurrStack();
   const char *name = NeuroCoreStackGetName(ws);
   if (name) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-    snprintf(tmp2, LOGGER_MAX, "^fg(" NNOELL_colorGreenP ")%i^fg(" NNOELL_colorGrayP ")|^fg()%s^fg()",
+    snprintf(tmp2, LOGGER_MAX, "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
         (ws + 1) % NeuroCoreGetSize(), name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &WhiteBoxPP);
     NeuroDzenWrapDzenBox(str, "WORKSPACE", &Blue2BoxPP);
@@ -171,7 +166,7 @@ void nnoellCurrWorkspaceLoggerT(char *str) {
   }
 }
 
-void nnoellCurrTitleLoggerT(char *str) {
+void NeuroThemeNnoellLoggerCurrTitle(char *str) {
   assert(str);
   ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c) {
@@ -183,7 +178,7 @@ void nnoellCurrTitleLoggerT(char *str) {
   }
 }
 
-void nnoellCurrWorkspaceListLoggerT(char *str) {
+void NeuroThemeNnoellLoggerWorkspaceList(char *str) {
   assert(str);
   int size = NeuroCoreGetSize();
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
@@ -205,55 +200,55 @@ void nnoellCurrWorkspaceListLoggerT(char *str) {
   }
 }
 
-void nnoellTimeLoggerT(char *str) {
+void NeuroThemeNnoellLoggerTime(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   time_t t = time(NULL);
   struct tm res;
   localtime_r(&t, &res);
   snprintf(tmp, LOGGER_MAX,
-      "%02d^fg("NNOELL_colorGrayP"):^fg()%02d^fg("NNOELL_colorGrayP"):^fg("NNOELL_colorGreenP")%02d^fg()",
+      "%02d^fg("NeuroThemeNnoellColorGray"):^fg()%02d^fg("NeuroThemeNnoellColorGray"):^fg("NeuroThemeNnoellColorGreen")%02d^fg()",
       res.tm_hour, res.tm_min, res.tm_sec);
   NeuroDzenWrapDzenBox(str, tmp, &WhiteBoxPP);
 }
 
-void nnoellDateLoggerT(char *str) {
+void NeuroThemeNnoellLoggerDate(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   time_t t = time(NULL);
   struct tm res;
   localtime_r(&t, &res);
   snprintf(tmp, LOGGER_MAX,
-      "%d^fg("NNOELL_colorGrayP").^fg()%02d^fg("NNOELL_colorGrayP").^fg("NNOELL_colorBlueP")%02d^fg()",
+      "%d^fg("NeuroThemeNnoellColorGray").^fg()%02d^fg("NeuroThemeNnoellColorGray").^fg("NeuroThemeNnoellColorBlue")%02d^fg()",
       res.tm_year+1900, res.tm_mon+1, res.tm_mday);
   NeuroDzenWrapDzenBox(str, tmp, &WhiteBoxPP);
 }
 
-void nnoellDayLoggerT(char *str) {
+void NeuroThemeNnoellLoggerDay(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   NeuroDzenLoggerDay(tmp);
   NeuroDzenWrapDzenBox(str, tmp, &White2BBoxPP);
 }
 
-void nnoellCalendarLoggerT(char *str) {
+void NeuroThemeNnoellLoggerCalendar(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   NeuroDzenWrapClickArea(tmp, "CALENDAR", &calendarCA);
   NeuroDzenWrapDzenBox(str, tmp, &BlueBoxPP);
 }
 
-void nnoellDateTimeLoggerT(char *str) {
+void NeuroThemeNnoellLoggerDateTime(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  nnoellCalendarLoggerT(tmp);
-  nnoellTimeLoggerT(tmp2);
-  nnoellDateLoggerT(tmp3);
-  nnoellDayLoggerT(tmp4);
+  NeuroThemeNnoellLoggerCalendar(tmp);
+  NeuroThemeNnoellLoggerTime(tmp2);
+  NeuroThemeNnoellLoggerDate(tmp3);
+  NeuroThemeNnoellLoggerDay(tmp4);
   snprintf(str, LOGGER_MAX, "%s%s%s%s", tmp4, tmp3, tmp2, tmp);
 }
 
-void nnoellUptimeLoggerT(char *str) {
+void NeuroThemeNnoellLoggerUptime(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   NeuroDzenLoggerUptime(tmp);
@@ -262,7 +257,7 @@ void nnoellUptimeLoggerT(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellCurrStackSizeLoggerT(char *str) {
+void NeuroThemeNnoellLoggerStackSize(char *str) {
   assert(str);
   int size = NeuroCoreStackGetSize(NeuroCoreGetCurrStack());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
@@ -272,7 +267,7 @@ void nnoellCurrStackSizeLoggerT(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellCurrMinimizedCountLoggerT(char *str) {
+void NeuroThemeNnoellLoggerMinimizedCount(char *str) {
   assert(str);
   int count = NeuroCoreStackGetMinimizedNum(NeuroCoreGetCurrStack());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
@@ -282,10 +277,10 @@ void nnoellCurrMinimizedCountLoggerT(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellCpuUsageLoggerT(char *str) {
+void NeuroThemeNnoellLoggerCpu(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
-  NeuroDzenLoggerCpuPercent(tmp);
+  NeuroDzenLoggerCpu(tmp);
   char *p = strchr(tmp, ' ');  // Skip general cpu usage
   if (!p)
     return;
@@ -295,7 +290,7 @@ void nnoellCpuUsageLoggerT(char *str) {
   tmp[ 0 ] = '\0';
 }
 
-void nnoellRamPercLoggerT(char *str) {
+void NeuroThemeNnoellLoggerRam(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   NeuroDzenLoggerRam(tmp);
@@ -304,7 +299,7 @@ void nnoellRamPercLoggerT(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellBatteryLoggerT(char *str) {
+void NeuroThemeNnoellLoggerBattery(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   if (-1 == NeuroDzenReadFile(tmp, "/sys/class/power_supply/BAT0/capacity"))
@@ -320,7 +315,7 @@ void nnoellBatteryLoggerT(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellWifiStrengthLoggerT(char *str) {
+void NeuroThemeNnoellLoggerWifiStrength(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   NeuroDzenLoggerWifiStrength(tmp);
@@ -329,7 +324,7 @@ void nnoellWifiStrengthLoggerT(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellTemperatureLoggerT(char *str) {
+void NeuroThemeNnoellLoggerTemperature(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   if (-1 == NeuroDzenReadFile(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))

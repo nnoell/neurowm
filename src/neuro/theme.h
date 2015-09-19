@@ -12,24 +12,29 @@
 // Includes
 #include "type.h"
 
+// Nnoell theme paths
+#define NeuroThemeNnoellDzenBoxLeftIcon  "/home/julian/.icons/xbm_icons/boxleft.xbm"
+#define NeuroThemeNnoellDzenBoxLeftIcon2 "/home/julian/.icons/xbm_icons/boxleft2.xbm"
+#define NeuroThemeNnoellDzenBoxRightIcon "/home/julian/.icons/xbm_icons/boxright.xbm"
+
 // Nnoell theme colors
-#define NNOELL_colorBlackP       "#020202"
-#define NNOELL_colorBlackAltP    "#1c1c1c"
-#define NNOELL_colorGrayP        "#444444"
-#define NNOELL_colorGrayAltP     "#101010"
-#define NNOELL_colorGrayAlt2P    "#404040"
-#define NNOELL_colorGrayAlt3P    "#252525"
-#define NNOELL_colorWhiteP       "#a9a6af"
-#define NNOELL_colorWhiteAltP    "#9d9d9d"
-#define NNOELL_colorWhiteAlt2P   "#b5b3b3"
-#define NNOELL_colorWhiteAlt3P   "#707070"
-#define NNOELL_colorMagentaP     "#8e82a2"
-#define NNOELL_colorBlueP        "#44aacc"
-#define NNOELL_colorBlueAltP     "#3955c4"
-#define NNOELL_colorRedP         "#f7a16e"
-#define NNOELL_colorRedAltP      "#e0105f"
-#define NNOELL_colorGreenP       "#66ff66"
-#define NNOELL_colorGreenAltP    "#558965"
+#define NeuroThemeNnoellColorBlack     "#020202"
+#define NeuroThemeNnoellColorBlackAlt  "#1c1c1c"
+#define NeuroThemeNnoellColorGray      "#444444"
+#define NeuroThemeNnoellColorGrayAlt   "#101010"
+#define NeuroThemeNnoellColorGrayAlt2  "#404040"
+#define NeuroThemeNnoellColorGrayAlt3  "#252525"
+#define NeuroThemeNnoellColorWhite     "#a9a6af"
+#define NeuroThemeNnoellColorWhiteAlt  "#9d9d9d"
+#define NeuroThemeNnoellColorWhiteAlt2 "#b5b3b3"
+#define NeuroThemeNnoellColorWhiteAlt3 "#707070"
+#define NeuroThemeNnoellColorMagenta   "#8e82a2"
+#define NeuroThemeNnoellColorBlue      "#44aacc"
+#define NeuroThemeNnoellColorBlueAlt   "#3955c4"
+#define NeuroThemeNnoellColorRed       "#f7a16e"
+#define NeuroThemeNnoellColorRedAlt    "#e0105f"
+#define NeuroThemeNnoellColorGreen     "#66ff66"
+#define NeuroThemeNnoellColorGreenAlt  "#558965"
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -37,25 +42,24 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Nnoell theme loggers
-void nnoellCurrLayoutLoggerT(char *str);
-void nnoellCurrLayoutModLoggerT(char *str);
-void nnoellCurrWorkspaceLoggerT(char *str);
-void nnoellCurrTitleLoggerT(char *str);
-void nnoellCurrWorkspaceListLoggerT(char *str);
-void nnoellTimeLoggerT(char *str);
-void nnoellDateLoggerT(char *str);
-void nnoellDayLoggerT(char *str);
-void nnoellCalendarLoggerT(char *str);
-void nnoellDateTimeLoggerT(char *str);
-void nnoellUptimeLoggerT(char *str);
-void nnoellCurrStackSizeLoggerT(char *str);
-void nnoellCurrMinimizedCountLoggerT(char *str);
-void nnoellCpuUsageLoggerT(char *str);
-void nnoellRamPercLoggerT(char *str);
-void nnoellBatteryLoggerT(char *str);
-void nnoellWifiStrengthLoggerT(char *str);
-void nnoellTemperatureLoggerT(char *str);
-
+void NeuroThemeNnoellLoggerCurrLayout(char *str);
+void NeuroThemeNnoellLoggerLayoutMod(char *str);
+void NeuroThemeNnoellLoggerCurrWorkspace(char *str);
+void NeuroThemeNnoellLoggerCurrTitle(char *str);
+void NeuroThemeNnoellLoggerWorkspaceList(char *str);
+void NeuroThemeNnoellLoggerTime(char *str);
+void NeuroThemeNnoellLoggerDate(char *str);
+void NeuroThemeNnoellLoggerDay(char *str);
+void NeuroThemeNnoellLoggerCalendar(char *str);
+void NeuroThemeNnoellLoggerDateTime(char *str);
+void NeuroThemeNnoellLoggerUptime(char *str);
+void NeuroThemeNnoellLoggerStackSize(char *str);
+void NeuroThemeNnoellLoggerMinimizedCount(char *str);
+void NeuroThemeNnoellLoggerCpu(char *str);
+void NeuroThemeNnoellLoggerRam(char *str);
+void NeuroThemeNnoellLoggerBattery(char *str);
+void NeuroThemeNnoellLoggerWifiStrength(char *str);
+void NeuroThemeNnoellLoggerTemperature(char *str);
 
 #endif  // NEURO_THEME_H_
 

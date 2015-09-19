@@ -380,6 +380,17 @@ void NeuroDzenLoggerUptime(char *str) {
   snprintf(str, LOGGER_MAX, "%ih %im %is", hours, minutes, seconds);
 }
 
+void NeuroDzenLoggerCpu(char *str) {
+  assert(str);
+  char buf[ LOGGER_MAX ];
+  int i;
+  for (i = 0; i < numCpus; ++i) {
+    snprintf(buf, LOGGER_MAX, "%i%% ", cpusInfo[ i ].perc);
+    strncat(str, buf, LOGGER_MAX - strlen(str) - 1);
+  }
+  str[ strlen(str) - 1 ] = '\0';
+}
+
 void NeuroDzenLoggerRam(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
@@ -433,16 +444,5 @@ void NeuroDzenLoggerCurrTitle(char *str) {
   ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c)
     strncpy(str, CLI_GET(c).title, LOGGER_MAX);
-}
-
-void NeuroDzenLoggerCpuPercent(char *str) {
-  assert(str);
-  char buf[ LOGGER_MAX ];
-  int i;
-  for (i = 0; i < numCpus; ++i) {
-    snprintf(buf, LOGGER_MAX, "%i%% ", cpusInfo[ i ].perc);
-    strncat(str, buf, LOGGER_MAX - strlen(str) - 1);
-  }
-  str[ strlen(str) - 1 ] = '\0';
 }
 
