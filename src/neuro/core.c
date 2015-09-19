@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  stackset
+// Module      :  core
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
@@ -14,7 +14,7 @@
 // Includes
 #include "system.h"
 #include "geometry.h"
-#include "stackset.h"
+#include "core.h"
 
 // Defines
 #define STEP_SIZE_REALLOC 32

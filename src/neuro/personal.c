@@ -13,9 +13,9 @@
 
 // Includes
 #include "personal.h"
-#include "stackset.h"
+#include "core.h"
 #include "layout.h"
-#include "dzenpanel.h"
+#include "dzen.h"
 #include "workspace.h"
 
 // Nnoell paths

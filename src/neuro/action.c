@@ -15,8 +15,8 @@
 #include "config.h"
 #include "action.h"
 #include "system.h"
-#include "stackset.h"
-#include "dzenpanel.h"
+#include "core.h"
+#include "dzen.h"
 #include "neurowm.h"
 
 

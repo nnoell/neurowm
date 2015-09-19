@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  dzenpanel
+// Module      :  dzen
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
@@ -11,8 +11,8 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_DZENPANEL_H_
-#define NEURO_DZENPANEL_H_
+#ifndef NEURO_DZEN_H_
+#define NEURO_DZEN_H_
 
 // Includes
 #include "type.h"
@@ -53,5 +53,5 @@ int readFileDP(char *buf, const char *fileName);
 void wrapDzenBoxDP(char *dst, const char *src, const BoxPP *b);
 void wrapDzenClickAreaDP(char *dst, const char *src, const CA *ca);
 
-#endif  // NEURO_DZENPANEL_H_
+#endif  // NEURO_DZEN_H_
 

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  stackset
+// Module      :  core
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
@@ -11,8 +11,8 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_STACKSET_H_
-#define NEURO_STACKSET_H_
+#ifndef NEURO_CORE_H_
+#define NEURO_CORE_H_
 
 // Includes
 #include "type.h"
@@ -78,5 +78,5 @@ ClientPtrPtr getPrevClientSS(const ClientPtrPtr c);
 ClientPtrPtr swpClientSS(const ClientPtrPtr c1, const ClientPtrPtr c2);
 
 
-#endif  // NEURO_STACKSET_H_
+#endif  // NEURO_CORE_H_
 

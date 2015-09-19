@@ -14,9 +14,9 @@
 // Includes
 #include "neurowm.h"
 #include "system.h"
-#include "stackset.h"
+#include "core.h"
 #include "event.h"
-#include "dzenpanel.h"
+#include "dzen.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------

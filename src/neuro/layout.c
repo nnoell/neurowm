@@ -15,7 +15,7 @@
 #include "system.h"
 #include "layout.h"
 #include "geometry.h"
-#include "stackset.h"
+#include "core.h"
 #include "workspace.h"
 #include "rule.h"
 

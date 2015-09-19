@@ -15,12 +15,12 @@
 #include "event.h"
 #include "geometry.h"
 #include "system.h"
-#include "stackset.h"
+#include "core.h"
 #include "layout.h"
 #include "client.h"
 #include "workspace.h"
 #include "rule.h"
-#include "dzenpanel.h"
+#include "dzen.h"
 #include "action.h"
 
 

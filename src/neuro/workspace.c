@@ -14,7 +14,7 @@
 // Includes
 #include "workspace.h"
 #include "system.h"
-#include "stackset.h"
+#include "core.h"
 #include "layout.h"
 #include "client.h"
 #include "rule.h"
