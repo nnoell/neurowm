@@ -25,7 +25,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // ActionClientFn
-typedef void (*ActionClientFn)(ClientPtrPtr c, ClientSelectorFn gcf, const void *data);
+typedef void (*ActionClientFn)(ClientPtrPtr c, ClientSelectorFn csf, const void *data);
 
 // ActionWorkspaceFn
 typedef void (*ActionWorkspaceFn)(int ws);
@@ -35,21 +35,21 @@ typedef void (*ActionWorkspaceFn)(int ws);
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static void processWorkspaceAction(const ActionWorkspaceFn gwsaf, int ws) {
-  assert(gwsaf);
+static void processWorkspaceAction(const ActionWorkspaceFn awsf, int ws) {
+  assert(awsf);
   rmvEnterNotifyMaskW(ws);
-  gwsaf(ws);
+  awsf(ws);
   addEnterNotifyMaskW(ws);
 }
 
-static void processClientAction(const ActionClientFn gcaf, ClientPtrPtr c, const ClientSelectorFn csf,
+static void processClientAction(const ActionClientFn acf, ClientPtrPtr c, const ClientSelectorFn csf,
     const void *data) {
-  assert(gcaf);
+  assert(acf);
   assert(csf);
   if (!c)
     return;
   rmvEnterNotifyMaskW(CLI_GET(c).ws);
-  gcaf(c, csf, data);
+  acf(c, csf, data);
   addEnterNotifyMaskW(CLI_GET(c).ws);
 }
 
