@@ -28,7 +28,7 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static void processKeyPress(XEvent *e) {
+static void do_key_press(XEvent *e) {
   assert(e);
   XKeyEvent ke = e->xkey;
   int ks;
@@ -45,7 +45,7 @@ static void processKeyPress(XEvent *e) {
   XFree(keysym);
 }
 
-static void processButtonPress(XEvent *e) {
+static void do_button_press(XEvent *e) {
   assert(e);
   XButtonPressedEvent *ev = &e->xbutton;
   const Button *b;
@@ -59,18 +59,18 @@ static void processButtonPress(XEvent *e) {
   }
 }
 
-static void processMapRequest(XEvent *e) {
+static void do_map_request(XEvent *e) {
   assert(e);
-  manageWindowE(e->xmaprequest.window);
+  NeuroEventManageWindow(e->xmaprequest.window);
   NeuroDzenUpdate(True);
 }
 
-static void processDestroyNotify(XEvent *e) {
+static void do_destroy_notify(XEvent *e) {
   assert(e);
   Window w = e->xdestroywindow.window;
   ClientPtrPtr c = findWindowClientAllW(w);
   if (c) {
-    unmanageCliE(c);
+    NeuroEventUnmanageClient(c);
   } else {
     Client *cli = NeuroCoreRemoveMinimizedClient(w);
     if (cli)
@@ -79,12 +79,12 @@ static void processDestroyNotify(XEvent *e) {
   NeuroDzenUpdate(True);
 }
 
-static void processUnmapNotify(XEvent *e) {
+static void do_unmap_notify(XEvent *e) {
   assert(e);
   Window w = e->xdestroywindow.window;
   ClientPtrPtr c = findWindowClientAllW(w);
   if (c) {
-    unmanageCliE(c);
+    NeuroEventUnmanageClient(c);
   } else {
     Client *cli = NeuroCoreRemoveMinimizedClient(w);
     if (cli)
@@ -93,7 +93,7 @@ static void processUnmapNotify(XEvent *e) {
   NeuroDzenUpdate(True);
 }
 
-static void processEnterNotify(XEvent *e) {
+static void do_enter_notify(XEvent *e) {
   assert(e);
   XCrossingEvent *ev = &e->xcrossing;
   if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != (unsigned int)root)
@@ -112,7 +112,7 @@ static void processEnterNotify(XEvent *e) {
   NeuroDzenUpdate(True);
 }
 
-static void processConfigureRequest(XEvent *e) {
+static void do_configure_request(XEvent *e) {
   assert(e);
   XConfigureRequestEvent *ev = &e->xconfigurerequest;
   XWindowChanges wc;
@@ -131,7 +131,7 @@ static void processConfigureRequest(XEvent *e) {
   NeuroDzenUpdate(True);
 }
 
-static void processFocusIn(XEvent *e) {
+static void do_focus_in(XEvent *e) {
   assert(e);
   ClientPtrPtr c = NeuroClientGetFocused();
   if (!c)
@@ -142,7 +142,7 @@ static void processFocusIn(XEvent *e) {
   NeuroDzenUpdate(True);
 }
 
-static void processClientMessage(XEvent *e) {
+static void do_client_message(XEvent *e) {
   assert(e);
   ClientPtrPtr c = findWindowClientAllW(e->xclient.window);
   if (!c)
@@ -162,7 +162,7 @@ static void processClientMessage(XEvent *e) {
   NeuroDzenUpdate(True);
 }
 
-static void processPropertyNotify(XEvent *e) {
+static void do_property_notify(XEvent *e) {
   assert(e);
   XPropertyEvent *ev = &e->xproperty;
   if (ev->atom == XA_WM_NAME || ev->atom == netatoms[ NET_WM_NAME ]) {  // Window title
@@ -191,17 +191,17 @@ static void processPropertyNotify(XEvent *e) {
 // PUBLIC VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-const EventHandler const eventsE[ LASTEvent ] = {
-  [ KeyPress ]         = processKeyPress,
-  [ ButtonPress ]      = processButtonPress,
-  [ MapRequest ]       = processMapRequest,
-  [ UnmapNotify ]      = processUnmapNotify,
-  [ DestroyNotify ]    = processDestroyNotify,
-  [ EnterNotify ]      = processEnterNotify,
-  [ ConfigureRequest ] = processConfigureRequest,
-  [ FocusIn ]          = processFocusIn,
-  [ ClientMessage ]    = processClientMessage,
-  [ PropertyNotify ]   = processPropertyNotify
+const EventHandler const NeuroEventEventArray[ LASTEvent ] = {
+  [ KeyPress ]         = do_key_press,
+  [ ButtonPress ]      = do_button_press,
+  [ MapRequest ]       = do_map_request,
+  [ UnmapNotify ]      = do_unmap_notify,
+  [ DestroyNotify ]    = do_destroy_notify,
+  [ EnterNotify ]      = do_enter_notify,
+  [ ConfigureRequest ] = do_configure_request,
+  [ FocusIn ]          = do_focus_in,
+  [ ClientMessage ]    = do_client_message,
+  [ PropertyNotify ]   = do_property_notify
 };
 
 
@@ -209,7 +209,7 @@ const EventHandler const eventsE[ LASTEvent ] = {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-void manageWindowE(Window w) {
+void NeuroEventManageWindow(Window w) {
   // Check if window is valid
   XWindowAttributes wa;
   if (!XGetWindowAttributes(display, w, &wa))
@@ -222,10 +222,10 @@ void manageWindowE(Window w) {
   // Add client to the stackset
   Client *cli = allocCliAndSetRulesR(w, &wa);
   if (!cli)
-    exitErrorS("manageWindowE - could not alloc Client and set rules");
+    exitErrorS("NeuroEventManageWindow - could not alloc Client and set rules");
   ClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
-    exitErrorS("manageWindowE - could not add client");
+    exitErrorS("NeuroEventManageWindow - could not add client");
 
   // Transient windows
   Window trans = None;
@@ -257,7 +257,7 @@ void manageWindowE(Window w) {
   addEnterNotifyMaskW(ws);
 }
 
-void unmanageCliE(ClientPtrPtr c) {
+void NeuroEventUnmanageClient(ClientPtrPtr c) {
   assert(c);
   const int ws = CLI_GET(c).ws;
   rmvEnterNotifyMaskW(ws);
@@ -269,18 +269,18 @@ void unmanageCliE(ClientPtrPtr c) {
   addEnterNotifyMaskW(ws);
 }
 
-void loadWindowsE() {
+void NeuroEventLoadWindows() {
   unsigned int i, num;
   Window d1, d2, *wins = NULL;
   XWindowAttributes wa;
   if (!XQueryTree(display, root, &d1, &d2, &wins, &num))
-    exitErrorS("loadWindowsE - could not get windows");
+    exitErrorS("NeuroEventLoadWindows - could not get windows");
   for (i = 0; i < num; ++i) {
     if (!XGetWindowAttributes(display, wins[ i ], &wa))
       continue;
     if (wa.map_state != IsViewable)
       continue;
-    manageWindowE(wins[ i ]);
+    NeuroEventManageWindow(wins[ i ]);
   }
   if (wins)
     XFree(wins);

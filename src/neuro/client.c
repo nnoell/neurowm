@@ -229,7 +229,7 @@ void NeuroClientKill(ClientPtrPtr c, const void *data) {
     XSendEvent(display, CLI_GET(c).win, False, NoEventMask, &ke);
   } else {
     XKillClient(display, CLI_GET(c).win);
-    unmanageCliE(c);
+    NeuroEventUnmanageClient(c);
   }
 }
 

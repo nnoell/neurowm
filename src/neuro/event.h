@@ -26,16 +26,16 @@
 typedef void (*EventHandler)(XEvent *e);
 
 // Array of Events
-extern const EventHandler const eventsE[ LASTEvent ];
+extern const EventHandler const NeuroEventEventArray[ LASTEvent ];
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-void manageWindowE(Window w);
-void unmanageCliE(ClientPtrPtr c);
-void loadWindowsE();
+void NeuroEventManageWindow(Window w);
+void NeuroEventUnmanageClient(ClientPtrPtr c);
+void NeuroEventLoadWindows();
 
 
 #endif  // NEURO_EVENT_H_

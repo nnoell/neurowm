@@ -77,7 +77,7 @@ static void initNeurowm(const Configuration *c) {
   //   exitErrorG("initNeurowmN - could not set SIGHUP handler");
 
   // Load existing windows if Xsesion was not closed
-  loadWindowsE();
+  NeuroEventLoadWindows();
 }
 
 
@@ -92,8 +92,8 @@ int runN(const Configuration *c) {
   // Main loop
   XEvent ev;
   while (!stopWhile && !XNextEvent(display, &ev))
-    if (eventsE[ ev.type ])
-      eventsE[ ev.type ](&ev);
+    if (NeuroEventEventArray[ ev.type ])
+      NeuroEventEventArray[ ev.type ](&ev);
 
   // End window manager
   endNeurowm();
