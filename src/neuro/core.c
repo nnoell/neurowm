@@ -313,7 +313,7 @@ Bool initSS() {
   return True;
 }
 
-void endSS() {
+void stopSS() {
   int i;
   for (i = 0; i < SS.size; ++i)
     freeStack(SS.stacks + i);

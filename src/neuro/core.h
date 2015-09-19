@@ -24,7 +24,7 @@
 
 // StackSet
 Bool initSS();
-void endSS();
+void stopSS();
 int getCurrStackSS();
 int getPrevStackSS();
 int getNextStackSS();

@@ -177,7 +177,7 @@ Bool initS() {
   return True;
 }
 
-void endS() {
+void stopS() {
   XFreeCursor(display, cursors[ CurNormal ]);
   XFreeCursor(display, cursors[ CurResize ]);
   XFreeCursor(display, cursors[ CurMove ]);

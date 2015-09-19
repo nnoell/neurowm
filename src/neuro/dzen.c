@@ -157,12 +157,12 @@ Bool initDP() {
   return True;
 }
 
-void endDP() {
+void stopDP() {
   endUpdateThread();
   int i;
   for (i = 0; i < PIP.numPanels; ++i)
     if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)
-      perror("endDP - could not kill panels");
+      perror("stopDP - could not kill panels");
   free(PIP.pi);
   PIP.pi = NULL;
 }

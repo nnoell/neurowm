@@ -70,7 +70,7 @@ extern const Atom netatoms[ NET_COUNT ];
 // Basic functions
 void setConfigS(const WMConfig *c);
 Bool initS();
-void endS();
+void stopS();
 
 // Binding functions
 void grabKeysS(Window w);

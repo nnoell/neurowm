@@ -41,9 +41,9 @@ static int recompileNeurowm(pid_t *pid) {
 
 static void endNeurowm() {
   runActionChainA(endUpHookS);
-  endDP();
-  endSS();
-  endS();
+  stopDP();
+  stopSS();
+  stopS();
 }
 
 static void signalHandler(int signo) {

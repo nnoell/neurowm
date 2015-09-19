@@ -29,7 +29,7 @@
 
 // Basic Functions
 Bool initDP();
-void endDP();
+void stopDP();
 void updateDP(int onlyEvent);
 
 // CPU Calculation

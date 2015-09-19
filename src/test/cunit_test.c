@@ -30,7 +30,7 @@ int init_stackset_suite(void) {
 }
 
 int clean_stackset_suite(void) {
-  endSS();
+  stopSS();
   return 0;
 }
 
