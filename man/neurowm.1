@@ -268,12 +268,12 @@ exec\ neurowm
 \f[]
 .fi
 .SH CUSTOMIZATION
-In order to configure neurowm, you must code a neurowm.c file in C language 
-under \f[I]~/.neurowm\f[] directory, then you must compile it and run it in order to 
+In order to configure neurowm, you must code a neurowm.c file in C language
+under \f[I]~/.neurowm\f[] directory, then you must compile it and run it in order to
 see your applied changes.
 
 A neurowm configuration is just a big struct of type \f[I]WMConfig\f[]. This struct must be passed as a parameter to a function called \f[I]neurowm\f[] within \f[I]neurowm.h\f[] module. There is already an initialized WMConfig struct called \f[I]defWMConfig\f[] in 
-\f[I]config.h\f[] with the default neurowm configuration. Therefore, the simpliest 
+\f[I]config.h\f[] with the default neurowm configuration. Therefore, the simpliest
 \f[I]neurowm.c\f[] you can write is the following:
 .IP
 .nf
@@ -281,7 +281,7 @@ A neurowm configuration is just a big struct of type \f[I]WMConfig\f[]. This str
 #include <neuro/neurowm.h>
 
 int\ main()\ {
-\ \ \ \ return\ runN(&defWMConfig);
+\ \ \ \ return\ runN(&NeuroConfigConfiguration);
 }
 \f[]
 .fi

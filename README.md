@@ -37,12 +37,12 @@ Configuration
 
 In order to run *neurowm*, you must firstly write your own **neurowm.c** configuration file in **~/.neurowm** folder. If the folder does not exist, create it. There are examples of **neurowm.c** configuration files under the **examples** folder.
 
-The **default neurowm configuration** lies within the config module, so, to run *neurowm* with its default parameters, you just need to load the already defined `defWMConfig` structure. Here is an example of the simpliest neurowm.c:
+The **default neurowm configuration** lies within the config module, so, to run *neurowm* with its default parameters, you just need to load the already defined `NeuroConfigConfiguration` structure. Here is an example of the simpliest neurowm.c:
 
 	#include <neuro/neurowm.h>
 
 	int main() {
-		return runN(&defWMConfig);
+		return runN(&NeuroConfigConfiguration);
 	}
 
 Once you have written your own neurowm.c file, compile it using the `--recompile` flag:

@@ -306,7 +306,7 @@ static const Key *myKeys[] = {
 //----------------------------------------------------------------------------------------------------------------------
 
 // BUTTON (MOD, BUTTON, ACTIONCHAIN, UNWRAPONFOCUS)
-static const Button button00[] = { { noModMask,           Button1, CHAIN_NULL(NeuroActionChainFocusPtrClient),            True  } };
+static const Button button00[] = { { NULL_MASK,           Button1, CHAIN_NULL(NeuroActionChainFocusPtrClient),            True  } };
 static const Button button01[] = { { myModMask,           Button1, CHAIN_NULL(NeuroActionChainFreeMovePtrClient),         False } };
 static const Button button02[] = { { myModMask,           Button2, CHAIN_NULL(NeuroActionChainToggleFreePtrClient),       False } };
 static const Button button03[] = { { myModMask,           Button3, CHAIN_NULL(NeuroActionChainFreeResizePtrClient),       False } };
@@ -323,11 +323,11 @@ static const Button *myButtons[] = { button00, button01, button02, button03, but
 //----------------------------------------------------------------------------------------------------------------------
 
 static const Configuration myConfiguration = {
-  defNormBorderColor,
-  defCurrBorderColor,
-  defPrevBorderColor,
-  defFreeBorderColor,
-  defUrgtBorderColor,
+  NeuroConfigNormBorderColor,
+  NeuroConfigCurrBorderColor,
+  NeuroConfigPrevBorderColor,
+  NeuroConfigFreeBorderColor,
+  NeuroConfigUrgtBorderColor,
   myBorderWidth,
   myBorderGap,
   myWorkspaceSet,
@@ -348,6 +348,6 @@ int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
   return runN(&myConfiguration);
-  // return runN(&defConfiguration);
+  // return runN(&NeuroConfigConfiguration);
 }
 

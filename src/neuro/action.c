@@ -63,7 +63,7 @@ const Action const NeuroActionNothing[] = { { NeuroActionHandlerNothing, ARG_NUL
 const Action const NeuroActionQuit[] = { { NeuroActionHandlerQuit, ARG_NULL } };
 const Action const NeuroActionReload[] = { { NeuroActionHandlerReload, ARG_NULL } };
 const Action const NeuroActionStartCpuCalc[] = { { NeuroActionHandlerStartCpuCalc, ARG_NULL } };
-const Action const NeuroActionSpawn[] = { { NeuroActionHandlerSpawn, ARG_CMD(defTerminalCommand) } };
+const Action const NeuroActionSpawn[] = { { NeuroActionHandlerSpawn, ARG_CMD(NeuroConfigTerminalCommand) } };
 const Action const NeuroActionSleep[] = { { NeuroActionHandlerSleep, ARG_INT(1) } };
 const Action const NeuroActionStopCpuCalc[] = { { NeuroActionHandlerStopCpuCalc, ARG_NULL } };
 const Action const NeuroActionChangeLayout[] = { { NeuroActionHandlerChangeLayout, ARG_INT(1) } };
@@ -76,7 +76,8 @@ const Action const NeuroActionChangeWorkspace[] = { { NeuroActionHandlerChangeWo
 const Action const NeuroActionRelativeChangeWorkspace[] = { {
     NeuroActionHandlerRelativeChangeWorkspace, ARG_WSF(nextW) } };
 const Action const NeuroActionRestoreLastMinimized[] = { { NeuroActionHandlerRestoreLastMinimized, ARG_NULL } };
-const Action const NeuroActionToggleScatchpad[] = { { NeuroActionHandlerToggleScratchpad, ARG_CMD(defNSPCommand) } };
+const Action const NeuroActionToggleScatchpad[] = { {
+    NeuroActionHandlerToggleScratchpad, ARG_CMD(NeuroConfigScratchpadCommand) } };
 const Action const NeuroActionFocusCurrClient[] = { { NeuroActionHandlerFocusCurrClient, ARG_CSF(nextC) } };
 const Action const NeuroActionSwapCurrClient[] = { { NeuroActionHandlerSwapCurrClient, ARG_CSF(nextC) } };
 const Action const NeuroActionSendCurrClient[] = { { NeuroActionHandlerSendCurrClient, ARG_INT(0) } };
