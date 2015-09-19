@@ -169,7 +169,7 @@ static const DzenFlags topLeftDzenFlags[] = { {
   0, 0, 1500, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'l', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn topLeftLoggers[] = {
-  nnoellCurrLayoutLoggerP, nnoellCurrLayoutModLoggerP, nnoellCurrWSLoggerP, nnoellCurrTitleLoggerP, NULL
+  nnoellCurrLayoutLoggerT, nnoellCurrLayoutModLoggerT, nnoellCurrWorkspaceLoggerT, nnoellCurrTitleLoggerT, NULL
 };
 
 // TOP RIGHT
@@ -177,7 +177,7 @@ static const DzenFlags topRightDzenFlags[] = { {
   1500, 0, 420, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'r', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn topRightLoggers[] = {
-  nnoellUptimeLoggerP, nnoellDateTimeLoggerP, NULL
+  nnoellUptimeLoggerT, nnoellDateTimeLoggerT, NULL
 };
 
 // BOTTOM LEFT
@@ -185,7 +185,7 @@ static const DzenFlags botLeftDzenFlags[] = { {
   0, 1064, 920, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'l', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn botLeftLoggers[] = {
-  nnoellCurrWSListLoggerP, nnoellCurrSizeStackLoggerP, nnoellCurrMinimizedCountLoggerP, NULL
+  nnoellCurrWorkspaceListLoggerT, nnoellCurrStackSizeLoggerT, nnoellCurrMinimizedCountLoggerT, NULL
 };
 
 // BOTTOM RIGHT
@@ -193,7 +193,7 @@ static const DzenFlags botRightDzenFlags[] = { {
   920, 1064, 1000, 16, NNOELL_colorWhiteAltP, NNOELL_colorBlackP, 'r', DZENPANELFONT, "onstart=lower", "-p"
 } };
 static const LoggerFn botRightLoggers[] = {
-  nnoellCPUUsageLoggerP, nnoellRamPercLoggerP, nnoellTempLoggerP, nnoellWifiStrengthLoggerP, NULL
+  nnoellCpuUsageLoggerT, nnoellRamPercLoggerT, nnoellTemperatureLoggerT, nnoellWifiStrengthLoggerT, NULL
 };
 
 // DZENPANELS (DZENFLAGS, LOGGERS, SEP, REFRESH)

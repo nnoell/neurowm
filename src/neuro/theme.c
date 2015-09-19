@@ -115,7 +115,7 @@ static const CA calendarCA = {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Nnoell Loggers
-void nnoellCurrLayoutLoggerP(char *str) {
+void nnoellCurrLayoutLoggerT(char *str) {
   assert(str);
   int ws = getCurrStackSS();
   int idx = getLayoutIdxStackSS(ws);
@@ -134,7 +134,7 @@ void nnoellCurrLayoutLoggerP(char *str) {
   }
 }
 
-void nnoellCurrLayoutModLoggerP(char *str) {
+void nnoellCurrLayoutModLoggerT(char *str) {
   assert(str);
   int ws = getCurrStackSS();
   Layout *l = getCurrLayoutStackSS(ws);
@@ -157,7 +157,7 @@ void nnoellCurrLayoutModLoggerP(char *str) {
   }
 }
 
-void nnoellCurrWSLoggerP(char *str) {
+void nnoellCurrWorkspaceLoggerT(char *str) {
   assert(str);
   int ws = getCurrStackSS();
   const char *name = getNameStackSS(ws);
@@ -171,7 +171,7 @@ void nnoellCurrWSLoggerP(char *str) {
   }
 }
 
-void nnoellCurrTitleLoggerP(char *str) {
+void nnoellCurrTitleLoggerT(char *str) {
   assert(str);
   ClientPtrPtr c = getCurrClientStackSS(getCurrStackSS());
   if (c) {
@@ -183,7 +183,7 @@ void nnoellCurrTitleLoggerP(char *str) {
   }
 }
 
-void nnoellCurrWSListLoggerP(char *str) {
+void nnoellCurrWorkspaceListLoggerT(char *str) {
   assert(str);
   int size = getSizeSS();
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
@@ -205,7 +205,7 @@ void nnoellCurrWSListLoggerP(char *str) {
   }
 }
 
-void nnoellTimeLoggerP(char *str) {
+void nnoellTimeLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   time_t t = time(NULL);
@@ -217,7 +217,7 @@ void nnoellTimeLoggerP(char *str) {
   wrapDzenBoxD(str, tmp, &WhiteBoxPP);
 }
 
-void nnoellDateLoggerP(char *str) {
+void nnoellDateLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   time_t t = time(NULL);
@@ -229,31 +229,31 @@ void nnoellDateLoggerP(char *str) {
   wrapDzenBoxD(str, tmp, &WhiteBoxPP);
 }
 
-void nnoellDayLoggerP(char *str) {
+void nnoellDayLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   dayLoggerD(tmp);
   wrapDzenBoxD(str, tmp, &White2BBoxPP);
 }
 
-void nnoellCalendarLoggerP(char *str) {
+void nnoellCalendarLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ];
   wrapDzenClickAreaD(tmp, "CALENDAR", &calendarCA);
   wrapDzenBoxD(str, tmp, &BlueBoxPP);
 }
 
-void nnoellDateTimeLoggerP(char *str) {
+void nnoellDateTimeLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  nnoellCalendarLoggerP(tmp);
-  nnoellTimeLoggerP(tmp2);
-  nnoellDateLoggerP(tmp3);
-  nnoellDayLoggerP(tmp4);
+  nnoellCalendarLoggerT(tmp);
+  nnoellTimeLoggerT(tmp2);
+  nnoellDateLoggerT(tmp3);
+  nnoellDayLoggerT(tmp4);
   snprintf(str, LOGGER_MAX, "%s%s%s%s", tmp4, tmp3, tmp2, tmp);
 }
 
-void nnoellUptimeLoggerP(char *str) {
+void nnoellUptimeLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   uptimeLoggerD(tmp);
@@ -262,7 +262,7 @@ void nnoellUptimeLoggerP(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellCurrSizeStackLoggerP(char *str) {
+void nnoellCurrStackSizeLoggerT(char *str) {
   assert(str);
   int size = getSizeStackSS(getCurrStackSS());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
@@ -272,7 +272,7 @@ void nnoellCurrSizeStackLoggerP(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellCurrMinimizedCountLoggerP(char *str) {
+void nnoellCurrMinimizedCountLoggerT(char *str) {
   assert(str);
   int count = getMinimizedNumStackSS(getCurrStackSS());
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
@@ -282,7 +282,7 @@ void nnoellCurrMinimizedCountLoggerP(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellCPUUsageLoggerP(char *str) {
+void nnoellCpuUsageLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   cpuPercUsageLoggerD(tmp);
@@ -295,7 +295,7 @@ void nnoellCPUUsageLoggerP(char *str) {
   tmp[ 0 ] = '\0';
 }
 
-void nnoellRamPercLoggerP(char *str) {
+void nnoellRamPercLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   ramPercLoggerD(tmp);
@@ -304,7 +304,7 @@ void nnoellRamPercLoggerP(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellBatteryLoggerP(char *str) {
+void nnoellBatteryLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   if (-1 == readFileD(tmp, "/sys/class/power_supply/BAT0/capacity"))
@@ -320,7 +320,7 @@ void nnoellBatteryLoggerP(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellWifiStrengthLoggerP(char *str) {
+void nnoellWifiStrengthLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
   wifiStrengthD(tmp);
@@ -329,7 +329,7 @@ void nnoellWifiStrengthLoggerP(char *str) {
   strncat(str, tmp2, LOGGER_MAX - strlen(str) - 1);
 }
 
-void nnoellTempLoggerP(char *str) {
+void nnoellTemperatureLoggerT(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
   if (-1 == readFileD(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))

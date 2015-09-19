@@ -12,7 +12,7 @@
 // Includes
 #include "type.h"
 
-// Nnoell colors
+// Nnoell theme colors
 #define NNOELL_colorBlackP       "#020202"
 #define NNOELL_colorBlackAltP    "#1c1c1c"
 #define NNOELL_colorGrayP        "#444444"
@@ -36,25 +36,25 @@
 // PUBLIC FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Nnoell loggers
-void nnoellCurrLayoutLoggerP(char *str);
-void nnoellCurrLayoutModLoggerP(char *str);
-void nnoellCurrWSLoggerP(char *str);
-void nnoellCurrTitleLoggerP(char *str);
-void nnoellCurrWSListLoggerP(char *str);
-void nnoellTimeLoggerP(char *str);
-void nnoellDateLoggerP(char *str);
-void nnoellDayLoggerP(char *str);
-void nnoellCalendarLoggerP(char *str);
-void nnoellDateTimeLoggerP(char *str);
-void nnoellUptimeLoggerP(char *str);
-void nnoellCurrSizeStackLoggerP(char *str);
-void nnoellCurrMinimizedCountLoggerP(char *str);
-void nnoellCPUUsageLoggerP(char *str);
-void nnoellRamPercLoggerP(char *str);
-void nnoellBatteryLoggerP(char *str);
-void nnoellWifiStrengthLoggerP(char *str);
-void nnoellTempLoggerP(char *str);
+// Nnoell theme loggers
+void nnoellCurrLayoutLoggerT(char *str);
+void nnoellCurrLayoutModLoggerT(char *str);
+void nnoellCurrWorkspaceLoggerT(char *str);
+void nnoellCurrTitleLoggerT(char *str);
+void nnoellCurrWorkspaceListLoggerT(char *str);
+void nnoellTimeLoggerT(char *str);
+void nnoellDateLoggerT(char *str);
+void nnoellDayLoggerT(char *str);
+void nnoellCalendarLoggerT(char *str);
+void nnoellDateTimeLoggerT(char *str);
+void nnoellUptimeLoggerT(char *str);
+void nnoellCurrStackSizeLoggerT(char *str);
+void nnoellCurrMinimizedCountLoggerT(char *str);
+void nnoellCpuUsageLoggerT(char *str);
+void nnoellRamPercLoggerT(char *str);
+void nnoellBatteryLoggerT(char *str);
+void nnoellWifiStrengthLoggerT(char *str);
+void nnoellTemperatureLoggerT(char *str);
 
 
 #endif  // NEURO_THEME_H_
