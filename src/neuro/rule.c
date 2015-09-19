@@ -92,8 +92,8 @@ Client *allocCliAndSetRulesR(Window w, const XWindowAttributes *wa) {
   if (isFreeSizeHints(c))
     c->freeSetterFn = defFreeR;
   c->ws = NeuroCoreGetCurrStack();
-  updateClassAndNameC(&c, NULL);
-  updateTitleC(&c, NULL);
+  NeuroClientUpdateClassAndName(&c, NULL);
+  NeuroClientUpdateTitle(&c, NULL);
   const Rule *r;
   int i;
   for (i = 0; ruleSetS[ i ]; ++i) {

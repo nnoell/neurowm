@@ -64,23 +64,23 @@ static const ActionChain myEndUpHook[] = { CHAIN_NULL(NeuroActionChainStopCpuCal
 
 // LAYOUTCONFS (NAME, ARRANGERF, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
 static const LayoutConf tile[] = { {
-  "Tile", tallArrangerL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  "Tile", tallArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
   notModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf mirr[] = { {
-  "Mirr", tallArrangerL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  "Mirr", tallArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
   mirrModL, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf grid[] = { {
-  "Grid", gridArrangerL, allBorderColorC, smartBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  "Grid", gridArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
   mirrModL|reflXModL|reflYModL, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf full[] = { {
-  "Full",  fullArrangerL,  allBorderColorC, smartBorderWidthC,  alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  "Full",  fullArrangerL,  NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart,  NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
   notModL, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf floa[] = { {
-  "Float", floatArrangerL, allBorderColorC, alwaysBorderWidthC, alwaysBorderGapC, {0.0f, 0.0f, 1.0f, 1.0f},
+  "Float", floatArrangerL, NeuroClientColorSetterAll, NeuroClientBorderWidthSetterAlways, NeuroClientBorderGapSetterAlways, {0.0f, 0.0f, 1.0f, 1.0f},
   notModL, False, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 
@@ -213,22 +213,22 @@ static const DzenPanel *myDzenPanelSet[] = { topLeftPanel, topRightPanel, botLef
 // KEY (MOD, KEY, ACTIONCHAIN)
 static const Key key00[] = { { myModMask|ShiftMask,   XK_Return,    CHAIN(NeuroActionChainSpawn, ARG_CMD(termcmd))                 } };
 static const Key key01[] = { { myModMask,             XK_c,         CHAIN_NULL(NeuroActionChainKillClient)                         } };
-static const Key key02[] = { { myModMask,             XK_j,         CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(nextC))         } };
-static const Key key03[] = { { myModMask,             XK_k,         CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(prevC))         } };
-static const Key key04[] = { { myModMask,             XK_Tab,       CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(oldC))          } };
-static const Key key05[] = { { myModMask,             XK_m,         CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(headC))         } };
-static const Key key06[] = { { myModMask|ShiftMask,   XK_j,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(nextC))          } };
-static const Key key07[] = { { myModMask|ShiftMask,   XK_k,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(prevC))          } };
-static const Key key08[] = { { myModMask|ShiftMask,   XK_p,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(oldC))           } };
-static const Key key09[] = { { myModMask|ShiftMask,   XK_m,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(headC))          } };
-static const Key key10[] = { { myModMask,             XK_Up,        CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(upC))           } };
-static const Key key11[] = { { myModMask,             XK_Down,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(downC))         } };
-static const Key key12[] = { { myModMask,             XK_Left,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(leftC))         } };
-static const Key key13[] = { { myModMask,             XK_Right,     CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(rightC))        } };
-static const Key key14[] = { { myModMask|ShiftMask,   XK_Up,        CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(upC))            } };
-static const Key key15[] = { { myModMask|ShiftMask,   XK_Down,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(downC))          } };
-static const Key key16[] = { { myModMask|ShiftMask,   XK_Left,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(leftC))          } };
-static const Key key17[] = { { myModMask|ShiftMask,   XK_Right,     CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(rightC))         } };
+static const Key key02[] = { { myModMask,             XK_j,         CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorNext))         } };
+static const Key key03[] = { { myModMask,             XK_k,         CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorPrev))         } };
+static const Key key04[] = { { myModMask,             XK_Tab,       CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorOld))          } };
+static const Key key05[] = { { myModMask,             XK_m,         CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorHead))         } };
+static const Key key06[] = { { myModMask|ShiftMask,   XK_j,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorNext))          } };
+static const Key key07[] = { { myModMask|ShiftMask,   XK_k,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorPrev))          } };
+static const Key key08[] = { { myModMask|ShiftMask,   XK_p,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorOld))           } };
+static const Key key09[] = { { myModMask|ShiftMask,   XK_m,         CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorHead))          } };
+static const Key key10[] = { { myModMask,             XK_Up,        CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorUp))           } };
+static const Key key11[] = { { myModMask,             XK_Down,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorDown))         } };
+static const Key key12[] = { { myModMask,             XK_Left,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorLeft))         } };
+static const Key key13[] = { { myModMask,             XK_Right,     CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorRight))        } };
+static const Key key14[] = { { myModMask|ShiftMask,   XK_Up,        CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorUp))            } };
+static const Key key15[] = { { myModMask|ShiftMask,   XK_Down,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorDown))          } };
+static const Key key16[] = { { myModMask|ShiftMask,   XK_Left,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorLeft))          } };
+static const Key key17[] = { { myModMask|ShiftMask,   XK_Right,     CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorRight))         } };
 static const Key key18[] = { { myModMask,             XK_space,     CHAIN_NULL(NeuroActionChainChangeLayout)                       } };
 static const Key key19[] = { { myModMask,             XK_t,         CHAIN_NULL(NeuroActionChainToggleFreeCurrClient)               } };
 static const Key key20[] = { { myModMask,             XK_z,         CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(mirrModL))     } };

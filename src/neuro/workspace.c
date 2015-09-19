@@ -39,18 +39,18 @@ static Bool isAboveTiledClient(const ClientPtrPtr c) {
 
 static void focusClient(ClientPtrPtr c) {
   assert(c);
-  unsetUrgentC(c, NULL);
+  NeuroClientUnsetUrgent(c, NULL);
   ungrabButtonsS(CLI_GET(c).win);
   XSetInputFocus(display, CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(display, root, netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
       (unsigned char *)&(CLI_GET(c).win), 1);
-  updateC(c, NULL);
+  NeuroClientUpdate(c, NULL);
 }
 
 static void unfocusClient(ClientPtrPtr c) {
   assert(c);
   grabButtonsS(CLI_GET(c).win);
-  updateC(c, NULL);
+  NeuroClientUpdate(c, NULL);
 }
 
 static void processClient(const WorkspaceClientFn wcf, const ClientPtrPtr ref, const ClientSelectorFn csf,
@@ -76,7 +76,7 @@ static void sendClient(ClientPtrPtr c, const void *data) {
   const Bool isFree = CLI_GET(c).freeSetterFn != notFreeR;
   const Bool doRules = True;
   if (oldws == currws)
-    hideC(c, (const void *)&doRules);
+    NeuroClientHide(c, (const void *)&doRules);
   if (isFree)
     memmove(&oldRegion, NeuroCoreClientGetRegion(c), sizeof(Rectangle));
   Client *cli = NeuroCoreRemoveClient(c);
@@ -87,7 +87,7 @@ static void sendClient(ClientPtrPtr c, const void *data) {
   if (isFree)
     memmove(NeuroCoreClientGetRegion(c2), &oldRegion, sizeof(Rectangle));
   if (ws == currws)
-    showC(c2, (const void *)&doRules);
+    NeuroClientShow(c2, (const void *)&doRules);
   runCurrL(currws);
   updateFocusW(currws);
 }
@@ -112,7 +112,7 @@ void changeW(int ws) {
 void updateW(int ws) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    updateC(c, NULL);
+    NeuroClientUpdate(c, NULL);
 }
 
 void updateFocusW(int ws) {
@@ -157,31 +157,31 @@ void updateFocusW(int ws) {
 void hideW(int ws, Bool doRules) {
   ClientPtrPtr c;
   for (c=NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    hideC(c, (const void *)&doRules);
+    NeuroClientHide(c, (const void *)&doRules);
 }
 
 void showW(int ws, Bool doRules) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    showC(c, (const void *)&doRules);
+    NeuroClientShow(c, (const void *)&doRules);
 }
 
 void tileW(int ws) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    tileC(c, NULL);
+    NeuroClientTile(c, NULL);
 }
 
 void freeW(int ws, const void *freeSetterFn) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    freeC(c, freeSetterFn);
+    NeuroClientFree(c, freeSetterFn);
 }
 
 void minimizeW(int ws) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    minimizeC(c, NULL);
+    NeuroClientMinimize(c, NULL);
 }
 
 void restoreLastMinimizedW(int ws) {
@@ -242,51 +242,51 @@ void sendClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *ws) {
 }
 
 void killClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(killC, ref, csf, data);
+  processClient(NeuroClientKill, ref, csf, data);
 }
 
 void minimizeClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(minimizeC, ref, csf, data);
+  processClient(NeuroClientMinimize, ref, csf, data);
 }
 
 void tileClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(tileC, ref, csf, data);
+  processClient(NeuroClientTile, ref, csf, data);
 }
 
 void freeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn) {
-  processClient(freeC, ref, csf, freeSetterFn);
+  processClient(NeuroClientFree, ref, csf, freeSetterFn);
 }
 
 void toggleFreeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn) {
-  processClient(toggleFreeC, ref, csf, freeSetterFn);
+  processClient(NeuroClientToggleFree, ref, csf, freeSetterFn);
 }
 
 void normalClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(normalC, ref, csf, data);
+  processClient(NeuroClientNormal, ref, csf, data);
 }
 
 void fullScreenClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(fullScreenC, ref, csf, data);
+  processClient(NeuroClientFullscreen, ref, csf, data);
 }
 
 void toggleFullScreenClientW(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(toggleFullScreenC, ref, csf, data);
+  processClient(NeuroClientToggleFullscreen, ref, csf, data);
 }
 
 void floatMoveClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(moveC, ref, csf, data);
+  processClient(NeuroClientFloatMove, ref, csf, data);
 }
 
 void floatResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(resizeC, ref, csf, data);
+  processClient(NeuroClientFloatResize, ref, csf, data);
 }
 
 void freeMoveClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(freeMoveC, ref, csf, data);
+  processClient(NeuroClientFreeMove, ref, csf, data);
 }
 
 void freeResizeClientW(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
-  processClient(freeResizeC, ref, csf, data);
+  processClient(NeuroClientFreeResize, ref, csf, data);
 }
 
 
@@ -306,18 +306,18 @@ int oldW() {
 
 // Find functions
 ClientPtrPtr findWindowClientAllW(Window w) {
-  return NeuroCoreFindClient(testWindowC, (const void *)&w);
+  return NeuroCoreFindClient(NeuroClientTesterWindow, (const void *)&w);
 }
 
 ClientPtrPtr findWindowClientW(int ws, Window w) {
-  return NeuroCoreStackFindClient(ws, testWindowC, (const void *)&w);
+  return NeuroCoreStackFindClient(ws, NeuroClientTesterWindow, (const void *)&w);
 }
 
 ClientPtrPtr findUrgentClientW(int ws) {
-  return NeuroCoreStackFindClient(ws, testIsUrgentC, NULL);
+  return NeuroCoreStackFindClient(ws, NeuroClientTesterUrgent, NULL);
 }
 
 ClientPtrPtr findFixedClientW(int ws) {
-  return NeuroCoreStackFindClient(ws, testIsFixedC, NULL);
+  return NeuroCoreStackFindClient(ws, NeuroClientTesterFixed, NULL);
 }
 

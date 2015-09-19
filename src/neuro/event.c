@@ -108,7 +108,7 @@ static void processEnterNotify(XEvent *e) {
     return;
   if (NeuroCoreClientIsCurr(c))
     return;
-  focusClientW(c, selfC, NULL);
+  focusClientW(c, NeuroClientSelectorSelf, NULL);
   updateD(True);
 }
 
@@ -133,12 +133,12 @@ static void processConfigureRequest(XEvent *e) {
 
 static void processFocusIn(XEvent *e) {
   assert(e);
-  ClientPtrPtr c = getFocusedC();
+  ClientPtrPtr c = NeuroClientGetFocused();
   if (!c)
     return;
   if (CLI_GET(c).win == e->xfocus.window)
     return;
-  focusClientW(c, selfC, NULL);
+  focusClientW(c, NeuroClientSelectorSelf, NULL);
   updateD(True);
 }
 
@@ -151,13 +151,13 @@ static void processClientMessage(XEvent *e) {
       ((unsigned)e->xclient.data.l[1] == netatoms[ NET_FULLSCREEN ]
       || (unsigned)e->xclient.data.l[2] == netatoms[ NET_FULLSCREEN ])) {
     if (e->xclient.data.l[0] == 0)  // _NET_WM_STATE_REMOVE
-      normalC(c, NULL);
+      NeuroClientNormal(c, NULL);
     else if (e->xclient.data.l[0] == 1)  // _NET_WM_STATE_ADD
-      fullScreenC(c, NULL);
+      NeuroClientFullscreen(c, NULL);
     else if (e->xclient.data.l[0] == 2)  // _NET_WM_STATE_TOGGLE
-      toggleFullScreenC(c, NULL);
+      NeuroClientToggleFullscreen(c, NULL);
   } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
-    focusClientW(c, selfC, NULL);
+    focusClientW(c, NeuroClientSelectorSelf, NULL);
   }
   updateD(True);
 }
@@ -169,7 +169,7 @@ static void processPropertyNotify(XEvent *e) {
     ClientPtrPtr c = findWindowClientAllW(ev->window);
     if (!c)
       return;
-    updateTitleC(c, NULL);
+    NeuroClientUpdateTitle(c, NULL);
     updateD(True);
   } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
     ClientPtrPtr c = findWindowClientAllW(ev->window);
@@ -179,10 +179,10 @@ static void processPropertyNotify(XEvent *e) {
       return;
     XWMHints *wmh = XGetWMHints(display, CLI_GET(c).win);
     if (wmh && (wmh->flags & XUrgencyHint))
-      setUrgentC(c, NULL);
+      NeuroClientSetUrgent(c, NULL);
     if (wmh)
       XFree(wmh);
-    updateC(c, NULL);
+    NeuroClientUpdate(c, NULL);
     updateD(True);
   }
 }
@@ -243,7 +243,7 @@ void manageWindowE(Window w) {
 
   // Map window
   Bool doRules = False;
-  hideC(c, (const void*)&doRules);
+  NeuroClientHide(c, (const void*)&doRules);
   XMapWindow(display, CLI_GET(c).win);
   grabButtonsS(CLI_GET(c).win);
   const int ws = CLI_GET(c).ws;
@@ -251,7 +251,7 @@ void manageWindowE(Window w) {
     return;
   rmvEnterNotifyMaskW(ws);
   doRules = True;
-  showC(c, (const void*)&doRules);
+  NeuroClientShow(c, (const void*)&doRules);
   runCurrL(ws);
   updateFocusW(ws);
   addEnterNotifyMaskW(ws);
