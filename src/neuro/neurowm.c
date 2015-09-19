@@ -92,8 +92,8 @@ int NeuroNeurowmRun(const Configuration *c) {
   // Main loop
   XEvent ev;
   while (!stopWhile && !XNextEvent(display, &ev))
-    if (NeuroEventEventArray[ ev.type ])
-      NeuroEventEventArray[ ev.type ](&ev);
+    if (eventArray[ ev.type ])
+      eventArray[ ev.type ](&ev);
 
   // Stop window manager
   stop_wm();

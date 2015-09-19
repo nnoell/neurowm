@@ -191,7 +191,7 @@ static void do_property_notify(XEvent *e) {
 // PUBLIC VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-const EventHandler const NeuroEventEventArray[ LASTEvent ] = {
+const EventHandler const eventArray[ LASTEvent ] = {
   [ KeyPress ]         = do_key_press,
   [ ButtonPress ]      = do_button_press,
   [ MapRequest ]       = do_map_request,

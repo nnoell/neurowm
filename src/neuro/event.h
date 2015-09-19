@@ -26,7 +26,7 @@
 typedef void (*EventHandler)(XEvent *e);
 
 // Array of Events
-extern const EventHandler const NeuroEventEventArray[ LASTEvent ];
+extern const EventHandler const eventArray[ LASTEvent ];
 
 
 //----------------------------------------------------------------------------------------------------------------------
