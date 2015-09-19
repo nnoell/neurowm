@@ -64,7 +64,7 @@ const Action const reloadNeurowmActionA[] = { { reloadNeurowmHandlerA, ARG_NULL 
 const Action const startCpuCalcActionA[] = { { startCpuCalcHandlerA, ARG_NULL } };
 const Action const spawnActionA[] = { { spawnHandlerA, ARG_CMD(defTerminalCommand) } };
 const Action const sleepActionA[] = { { sleepHandlerA, ARG_INT(1) } };
-const Action const endCpuCalcActionA[] = { { endCpuCalcHandlerA, ARG_NULL } };
+const Action const stopCpuCalcActionA[] = { { stopCpuCalcHandlerA, ARG_NULL } };
 const Action const changeLayoutActionA[] = { { changeLayoutHandlerA, ARG_INT(1) } };
 const Action const resetLayoutActionA[] = { { resetLayoutHandlerA, ARG_NULL } };
 const Action const toggleLayoutActionA[] = { { toggleLayoutHandlerA, ARG_INT(0) } };
@@ -103,7 +103,7 @@ const Action *const reloadNeurowmA[] = { reloadNeurowmActionA, NULL };
 const Action *const startCpuCalcA[] = { startCpuCalcActionA, NULL };
 const Action *const spawnA[] = { spawnActionA, NULL };
 const Action *const sleepA[] = { sleepActionA, NULL };
-const Action *const endCpuCalcA[] = { endCpuCalcActionA, NULL };
+const Action *const stopCpuCalcA[] = { stopCpuCalcActionA, NULL };
 const Action *const changeLayoutA[] = { changeLayoutActionA, NULL };
 const Action *const resetLayoutA[] = { resetLayoutActionA, NULL };
 const Action *const toggleLayoutA[] = { toggleLayoutActionA, NULL };
@@ -178,9 +178,9 @@ void startCpuCalcHandlerA(GenericArg null_arg) {
   startCpuCalcD();
 }
 
-void endCpuCalcHandlerA(GenericArg null_arg) {
+void stopCpuCalcHandlerA(GenericArg null_arg) {
   (void)null_arg;
-  endCpuCalcD();
+  stopCpuCalcD();
 }
 
 

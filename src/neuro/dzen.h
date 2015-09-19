@@ -34,7 +34,7 @@ void updateD(int onlyEvent);
 
 // CPU Calculation
 void startCpuCalcD();
-void endCpuCalcD();
+void stopCpuCalcD();
 
 // Loggers
 void timeLoggerD(char *str);

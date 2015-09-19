@@ -29,7 +29,7 @@ extern const Action const reloadNeurowmActionA[];
 extern const Action const spawnActionA[];
 extern const Action const sleepActionA[];
 extern const Action const startCpuCalcActionA[];
-extern const Action const endCpuCalcActionA[];
+extern const Action const stopCpuCalcActionA[];
 
 // Layout (Actions)
 extern const Action const changeLayoutActionA[];
@@ -76,7 +76,7 @@ extern const Action *const reloadNeurowmA[];
 extern const Action *const spawnA[];
 extern const Action *const sleepA[];
 extern const Action *const startCpuCalcA[];
-extern const Action *const endCpuCalcA[];
+extern const Action *const stopCpuCalcA[];
 
 // Layout (Action Chains)
 extern const Action *const changeLayoutA[];
@@ -131,7 +131,7 @@ void changeNeurowmNameHandlerA(GenericArg string_arg);
 void spawnHandlerA(GenericArg command_arg);
 void sleepHandlerA(GenericArg int_arg);
 void startCpuCalcHandlerA(GenericArg null_arg);
-void endCpuCalcHandlerA(GenericArg null_arg);
+void stopCpuCalcHandlerA(GenericArg null_arg);
 
 // Layout (Handlers)
 void changeLayoutHandlerA(GenericArg int_arg);

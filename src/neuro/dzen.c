@@ -145,12 +145,12 @@ static Bool initCpuPercThread() {
   return pthread_create(&threadID, &threadAttr, updateCpuPercThread, NULL);
 }
 
-static void endCpuPercThread() {
+static void stopCpuPercThread() {
   pthread_attr_destroy(&threadAttr);
   stopUpdateCpuPercWhile = True;
   void *status;
   if (pthread_join(threadID, &status))  // Wait
-    perror("endUpdateCpuPercThreadP - could not join thread");
+    perror("stopUpdateCpuPercThreadP - could not join thread");
 }
 
 // Dzen
@@ -221,14 +221,14 @@ static Bool initUpdateThread() {
   return pthread_create(&PIP.updateThread, &PIP.attr, updateThread, NULL) == 0;
 }
 
-static void endUpdateThread() {
+static void stopUpdateThread() {
   if (PIP.resetRate <= 0)
     return;
   pthread_attr_destroy(&PIP.attr);
   stopUpdateWhile = True;
   void *status;
   if (pthread_join(PIP.updateThread, &status))  // Wait
-    perror("endUpdateThreadDP - could not join thread");
+    perror("stopUpdateThreadDP - could not join thread");
 }
 
 
@@ -246,8 +246,8 @@ void startCpuCalcD() {
     exitErrorS("startCpuCalcD - could not init thread to update cpus");
 }
 
-void endCpuCalcD() {
-  endCpuPercThread();
+void stopCpuCalcD() {
+  stopCpuPercThread();
   free(cpusInfo);
   cpusInfo = NULL;
 }
@@ -291,7 +291,7 @@ Bool initD() {
 }
 
 void stopD() {
-  endUpdateThread();
+  stopUpdateThread();
   int i;
   for (i = 0; i < PIP.numPanels; ++i)
     if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)

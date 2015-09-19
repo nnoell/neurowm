@@ -55,7 +55,7 @@ static const Action *startUpHookActions[] = { action0, action1, action2, startCp
 static const ActionChain myStartUpHook[] = { CHAIN_NULL(startUpHookActions) };
 
 // ENDUP
-static const ActionChain myEndUpHook[] = { CHAIN_NULL(endCpuCalcA) };
+static const ActionChain myEndUpHook[] = { CHAIN_NULL(stopCpuCalcA) };
 
 
 //----------------------------------------------------------------------------------------------------------------------
