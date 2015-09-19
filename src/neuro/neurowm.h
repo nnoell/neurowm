@@ -21,7 +21,7 @@
 #include "client.h"
 #include "workspace.h"
 #include "action.h"
-#include "personal.h"
+#include "theme.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -1,13 +1,13 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  personal
+// Module      :  theme
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
 // Stability   :  stable
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_PERSONAL_H_
-#define NEURO_PERSONAL_H_
+#ifndef NEURO_THEME_H_
+#define NEURO_THEME_H_
 
 // Includes
 #include "type.h"
@@ -57,5 +57,5 @@ void nnoellWifiStrengthLoggerP(char *str);
 void nnoellTempLoggerP(char *str);
 
 
-#endif  // NEURO_PERSONAL_H_
+#endif  // NEURO_THEME_H_
 

@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------------------------------------------
-// Module      :  personal
+// Module      :  theme
 // Copyright   :  (c) Julian Bouzas 2014
 // License     :  BSD3-style (see LICENSE)
 // Maintainer  :  Julian Bouzas - nnoell3[at]gmail.com
@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
-#include "personal.h"
+#include "theme.h"
 #include "core.h"
 #include "layout.h"
 #include "dzen.h"

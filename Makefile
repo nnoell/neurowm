@@ -14,7 +14,7 @@ LDADD = -lX11 -pthread
 LDADDTEST = -lX11 -pthread -lcunit
 
 # Mod names
-MOD_NAMES = neurowm config dzen event rule workspace layout client core system geometry type personal action
+MOD_NAMES = neurowm config dzen event rule workspace layout client core system geometry type theme action
 
 # Source names
 SOURCE_BIN_NAME = main.c
