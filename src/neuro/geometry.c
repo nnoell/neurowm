@@ -19,7 +19,7 @@
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-Rectangle *getRelativeRectangleG(Rectangle *dst, const Rectangle *src, const float *rel) {
+Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *src, const float *rel) {
   assert(dst);
   assert(src);
   assert(rel);
@@ -30,7 +30,7 @@ Rectangle *getRelativeRectangleG(Rectangle *dst, const Rectangle *src, const flo
   return dst;
 }
 
-Rectangle *getAbsoluteRelativeRectangleG(Rectangle *dst, const Rectangle *src, const int *gaps) {
+Rectangle *NeuroGeometryGetAbsoluteRelativeRectangle(Rectangle *dst, const Rectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);
@@ -41,20 +41,20 @@ Rectangle *getAbsoluteRelativeRectangleG(Rectangle *dst, const Rectangle *src, c
   return dst;
 }
 
-Rectangle *setRectangleG(Rectangle *r, int x, int y, int w, int h) {
+Rectangle *NeuroGeometrySetRectangle(Rectangle *r, int x, int y, int w, int h) {
   assert(r);
   r->x = x; r->y = y; r->w = w; r->h = h;
   return r;
 }
 
-Rectangle *setRectangleBorderWidthG(Rectangle *r, int width) {
+Rectangle *NeuroGeometrySetRectangleBorderWidth(Rectangle *r, int width) {
   assert(r);
   r->w -= width * 2;
   r->h -= width * 2;
   return r;
 }
 
-Rectangle *setRectangleBorderGapG(Rectangle *r, int gap) {
+Rectangle *NeuroGeometrySetRectangleBorderGap(Rectangle *r, int gap) {
   assert(r);
   r->x += gap;
   r->y += gap;
@@ -63,12 +63,12 @@ Rectangle *setRectangleBorderGapG(Rectangle *r, int gap) {
   return r;
 }
 
-Rectangle *setRectangleBorderWidthAndGapG(Rectangle *r, int width, int gap) {
+Rectangle *NeuroGeometrySetRectangleBorderWidthAndGap(Rectangle *r, int width, int gap) {
   assert(r);
-  return setRectangleBorderGapG(setRectangleBorderWidthG(r, width), gap);
+  return NeuroGeometrySetRectangleBorderGap(NeuroGeometrySetRectangleBorderWidth(r, width), gap);
 }
 
-Rectangle *mirrorRectangleG(Rectangle *rect, const Rectangle *reg) {
+Rectangle *NeuroGeometryMirrorRectangle(Rectangle *rect, const Rectangle *reg) {
   assert(rect);
   assert(reg);
   const int oldx = rect->x, oldy = rect->y, oldw = rect->w, oldh = rect->h;
@@ -79,7 +79,7 @@ Rectangle *mirrorRectangleG(Rectangle *rect, const Rectangle *reg) {
   return rect;
 }
 
-Rectangle *transpRectangleG(Rectangle *rect) {
+Rectangle *NeuroGeometryTranspRectangle(Rectangle *rect) {
   int tmp = rect->x;
   rect->x = rect->y;
   rect->y = tmp;
@@ -89,7 +89,7 @@ Rectangle *transpRectangleG(Rectangle *rect) {
   return rect;
 }
 
-Rectangle *fitRectangleInRegionG(Rectangle *rect, const Rectangle *reg) {
+Rectangle *NeuroGeometryNeuroGeometryTranspRectangle(Rectangle *rect, const Rectangle *reg) {
   assert(rect);
   assert(reg);
   if (rect->x < reg->x)
@@ -107,7 +107,7 @@ Rectangle *fitRectangleInRegionG(Rectangle *rect, const Rectangle *reg) {
   return rect;
 }
 
-Rectangle *centerRectangleInRegionG(Rectangle *rect, const Rectangle *reg) {
+Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle *reg) {
   assert(rect);
   assert(reg);
   rect->x = reg->x + (reg->w - rect->w) / 2;
@@ -115,7 +115,7 @@ Rectangle *centerRectangleInRegionG(Rectangle *rect, const Rectangle *reg) {
   return rect;
 }
 
-Bool isPointInRectangleG(const Rectangle *a, int x, int y) {
+Bool NeuroGeometryIsPointInRectangleG(const Rectangle *a, int x, int y) {
   assert(a);
   if (x < a->x)
     return False;

@@ -22,17 +22,17 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-Rectangle *getRelativeRectangleG(Rectangle *dst, const Rectangle *src, const float *rel);
-Rectangle *getAbsoluteRelativeRectangleG(Rectangle *dst, const Rectangle *src, const int *gaps);
-Rectangle *setRectangleG(Rectangle *r, int x, int y, int w, int h);
-Rectangle *setRectangleBorderWidthG(Rectangle *r, int width);
-Rectangle *setRectangleBorderGapG(Rectangle *r, int gap);
-Rectangle *setRectangleBorderWidthAndGapG(Rectangle *r, int width, int gap);
-Rectangle *mirrorRectangleG(Rectangle *rect, const Rectangle *reg);
-Rectangle *transpRectangleG(Rectangle *rect);
-Rectangle *fitRectangleInRegionG(Rectangle *rect, const Rectangle *reg);
-Rectangle *centerRectangleInRegionG(Rectangle *rect, const Rectangle *reg);
-Bool isPointInRectangleG(const Rectangle *a, int x, int y);
+Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *src, const float *rel);
+Rectangle *NeuroGeometryGetAbsoluteRelativeRectangle(Rectangle *dst, const Rectangle *src, const int *gaps);
+Rectangle *NeuroGeometrySetRectangle(Rectangle *r, int x, int y, int w, int h);
+Rectangle *NeuroGeometrySetRectangleBorderWidth(Rectangle *r, int width);
+Rectangle *NeuroGeometrySetRectangleBorderGap(Rectangle *r, int gap);
+Rectangle *NeuroGeometrySetRectangleBorderWidthAndGap(Rectangle *r, int width, int gap);
+Rectangle *NeuroGeometryMirrorRectangle(Rectangle *rect, const Rectangle *reg);
+Rectangle *NeuroGeometryTranspRectangle(Rectangle *rect);
+Rectangle *NeuroGeometryNeuroGeometryTranspRectangle(Rectangle *rect, const Rectangle *reg);
+Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle *reg);
+Bool NeuroGeometryIsPointInRectangleG(const Rectangle *a, int x, int y);
 
 #endif  // NEURO_GEOMETRY_H_
 

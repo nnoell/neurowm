@@ -50,7 +50,7 @@ static Arrange *allocArrange(int ws, Layout *l) {
   if (!a)
     return NULL;
   a->size = i;
-  getRelativeRectangleG(&a->region, NeuroCoreStackGetRegion(ws), l->region);
+  NeuroGeometryGetRelativeRectangle(&a->region, NeuroCoreStackGetRegion(ws), l->region);
   a->cliRegions = rs;
   a->cliFloatRegions = frs;
   a->arrangeSettings = l->arrangeSettings;
@@ -93,12 +93,12 @@ static Arrange *normalArrange(Arrange *a, ArrangerFn af) {
 static Arrange *mirrorArrange(Arrange *a, ArrangerFn af) {
   assert(a);
   assert(af);
-  transpRectangleG(&a->region);
+  NeuroGeometryTranspRectangle(&a->region);
   af(a);
   int i;
   for (i = 0; i < a->size; ++i)
-    transpRectangleG(a->cliRegions[ i ]);
-  transpRectangleG(&a->region);
+    NeuroGeometryTranspRectangle(a->cliRegions[ i ]);
+  NeuroGeometryTranspRectangle(&a->region);
   return a;
 }
 
@@ -222,12 +222,13 @@ Arrange *tallArrangerL(Arrange *a) {
   getBestPositionsAndSizes(nwindows, a->region.h, ys, hs);
   int i;
   for (i = 0; i < nwindows; ++i)  // Master area
-    setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ] , n > mn ? ms : a->region.w, hs[ i ]);
+    NeuroGeometrySetRectangle(a->cliRegions[ i ], a->region.x, a->region.y + ys[ i ],
+        n > mn ? ms : a->region.w, hs[ i ]);
   if (n - nwindows == 0)
     return a;
   getBestPositionsAndSizes(n - nwindows, a->region.h, ys, hs);
   for (; i < n; ++i)  // Stacking area
-    setRectangleG(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms,
+    NeuroGeometrySetRectangle(a->cliRegions[ i ], a->region.x + ms, a->region.y + ys[ i-nwindows ], a->region.w - ms,
         hs[ i-nwindows ]);
   return a;
 }
@@ -251,7 +252,7 @@ Arrange *gridArrangerL(Arrange *a) {
     memset(ys, 0, sizeof(ys));
     memset(hs, 0, sizeof(hs));
     getBestPositionsAndSizes(rows, a->region.h, ys, hs);
-    setRectangleG(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
+    NeuroGeometrySetRectangle(a->cliRegions[ i ], a->region.x + xs[ cn ], a->region.y + ys[ rn ], ws[ cn ], hs[ rn ]);
     if (++rn >= rows) {
       rn = 0;
       ++cn;
@@ -264,7 +265,7 @@ Arrange *fullArrangerL(Arrange *a) {
   assert(a);
   int i;
   for (i = 0; i < a->size; ++i)
-    setRectangleG(a->cliRegions[ i ], a->region.x, a->region.y, a->region.w, a->region.h);
+    NeuroGeometrySetRectangle(a->cliRegions[ i ], a->region.x, a->region.y, a->region.w, a->region.h);
   return a;
 }
 
@@ -274,8 +275,8 @@ Arrange *floatArrangerL(Arrange *a) {
   int i;
   for (i = 0; i < a->size; ++i) {
     fr = a->cliFloatRegions[ i ];
-    setRectangleG(a->cliRegions[ i ], fr->x, fr->y, fr->w, fr->h);
-    fitRectangleInRegionG(a->cliRegions[ i ], &a->region);
+    NeuroGeometrySetRectangle(a->cliRegions[ i ], fr->x, fr->y, fr->w, fr->h);
+    NeuroGeometryNeuroGeometryTranspRectangle(a->cliRegions[ i ], &a->region);
   }
   return a;
 }

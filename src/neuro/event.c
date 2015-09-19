@@ -233,9 +233,9 @@ void NeuroEventManageWindow(Window w) {
     CLI_GET(c).freeSetterFn = defFreeR;
     ClientPtrPtr t = findWindowClientAllW(trans);
     if (t)  // Always true, but still
-      centerRectangleInRegionG(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
+      NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
     else
-      centerRectangleInRegionG(NeuroCoreClientGetRegion(c), &screenRegion);
+      NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), &screenRegion);
   }
 
   // Set event mask

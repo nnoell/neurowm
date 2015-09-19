@@ -38,7 +38,7 @@ Client *allocClientT(Window w, const XWindowAttributes *wa) {
   c->fixSize = 0;
   c->isUrgent = False;
   c->isFullScreen = False;
-  setRectangleG(&(c->floatRegion), wa->x, wa->y, wa->width, wa->height);
+  NeuroGeometrySetRectangle(&(c->floatRegion), wa->x, wa->y, wa->width, wa->height);
   return c;
 }
 

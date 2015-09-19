@@ -299,7 +299,7 @@ Bool NeuroCoreInit() {
     s->name = ws->name;
     s->curr = NULL; s->prev = NULL; s->head = NULL; s->last = NULL; s->nsp = NULL;
     s->size = 0;
-    getAbsoluteRelativeRectangleG(&s->region, &screenRegion, ws->gaps);
+    NeuroGeometryGetAbsoluteRelativeRectangle(&s->region, &screenRegion, ws->gaps);
     s->currLayoutIdx = 0;
     s->currTogLayoutIdx = -1;  // No toggled layout by default
     *(int *)&(s->numLayouts) = sizel;

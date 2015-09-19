@@ -198,21 +198,21 @@ void defFreeR(Rectangle *a, const Rectangle *r) {
 void centerFreeR(Rectangle *a, const Rectangle *r) {
   assert(a);
   assert(r);
-  centerRectangleInRegionG(a, r);
+  NeuroGeometryCenterRectangleInRegion(a, r);
 }
 
 void bigCenterFreeR(Rectangle *a, const Rectangle *r) {
   assert(a);
   assert(r);
   float size[ 4 ] = { 0.05f, 0.05f, 0.9f, 0.9f };
-  getRelativeRectangleG(a, r, size);
-  centerRectangleInRegionG(a, r);
+  NeuroGeometryGetRelativeRectangle(a, r, size);
+  NeuroGeometryCenterRectangleInRegion(a, r);
 }
 
 void scratchpadFreeR(Rectangle *a, const Rectangle *r) {
   assert(a);
   assert(r);
   float size[ 4 ] = { 0.00f, 0.00f, 1.00f, 0.75f };
-  getRelativeRectangleG(a, r, size);
+  NeuroGeometryGetRelativeRectangle(a, r, size);
 }
 
