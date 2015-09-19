@@ -41,6 +41,5 @@ void NeuroRuleFreeSetterCenter(Rectangle *a, const Rectangle *r);
 void NeuroRuleFreeSetterBigCenter(Rectangle *a, const Rectangle *r);
 void NeuroRuleFreeSetterScratchpad(Rectangle *a, const Rectangle *r);
 
-
 #endif  // NEURO_RULE_H_
 

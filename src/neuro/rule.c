@@ -75,7 +75,7 @@ static void set_rule(Client *c, const Rule *r) {
   else if (c->fixPos == NeuroRuleFixedPositionLeft || c->fixPos == NeuroRuleFixedPositionRigth)
     c->fixSize = r->fixSize * reg->w;
   if (r->goWorkspace)
-    changeW(c->ws);
+    NeuroWorkspaceChange(c->ws);
 }
 
 

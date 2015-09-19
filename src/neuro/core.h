@@ -77,6 +77,5 @@ ClientPtrPtr NeuroCoreClientGetNext(const ClientPtrPtr c);
 ClientPtrPtr NeuroCoreClientGetPrev(const ClientPtrPtr c);
 ClientPtrPtr NeuroCoreClientSwap(const ClientPtrPtr c1, const ClientPtrPtr c2);
 
-
 #endif  // NEURO_CORE_H_
 

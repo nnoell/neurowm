@@ -86,143 +86,143 @@ const DzenPanel *NeuroConfigDzenPanelSet[] = { NULL };
 
 // Key
 static const Key key00[] = { {
-    Mod1Mask|ShiftMask,   XK_Return, CHAIN(NeuroActionChainSpawn, ARG_CMD(NeuroConfigTerminalCommand))         } };
+    Mod1Mask|ShiftMask,   XK_Return, CHAIN(NeuroActionChainSpawn, ARG_CMD(NeuroConfigTerminalCommand))             } };
 static const Key key01[] = { {
-    Mod1Mask,             XK_c,      CHAIN_NULL(NeuroActionChainKillClient)                                    } };
+    Mod1Mask,             XK_c,      CHAIN_NULL(NeuroActionChainKillClient)                                        } };
 static const Key key02[] = { {
-    Mod1Mask,             XK_j,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorNext))  } };
+    Mod1Mask,             XK_j,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorNext))      } };
 static const Key key03[] = { {
-    Mod1Mask,             XK_k,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorPrev))  } };
+    Mod1Mask,             XK_k,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorPrev))      } };
 static const Key key04[] = { {
-    Mod1Mask,             XK_Tab,    CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorOld))   } };
+    Mod1Mask,             XK_Tab,    CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorOld))       } };
 static const Key key05[] = { {
-    Mod1Mask,             XK_m,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorHead))  } };
+    Mod1Mask,             XK_m,      CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorHead))      } };
 static const Key key06[] = { {
-    Mod1Mask|ShiftMask,   XK_j,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorNext))   } };
+    Mod1Mask|ShiftMask,   XK_j,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorNext))       } };
 static const Key key07[] = { {
-    Mod1Mask|ShiftMask,   XK_k,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorPrev))   } };
+    Mod1Mask|ShiftMask,   XK_k,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorPrev))       } };
 static const Key key08[] = { {
-    Mod1Mask|ShiftMask,   XK_p,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorOld))    } };
+    Mod1Mask|ShiftMask,   XK_p,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorOld))        } };
 static const Key key09[] = { {
-    Mod1Mask|ShiftMask,   XK_m,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorHead))   } };
+    Mod1Mask|ShiftMask,   XK_m,      CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorHead))       } };
 static const Key key10[] = { {
-    Mod1Mask,             XK_Up,     CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorUp))    } };
+    Mod1Mask,             XK_Up,     CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorUp))        } };
 static const Key key11[] = { {
-    Mod1Mask,             XK_Down,   CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorDown))  } };
+    Mod1Mask,             XK_Down,   CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorDown))      } };
 static const Key key12[] = { {
-    Mod1Mask,             XK_Left,   CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorLeft))  } };
+    Mod1Mask,             XK_Left,   CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorLeft))      } };
 static const Key key13[] = { {
-    Mod1Mask,             XK_Right,  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorRight)) } };
+    Mod1Mask,             XK_Right,  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorRight))     } };
 static const Key key14[] = { {
-    Mod1Mask|ShiftMask,   XK_Up,     CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorUp))     } };
+    Mod1Mask|ShiftMask,   XK_Up,     CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorUp))         } };
 static const Key key15[] = { {
-    Mod1Mask|ShiftMask,   XK_Down,   CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorDown))   } };
+    Mod1Mask|ShiftMask,   XK_Down,   CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorDown))       } };
 static const Key key16[] = { {
-    Mod1Mask|ShiftMask,   XK_Left,   CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorLeft))   } };
+    Mod1Mask|ShiftMask,   XK_Left,   CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorLeft))       } };
 static const Key key17[] = { {
-    Mod1Mask|ShiftMask,   XK_Right,  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorRight))  } };
+    Mod1Mask|ShiftMask,   XK_Right,  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorRight))      } };
 static const Key key18[] = { {
-    Mod1Mask,             XK_space,  CHAIN_NULL(NeuroActionChainChangeLayout)                                  } };
+    Mod1Mask,             XK_space,  CHAIN_NULL(NeuroActionChainChangeLayout)                                      } };
 static const Key key19[] = { {
-    Mod1Mask,             XK_t,      CHAIN_NULL(NeuroActionChainToggleFreeCurrClient)                          } };
+    Mod1Mask,             XK_t,      CHAIN_NULL(NeuroActionChainToggleFreeCurrClient)                              } };
 static const Key key20[] = { {
-    Mod1Mask,             XK_z,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(mirrModL))                } };
+    Mod1Mask,             XK_z,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(mirrModL))                    } };
 static const Key key21[] = { {
-    Mod1Mask,             XK_x,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(reflXModL))               } };
+    Mod1Mask,             XK_x,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(reflXModL))                   } };
 static const Key key22[] = { {
-    Mod1Mask,             XK_y,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(reflYModL))               } };
+    Mod1Mask,             XK_y,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(reflYModL))                   } };
 static const Key key23[] = { {
-    Mod1Mask,             XK_f,      CHAIN(NeuroActionChainToggleLayout, ARG_INT(0))                           } };
+    Mod1Mask,             XK_f,      CHAIN(NeuroActionChainToggleLayout, ARG_INT(0))                               } };
 static const Key key24[] = { {
-    Mod1Mask,             XK_o,      CHAIN(NeuroActionChainToggleLayout, ARG_INT(1))                           } };
+    Mod1Mask,             XK_o,      CHAIN(NeuroActionChainToggleLayout, ARG_INT(1))                               } };
 static const Key key25[] = { {
-    Mod1Mask|ShiftMask,   XK_f,      CHAIN_NULL(NeuroActionChainToggleFullscreenCurrClient)                    } };
+    Mod1Mask|ShiftMask,   XK_f,      CHAIN_NULL(NeuroActionChainToggleFullscreenCurrClient)                        } };
 static const Key key26[] = { {
-    Mod1Mask,             XK_comma,  CHAIN_NULL(NeuroActionChainIncreaseMasterLayout)                          } };
+    Mod1Mask,             XK_comma,  CHAIN_NULL(NeuroActionChainIncreaseMasterLayout)                              } };
 static const Key key27[] = { {
-    Mod1Mask,             XK_period, CHAIN(NeuroActionChainIncreaseMasterLayout, ARG_INT(-1))                  } };
+    Mod1Mask,             XK_period, CHAIN(NeuroActionChainIncreaseMasterLayout, ARG_INT(-1))                      } };
 static const Key key28[] = { {
-    Mod1Mask,             XK_l,      CHAIN_NULL(NeuroActionChainResizeMasterLayout)                            } };
+    Mod1Mask,             XK_l,      CHAIN_NULL(NeuroActionChainResizeMasterLayout)                                } };
 static const Key key29[] = { {
-    Mod1Mask,             XK_h,      CHAIN(NeuroActionChainResizeMasterLayout, ARG_FLOAT(-1.0f))               } };
+    Mod1Mask,             XK_h,      CHAIN(NeuroActionChainResizeMasterLayout, ARG_FLOAT(-1.0f))                   } };
 static const Key key30[] = { {
-    Mod1Mask,             XK_1,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx0W))                    } };
+    Mod1Mask,             XK_1,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector0))      } };
 static const Key key31[] = { {
-    Mod1Mask,             XK_2,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx1W))                    } };
+    Mod1Mask,             XK_2,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector1))      } };
 static const Key key32[] = { {
-    Mod1Mask,             XK_3,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx2W))                    } };
+    Mod1Mask,             XK_3,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector2))      } };
 static const Key key33[] = { {
-    Mod1Mask,             XK_4,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx3W))                    } };
+    Mod1Mask,             XK_4,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector3))      } };
 static const Key key34[] = { {
-    Mod1Mask,             XK_5,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx4W))                    } };
+    Mod1Mask,             XK_5,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector4))      } };
 static const Key key35[] = { {
-    Mod1Mask,             XK_6,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx5W))                    } };
+    Mod1Mask,             XK_6,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector5))      } };
 static const Key key36[] = { {
-    Mod1Mask,             XK_7,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx6W))                    } };
+    Mod1Mask,             XK_7,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector6))      } };
 static const Key key37[] = { {
-    Mod1Mask,             XK_8,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx7W))                    } };
+    Mod1Mask,             XK_8,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector7))      } };
 static const Key key38[] = { {
-    Mod1Mask,             XK_9,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx8W))                    } };
+    Mod1Mask,             XK_9,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector8))      } };
 static const Key key39[] = { {
-    Mod1Mask,             XK_0,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(idx9W))                    } };
+    Mod1Mask,             XK_0,      CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector9))      } };
 static const Key key40[] = { {
-    ControlMask|Mod1Mask, XK_Left,   CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(prevW))                    } };
+    ControlMask|Mod1Mask, XK_Left,   CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorPrev))   } };
 static const Key key41[] = { {
-    ControlMask|Mod1Mask, XK_Right,  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(nextW))                    } };
+    ControlMask|Mod1Mask, XK_Right,  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorNext))   } };
 static const Key key42[] = { {
-    Mod1Mask|ShiftMask,   XK_Tab,    CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(oldW))                     } };
+    Mod1Mask|ShiftMask,   XK_Tab,    CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorOld))    } };
 static const Key key43[] = { {
-    Mod1Mask|ShiftMask,   XK_1,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx0W))                     } };
+    Mod1Mask|ShiftMask,   XK_1,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector0))       } };
 static const Key key44[] = { {
-    Mod1Mask|ShiftMask,   XK_2,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx1W))                     } };
+    Mod1Mask|ShiftMask,   XK_2,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector1))       } };
 static const Key key45[] = { {
-    Mod1Mask|ShiftMask,   XK_3,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx2W))                     } };
+    Mod1Mask|ShiftMask,   XK_3,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector2))       } };
 static const Key key46[] = { {
-    Mod1Mask|ShiftMask,   XK_4,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx3W))                     } };
+    Mod1Mask|ShiftMask,   XK_4,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector3))       } };
 static const Key key47[] = { {
-    Mod1Mask|ShiftMask,   XK_5,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx4W))                     } };
+    Mod1Mask|ShiftMask,   XK_5,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector4))       } };
 static const Key key48[] = { {
-    Mod1Mask|ShiftMask,   XK_6,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx5W))                     } };
+    Mod1Mask|ShiftMask,   XK_6,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector5))       } };
 static const Key key49[] = { {
-    Mod1Mask|ShiftMask,   XK_7,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx6W))                     } };
+    Mod1Mask|ShiftMask,   XK_7,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector6))       } };
 static const Key key50[] = { {
-    Mod1Mask|ShiftMask,   XK_8,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx7W))                     } };
+    Mod1Mask|ShiftMask,   XK_8,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector7))       } };
 static const Key key51[] = { {
-    Mod1Mask|ShiftMask,   XK_9,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx8W))                     } };
+    Mod1Mask|ShiftMask,   XK_9,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector8))       } };
 static const Key key52[] = { {
-    Mod1Mask|ShiftMask,   XK_0,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(idx9W))                     } };
+    Mod1Mask|ShiftMask,   XK_0,      CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector9))       } };
 static const Key key53[] = { {
-    Mod1Mask|ControlMask, XK_1,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx0W))               } };
+    Mod1Mask|ControlMask, XK_1,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector0)) } };
 static const Key key54[] = { {
-    Mod1Mask|ControlMask, XK_2,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx1W))               } };
+    Mod1Mask|ControlMask, XK_2,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector1)) } };
 static const Key key55[] = { {
-    Mod1Mask|ControlMask, XK_3,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx2W))               } };
+    Mod1Mask|ControlMask, XK_3,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector2)) } };
 static const Key key56[] = { {
-    Mod1Mask|ControlMask, XK_4,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx3W))               } };
+    Mod1Mask|ControlMask, XK_4,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector3)) } };
 static const Key key57[] = { {
-    Mod1Mask|ControlMask, XK_5,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx4W))               } };
+    Mod1Mask|ControlMask, XK_5,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector4)) } };
 static const Key key58[] = { {
-    Mod1Mask|ControlMask, XK_6,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx5W))               } };
+    Mod1Mask|ControlMask, XK_6,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector5)) } };
 static const Key key59[] = { {
-    Mod1Mask|ControlMask, XK_7,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx6W))               } };
+    Mod1Mask|ControlMask, XK_7,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector6)) } };
 static const Key key60[] = { {
-    Mod1Mask|ControlMask, XK_8,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx7W))               } };
+    Mod1Mask|ControlMask, XK_8,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector7)) } };
 static const Key key61[] = { {
-    Mod1Mask|ControlMask, XK_9,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx8W))               } };
+    Mod1Mask|ControlMask, XK_9,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector8)) } };
 static const Key key62[] = { {
-    Mod1Mask|ControlMask, XK_0,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(idx9W))               } };
+    Mod1Mask|ControlMask, XK_0,      CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector9)) } };
 static const Key key63[] = { {
-    Mod1Mask|ShiftMask,   XK_q,      CHAIN_NULL(NeuroActionChainQuit)                                          } };
+    Mod1Mask|ShiftMask,   XK_q,      CHAIN_NULL(NeuroActionChainQuit)                                              } };
 static const Key key64[] = { {
-    Mod1Mask,             XK_q,      CHAIN_NULL(NeuroActionChainReload)                                        } };
+    Mod1Mask,             XK_q,      CHAIN_NULL(NeuroActionChainReload)                                            } };
 static const Key key65[] = { {
-    Mod1Mask,             XK_F2,     CHAIN(NeuroActionChainSpawn, ARG_CMD(NeuroConfigLauncherCommand))         } };
+    Mod1Mask,             XK_F2,     CHAIN(NeuroActionChainSpawn, ARG_CMD(NeuroConfigLauncherCommand))             } };
 static const Key key66[] = { {
-    Mod1Mask|ShiftMask,   XK_space,  CHAIN_NULL(NeuroActionChainResetLayout)                                   } };
+    Mod1Mask|ShiftMask,   XK_space,  CHAIN_NULL(NeuroActionChainResetLayout)                                       } };
 static const Key key67[] = { {
-    Mod1Mask,             XK_n,      CHAIN_NULL(NeuroActionChainMinimizeCurrClient)                            } };
+    Mod1Mask,             XK_n,      CHAIN_NULL(NeuroActionChainMinimizeCurrClient)                                } };
 static const Key key68[] = { {
-    Mod1Mask|ShiftMask,   XK_n,      CHAIN_NULL(NeuroActionChainRestoreLastMinimized)                          } };
+    Mod1Mask|ShiftMask,   XK_n,      CHAIN_NULL(NeuroActionChainRestoreLastMinimized)                              } };
 
 // Keys
 const Key *NeuroConfigKeys[] = {

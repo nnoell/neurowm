@@ -128,7 +128,7 @@ struct Client {
   Bool isHidden;
   Bool isFullScreen;
   FreeSetterFn freeSetterFn;
-  unsigned int fixPos;  // Can be: NeuroRuleFixedPositionNull | NeuroRuleFixedPositionUp | NeuroRuleFixedPositionDown | NeuroRuleFixedPositionLeft | NeuroRuleFixedPositionRigth
+  unsigned int fixPos;
   int fixSize;
   Bool isUrgent;
 };

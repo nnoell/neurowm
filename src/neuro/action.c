@@ -37,9 +37,9 @@ typedef void (*ActionWorkspaceFn)(int ws);
 
 static void process_workspace(const ActionWorkspaceFn awsf, int ws) {
   assert(awsf);
-  rmvEnterNotifyMaskW(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(ws);
   awsf(ws);
-  addEnterNotifyMaskW(ws);
+  NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 static void process_client(const ActionClientFn acf, ClientPtrPtr c, const ClientSelectorFn csf,
@@ -48,9 +48,9 @@ static void process_client(const ActionClientFn acf, ClientPtrPtr c, const Clien
   assert(csf);
   if (!c)
     return;
-  rmvEnterNotifyMaskW(CLI_GET(c).ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(CLI_GET(c).ws);
   acf(c, csf, data);
-  addEnterNotifyMaskW(CLI_GET(c).ws);
+  NeuroWorkspaceAddEnterNotifyMask(CLI_GET(c).ws);
 }
 
 
@@ -86,7 +86,7 @@ const Action const NeuroActionIncreaseMasterLayout[] = { {
 const Action const NeuroActionResizeMasterLayout[] = { {
     NeuroActionHandlerResizeMasterLayout, ARG_FLOAT(1.0f) } };
 const Action const NeuroActionChangeWorkspace[] = { {
-    NeuroActionHandlerChangeWorkspace, ARG_WSF(nextW) } };
+    NeuroActionHandlerChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorNext) } };
 const Action const NeuroActionRestoreLastMinimized[] = { {
     NeuroActionHandlerRestoreLastMinimized, ARG_NULL } };
 const Action const NeuroActionToggleScatchpad[] = { {
@@ -96,7 +96,7 @@ const Action const NeuroActionFocusCurrClient[] = { {
 const Action const NeuroActionSwapCurrClient[] = { {
     NeuroActionHandlerSwapCurrClient, ARG_CSF(NeuroClientSelectorNext) } };
 const Action const NeuroActionSendCurrClient[] = { {
-    NeuroActionHandlerSendCurrClient, ARG_WSF(nextW) } };
+    NeuroActionHandlerSendCurrClient, ARG_WSF(NeuroWorkspaceSelectorNext) } };
 const Action const NeuroActionKillCurrClient[] = { {
     NeuroActionHandlerKillCurrClient, ARG_CSF(NeuroClientSelectorSelf) } };
 const Action const NeuroActionTileCurrClient[] = { {
@@ -252,57 +252,57 @@ void NeuroActionHandlerStopCpuCalc(GenericArg null_arg) {
 // Layout
 void NeuroActionHandlerChangeLayout(GenericArg int_arg) {
   const int ws = NeuroCoreGetCurrStack();
-  rmvEnterNotifyMaskW(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutChange(ws, ARG_INT_GET(int_arg));
-  addEnterNotifyMaskW(ws);
+  NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerResetLayout(GenericArg null_arg) {
   (void)null_arg;
   const int ws = NeuroCoreGetCurrStack();
-  rmvEnterNotifyMaskW(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutReset(ws);
-  addEnterNotifyMaskW(ws);
+  NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerToggleLayout(GenericArg int_arg) {
   const int ws = NeuroCoreGetCurrStack();
-  rmvEnterNotifyMaskW(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutToggle(ws, ARG_INT_GET(int_arg));
-  addEnterNotifyMaskW(ws);
+  NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerToggleModLayout(GenericArg uint_arg) {
   const int ws = NeuroCoreGetCurrStack();
-  rmvEnterNotifyMaskW(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutToggleModCurr(ws, ARG_INT_GET(uint_arg));
-  addEnterNotifyMaskW(ws);
+  NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerIncreaseMasterLayout(GenericArg int_arg) {
   const int ws = NeuroCoreGetCurrStack();
-  rmvEnterNotifyMaskW(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutIncreaseMaster(ws, ARG_INT_GET(int_arg));
-  addEnterNotifyMaskW(ws);
+  NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerResizeMasterLayout(GenericArg float_arg) {
   const int ws = NeuroCoreGetCurrStack();
-  rmvEnterNotifyMaskW(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutResizeMaster(ws, ARG_FLOAT_GET(float_arg));
-  addEnterNotifyMaskW(ws);
+  NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 // Workspace
 void NeuroActionHandlerChangeWorkspace(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
   const int dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
-  process_workspace(changeW, dst);
+  process_workspace(NeuroWorkspaceChange, dst);
 }
 
 void NeuroActionHandlerRestoreLastMinimized(GenericArg null_arg) {
   (void)null_arg;
-  process_workspace(restoreLastMinimizedW, NeuroCoreGetCurrStack());
+  process_workspace(NeuroWorkspaceRestoreLastMinimized, NeuroCoreGetCurrStack());
 }
 
 void NeuroActionHandlerToggleScratchpad(GenericArg command_arg) {
@@ -312,87 +312,88 @@ void NeuroActionHandlerToggleScratchpad(GenericArg command_arg) {
   const int ws = NeuroCoreGetCurrStack();
   const int nspws = NeuroCoreGetNspStack();
   if (nspc && CLI_GET(nspc).ws == ws) {
-    process_client(sendClientW, nspc, NeuroClientSelectorSelf, (const void *)&nspws);
+    process_client(NeuroWorkspaceClientSend, nspc, NeuroClientSelectorSelf, (const void *)&nspws);
   } else if (nspc) {
-    process_client(sendClientW, nspc, NeuroClientSelectorSelf, (const void *)&ws);
+    process_client(NeuroWorkspaceClientSend, nspc, NeuroClientSelectorSelf, (const void *)&ws);
   } else {
     if (!NeuroCoreGetNspStackSize())
       NeuroSystemSpawn(ARG_CMD_GET(command_arg), NULL);
     else
-      process_client(sendClientW, c, NeuroClientSelectorSelf, (const void *)&ws);
+      process_client(NeuroWorkspaceClientSend, c, NeuroClientSelectorSelf, (const void *)&ws);
   }
 }
 
 // Curr Client
 void NeuroActionHandlerFocusCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  process_client(focusClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientFocus, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerSwapCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  process_client(swapClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientSwap, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerSendCurrClient(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
   const int ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)() % NeuroCoreGetSize();
-  process_client(sendClientW, NeuroClientGetFocused(), NeuroClientSelectorSelf, (const void *)&ws);
+  process_client(NeuroWorkspaceClientSend, NeuroClientGetFocused(), NeuroClientSelectorSelf, (const void *)&ws);
 }
 
 void NeuroActionHandlerKillCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  killClientW(NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
-  // process_client(killClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  NeuroWorkspaceClientKill(NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  // process_client(NeuroWorkspaceClientKill, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerTileCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  process_client(tileClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientTile, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerNormalCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  process_client(normalClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientNormal, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerFullscreenCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  process_client(fullScreenClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientFullscreen, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerToggleFullscreenCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  process_client(toggleFullScreenClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientToggleFullscreen, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg),
+      NULL);
 }
 
 void NeuroActionHandlerMinimizeCurrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
-  process_client(minimizeClientW, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientMinimize, NeuroClientGetFocused(), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerFreeCurrClient(GenericArg freeSetterFn_arg) {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
-  process_client(freeClientW, NeuroClientGetFocused(), NeuroClientSelectorSelf, p);
+  process_client(NeuroWorkspaceClientFree, NeuroClientGetFocused(), NeuroClientSelectorSelf, p);
 }
 
 void NeuroActionHandlerToggleFreeCurrClient(GenericArg freeSetterFn_arg) {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
-  process_client(toggleFreeClientW, NeuroClientGetFocused(), NeuroClientSelectorSelf, p);
+  process_client(NeuroWorkspaceClientToggleFree, NeuroClientGetFocused(), NeuroClientSelectorSelf, p);
 }
 
 // Ptr Client
 void NeuroActionHandlerFocusPtrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  process_client(focusClientW, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientFocus, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerFreeMovePtrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   GenericArg fsf = (GenericArg)ARG_FSF(NeuroRuleFreeSetterDefault);
   int rx, ry;
-  process_client(freeMoveClientW, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg),
+  process_client(NeuroWorkspaceClientFreeMove, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg),
       (const void *)&fsf);
 }
 
@@ -400,38 +401,41 @@ void NeuroActionHandlerFreeResizePtrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   GenericArg fsf = (GenericArg)ARG_FSF(NeuroRuleFreeSetterDefault);
   int rx, ry;
-  process_client(freeResizeClientW, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg),
+  process_client(NeuroWorkspaceClientFreeResize, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg),
       (const void *)&fsf);
 }
 
 void NeuroActionHandlerFloatMovePtrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  process_client(floatMoveClientW, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientFloatMove, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg),
+      NULL);
 }
 
 void NeuroActionHandlerFloatResizePtrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  process_client(floatResizeClientW, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientFloatResize, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg),
+      NULL);
 }
 
 void NeuroActionHandlerToggleFullscreenPtrClient(GenericArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.argfn_.selectCliFn);
   int rx, ry;
-  process_client(toggleFullScreenClientW, NeuroClientGetPointed(&rx, &ry), ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientToggleFullscreen, NeuroClientGetPointed(&rx, &ry),
+      ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
 void NeuroActionHandlerFreePtrClient(GenericArg freeSetterFn_arg) {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
   int rx, ry;
-  process_client(freeClientW, NeuroClientGetPointed(&rx, &ry), NeuroClientSelectorSelf, p);
+  process_client(NeuroWorkspaceClientFree, NeuroClientGetPointed(&rx, &ry), NeuroClientSelectorSelf, p);
 }
 
 void NeuroActionHandlerToggleFreePtrClient(GenericArg freeSetterFn_arg)  {
   const void *p = (const void *)&ARG_GAF_GET(freeSetterFn_arg);
   int rx, ry;
-  process_client(toggleFreeClientW, NeuroClientGetPointed(&rx, &ry), NeuroClientSelectorSelf, p);
+  process_client(NeuroWorkspaceClientToggleFree, NeuroClientGetPointed(&rx, &ry), NeuroClientSelectorSelf, p);
 }
 
 // Util

@@ -43,6 +43,11 @@ void NeuroClientFloatResize(ClientPtrPtr c, const void *data);
 void NeuroClientFreeMove(ClientPtrPtr c, const void *freeSetterFn);
 void NeuroClientFreeResize(ClientPtrPtr c, const void *freeSetterFn);
 
+// Find
+ClientPtrPtr NeuroClientFindWindow(Window w);
+ClientPtrPtr NeuroClientFindUrgent();
+ClientPtrPtr NeuroClientFindFixed();
+
 // Client getters
 ClientPtrPtr NeuroClientGetFocused();
 ClientPtrPtr NeuroClientGetPointed(int *x, int *y);

@@ -37,6 +37,5 @@ void NeuroEventManageWindow(Window w);
 void NeuroEventUnmanageClient(ClientPtrPtr c);
 void NeuroEventLoadWindows();
 
-
 #endif  // NEURO_EVENT_H_
 

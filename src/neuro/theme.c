@@ -118,11 +118,11 @@ void NeuroThemeNnoellLoggerCurrLayout(char *str) {
   if (lc) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     if (NeuroCoreStackIsCurrToggledLayout(ws))
-      snprintf(tmp2, LOGGER_MAX, "^fg(" NeuroThemeNnoellColorRed ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1,
-          lc->name);
+      snprintf(tmp2, LOGGER_MAX, "^fg(" NeuroThemeNnoellColorRed ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
+          idx + 1, lc->name);
     else
-      snprintf(tmp2, LOGGER_MAX, "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1,
-          lc->name);
+      snprintf(tmp2, LOGGER_MAX, "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
+          idx + 1, lc->name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &WhiteBoxPP);
     NeuroDzenWrapDzenBox(str, "LAYOUT", &Blue2BoxPP);
     strncat(str, tmp, LOGGER_MAX - strlen(str) - 1);
@@ -189,7 +189,7 @@ void NeuroThemeNnoellLoggerWorkspaceList(char *str) {
     static const CA wslstCA = { tmp3, tmp3, tmp3, tmp3, tmp3 };
     if (i == NeuroCoreGetCurrStack())
       NeuroDzenWrapDzenBox(tmp2, tmp, &Blue2BBoxPP);
-    else if (findUrgentClientW(i))
+    else if (NeuroWorkspaceClientFindUrgent(i))
       NeuroDzenWrapDzenBox(tmp2, tmp, &Green2BBoxPP);
     else if (!NeuroCoreStackIsEmpty(i))
       NeuroDzenWrapDzenBox(tmp2, tmp, &White2BBoxPP);
@@ -207,7 +207,9 @@ void NeuroThemeNnoellLoggerTime(char *str) {
   struct tm res;
   localtime_r(&t, &res);
   snprintf(tmp, LOGGER_MAX,
-      "%02d^fg("NeuroThemeNnoellColorGray"):^fg()%02d^fg("NeuroThemeNnoellColorGray"):^fg("NeuroThemeNnoellColorGreen")%02d^fg()",
+      "%02d^fg("NeuroThemeNnoellColorGray
+      "):^fg()%02d^fg("NeuroThemeNnoellColorGray
+      "):^fg("NeuroThemeNnoellColorGreen")%02d^fg()",
       res.tm_hour, res.tm_min, res.tm_sec);
   NeuroDzenWrapDzenBox(str, tmp, &WhiteBoxPP);
 }
@@ -219,7 +221,9 @@ void NeuroThemeNnoellLoggerDate(char *str) {
   struct tm res;
   localtime_r(&t, &res);
   snprintf(tmp, LOGGER_MAX,
-      "%d^fg("NeuroThemeNnoellColorGray").^fg()%02d^fg("NeuroThemeNnoellColorGray").^fg("NeuroThemeNnoellColorBlue")%02d^fg()",
+      "%d^fg("NeuroThemeNnoellColorGray
+      ").^fg()%02d^fg("NeuroThemeNnoellColorGray
+      ").^fg("NeuroThemeNnoellColorBlue")%02d^fg()",
       res.tm_year+1900, res.tm_mon+1, res.tm_mday);
   NeuroDzenWrapDzenBox(str, tmp, &WhiteBoxPP);
 }
