@@ -174,7 +174,7 @@ static Bool realloc_minimized_clients_if_necessary(Stack *s, int newCount) {
   return True;
 }
 
-Client *push_minimized_client(Stack *s, Client *c) {
+static Client *push_minimized_client(Stack *s, Client *c) {
   assert(s);
   assert(c);
   int newCount = s->minimizedNum + 1;
@@ -185,7 +185,7 @@ Client *push_minimized_client(Stack *s, Client *c) {
   return c;
 }
 
-Client *pop_minimized_client(Stack *s) {
+static Client *pop_minimized_client(Stack *s) {
   assert(s);
   if (s->minimizedNum == 0)
     return NULL;
