@@ -126,11 +126,11 @@ static const Key key18[] = { {
 static const Key key19[] = { {
     Mod1Mask,             XK_t,      CHAIN_NULL(NeuroActionChainToggleFreeCurrClient)                              } };
 static const Key key20[] = { {
-    Mod1Mask,             XK_z,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModMirror))                    } };
+    Mod1Mask,             XK_z,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModMirror))        } };
 static const Key key21[] = { {
-    Mod1Mask,             XK_x,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModReflectX))                   } };
+    Mod1Mask,             XK_x,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModReflectX))      } };
 static const Key key22[] = { {
-    Mod1Mask,             XK_y,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModReflectY))                   } };
+    Mod1Mask,             XK_y,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModReflectY))      } };
 static const Key key23[] = { {
     Mod1Mask,             XK_f,      CHAIN(NeuroActionChainToggleLayout, ARG_INT(0))                               } };
 static const Key key24[] = { {
