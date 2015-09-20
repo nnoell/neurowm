@@ -18,10 +18,10 @@
 #include "type.h"
 
 // Defines
-#define nullModL  0
-#define mirrModL  (1<<0)
-#define reflXModL (1<<1)
-#define reflYModL (1<<2)
+#define NeuroLayoutModNull     0
+#define NeuroLayoutModMirror   (1<<0)
+#define NeuroLayoutModReflectX (1<<1)
+#define NeuroLayoutModReflectY (1<<2)
 
 //----------------------------------------------------------------------------------------------------------------------
 // FUNCTION DECLARATION

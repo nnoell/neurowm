@@ -131,13 +131,13 @@ void NeuroLayoutRun(int ws, int i) {
   if (!a)
     NeuroSystemError("NeuroLayoutRun - Could not run layout");
   if (a->size) {  // Then run layout
-    if (l->mod & mirrModL)
+    if (l->mod & NeuroLayoutModMirror)
       mirror_arrange(a, l->arrangerFn);
     else
       normal_arrange(a, l->arrangerFn);
-    if (l->mod & reflXModL)
+    if (l->mod & NeuroLayoutModReflectX)
       reflect_x_mod(a);
-    if (l->mod & reflYModL)
+    if (l->mod & NeuroLayoutModReflectY)
       reflect_y_mod(a);
   }
   delete_arrange(a);

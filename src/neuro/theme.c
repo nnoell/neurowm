@@ -136,14 +136,14 @@ void NeuroThemeNnoellLoggerLayoutMod(char *str) {
   if (l) {
     static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ];
     tmp[ 0 ] = '\0';
-    if (l->mod == nullModL) {
+    if (l->mod == NeuroLayoutModNull) {
       strncpy(tmp, "Norm", LOGGER_MAX);
     } else {
-      if (l->mod & mirrModL)
+      if (l->mod & NeuroLayoutModMirror)
         strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")M^fg()", LOGGER_MAX - strlen(tmp) - 1);
-      if (l->mod & reflXModL)
+      if (l->mod & NeuroLayoutModReflectX)
         strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")X^fg()", LOGGER_MAX - strlen(tmp) - 1);
-      if (l->mod & reflYModL)
+      if (l->mod & NeuroLayoutModReflectY)
         strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")Y^fg()", LOGGER_MAX - strlen(tmp) - 1);
     }
     NeuroDzenWrapDzenBox(tmp2, tmp, &WhiteBoxPP);
