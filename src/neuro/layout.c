@@ -33,7 +33,7 @@ static Arrange *new_arrange(int ws, Layout *l) {
   int i = 0, size = 0;
   ClientPtrPtr c;
   for (c=NeuroCoreStackGetHeadClient(ws); c; c=NeuroCoreClientGetNext(c)) {
-    if (CLI_GET(c).freeSetterFn == NeuroRuleFreeSetterNull && !CLI_GET(c).fixPos && !CLI_GET(c).isHidden &&
+    if (CLI_GET(c).freeSetterFn == NeuroRuleFreeSetterNull && !CLI_GET(c).fixedPos && !CLI_GET(c).isHidden &&
         !CLI_GET(c).isFullScreen) {
       if (i >= size || i <= 0) {  // Realloc if memory is needed
         size += STEP_SIZE_REALLOC;
@@ -131,13 +131,13 @@ void NeuroLayoutRun(int ws, int i) {
   if (!a)
     NeuroSystemError("NeuroLayoutRun - Could not run layout");
   if (a->size) {  // Then run layout
-    if (l->mod & NeuroLayoutModMirror)
+    if (l->mod & LayoutModMirror)
       mirror_arrange(a, l->arrangerFn);
     else
       normal_arrange(a, l->arrangerFn);
-    if (l->mod & NeuroLayoutModReflectX)
+    if (l->mod & LayoutModReflectX)
       reflect_x_mod(a);
-    if (l->mod & NeuroLayoutModReflectY)
+    if (l->mod & LayoutModReflectY)
       reflect_y_mod(a);
   }
   delete_arrange(a);

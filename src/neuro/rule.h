@@ -19,11 +19,6 @@
 
 // Defines
 #define NeuroRuleFreeSetterNull NULL
-#define NeuroRuleFixedPositionNull  0
-#define NeuroRuleFixedPositionUp    1
-#define NeuroRuleFixedPositionDown  2
-#define NeuroRuleFixedPositionLeft  3
-#define NeuroRuleFixedPositionRigth 4
 
 
 //----------------------------------------------------------------------------------------------------------------------

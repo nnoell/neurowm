@@ -46,10 +46,11 @@
 #define ARG_PTR(X)   {.pointer_ = (X)}
 #define ARG_CHAR(X)  {.char_ = (X)}
 #define ARG_INT(X)   {.int_ = (X)}
-#define ARG_UINT(X)  {.uint_ = (X)}
 #define ARG_FLOAT(X) {.float_ = (X)}
 #define ARG_STR(X)   {.string_ = (X)}
 #define ARG_CMD(X)   {.command_ = (X)}
+#define ARG_LMOD(X)  {.LayoutMod_ = (X)}
+#define ARG_GAF(X)   {.GenericArgFn_ = (X)}
 #define ARG_FSF(X)   {.GenericArgFn_.FreeSetterFn_ = (X)}
 #define ARG_CSF(X)   {.GenericArgFn_.ClientSelectorFn_ = (X)}
 #define ARG_WSF(X)   {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
@@ -58,10 +59,10 @@
 #define ARG_PTR_GET(X)   ((X).pointer_)
 #define ARG_CHAR_GET(X)  ((X).char_)
 #define ARG_INT_GET(X)   ((X).int_)
-#define ARG_UINT_GET(X)  ((X).uint_)
 #define ARG_FLOAT_GET(X) ((X).float_)
 #define ARG_STR_GET(X)   ((X).string_)
 #define ARG_CMD_GET(X)   ((X).command_)
+#define ARG_LMOD_GET(X)  ((X).LayoutMod_)
 #define ARG_GAF_GET(X)   ((X).GenericArgFn_)
 #define ARG_FLF_GET(X)   ((X).GenericArgFn_.FreeSetterFn_)
 #define ARG_CSF_GET(X)   ((X).GenericArgFn_.ClientSelectorFn_)
@@ -98,6 +99,28 @@
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
+// ENUM TYPES ----------------------------------------------------------------------------------------------------------
+
+// LayoutMod
+enum LayoutMod {
+  LayoutModNull = 0,
+  LayoutModMirror = 1 << 0,
+  LayoutModReflectX = 1 << 1,
+  LayoutModReflectY = 1 << 2
+};
+typedef enum LayoutMod LayoutMod;
+
+// RuleFixedPosition
+enum RuleFixedPosition {
+  RuleFixedPositionNull = 0,
+  RuleFixedPositionUp = 1,
+  RuleFixedPositionDown = 2,
+  RuleFixedPositionLeft = 3,
+  RuleFixedPositionRigth = 4
+};
+typedef enum RuleFixedPosition RuleFixedPosition;
+
+
 // GEOMETRY TYPES ------------------------------------------------------------------------------------------------------
 
 // Rectangle
@@ -128,7 +151,7 @@ struct Client {
   Bool isHidden;
   Bool isFullScreen;
   FreeSetterFn freeSetterFn;
-  unsigned int fixPos;
+  RuleFixedPosition fixedPos;
   int fixSize;
   Bool isUrgent;
 };
@@ -165,7 +188,7 @@ union GenericArg {
   const void *const pointer_;
   const char char_;
   const int int_;
-  const unsigned int uint_;
+  const LayoutMod LayoutMod_;
   const float float_;
   const char *const string_;
   const char *const *const command_;
@@ -232,7 +255,7 @@ struct Layout {
   const BorderSetterFn borderWidthSetterFn;
   const BorderSetterFn borderGapSetterFn;
   const float *const region;
-  unsigned int mod;
+  LayoutMod mod;
   Bool followMouse;
   GenericArg arrangeSettings[ ARRSET_MAX ];
 };
@@ -249,7 +272,7 @@ struct LayoutConf {
   const BorderSetterFn borderWidthSetterFn;
   const BorderSetterFn borderGapSetterFn;
   const float region[ 4 ];
-  const unsigned int mod;
+  const LayoutMod mod;
   const Bool followMouse;
   const GenericArg arrangeSettings[ ARRSET_MAX ];
 };
@@ -288,7 +311,7 @@ struct Rule {
   const char *const title;
   const Bool isFullScreen;
   const FreeSetterFn freeSetterFn;
-  const unsigned int fixPos;
+  const RuleFixedPosition fixedPos;
   const float fixSize;
   const WorkspaceSelectorFn workspaceSelectorFn;
   const Bool goWorkspace;

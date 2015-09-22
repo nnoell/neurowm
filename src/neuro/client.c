@@ -468,7 +468,7 @@ Bool NeuroClientTesterUrgent(const ClientPtrPtr c, const void *data) {
 Bool NeuroClientTesterFixed(const ClientPtrPtr c, const void *data) {
   assert(c);
   (void)data;
-  return CLI_GET(c).fixPos != NeuroRuleFixedPositionNull;
+  return CLI_GET(c).fixedPos != RuleFixedPositionNull;
 }
 
 // Color Setters

@@ -34,27 +34,27 @@ const ActionChain NeuroConfigEndupHook[] = { CHAIN_NULL(NeuroActionChainNothing)
 static const LayoutConf tile[] = { {
   "Tile", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, NeuroLayoutModNull, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf mirr[] = { {
   "Mirr", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, NeuroLayoutModMirror, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModMirror, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 } };
 static const LayoutConf grid[] = { {
   "Grid", NeuroLayoutArrangerGrid,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, NeuroLayoutModNull, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf full[] = { {
   "Full", NeuroLayoutArrangerFull,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, NeuroLayoutModNull, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 static const LayoutConf floa[] = { {
   "Float", NeuroLayoutArrangerFloat,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterAlways, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, NeuroLayoutModNull, False, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, False, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 } };
 
 // Layouts
@@ -126,11 +126,11 @@ static const Key key18[] = { {
 static const Key key19[] = { {
     Mod1Mask,             XK_t,      CHAIN_NULL(NeuroActionChainToggleFreeCurrClient)                              } };
 static const Key key20[] = { {
-    Mod1Mask,             XK_z,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModMirror))        } };
+    Mod1Mask,             XK_z,      CHAIN(NeuroActionChainToggleModLayout, ARG_LMOD(LayoutModMirror))        } };
 static const Key key21[] = { {
-    Mod1Mask,             XK_x,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModReflectX))      } };
+    Mod1Mask,             XK_x,      CHAIN(NeuroActionChainToggleModLayout, ARG_LMOD(LayoutModReflectX))      } };
 static const Key key22[] = { {
-    Mod1Mask,             XK_y,      CHAIN(NeuroActionChainToggleModLayout, ARG_UINT(NeuroLayoutModReflectY))      } };
+    Mod1Mask,             XK_y,      CHAIN(NeuroActionChainToggleModLayout, ARG_LMOD(LayoutModReflectY))      } };
 static const Key key23[] = { {
     Mod1Mask,             XK_f,      CHAIN(NeuroActionChainToggleLayout, ARG_INT(0))                               } };
 static const Key key24[] = { {
