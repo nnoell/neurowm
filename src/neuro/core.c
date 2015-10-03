@@ -69,7 +69,7 @@ struct StackSet {
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static StackSet SS;
+static StackSet stack_set_;
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -108,7 +108,7 @@ static void delete_node(Node *n) {
 
 static void set_curr_node(Node *n) {
   assert(n);
-  Stack *s = SS.stacks + n->cli->ws;
+  Stack *s = stack_set_.stacks + n->cli->ws;
   if (n == s->curr)
     return;
   s->prev = s->curr;
@@ -140,7 +140,7 @@ static Client *remove_last_node(Stack *s) {
 
 static Client *remove_no_last_node(Node *n) {
   assert(n);
-  Stack *s = SS.stacks + n->cli->ws;
+  Stack *s = stack_set_.stacks + n->cli->ws;
   if (s->size == 0 || s->last == n)
     return NULL;
   Bool updateNSP = n->cli->isNSP;
@@ -282,8 +282,8 @@ static void set_layouts(Layout *l, const LayoutConf *const *lc, size_t size) {
 Bool NeuroCoreInit() {
   assert(workspaceSetS);
   size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSetS);
-  SS.stacks = new_stackset(size + 1);  // We need on extra stack for NSP
-  if (!SS.stacks)
+  stack_set_.stacks = new_stackset(size + 1);  // We need on extra stack for NSP
+  if (!stack_set_.stacks)
     return False;
   const Workspace *ws;
   size_t i, sizel, sizetl;
@@ -293,7 +293,7 @@ Bool NeuroCoreInit() {
     if (!sizel)
       return False;
     sizetl = NeuroTypeArrayLength((const void *const *const)(ws->togLayouts));
-    Stack *s = new_stack(SS.stacks + i, sizel, sizetl);
+    Stack *s = new_stack(stack_set_.stacks + i, sizel, sizetl);
     if (!s)
       return False;
     s->name = ws->name;
@@ -307,55 +307,55 @@ Bool NeuroCoreInit() {
     set_layouts(s->layouts, ws->layouts, sizel);
     set_layouts(s->togLayouts, ws->togLayouts, sizetl);
   }
-  SS.curr = 0;
-  SS.old = 0;
-  SS.size = size;
+  stack_set_.curr = 0;
+  stack_set_.old = 0;
+  stack_set_.size = size;
   return True;
 }
 
 void NeuroCoreStop() {
   int i;
-  for (i = 0; i < SS.size; ++i)
-    delete_stack(SS.stacks + i);
-  delete_stack_set(SS.stacks);
-  SS.stacks = NULL;
+  for (i = 0; i < stack_set_.size; ++i)
+    delete_stack(stack_set_.stacks + i);
+  delete_stack_set(stack_set_.stacks);
+  stack_set_.stacks = NULL;
 }
 
 int NeuroCoreGetCurrStack() {
-  return SS.curr;
+  return stack_set_.curr;
 }
 
 int NeuroCoreGetPrevStack() {
-  return SS.curr - 1 < 0 ? SS.size -1 : SS.curr - 1;
+  return stack_set_.curr - 1 < 0 ? stack_set_.size -1 : stack_set_.curr - 1;
 }
 
 int NeuroCoreGetNextStack() {
-  return SS.curr + 1 >= SS.size ? 0 : SS.curr + 1;
+  return stack_set_.curr + 1 >= stack_set_.size ? 0 : stack_set_.curr + 1;
 }
 
 int NeuroCoreGetOldStack() {
-  return SS.old;
+  return stack_set_.old;
 }
 
 int NeuroCoreGetNspStack() {
-  return SS.size;
+  return stack_set_.size;
 }
 
 int NeuroCoreGetSize() {
-  return SS.size;
+  return stack_set_.size;
 }
 
 int NeuroCoreGetNspStackSize() {
-  return SS.stacks[ SS.size ].size;
+  return stack_set_.stacks[ stack_set_.size ].size;
 }
 
 ClientPtrPtr NeuroCoreGetCurrClientNspStack() {
-  return (ClientPtrPtr)SS.stacks[ SS.size ].curr;
+  return (ClientPtrPtr)stack_set_.stacks[ stack_set_.size ].curr;
 }
 
 void NeuroCoreSetCurrStack(int ws) {
-  SS.old = SS.curr;
-  SS.curr = ws % SS.size;
+  stack_set_.old = stack_set_.curr;
+  stack_set_.curr = ws % stack_set_.size;
 }
 
 void NeuroCoreSetCurrClient(const ClientPtrPtr c) {
@@ -366,12 +366,12 @@ void NeuroCoreSetCurrClient(const ClientPtrPtr c) {
 
 // First off, search in the current stack, if it is not there, search in the other stacks
 ClientPtrPtr NeuroCoreFindClient(const ClientTesterFn ctf, const void *p) {
-  ClientPtrPtr c = NeuroCoreStackFindClient(SS.curr, ctf, p);
+  ClientPtrPtr c = NeuroCoreStackFindClient(stack_set_.curr, ctf, p);
   if (c)
     return c;
   int i;
-  for (i = 0; i < SS.size; ++i) {
-    if (i == SS.curr)
+  for (i = 0; i < stack_set_.size; ++i) {
+    if (i == stack_set_.curr)
       continue;
     c = NeuroCoreStackFindClient(i, ctf, p);
     if (c)
@@ -382,14 +382,14 @@ ClientPtrPtr NeuroCoreFindClient(const ClientTesterFn ctf, const void *p) {
 
 // First, search in the current stack, if is not there, search in the other stacks
 ClientPtrPtr NeuroCoreFindNspClient() {
-  Node *n = SS.stacks[ SS.curr ].nsp;
+  Node *n = stack_set_.stacks[ stack_set_.curr ].nsp;
   if (n)
     return (ClientPtrPtr)n;
   int i;
-  for (i = 0; i < SS.size; ++i) {
-    if (i == SS.curr)
+  for (i = 0; i < stack_set_.size; ++i) {
+    if (i == stack_set_.curr)
       continue;
-    n = SS.stacks[ i ].nsp;
+    n = stack_set_.stacks[ i ].nsp;
     if (n)
       return (ClientPtrPtr)n;
   }
@@ -399,7 +399,7 @@ ClientPtrPtr NeuroCoreFindNspClient() {
 ClientPtrPtr NeuroCoreAddClientEnd(const Client *c) {
   if (!c)
     return NULL;
-  Stack *s = SS.stacks + c->ws;
+  Stack *s = stack_set_.stacks + c->ws;
   Node *n = new_node(c);
   if (!n)
     return NULL;
@@ -426,7 +426,7 @@ ClientPtrPtr NeuroCoreAddClientEnd(const Client *c) {
 ClientPtrPtr NeuroCoreAddClientStart(const Client *c) {
   if (!c)
     return NULL;
-  Stack *s = SS.stacks + c->ws;
+  Stack *s = stack_set_.stacks + c->ws;
   Node *n = new_node(c);
   if (!n)
     return NULL;
@@ -455,32 +455,32 @@ Client *NeuroCoreRemoveClient(ClientPtrPtr c) {
   if (!c)
     return NULL;
   if (NeuroCoreClientIsLast(c))
-    return remove_last_node(SS.stacks + CLI_GET(c).ws);
+    return remove_last_node(stack_set_.stacks + CLI_GET(c).ws);
   return remove_no_last_node((Node *)c);
 }
 
 Client *NeuroCorePushMinimizedClient(Client *c) {
   assert(c);
-  Stack *s = SS.stacks + (c->ws % SS.size);
+  Stack *s = stack_set_.stacks + (c->ws % stack_set_.size);
   return push_minimized_client(s, c);
 }
 
 Client *NeuroCorePopMinimizedClient(int ws) {
-  Stack *s = SS.stacks + (ws % SS.size);
+  Stack *s = stack_set_.stacks + (ws % stack_set_.size);
   return pop_minimized_client(s);
 }
 
 // First, search in the current stack, if is not there, search in the other stacks
 Client *NeuroCoreRemoveMinimizedClient(Window w) {
-  Stack *s = SS.stacks + SS.curr;
+  Stack *s = stack_set_.stacks + stack_set_.curr;
   Client *c = remove_minimized_client(s, w);
   if (c)
     return c;
   int i;
-  for (i = 0; i < SS.size; ++i) {
-    if (i == SS.curr)
+  for (i = 0; i < stack_set_.size; ++i) {
+    if (i == stack_set_.curr)
       continue;
-    c = remove_minimized_client(SS.stacks + i, w);
+    c = remove_minimized_client(stack_set_.stacks + i, w);
     if (c)
       return c;
   }
@@ -488,73 +488,73 @@ Client *NeuroCoreRemoveMinimizedClient(Window w) {
 }
 
 Bool NeuroCoreStackIsCurr(int ws) {
-  return ws == SS.curr;
+  return ws == stack_set_.curr;
 }
 
 Bool NeuroCoreStackIsNsp(int ws) {
-  return ws == SS.size;
+  return ws == stack_set_.size;
 }
 
 Bool NeuroCoreStackIsEmpty(int ws) {
-  return SS.stacks[ ws % SS.size ].size <= 0;
+  return stack_set_.stacks[ ws % stack_set_.size ].size <= 0;
 }
 
 const char *NeuroCoreStackGetName(int ws) {
-  return SS.stacks[ ws % SS.size ].name;
+  return stack_set_.stacks[ ws % stack_set_.size ].name;
 }
 
 int NeuroCoreStackGetSize(int ws) {
-  return SS.stacks[ ws % SS.size ].size;
+  return stack_set_.stacks[ ws % stack_set_.size ].size;
 }
 
 int NeuroCoreStackGetMinimizedNum(int ws) {
-  return SS.stacks[ ws % SS.size ].minimizedNum;
+  return stack_set_.stacks[ ws % stack_set_.size ].minimizedNum;
 }
 
 int NeuroCoreStackGetNumLayouts(int ws) {
-  int s = ws % SS.size;
-  if (SS.stacks[ s ].currTogLayoutIdx == -1)
-    return SS.stacks[ s ].numLayouts;
-  return SS.stacks[ s ].numTogLayouts;
+  int s = ws % stack_set_.size;
+  if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
+    return stack_set_.stacks[ s ].numLayouts;
+  return stack_set_.stacks[ s ].numTogLayouts;
 }
 
 int NeuroCoreStackGetLayoutIdx(int ws) {
-  int s = ws % SS.size;
-  if (SS.stacks[ s ].currTogLayoutIdx == -1)
-    return SS.stacks[ s ].currLayoutIdx;
-  return SS.stacks[ s ].currTogLayoutIdx;
+  int s = ws % stack_set_.size;
+  if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
+    return stack_set_.stacks[ s ].currLayoutIdx;
+  return stack_set_.stacks[ s ].currTogLayoutIdx;
 }
 
 Bool NeuroCoreStackIsCurrToggledLayout(int ws) {
-  int s = ws % SS.size;
-  return SS.stacks[ s ].currTogLayoutIdx != -1;
+  int s = ws % stack_set_.size;
+  return stack_set_.stacks[ s ].currTogLayoutIdx != -1;
 }
 
 void NeuroCoreStackSetLayoutIdx(int ws, int i) {
-  int s = ws % SS.size;
-  SS.stacks[ s ].currLayoutIdx = i % SS.stacks[ s ].numLayouts;
+  int s = ws % stack_set_.size;
+  stack_set_.stacks[ s ].currLayoutIdx = i % stack_set_.stacks[ s ].numLayouts;
 }
 
 void NeuroCoreStackSetToggledLayout(int ws, int i) {
-  int s = ws % SS.size;
+  int s = ws % stack_set_.size;
   if (i != -1)
-    SS.stacks[ s ].currTogLayoutIdx = i % SS.stacks[ s ].numTogLayouts;
+    stack_set_.stacks[ s ].currTogLayoutIdx = i % stack_set_.stacks[ s ].numTogLayouts;
   else
-    SS.stacks[ s ].currTogLayoutIdx = -1;
+    stack_set_.stacks[ s ].currTogLayoutIdx = -1;
 }
 
 Layout *NeuroCoreStackGetLayout(int ws, int i) {
-  int s = ws % SS.size;
-  if (SS.stacks[ s ].currTogLayoutIdx == -1)
-    return SS.stacks[ s ].layouts + (i % SS.stacks[ s ].numLayouts);
-  return SS.stacks[ s ].togLayouts + (i % SS.stacks[ s ].numTogLayouts);
+  int s = ws % stack_set_.size;
+  if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
+    return stack_set_.stacks[ s ].layouts + (i % stack_set_.stacks[ s ].numLayouts);
+  return stack_set_.stacks[ s ].togLayouts + (i % stack_set_.stacks[ s ].numTogLayouts);
 }
 
 const LayoutConf *NeuroCoreStackGetLayoutConf(int ws, int i) {
-  int s = ws % SS.size;
-  if (SS.stacks[ s ].currTogLayoutIdx == -1)
-    return workspaceSetS[ s ]->layouts[ i % SS.stacks[ s ].numLayouts ];
-  return workspaceSetS[ s ]->togLayouts[ i % SS.stacks[ s ].numTogLayouts ];
+  int s = ws % stack_set_.size;
+  if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
+    return workspaceSetS[ s ]->layouts[ i % stack_set_.stacks[ s ].numLayouts ];
+  return workspaceSetS[ s ]->togLayouts[ i % stack_set_.stacks[ s ].numTogLayouts ];
 }
 
 Layout *NeuroCoreStackGetCurrLayout(int ws) {
@@ -566,28 +566,28 @@ const LayoutConf *NeuroCoreStackGetCurrLayoutConf(int ws) {
 }
 
 Rectangle *NeuroCoreStackGetRegion(int ws) {
-  return &(SS.stacks[ ws % SS.size ].region);
+  return &(stack_set_.stacks[ ws % stack_set_.size ].region);
 }
 
 ClientPtrPtr NeuroCoreStackGetCurrClient(int ws) {
-  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].curr);
+  return (ClientPtrPtr)(stack_set_.stacks[ ws % stack_set_.size ].curr);
 }
 
 ClientPtrPtr NeuroCoreStackGetPrevClient(int ws) {
-  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].prev);
+  return (ClientPtrPtr)(stack_set_.stacks[ ws % stack_set_.size ].prev);
 }
 
 ClientPtrPtr NeuroCoreStackGetHeadClient(int ws) {
-  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].head);
+  return (ClientPtrPtr)(stack_set_.stacks[ ws % stack_set_.size ].head);
 }
 
 ClientPtrPtr NeuroCoreStackGetLastClient(int ws) {
-  return (ClientPtrPtr)(SS.stacks[ ws % SS.size ].last);
+  return (ClientPtrPtr)(stack_set_.stacks[ ws % stack_set_.size ].last);
 }
 
 ClientPtrPtr NeuroCoreStackFindClient(int ws, const ClientTesterFn ctf, const void *data) {
   assert(tcfn);
-  Stack *s = SS.stacks + (ws % SS.size);
+  Stack *s = stack_set_.stacks + (ws % stack_set_.size);
   Node *n;
   for (n=s->head; n; n=n->next)
     if (ctf((ClientPtrPtr)n, data))
@@ -597,19 +597,19 @@ ClientPtrPtr NeuroCoreStackFindClient(int ws, const ClientTesterFn ctf, const vo
 
 // Client
 Bool NeuroCoreClientIsCurr(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].curr;
+  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].curr;
 }
 
 Bool NeuroCoreClientIsPrev(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].prev;
+  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].prev;
 }
 
 Bool NeuroCoreClientIsHead(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].head;
+  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].head;
 }
 
 Bool NeuroCoreClientIsLast(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == SS.stacks[ CLI_GET(c).ws ].last;
+  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].last;
 }
 
 Rectangle *NeuroCoreClientGetRegion(const ClientPtrPtr c) {
