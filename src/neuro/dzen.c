@@ -20,6 +20,7 @@
 #define CPU_FILE_PATH "/proc/stat"
 #define CPU_MAX_VALS 10
 
+
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
@@ -54,15 +55,15 @@ struct PipeInfoPanels {
 //----------------------------------------------------------------------------------------------------------------------
 
 // CPU Calculation
-static CpuInfo *cpusInfo;
-static int numCpus;
-static pthread_t threadID;
-static pthread_attr_t threadAttr;
-static Bool stopUpdateCpuPercWhile = False;
+static CpuInfo *cpus_info_;
+static int cpus_num_;
+static pthread_t cpu_thread_id_;
+static pthread_attr_t cpu_thread_attr_;
+static Bool cpu_stop_update_while_ = False;
 
 // Dzen
-static PipeInfoPanels PIP;
-static Bool stopUpdateWhile = False;
+static PipeInfoPanels dzen_pipe_info_panels_;
+static Bool dzen_stop_update_while_ = False;
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -106,8 +107,8 @@ static void update_cpu_perc(const char *file, int ncpus) {
   memset(prevIdle, 0, sizeof(prevIdle));
   memset(prevTotal, 0, sizeof(prevTotal));
 
-  stopUpdateCpuPercWhile = False;
-  while (!stopUpdateCpuPercWhile) {
+  cpu_stop_update_while_ = False;
+  while (!cpu_stop_update_while_) {
     FILE *fd = fopen(file, "r");
     if (fd == NULL)
       return;
@@ -123,9 +124,9 @@ static void update_cpu_perc(const char *file, int ncpus) {
           cpusFileInfo[ i ] + 6, cpusFileInfo[ i ] + 7,
           cpusFileInfo[ i ] + 8, cpusFileInfo[ i ] + 9))
         return;
-      get_perc_info(cpusInfo + i, cpusFileInfo[ i ], prevIdle[ i ], prevTotal[ i ]);
-      prevIdle[ i ] = cpusInfo[ i ].idle;
-      prevTotal[ i ] = cpusInfo[ i ].total;
+      get_perc_info(cpus_info_ + i, cpusFileInfo[ i ], prevIdle[ i ], prevTotal[ i ]);
+      prevIdle[ i ] = cpus_info_[ i ].idle;
+      prevTotal[ i ] = cpus_info_[ i ].total;
     }
 
     fclose(fd);
@@ -135,21 +136,21 @@ static void update_cpu_perc(const char *file, int ncpus) {
 
 static void *update_cpu_perc_thread(void *args) {
   (void)args;
-  update_cpu_perc(CPU_FILE_PATH, numCpus);
+  update_cpu_perc(CPU_FILE_PATH, cpus_num_);
   pthread_exit(NULL);
 }
 
 static Bool initCpuPercThread() {
-  pthread_attr_init(&threadAttr);
-  pthread_attr_setdetachstate(&threadAttr, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&threadID, &threadAttr, update_cpu_perc_thread, NULL);
+  pthread_attr_init(&cpu_thread_attr_);
+  pthread_attr_setdetachstate(&cpu_thread_attr_, PTHREAD_CREATE_JOINABLE);
+  return pthread_create(&cpu_thread_id_, &cpu_thread_attr_, update_cpu_perc_thread, NULL);
 }
 
 static void stop_cpu_perc_thread() {
-  pthread_attr_destroy(&threadAttr);
-  stopUpdateCpuPercWhile = True;
+  pthread_attr_destroy(&cpu_thread_attr_);
+  cpu_stop_update_while_ = True;
   void *status;
-  if (pthread_join(threadID, &status))  // Wait
+  if (pthread_join(cpu_thread_id_, &status))  // Wait
     perror("stopUpdateCpuPercThreadP - Could not join thread");
 }
 
@@ -197,37 +198,37 @@ static void *update_thread(void *args) {
   (void)args;
   const DzenPanel *dp;
   int i = 0, j;
-  stopUpdateWhile = False;
-  while (!stopUpdateWhile) {
-    for (j = 0; j < PIP.numPanels; ++j) {
+  dzen_stop_update_while_ = False;
+  while (!dzen_stop_update_while_) {
+    for (j = 0; j < dzen_pipe_info_panels_.numPanels; ++j) {
       dp = dzenPanelSetS[ j ];
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
-        update_dzen_panel(dp, PIP.pi[ j ].output);
+        update_dzen_panel(dp, dzen_pipe_info_panels_.pi[ j ].output);
     }
     ++i;
-    i %= PIP.resetRate;
+    i %= dzen_pipe_info_panels_.resetRate;
     sleep(1);
   }
   pthread_exit(NULL);
 }
 
 static Bool init_update_thread() {
-  if (PIP.resetRate <= 0)
+  if (dzen_pipe_info_panels_.resetRate <= 0)
     return True;
-  pthread_attr_init(&PIP.attr);
-  pthread_attr_setdetachstate(&PIP.attr, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&PIP.updateThread, &PIP.attr, update_thread, NULL) == 0;
+  pthread_attr_init(&dzen_pipe_info_panels_.attr);
+  pthread_attr_setdetachstate(&dzen_pipe_info_panels_.attr, PTHREAD_CREATE_JOINABLE);
+  return pthread_create(&dzen_pipe_info_panels_.updateThread, &dzen_pipe_info_panels_.attr, update_thread, NULL) == 0;
 }
 
 static void stop_update_thread() {
-  if (PIP.resetRate <= 0)
+  if (dzen_pipe_info_panels_.resetRate <= 0)
     return;
-  pthread_attr_destroy(&PIP.attr);
-  stopUpdateWhile = True;
+  pthread_attr_destroy(&dzen_pipe_info_panels_.attr);
+  dzen_stop_update_while_ = True;
   void *status;
-  if (pthread_join(PIP.updateThread, &status))  // Wait
+  if (pthread_join(dzen_pipe_info_panels_.updateThread, &status))  // Wait
     perror("stopUpdateThreadDP - Could not join thread");
 }
 
@@ -238,23 +239,24 @@ static void stop_update_thread() {
 
 // Dzen
 Bool NeuroDzenInit() {
-  PIP.numPanels = NeuroTypeArrayLength((const void const *const *)dzenPanelSetS);
-  PIP.pi = (PipeInfo *)calloc(PIP.numPanels, sizeof(PipeInfo));
-  PIP.updateThread = -1;
-  PIP.resetRate = 1;
-  if (!PIP.pi)
+  dzen_pipe_info_panels_.numPanels = NeuroTypeArrayLength((const void const *const *)dzenPanelSetS);
+  dzen_pipe_info_panels_.pi = (PipeInfo *)calloc(dzen_pipe_info_panels_.numPanels, sizeof(PipeInfo));
+  dzen_pipe_info_panels_.updateThread = -1;
+  dzen_pipe_info_panels_.resetRate = 1;
+  if (!dzen_pipe_info_panels_.pi)
     return False;
   const DzenPanel *dp;
   int i;
-  for (i = 0; i < PIP.numPanels; ++i) {
+  for (i = 0; i < dzen_pipe_info_panels_.numPanels; ++i) {
     char *dzenCmd[ DZEN_ARGS_MAX ];
     char line[ DZEN_LINE_MAX ];
     dp = dzenPanelSetS[ i ];
-    if (dp->refreshRate > PIP.resetRate)
-      PIP.resetRate *= dp->refreshRate;
+    if (dp->refreshRate > dzen_pipe_info_panels_.resetRate)
+      dzen_pipe_info_panels_.resetRate *= dp->refreshRate;
     get_dzen_cmd(dzenCmd, line, dp->df);
-    PIP.pi[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzenCmd, &(PIP.pi[ i ].pid));
-    if (PIP.pi[ i ].output == -1)
+    dzen_pipe_info_panels_.pi[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzenCmd,
+        &(dzen_pipe_info_panels_.pi[ i ].pid));
+    if (dzen_pipe_info_panels_.pi[ i ].output == -1)
       return False;
   }
   if (!init_update_thread())
@@ -266,40 +268,40 @@ Bool NeuroDzenInit() {
 void NeuroDzenStop() {
   stop_update_thread();
   int i;
-  for (i = 0; i < PIP.numPanels; ++i)
-    if (kill(PIP.pi[ i ].pid, SIGTERM) == -1)
+  for (i = 0; i < dzen_pipe_info_panels_.numPanels; ++i)
+    if (kill(dzen_pipe_info_panels_.pi[ i ].pid, SIGTERM) == -1)
       perror("NeuroDzenStop - Could not kill panels");
-  free(PIP.pi);
-  PIP.pi = NULL;
+  free(dzen_pipe_info_panels_.pi);
+  dzen_pipe_info_panels_.pi = NULL;
 }
 
 void NeuroDzenUpdate(Bool onlyEvent) {
   const DzenPanel *dp;
   int i;
-  for (i=0; i < PIP.numPanels; ++i) {
+  for (i=0; i < dzen_pipe_info_panels_.numPanels; ++i) {
     dp = dzenPanelSetS[ i ];
     if (onlyEvent) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
-        update_dzen_panel(dp, PIP.pi[ i ].output);
+        update_dzen_panel(dp, dzen_pipe_info_panels_.pi[ i ].output);
     } else {
-      update_dzen_panel(dp, PIP.pi[ i ].output);
+      update_dzen_panel(dp, dzen_pipe_info_panels_.pi[ i ].output);
     }
   }
 }
 
 void NeuroDzenStartCpuCalc() {
-  numCpus = get_num_cpus(CPU_FILE_PATH);
-  cpusInfo = (CpuInfo *)calloc(numCpus, sizeof(CpuInfo));
-  if (!cpusInfo)
-    NeuroSystemError("NeuroDzenStartCpuCalc - Could not alloc cpusInfo");
+  cpus_num_ = get_num_cpus(CPU_FILE_PATH);
+  cpus_info_ = (CpuInfo *)calloc(cpus_num_, sizeof(CpuInfo));
+  if (!cpus_info_)
+    NeuroSystemError("NeuroDzenStartCpuCalc - Could not alloc cpus_info_");
   if (initCpuPercThread())
     NeuroSystemError("NeuroDzenStartCpuCalc - Could not init thread to update cpus");
 }
 
 void NeuroDzenStopCpuCalc() {
   stop_cpu_perc_thread();
-  free(cpusInfo);
-  cpusInfo = NULL;
+  free(cpus_info_);
+  cpus_info_ = NULL;
 }
 
 void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b) {
@@ -384,8 +386,8 @@ void NeuroDzenLoggerCpu(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
   int i;
-  for (i = 0; i < numCpus; ++i) {
-    snprintf(buf, LOGGER_MAX, "%i%% ", cpusInfo[ i ].perc);
+  for (i = 0; i < cpus_num_; ++i) {
+    snprintf(buf, LOGGER_MAX, "%i%% ", cpus_info_[ i ].perc);
     strncat(str, buf, LOGGER_MAX - strlen(str) - 1);
   }
   str[ strlen(str) - 1 ] = '\0';
