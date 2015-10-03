@@ -42,10 +42,10 @@ struct PipeInfo {
 
 typedef struct PipeInfoPanels PipeInfoPanels;
 struct PipeInfoPanels {
-  PipeInfo *pi;
+  PipeInfo *pipeInfo;
   int numPanels;
   pthread_t updateThread;
-  pthread_attr_t attr;
+  pthread_attr_t attribute;
   int resetRate;
 };
 
@@ -205,7 +205,7 @@ static void *update_thread(void *args) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
-        update_dzen_panel(dp, dzen_pipe_info_panels_.pi[ j ].output);
+        update_dzen_panel(dp, dzen_pipe_info_panels_.pipeInfo[ j ].output);
     }
     ++i;
     i %= dzen_pipe_info_panels_.resetRate;
@@ -217,15 +217,16 @@ static void *update_thread(void *args) {
 static Bool init_update_thread() {
   if (dzen_pipe_info_panels_.resetRate <= 0)
     return True;
-  pthread_attr_init(&dzen_pipe_info_panels_.attr);
-  pthread_attr_setdetachstate(&dzen_pipe_info_panels_.attr, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&dzen_pipe_info_panels_.updateThread, &dzen_pipe_info_panels_.attr, update_thread, NULL) == 0;
+  pthread_attr_init(&dzen_pipe_info_panels_.attribute);
+  pthread_attr_setdetachstate(&dzen_pipe_info_panels_.attribute, PTHREAD_CREATE_JOINABLE);
+  return pthread_create(&dzen_pipe_info_panels_.updateThread, &dzen_pipe_info_panels_.attribute, update_thread,
+      NULL) == 0;
 }
 
 static void stop_update_thread() {
   if (dzen_pipe_info_panels_.resetRate <= 0)
     return;
-  pthread_attr_destroy(&dzen_pipe_info_panels_.attr);
+  pthread_attr_destroy(&dzen_pipe_info_panels_.attribute);
   dzen_stop_update_while_ = True;
   void *status;
   if (pthread_join(dzen_pipe_info_panels_.updateThread, &status))  // Wait
@@ -240,10 +241,10 @@ static void stop_update_thread() {
 // Dzen
 Bool NeuroDzenInit() {
   dzen_pipe_info_panels_.numPanels = NeuroTypeArrayLength((const void const *const *)dzenPanelSetS);
-  dzen_pipe_info_panels_.pi = (PipeInfo *)calloc(dzen_pipe_info_panels_.numPanels, sizeof(PipeInfo));
+  dzen_pipe_info_panels_.pipeInfo = (PipeInfo *)calloc(dzen_pipe_info_panels_.numPanels, sizeof(PipeInfo));
   dzen_pipe_info_panels_.updateThread = -1;
   dzen_pipe_info_panels_.resetRate = 1;
-  if (!dzen_pipe_info_panels_.pi)
+  if (!dzen_pipe_info_panels_.pipeInfo)
     return False;
   const DzenPanel *dp;
   int i;
@@ -254,9 +255,9 @@ Bool NeuroDzenInit() {
     if (dp->refreshRate > dzen_pipe_info_panels_.resetRate)
       dzen_pipe_info_panels_.resetRate *= dp->refreshRate;
     get_dzen_cmd(dzenCmd, line, dp->df);
-    dzen_pipe_info_panels_.pi[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzenCmd,
-        &(dzen_pipe_info_panels_.pi[ i ].pid));
-    if (dzen_pipe_info_panels_.pi[ i ].output == -1)
+    dzen_pipe_info_panels_.pipeInfo[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzenCmd,
+        &(dzen_pipe_info_panels_.pipeInfo[ i ].pid));
+    if (dzen_pipe_info_panels_.pipeInfo[ i ].output == -1)
       return False;
   }
   if (!init_update_thread())
@@ -269,10 +270,10 @@ void NeuroDzenStop() {
   stop_update_thread();
   int i;
   for (i = 0; i < dzen_pipe_info_panels_.numPanels; ++i)
-    if (kill(dzen_pipe_info_panels_.pi[ i ].pid, SIGTERM) == -1)
+    if (kill(dzen_pipe_info_panels_.pipeInfo[ i ].pid, SIGTERM) == -1)
       perror("NeuroDzenStop - Could not kill panels");
-  free(dzen_pipe_info_panels_.pi);
-  dzen_pipe_info_panels_.pi = NULL;
+  free(dzen_pipe_info_panels_.pipeInfo);
+  dzen_pipe_info_panels_.pipeInfo = NULL;
 }
 
 void NeuroDzenUpdate(Bool onlyEvent) {
@@ -282,9 +283,9 @@ void NeuroDzenUpdate(Bool onlyEvent) {
     dp = dzenPanelSetS[ i ];
     if (onlyEvent) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
-        update_dzen_panel(dp, dzen_pipe_info_panels_.pi[ i ].output);
+        update_dzen_panel(dp, dzen_pipe_info_panels_.pipeInfo[ i ].output);
     } else {
-      update_dzen_panel(dp, dzen_pipe_info_panels_.pi[ i ].output);
+      update_dzen_panel(dp, dzen_pipe_info_panels_.pipeInfo[ i ].output);
     }
   }
 }
