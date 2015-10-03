@@ -151,7 +151,7 @@ static void stop_cpu_perc_thread() {
   cpu_stop_update_while_ = True;
   void *status;
   if (pthread_join(cpu_thread_id_, &status))  // Wait
-    perror("stopUpdateCpuPercThreadP - Could not join thread");
+    perror("stop_cpu_perc_thread - Could not join thread");
 }
 
 // Dzen
@@ -229,7 +229,7 @@ static void stop_update_thread() {
   dzen_stop_update_while_ = True;
   void *status;
   if (pthread_join(dzen_pipe_info_panels_.updateThread, &status))  // Wait
-    perror("stopUpdateThreadDP - Could not join thread");
+    perror("stop_update_thread - Could not join thread");
 }
 
 
