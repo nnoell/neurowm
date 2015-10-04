@@ -50,7 +50,7 @@ static const Action action0[] = { { NeuroActionHandlerChangeNeurowmName, ARG_STR
 static const Action action1[] = { { NeuroActionHandlerSpawn, ARG_CMD(xdefload) } };
 static const Action action2[] = { { NeuroActionHandlerSpawn, ARG_CMD(wallcmd) } };
 
-static const Action *startUpHookActions[] = { action0, action1, action2, NeuroActionStartCpuCalc, NULL };
+static const Action *startUpHookActions[] = { action0, action1, action2, NeuroActionInitCpuCalc, NULL };
 
 static const ActionChain myStartUpHook[] = { CHAIN_NULL(startUpHookActions) };
 

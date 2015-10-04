@@ -28,7 +28,7 @@ extern const Action const NeuroActionQuit[];
 extern const Action const NeuroActionReload[];
 extern const Action const NeuroActionSpawn[];
 extern const Action const NeuroActionSleep[];
-extern const Action const NeuroActionStartCpuCalc[];
+extern const Action const NeuroActionInitCpuCalc[];
 extern const Action const NeuroActionStopCpuCalc[];
 
 // Layout (Actions)
@@ -73,7 +73,7 @@ extern const Action *const NeuroActionChainQuit[];
 extern const Action *const NeuroActionChainReload[];
 extern const Action *const NeuroActionChainSpawn[];
 extern const Action *const NeuroActionChainSleep[];
-extern const Action *const NeuroActionChainStartCpuCalc[];
+extern const Action *const NeuroActionChainInitCpuCalc[];
 extern const Action *const NeuroActionChainStopCpuCalc[];
 
 // Layout (Action Chains)
@@ -125,7 +125,7 @@ void NeuroActionHandlerReload(GenericArg null_arg);
 void NeuroActionHandlerChangeNeurowmName(GenericArg string_arg);
 void NeuroActionHandlerSpawn(GenericArg command_arg);
 void NeuroActionHandlerSleep(GenericArg int_arg);
-void NeuroActionHandlerStartCpuCalc(GenericArg null_arg);
+void NeuroActionHandlerInitCpuCalc(GenericArg null_arg);
 void NeuroActionHandlerStopCpuCalc(GenericArg null_arg);
 
 // Layout (Handlers)

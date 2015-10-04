@@ -39,7 +39,7 @@ static void do_key_press(XEvent *e) {
     k = keyBindingsS[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
       NeuroActionUtilRunActionChain(&k->actionChain);
-      NeuroDzenUpdate(True);
+      NeuroDzenRefresh(True);
     }
   }
   XFree(keysym);
@@ -54,7 +54,7 @@ static void do_button_press(XEvent *e) {
     b = buttonBindingsS[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       NeuroActionUtilRunActionChain(&b->actionChain);
-      NeuroDzenUpdate(True);
+      NeuroDzenRefresh(True);
     }
   }
 }
@@ -62,7 +62,7 @@ static void do_button_press(XEvent *e) {
 static void do_map_request(XEvent *e) {
   assert(e);
   NeuroEventManageWindow(e->xmaprequest.window);
-  NeuroDzenUpdate(True);
+  NeuroDzenRefresh(True);
 }
 
 static void do_destroy_notify(XEvent *e) {
@@ -75,7 +75,7 @@ static void do_destroy_notify(XEvent *e) {
     Client *cli = NeuroCoreRemoveMinimizedClient(w);
     NeuroTypeDeleteClient(cli);
   }
-  NeuroDzenUpdate(True);
+  NeuroDzenRefresh(True);
 }
 
 static void do_unmap_notify(XEvent *e) {
@@ -88,7 +88,7 @@ static void do_unmap_notify(XEvent *e) {
     Client *cli = NeuroCoreRemoveMinimizedClient(w);
     NeuroTypeDeleteClient(cli);
   }
-  NeuroDzenUpdate(True);
+  NeuroDzenRefresh(True);
 }
 
 static void do_enter_notify(XEvent *e) {
@@ -107,7 +107,7 @@ static void do_enter_notify(XEvent *e) {
   if (NeuroCoreClientIsCurr(c))
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
-  NeuroDzenUpdate(True);
+  NeuroDzenRefresh(True);
 }
 
 static void do_configure_request(XEvent *e) {
@@ -126,7 +126,7 @@ static void do_configure_request(XEvent *e) {
     NeuroLayoutRunCurr(CLI_GET(c).ws);
     NeuroWorkspaceUpdate(CLI_GET(c).ws);
   }
-  NeuroDzenUpdate(True);
+  NeuroDzenRefresh(True);
 }
 
 static void do_focus_in(XEvent *e) {
@@ -137,7 +137,7 @@ static void do_focus_in(XEvent *e) {
   if (CLI_GET(c).win == e->xfocus.window)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
-  NeuroDzenUpdate(True);
+  NeuroDzenRefresh(True);
 }
 
 static void do_client_message(XEvent *e) {
@@ -157,7 +157,7 @@ static void do_client_message(XEvent *e) {
   } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
     NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   }
-  NeuroDzenUpdate(True);
+  NeuroDzenRefresh(True);
 }
 
 static void do_property_notify(XEvent *e) {
@@ -168,7 +168,7 @@ static void do_property_notify(XEvent *e) {
     if (!c)
       return;
     NeuroClientUpdateTitle(c, NULL);
-    NeuroDzenUpdate(True);
+    NeuroDzenRefresh(True);
   } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
     ClientPtrPtr c = NeuroClientFindWindow(ev->window);
     if (!c)
@@ -181,7 +181,7 @@ static void do_property_notify(XEvent *e) {
     if (wmh)
       XFree(wmh);
     NeuroClientUpdate(c, NULL);
-    NeuroDzenUpdate(True);
+    NeuroDzenRefresh(True);
   }
 }
 
