@@ -32,7 +32,7 @@ Rectangle *NeuroGeometryMirrorRectangle(Rectangle *rect, const Rectangle *reg);
 Rectangle *NeuroGeometryTranspRectangle(Rectangle *rect);
 Rectangle *NeuroGeometryNeuroGeometryTranspRectangle(Rectangle *rect, const Rectangle *reg);
 Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle *reg);
-Bool NeuroGeometryIsPointInRectangleG(const Rectangle *a, int x, int y);
+Bool NeuroGeometryIsPointInRectangle(const Rectangle *a, int x, int y);
 
 #endif  // NEURO_GEOMETRY_H_
 

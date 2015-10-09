@@ -69,7 +69,7 @@ static Bool set_title_atom(Client *c, Atom atom) {
 static ClientPtrPtr query_pointer_client(int ws, int x, int y) {
   ClientPtrPtr c;
   for (c=NeuroCoreStackGetHeadClient(ws); c; c=NeuroCoreClientGetNext(c))
-    if (NeuroGeometryIsPointInRectangleG(NeuroCoreClientGetRegion(c), x, y))
+    if (NeuroGeometryIsPointInRectangle(NeuroCoreClientGetRegion(c), x, y))
       break;
   return c;
 }
