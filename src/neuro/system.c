@@ -25,6 +25,9 @@ const Window root_;
 const int x_res_;
 const int y_res_;
 const Rectangle screen_region_;
+const Cursor cursors[ NeuroSystemCursorLast ];
+const Atom wmatoms[ NeuroSystemWmAtomLast ];
+const Atom netatoms[ NeuroSystemNetAtomLast ];
 
 // Global configuration
 static const char *normBorderColor;
@@ -53,11 +56,6 @@ const Workspace *const *const workspaceSetS;
 const DzenPanel *const *const dzenPanelSetS;
 const ActionChain *const startUpHookS;
 const ActionChain *const endUpHookS;
-
-// Cursors and Atoms
-const Cursor cursors[ NeuroSystemCursorLast ];
-const Atom wmatoms[ NeuroSystemWmAtomLast ];
-const Atom netatoms[ NeuroSystemNetAtomLast ];
 
 
 //----------------------------------------------------------------------------------------------------------------------
