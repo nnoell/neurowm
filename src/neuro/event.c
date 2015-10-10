@@ -32,7 +32,7 @@ static void do_key_press(XEvent *e) {
   assert(e);
   XKeyEvent ke = e->xkey;
   int ks;
-  KeySym *keysym = XGetKeyboardMapping(display, ke.keycode, 1, &ks);
+  KeySym *keysym = XGetKeyboardMapping(NeuroSystemGetDisplay(), ke.keycode, 1, &ks);
   const Key *k;
   int i;
   for (i = 0; keyBindingsS[ i ]; ++i) {
@@ -94,7 +94,7 @@ static void do_unmap_notify(XEvent *e) {
 static void do_enter_notify(XEvent *e) {
   assert(e);
   XCrossingEvent *ev = &e->xcrossing;
-  if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != (unsigned int)root)
+  if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != NeuroSystemGetRoot())
     return;
   int ws = NeuroCoreGetCurrStack();  // Mouse is always in the current workspace
   if (NeuroCoreStackGetSize(ws) < 2)
@@ -120,7 +120,7 @@ static void do_configure_request(XEvent *e) {
   wc.height = ev->height;
   wc.sibling = ev->above;
   wc.stack_mode = ev->detail;
-  XConfigureWindow(display, ev->window, ev->value_mask, &wc);
+  XConfigureWindow(NeuroSystemGetDisplay(), ev->window, ev->value_mask, &wc);
   ClientPtrPtr c = NeuroClientFindWindow(ev->window);
   if (c) {
     NeuroLayoutRunCurr(CLI_GET(c).ws);
@@ -175,7 +175,7 @@ static void do_property_notify(XEvent *e) {
       return;
     if (NeuroCoreClientIsCurr(c) && NeuroCoreStackIsCurr(CLI_GET(c).ws))
       return;
-    XWMHints *wmh = XGetWMHints(display, CLI_GET(c).win);
+    XWMHints *wmh = XGetWMHints(NeuroSystemGetDisplay(), CLI_GET(c).win);
     if (wmh && (wmh->flags & XUrgencyHint))
       NeuroClientSetUrgent(c, NULL);
     if (wmh)
@@ -210,7 +210,7 @@ const EventHandler const eventArray[ LASTEvent ] = {
 void NeuroEventManageWindow(Window w) {
   // Check if window is valid
   XWindowAttributes wa;
-  if (!XGetWindowAttributes(display, w, &wa))
+  if (!XGetWindowAttributes(NeuroSystemGetDisplay(), w, &wa))
     return;
   if (wa.override_redirect)
     return;
@@ -227,22 +227,22 @@ void NeuroEventManageWindow(Window w) {
 
   // Transient windows
   Window trans = None;
-  if (XGetTransientForHint(display, CLI_GET(c).win, &trans)) {
+  if (XGetTransientForHint(NeuroSystemGetDisplay(), CLI_GET(c).win, &trans)) {
     CLI_GET(c).freeSetterFn = NeuroRuleFreeSetterDefault;
     ClientPtrPtr t = NeuroClientFindWindow(trans);
     if (t)  // Always true, but still
       NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
     else
-      NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), &screenRegion);
+      NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroSystemGetScreenRegion());
   }
 
   // Set event mask
-  XSelectInput(display, CLI_GET(c).win, CLIENT_MASK);
+  XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK);
 
   // Map window
   Bool doRules = False;
   NeuroClientHide(c, (const void*)&doRules);
-  XMapWindow(display, CLI_GET(c).win);
+  XMapWindow(NeuroSystemGetDisplay(), CLI_GET(c).win);
   NeuroSystemGrabButtons(CLI_GET(c).win);
   const int ws = CLI_GET(c).ws;
   if (!NeuroCoreStackIsCurr(ws))
@@ -271,10 +271,10 @@ void NeuroEventLoadWindows() {
   unsigned int i, num;
   Window d1, d2, *wins = NULL;
   XWindowAttributes wa;
-  if (!XQueryTree(display, root, &d1, &d2, &wins, &num))
+  if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
     NeuroSystemError("NeuroEventLoadWindows - Could not get windows");
   for (i = 0; i < num; ++i) {
-    if (!XGetWindowAttributes(display, wins[ i ], &wa))
+    if (!XGetWindowAttributes(NeuroSystemGetDisplay(), wins[ i ], &wa))
       continue;
     if (wa.map_state != IsViewable)
       continue;

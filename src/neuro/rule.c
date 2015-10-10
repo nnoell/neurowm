@@ -29,7 +29,7 @@ static int is_free_size_hints(Client *c) {
   int maxw = 0, maxh = 0, minw = 0, minh = 0;
   long msize;
   XSizeHints size;
-  if (!XGetWMNormalHints(display, c->win, &size, &msize))
+  if (!XGetWMNormalHints(NeuroSystemGetDisplay(), c->win, &size, &msize))
     size.flags = PSize;
   if (size.flags & PMaxSize) {
     maxw = size.max_width;
@@ -120,7 +120,7 @@ void NeuroRuleApply(const ClientPtrPtr c) {
       return;
     reg->y += CLI_GET(c).fixSize;
     reg->h -= CLI_GET(c).fixSize;
-    XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
   } else if (CLI_GET(c).fixedPos == RuleFixedPositionDown) {
     regc->x = reg->x;
     regc->y = reg->h - CLI_GET(c).fixSize;
@@ -129,7 +129,7 @@ void NeuroRuleApply(const ClientPtrPtr c) {
     if (CLI_GET(c).freeSetterFn != NeuroRuleFreeSetterNull)
       return;
     reg->h -= CLI_GET(c).fixSize;
-    XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
   } else if (CLI_GET(c).fixedPos == RuleFixedPositionLeft) {
     regc->x = reg->x;
     regc->y = reg->y;
@@ -139,7 +139,7 @@ void NeuroRuleApply(const ClientPtrPtr c) {
       return;
     reg->x += CLI_GET(c).fixSize;
     reg->w -= CLI_GET(c).fixSize;
-    XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
   } else if (CLI_GET(c).fixedPos ==  RuleFixedPositionRigth) {
     regc->x = reg->w - CLI_GET(c).fixSize;
     regc->y = reg->y;
@@ -148,7 +148,7 @@ void NeuroRuleApply(const ClientPtrPtr c) {
     if (CLI_GET(c).freeSetterFn != NeuroRuleFreeSetterNull)
       return;
     reg->w -= CLI_GET(c).fixSize;
-    XMoveResizeWindow(display, CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
   }
 }
 

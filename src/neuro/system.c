@@ -34,8 +34,8 @@ static const char *urgtBorderColor;
 Display *const display;
 const int screen;
 const Window root;
-const uint32_t xRes;
-const uint32_t yRes;
+const int xRes;
+const int yRes;
 const Rectangle screenRegion;
 
 // Configuration
@@ -119,6 +119,30 @@ static void set_cursors_and_atoms() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
+Display *NeuroSystemGetDisplay() {
+  return display;
+}
+
+Window NeuroSystemGetRoot() {
+  return root;
+}
+
+int NeuroSystemGetScreen() {
+  return screen;
+}
+
+int NeuroSystemGetXRes() {
+  return xRes;
+}
+
+int NeuroSystemGetYRes() {
+  return yRes;
+}
+
+const Rectangle *NeuroSystemGetScreenRegion() {
+  return &screenRegion;
+}
+
 void NeuroSystemSetConfiguration(const Configuration *c) {
   assert(c);
   *(const char **)&normBorderColor = c->normBorderColor;
@@ -146,7 +170,7 @@ Bool NeuroSystemInit() {
   *(Window *)&root = RootWindow(display, screen);
   *(int *)&xRes = XDisplayWidth(display, screen);
   *(int *)&yRes = XDisplayHeight(display, screen);
-  *(Rectangle *)&screenRegion = (Rectangle){ .x = xPos, .y = yPos, .w = xRes, .h = yRes };
+  *(Rectangle *)&screenRegion = (Rectangle){ .x = NeuroSystemGetXPos, .y = NeuroSystemGetYPos, .w = xRes, .h = yRes };
   *(Color *)&normBorderColorS = NeuroSystemGetColor(normBorderColor);
   *(Color *)&currBorderColorS = NeuroSystemGetColor(currBorderColor);
   *(Color *)&prevBorderColorS = NeuroSystemGetColor(prevBorderColor);

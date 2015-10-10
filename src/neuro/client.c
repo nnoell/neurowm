@@ -37,7 +37,7 @@ static Bool is_protocol_delete(Window w) {
   int i, n;
   Atom *protocols;
   Bool ret = False;
-  if (XGetWMProtocols(display, w, &protocols, &n)) {
+  if (XGetWMProtocols(NeuroSystemGetDisplay(), w, &protocols, &n)) {
     for (i = 0; !ret && i < n; i++)
       if (protocols[ i ] == wmatoms[ WM_DELETE_WINDOW ])
         ret = True;
@@ -49,7 +49,7 @@ static Bool is_protocol_delete(Window w) {
 static Bool set_title_atom(Client *c, Atom atom) {
   assert(c);
   XTextProperty tp;
-  XGetTextProperty(display, c->win, &tp, atom);
+  XGetTextProperty(NeuroSystemGetDisplay(), c->win, &tp, atom);
   if (!tp.nitems)
     return False;
   if (tp.encoding == XA_STRING) {
@@ -57,7 +57,7 @@ static Bool set_title_atom(Client *c, Atom atom) {
   } else {
     char **list = NULL;
     int n;
-    if (XmbTextPropertyToTextList(display, &tp, &list, &n) >= Success && n > 0 && list[ 0 ]) {
+    if (XmbTextPropertyToTextList(NeuroSystemGetDisplay(), &tp, &list, &n) >= Success && n > 0 && list[ 0 ]) {
       strncpy(c->title, list[ 0 ], NAME_MAX);
       XFreeStringList(list);
     }
@@ -76,17 +76,18 @@ static ClientPtrPtr query_pointer_client(int ws, int x, int y) {
 
 static void process_xmotion(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int px, int py,
     XMotionUpdaterFn mpf) {
-  const Bool res = XGrabPointer(display, root, False, ButtonPressMask|ButtonReleaseMask|PointerMotionMask,
-      GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ], CurrentTime);
+  const Bool res = XGrabPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), False,
+      ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ],
+      CurrentTime);
   if (res != GrabSuccess)
     return;
   XEvent ev;
   do {
-    XMaskEvent(display, ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
+    XMaskEvent(NeuroSystemGetDisplay(), ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
     if (ev.type == MotionNotify)
       mpf(r, ws, cx, cy, cw, ch, ev.xmotion.x, ev.xmotion.y, px, py);
   } while (ev.type != ButtonRelease);
-  XUngrabPointer(display, CurrentTime);
+  XUngrabPointer(NeuroSystemGetDisplay(), CurrentTime);
 }
 
 static void xmotion_move(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
@@ -122,12 +123,12 @@ void NeuroClientUpdate(ClientPtrPtr c, const void *data) {
 
   // Free windows
   if (CLI_GET(c).freeSetterFn != NeuroRuleFreeSetterNull)
-    CLI_GET(c).freeSetterFn(NeuroCoreClientGetRegion(c), &screenRegion);
+    CLI_GET(c).freeSetterFn(NeuroCoreClientGetRegion(c), NeuroSystemGetScreenRegion());
 
   // Fullscreen windows
   Rectangle r;
   if (CLI_GET(c).isFullScreen)
-    memmove(&r, &screenRegion, sizeof(Rectangle));
+    memmove(&r, NeuroSystemGetScreenRegion(), sizeof(Rectangle));
   else
     memmove(&r, NeuroCoreClientGetRegion(c), sizeof(Rectangle));
 
@@ -142,9 +143,9 @@ void NeuroClientUpdate(ClientPtrPtr c, const void *data) {
     r.h = 1;
 
   // Draw
-  XSetWindowBorder(display, CLI_GET(c).win, l->borderColorSetterFn(c));
-  XSetWindowBorderWidth(display, CLI_GET(c).win, borderWidth);
-  XMoveResizeWindow(display, CLI_GET(c).win, r.x, r.y, r.w, r.h);
+  XSetWindowBorder(NeuroSystemGetDisplay(), CLI_GET(c).win, l->borderColorSetterFn(c));
+  XSetWindowBorderWidth(NeuroSystemGetDisplay(), CLI_GET(c).win, borderWidth);
+  XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, r.x, r.y, r.w, r.h);
 }
 
 void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data) {
@@ -154,7 +155,7 @@ void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data) {
   CLI_GET(c).class[ 0 ] = '\0';
   CLI_GET(c).name[ 0 ] = '\0';
   XClassHint ch = (XClassHint){.res_name = NULL, .res_class = NULL};
-  if (!XGetClassHint(display, CLI_GET(c).win, &ch))
+  if (!XGetClassHint(NeuroSystemGetDisplay(), CLI_GET(c).win, &ch))
     return;
   strncpy(CLI_GET(c).class, ch.res_class, NAME_MAX);
   strncpy(CLI_GET(c).name, ch.res_name, NAME_MAX);
@@ -181,9 +182,9 @@ void NeuroClientHide(ClientPtrPtr c, const void *doRules) {  // Move off screen
   if (*(Bool *)doRules)
     NeuroRuleUnapply(c);
   Rectangle *regc = NeuroCoreClientGetRegion(c);
-  regc->x += xRes;
-  regc->y += yRes;
-  XMoveWindow(display, CLI_GET(c).win, regc->x, regc->y);
+  regc->x += NeuroSystemGetXRes();
+  regc->y += NeuroSystemGetYRes();
+  XMoveWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y);
   CLI_GET(c).isHidden = True;
 }
 
@@ -193,11 +194,11 @@ void NeuroClientShow(ClientPtrPtr c, const void *doRules) {  // Move back to scr
   if (!CLI_GET(c).isHidden)
     return;
   Rectangle *regc = NeuroCoreClientGetRegion(c);
-  regc->x -= xRes;
-  regc->y -= yRes;
+  regc->x -= NeuroSystemGetXRes();
+  regc->y -= NeuroSystemGetYRes();
   if (*(Bool *)doRules)
     NeuroRuleApply(c);
-  XMoveWindow(display, CLI_GET(c).win, regc->x, regc->y);
+  XMoveWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y);
   CLI_GET(c).isHidden = False;
 }
 
@@ -227,9 +228,9 @@ void NeuroClientKill(ClientPtrPtr c, const void *data) {
     ke.xclient.format = 32;
     ke.xclient.data.l[ 0 ] = wmatoms[ WM_DELETE_WINDOW ];
     ke.xclient.data.l[ 1 ] = CurrentTime;
-    XSendEvent(display, CLI_GET(c).win, False, NoEventMask, &ke);
+    XSendEvent(NeuroSystemGetDisplay(), CLI_GET(c).win, False, NoEventMask, &ke);
   } else {
-    XKillClient(display, CLI_GET(c).win);
+    XKillClient(NeuroSystemGetDisplay(), CLI_GET(c).win);
     NeuroEventUnmanageClient(c);
   }
 }
@@ -245,7 +246,8 @@ void NeuroClientMinimize(ClientPtrPtr c, const void *data) {
     return;
   if (!NeuroCorePushMinimizedClient(cli))
     NeuroSystemError("NeuroClientMinimize - Could not minimize client");
-  XMoveWindow(display, cli->win, xRes + 1, yRes + 1);  // Move client off screen
+  // Move client off screen
+  XMoveWindow(NeuroSystemGetDisplay(), cli->win, NeuroSystemGetXRes() + 1, NeuroSystemGetYRes() + 1);
   NeuroLayoutRunCurr(cli->ws);
   NeuroWorkspaceFocus(cli->ws);
 }
@@ -386,7 +388,7 @@ ClientPtrPtr NeuroClientGetPointed(int *x, int *y) {
   Window rootw, childw;
   int xc, yc;
   unsigned state;
-  if (!XQueryPointer(display, root, &rootw, &childw, x, y, &xc, &yc, &state))
+  if (!XQueryPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &rootw, &childw, x, y, &xc, &yc, &state))
     return NULL;
   return NeuroClientFindWindow(childw);
 }
@@ -521,7 +523,8 @@ int NeuroClientBorderWidthSetterSmart(const ClientPtrPtr c) {
     return borderWidthS;
   Rectangle *rc = NeuroCoreClientGetRegion(c);
   Rectangle *rs = NeuroCoreStackGetRegion(CLI_GET(c).ws);
-  if ((rc->w == rs->w && rc->h == rs->h) || (rc->w == screenRegion.w && rc->h == screenRegion.h))
+  if ((rc->w == rs->w && rc->h == rs->h) ||
+      (rc->w == NeuroSystemGetScreenRegion()->w && rc->h == NeuroSystemGetScreenRegion()->h))
     return 0;
   return borderWidthS;
 }
@@ -560,7 +563,8 @@ int NeuroClientBorderGapSetterSmart(const ClientPtrPtr c) {
     return 0;
   Rectangle *a = NeuroCoreClientGetRegion(c);
   Rectangle *as = NeuroCoreStackGetRegion(CLI_GET(c).ws);
-  if ((a->w == as->w && a->h == as->h) || (a->w == screenRegion.w && a->h == screenRegion.h))
+  if ((a->w == as->w && a->h == as->h) ||
+      (a->w == NeuroSystemGetScreenRegion()->w && a->h == NeuroSystemGetScreenRegion()->h))
     return 0;
   return borderGapS;
 }

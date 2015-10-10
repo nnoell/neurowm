@@ -22,21 +22,13 @@
 #define CLIENT_MASK_NO_ENTER (FocusChangeMask|PropertyChangeMask|StructureNotifyMask)
 #define ROOT_MASK (SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|StructureNotifyMask|CLIENT_MASK)
 
-#define xPos 0
-#define yPos 0
+#define NeuroSystemGetXPos 0
+#define NeuroSystemGetYPos 0
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
-
-// WM global variables
-extern Display *const display;
-extern const int screen;
-extern const Window root;
-extern const uint32_t xRes;
-extern const uint32_t yRes;
-extern const Rectangle screenRegion;
 
 // Global configuration
 extern const Color normBorderColorS;
@@ -68,6 +60,14 @@ extern const Atom netatoms[ NET_COUNT ];
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
+Display *NeuroSystemGetDisplay();
+Window NeuroSystemGetRoot();
+int NeuroSystemGetScreen();
+int NeuroSystemGetXRes();
+int NeuroSystemGetYRes();
+const Rectangle *NeuroSystemGetScreenRegion();
+
+
 void NeuroSystemSetConfiguration(const Configuration *c);
 Bool NeuroSystemInit();
 void NeuroSystemStop();

@@ -91,7 +91,7 @@ int NeuroNeurowmRun(const Configuration *c) {
 
   // Main loop
   XEvent ev;
-  while (!stopWhile && !XNextEvent(display, &ev))
+  while (!stopWhile && !XNextEvent(NeuroSystemGetDisplay(), &ev))
     if (eventArray[ ev.type ])
       eventArray[ ev.type ](&ev);
 

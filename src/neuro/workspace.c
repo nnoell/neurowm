@@ -41,8 +41,8 @@ static void focus_client(ClientPtrPtr c) {
   assert(c);
   NeuroClientUnsetUrgent(c, NULL);
   NeuroSystemUngrabButtons(CLI_GET(c).win);
-  XSetInputFocus(display, CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
-  XChangeProperty(display, root, netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
+  XSetInputFocus(NeuroSystemGetDisplay(), CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
+  XChangeProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
       (unsigned char *)&(CLI_GET(c).win), 1);
   NeuroClientUpdate(c, NULL);
 }
@@ -118,7 +118,7 @@ void NeuroWorkspaceUpdate(int ws) {
 void NeuroWorkspaceFocus(int ws) {
   int n = NeuroCoreStackGetSize(ws);
   if (n <= 0) {
-    XDeleteProperty(display, root, netatoms[ NET_ACTIVE ]);
+    XDeleteProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), netatoms[ NET_ACTIVE ]);
     return;
   }
 
@@ -135,7 +135,8 @@ void NeuroWorkspaceFocus(int ws) {
   focus_client(c);
 
   if (n > 1) {
-    if (!XQueryTree(display, root, &d1, &d2, &wins, &num))  // XQueryTree gets windows by stacking order
+    // XQueryTree gets windows by stacking order
+    if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
       NeuroSystemError("NeuroWorkspaceFocus - Could not get windows");
     int n2 = n;
     for (i = 0; i < num; ++i) {
@@ -151,7 +152,7 @@ void NeuroWorkspaceFocus(int ws) {
       XFree(wins);
   }
 
-  XRestackWindows(display, windows, n);
+  XRestackWindows(NeuroSystemGetDisplay(), windows, n);
 }
 
 void NeuroWorkspaceHide(int ws, Bool doRules) {
@@ -202,13 +203,13 @@ void NeuroWorkspaceRestoreLastMinimized(int ws) {
 void NeuroWorkspaceAddEnterNotifyMask(int ws) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    XSelectInput(display, CLI_GET(c).win, CLIENT_MASK);
+    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK);
 }
 
 void NeuroWorkspaceRemoveEnterNotifyMask(int ws) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    XSelectInput(display, CLI_GET(c).win, CLIENT_MASK_NO_ENTER);
+    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK_NO_ENTER);
 }
 
 // Find functions
