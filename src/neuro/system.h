@@ -30,6 +30,36 @@
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
+// NeuroSystemCursor
+enum NeuroSystemCursor {
+  NeuroSystemCursorNormal = 0,
+  NeuroSystemCursorResize,
+  NeuroSystemCursorMove,
+  NeuroSystemCursorLast
+};
+typedef enum NeuroSystemCursor NeuroSystemCursor;
+
+// NeuroSystemWmAtom
+enum NeuroSystemWmAtom {
+  NeuroSystemWmAtomProtocols = 0,
+  NeuroSystemWmAtomDeleteWindow,
+  NeuroSystemWmAtomLast
+};
+typedef enum NeuroSystemWmAtom NeuroSystemWmAtom;
+
+// NeuroSystemNetAtom
+enum NeuroSystemNetAtom {
+  NeuroSystemNetAtomSupported = 0,
+  NeuroSystemNetAtomFullscreen,
+  NeuroSystemNetAtomState,
+  NeuroSystemNetAtomName,
+  NeuroSystemNetAtomActive,
+  NeuroSystemNetAtomCloseWindow,
+  NeuroSystemNetAtomStrut,
+  NeuroSystemNetAtomLast
+};
+typedef enum NeuroSystemNetAtom NeuroSystemNetAtom;
+
 // Global configuration
 extern const Color normBorderColorS;
 extern const Color currBorderColorS;
@@ -46,28 +76,23 @@ extern const DzenPanel *const *const dzenPanelSetS;
 extern const ActionChain *const startUpHookS;
 extern const ActionChain *const endUpHookS;
 
-// Cursors and Atoms
-enum { CurNormal, CurResize, CurMove, CurLast };
-enum { WM_PROTOCOLS, WM_DELETE_WINDOW, WM_COUNT };
-enum { NET_SUPPORTED, NET_FULLSCREEN, NET_WM_STATE, NET_WM_NAME, NET_ACTIVE, NET_CLOSE_WINDOW, NET_STRUT, NET_COUNT };
-extern const Cursor cursors[ CurLast ];
-extern const Atom wmatoms[ WM_COUNT ];
-extern const Atom netatoms[ NET_COUNT ];
-
 
 //----------------------------------------------------------------------------------------------------------------------
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Basic functions
+// X functions
 Display *NeuroSystemGetDisplay();
 Window NeuroSystemGetRoot();
 int NeuroSystemGetScreen();
 int NeuroSystemGetXRes();
 int NeuroSystemGetYRes();
 const Rectangle *NeuroSystemGetScreenRegion();
+Cursor NeuroSystemGetCursor(NeuroSystemCursor c);
+Atom NeuroSystemGetWmAtom(NeuroSystemWmAtom a);
+Atom NeuroSystemGetNetAtom(NeuroSystemNetAtom a);
 
-
+// Main functions
 void NeuroSystemSetConfiguration(const Configuration *c);
 Bool NeuroSystemInit();
 void NeuroSystemStop();

@@ -145,16 +145,16 @@ static void do_client_message(XEvent *e) {
   ClientPtrPtr c = NeuroClientFindWindow(e->xclient.window);
   if (!c)
     return;
-  if (e->xclient.message_type == netatoms[ NET_WM_STATE ] &&
-      ((unsigned)e->xclient.data.l[1] == netatoms[ NET_FULLSCREEN ]
-      || (unsigned)e->xclient.data.l[2] == netatoms[ NET_FULLSCREEN ])) {
+  if (e->xclient.message_type == NeuroSystemGetNetAtom(NeuroSystemNetAtomState) &&
+      ((unsigned)e->xclient.data.l[1] == NeuroSystemGetNetAtom(NeuroSystemNetAtomFullscreen)
+      || (unsigned)e->xclient.data.l[2] == NeuroSystemGetNetAtom(NeuroSystemNetAtomFullscreen))) {
     if (e->xclient.data.l[0] == 0)  // _NET_WM_STATE_REMOVE
       NeuroClientNormal(c, NULL);
     else if (e->xclient.data.l[0] == 1)  // _NET_WM_STATE_ADD
       NeuroClientFullscreen(c, NULL);
     else if (e->xclient.data.l[0] == 2)  // _NET_WM_STATE_TOGGLE
       NeuroClientToggleFullscreen(c, NULL);
-  } else if (e->xclient.message_type == netatoms[ NET_ACTIVE ]) {
+  } else if (e->xclient.message_type == NeuroSystemGetNetAtom(NeuroSystemNetAtomActive)) {
     NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   }
   NeuroDzenUpdate(True);
@@ -163,7 +163,7 @@ static void do_client_message(XEvent *e) {
 static void do_property_notify(XEvent *e) {
   assert(e);
   XPropertyEvent *ev = &e->xproperty;
-  if (ev->atom == XA_WM_NAME || ev->atom == netatoms[ NET_WM_NAME ]) {  // Window title
+  if (ev->atom == XA_WM_NAME || ev->atom == NeuroSystemGetNetAtom(NeuroSystemNetAtomName)) {  // Window title
     ClientPtrPtr c = NeuroClientFindWindow(ev->window);
     if (!c)
       return;

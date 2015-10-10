@@ -42,8 +42,8 @@ static void focus_client(ClientPtrPtr c) {
   NeuroClientUnsetUrgent(c, NULL);
   NeuroSystemUngrabButtons(CLI_GET(c).win);
   XSetInputFocus(NeuroSystemGetDisplay(), CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
-  XChangeProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), netatoms[ NET_ACTIVE ], XA_WINDOW, 32, PropModeReplace,
-      (unsigned char *)&(CLI_GET(c).win), 1);
+  XChangeProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), NeuroSystemGetNetAtom(NeuroSystemNetAtomActive),
+      XA_WINDOW, 32, PropModeReplace, (unsigned char *)&(CLI_GET(c).win), 1);
   NeuroClientUpdate(c, NULL);
 }
 
@@ -118,7 +118,7 @@ void NeuroWorkspaceUpdate(int ws) {
 void NeuroWorkspaceFocus(int ws) {
   int n = NeuroCoreStackGetSize(ws);
   if (n <= 0) {
-    XDeleteProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), netatoms[ NET_ACTIVE ]);
+    XDeleteProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), NeuroSystemGetNetAtom(NeuroSystemNetAtomActive));
     return;
   }
 

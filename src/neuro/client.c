@@ -39,7 +39,7 @@ static Bool is_protocol_delete(Window w) {
   Bool ret = False;
   if (XGetWMProtocols(NeuroSystemGetDisplay(), w, &protocols, &n)) {
     for (i = 0; !ret && i < n; i++)
-      if (protocols[ i ] == wmatoms[ WM_DELETE_WINDOW ])
+      if (protocols[ i ] == NeuroSystemGetWmAtom(NeuroSystemWmAtomDeleteWindow))
         ret = True;
     XFree(protocols);
   }
@@ -77,8 +77,8 @@ static ClientPtrPtr query_pointer_client(int ws, int x, int y) {
 static void process_xmotion(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int px, int py,
     XMotionUpdaterFn mpf) {
   const Bool res = XGrabPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), False,
-      ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, cursors[ CurMove ],
-      CurrentTime);
+      ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None,
+      NeuroSystemGetCursor(NeuroSystemCursorMove), CurrentTime);
   if (res != GrabSuccess)
     return;
   XEvent ev;
@@ -170,7 +170,7 @@ void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data) {
   if (!c)
     return;
   CLI_GET(c).title[ 0 ] = '\0';
-  if (!set_title_atom(*c, netatoms[ NET_WM_NAME ]))
+  if (!set_title_atom(*c, NeuroSystemGetNetAtom(NeuroSystemNetAtomName)))
     set_title_atom(*c, XA_WM_NAME);
 }
 
@@ -224,9 +224,9 @@ void NeuroClientKill(ClientPtrPtr c, const void *data) {
     XEvent ke;
     ke.type = ClientMessage;
     ke.xclient.window = CLI_GET(c).win;
-    ke.xclient.message_type = wmatoms[ WM_PROTOCOLS ];
+    ke.xclient.message_type = NeuroSystemGetWmAtom(NeuroSystemWmAtomProtocols);
     ke.xclient.format = 32;
-    ke.xclient.data.l[ 0 ] = wmatoms[ WM_DELETE_WINDOW ];
+    ke.xclient.data.l[ 0 ] = NeuroSystemGetWmAtom(NeuroSystemWmAtomDeleteWindow);
     ke.xclient.data.l[ 1 ] = CurrentTime;
     XSendEvent(NeuroSystemGetDisplay(), CLI_GET(c).win, False, NoEventMask, &ke);
   } else {
