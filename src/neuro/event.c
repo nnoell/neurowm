@@ -33,10 +33,11 @@ static void do_key_press(XEvent *e) {
   XKeyEvent ke = e->xkey;
   int ks;
   KeySym *keysym = XGetKeyboardMapping(NeuroSystemGetDisplay(), ke.keycode, 1, &ks);
+  const Key *const *const keysBindings = NeuroSystemGetConfiguration()->keys;
   const Key *k;
   int i;
-  for (i = 0; keyBindingsS[ i ]; ++i) {
-    k = keyBindingsS[ i ];
+  for (i = 0; keysBindings[ i ]; ++i) {
+    k = keysBindings[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
       NeuroActionUtilRunActionChain(&k->actionChain);
       NeuroDzenUpdate(True);
@@ -48,10 +49,11 @@ static void do_key_press(XEvent *e) {
 static void do_button_press(XEvent *e) {
   assert(e);
   XButtonPressedEvent *ev = &e->xbutton;
+  const Button *const *const buttonBingings = NeuroSystemGetConfiguration()->buttons;
   const Button *b;
   int i;
-  for (i = 0; buttonBindingsS[ i ]; ++i) {
-    b = buttonBindingsS[ i ];
+  for (i = 0; buttonBingings[ i ]; ++i) {
+    b = buttonBingings[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       NeuroActionUtilRunActionChain(&b->actionChain);
       NeuroDzenUpdate(True);

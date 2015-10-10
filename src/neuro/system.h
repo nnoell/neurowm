@@ -35,7 +35,7 @@ enum NeuroSystemCursor {
   NeuroSystemCursorNormal = 0,
   NeuroSystemCursorResize,
   NeuroSystemCursorMove,
-  NeuroSystemCursorLast
+  NeuroSystemCursorCount
 };
 typedef enum NeuroSystemCursor NeuroSystemCursor;
 
@@ -43,7 +43,7 @@ typedef enum NeuroSystemCursor NeuroSystemCursor;
 enum NeuroSystemWmAtom {
   NeuroSystemWmAtomProtocols = 0,
   NeuroSystemWmAtomDeleteWindow,
-  NeuroSystemWmAtomLast
+  NeuroSystemWmAtomCount
 };
 typedef enum NeuroSystemWmAtom NeuroSystemWmAtom;
 
@@ -56,32 +56,33 @@ enum NeuroSystemNetAtom {
   NeuroSystemNetAtomActive,
   NeuroSystemNetAtomCloseWindow,
   NeuroSystemNetAtomStrut,
-  NeuroSystemNetAtomLast
+  NeuroSystemNetAtomCount
 };
 typedef enum NeuroSystemNetAtom NeuroSystemNetAtom;
 
-// Global configuration
-extern const Color normBorderColorS;
-extern const Color currBorderColorS;
-extern const Color prevBorderColorS;
-extern const Color freeBorderColorS;
-extern const Color urgtBorderColorS;
-extern const int borderWidthS;
-extern const int borderGapS;
-extern const Key *const *const keyBindingsS;
-extern const Button *const *const buttonBindingsS;
-extern const Rule *const *const ruleSetS;
-extern const Workspace *const *const workspaceSetS;
-extern const DzenPanel *const *const dzenPanelSetS;
-extern const ActionChain *const startUpHookS;
-extern const ActionChain *const endUpHookS;
+// NeuroSystemColor
+enum NeuroSystemColor {
+  NeuroSystemColorNormal = 0,
+  NeuroSystemColorCurrent,
+  NeuroSystemColorOld,
+  NeuroSystemColorFree,
+  NeuroSystemColorUrgent,
+  NeuroSystemColorCount
+};
+typedef enum NeuroSystemColor NeuroSystemColor;
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// X functions
+// Configuration functions
+void NeuroSystemSetConfiguration(const Configuration *c);
+const Configuration *NeuroSystemGetConfiguration();
+
+// Main functions
+Bool NeuroSystemInit();
+void NeuroSystemStop();
 Display *NeuroSystemGetDisplay();
 Window NeuroSystemGetRoot();
 int NeuroSystemGetScreen();
@@ -91,12 +92,8 @@ const Rectangle *NeuroSystemGetScreenRegion();
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c);
 Atom NeuroSystemGetWmAtom(NeuroSystemWmAtom a);
 Atom NeuroSystemGetNetAtom(NeuroSystemNetAtom a);
-
-// Main functions
-void NeuroSystemSetConfiguration(const Configuration *c);
-Bool NeuroSystemInit();
-void NeuroSystemStop();
-Color NeuroSystemGetColor(const char *color);
+Color NeuroSystemGetColor(NeuroSystemColor c);
+Color NeuroSystemGetColorFromHex(const char *color);
 void NeuroSystemChangeNeurowmName(const char *name);
 void NeuroSystemChangeProcName(const char *newname);
 int NeuroSystemSpawn(const char *const *cmd, pid_t *p);

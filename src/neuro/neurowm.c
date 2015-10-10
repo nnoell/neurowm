@@ -40,7 +40,7 @@ static int recompile_wm(pid_t *pid) {
 }
 
 static void stop_wm() {
-  NeuroActionUtilRunActionChain(endUpHookS);
+  NeuroActionUtilRunActionChain(NeuroSystemGetConfiguration()->endUpHook);
   NeuroDzenStop();
   NeuroCoreStop();
   NeuroSystemStop();
@@ -70,7 +70,7 @@ static void init_wm(const Configuration *c) {
   if (!NeuroDzenInit())
     NeuroSystemError("init_wm - Could not init Panels");
 
-  NeuroActionUtilRunActionChain(startUpHookS);
+  NeuroActionUtilRunActionChain(NeuroSystemGetConfiguration()->startUpHook);
 
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, signalHandler))

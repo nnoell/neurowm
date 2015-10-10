@@ -93,10 +93,11 @@ Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   c->ws = NeuroCoreGetCurrStack();
   NeuroClientUpdateClassAndName(&c, NULL);
   NeuroClientUpdateTitle(&c, NULL);
+  const Rule *const *const ruleSet = NeuroSystemGetConfiguration()->ruleSet;
   const Rule *r;
   int i;
-  for (i = 0; ruleSetS[ i ]; ++i) {
-    r = ruleSetS[ i ];
+  for (i = 0; ruleSet[ i ]; ++i) {
+    r = ruleSet[ i ];
     if (has_rule(c, r)) {
       set_rule(c, r);
       break;

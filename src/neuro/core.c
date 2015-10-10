@@ -280,15 +280,15 @@ static void set_layouts(Layout *l, const LayoutConf *const *lc, size_t size) {
 
 // StackSet
 Bool NeuroCoreInit() {
-  assert(workspaceSetS);
-  size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSetS);
+  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspaceSet;
+  size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSet);
   SS.stacks = new_stackset(size + 1);  // We need on extra stack for NSP
   if (!SS.stacks)
     return False;
   const Workspace *ws;
   size_t i, sizel, sizetl;
-  for (i = 0; workspaceSetS[ i ]; ++i) {
-    ws = workspaceSetS[ i ];
+  for (i = 0; workspaceSet[ i ]; ++i) {
+    ws = workspaceSet[ i ];
     sizel = NeuroTypeArrayLength((const void *const *const)(ws->layouts));
     if (!sizel)
       return False;
@@ -551,10 +551,11 @@ Layout *NeuroCoreStackGetLayout(int ws, int i) {
 }
 
 const LayoutConf *NeuroCoreStackGetLayoutConf(int ws, int i) {
+  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspaceSet;
   int s = ws % SS.size;
   if (SS.stacks[ s ].currTogLayoutIdx == -1)
-    return workspaceSetS[ s ]->layouts[ i % SS.stacks[ s ].numLayouts ];
-  return workspaceSetS[ s ]->togLayouts[ i % SS.stacks[ s ].numTogLayouts ];
+    return workspaceSet[ s ]->layouts[ i % SS.stacks[ s ].numLayouts ];
+  return workspaceSet[ s ]->togLayouts[ i % SS.stacks[ s ].numTogLayouts ];
 }
 
 Layout *NeuroCoreStackGetCurrLayout(int ws) {

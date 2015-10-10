@@ -25,37 +25,13 @@ const Window root_;
 const int x_res_;
 const int y_res_;
 const Rectangle screen_region_;
-const Cursor cursors_[ NeuroSystemCursorLast ];
-const Atom wm_atoms_[ NeuroSystemWmAtomLast ];
-const Atom net_atoms_[ NeuroSystemNetAtomLast ];
-
-// Global configuration
-static const char *normBorderColor;
-static const char *currBorderColor;
-static const char *prevBorderColor;
-static const char *freeBorderColor;
-static const char *urgtBorderColor;
-
-
-//----------------------------------------------------------------------------------------------------------------------
-// PUBLIC VARIABLE DEFINITION
-//----------------------------------------------------------------------------------------------------------------------
+const Cursor cursors_[ NeuroSystemCursorCount ];
+const Atom wm_atoms_[ NeuroSystemWmAtomCount ];
+const Atom net_atoms_[ NeuroSystemNetAtomCount ];
+const Color colors_[ NeuroSystemColorCount ];
 
 // Configuration
-const Color normBorderColorS;
-const Color currBorderColorS;
-const Color prevBorderColorS;
-const Color freeBorderColorS;
-const Color urgtBorderColorS;
-const int borderWidthS;
-const int borderGapS;
-const Key *const *const keyBindingsS;
-const Button *const *const buttonBindingsS;
-const Rule *const *const ruleSetS;
-const Workspace *const *const workspaceSetS;
-const DzenPanel *const *const dzenPanelSetS;
-const ActionChain *const startUpHookS;
-const ActionChain *const endUpHookS;
+static const Configuration *configuration_;
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -89,7 +65,14 @@ static int xerror_handler(Display *d, XErrorEvent *ee) {
   return -1;
 }
 
-static void set_cursors_and_atoms() {
+static void set_colors_cursors_atoms() {
+  // Colors
+  *(Color *)&colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(configuration_->normBorderColor);
+  *(Color *)&colors_[ NeuroSystemColorCurrent ] = NeuroSystemGetColorFromHex(configuration_->currBorderColor);
+  *(Color *)&colors_[ NeuroSystemColorOld ] = NeuroSystemGetColorFromHex(configuration_->oldBorderColor);
+  *(Color *)&colors_[ NeuroSystemColorFree ] = NeuroSystemGetColorFromHex(configuration_->freeBorderColor);
+  *(Color *)&colors_[ NeuroSystemColorUrgent ] = NeuroSystemGetColorFromHex(configuration_->urgtBorderColor);
+
   // Cursors
   *(Cursor *)&cursors_[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
   *(Cursor *)&cursors_[ NeuroSystemCursorResize ] = XCreateFontCursor(display_, XC_bottom_right_corner);
@@ -110,13 +93,67 @@ static void set_cursors_and_atoms() {
 
   // EWMH support per view
   XChangeProperty(display_, root_, net_atoms_[ NeuroSystemNetAtomSupported ], XA_ATOM, 32, PropModeReplace,
-      (unsigned char *)net_atoms_, NeuroSystemNetAtomLast);
+      (unsigned char *)net_atoms_, NeuroSystemNetAtomCount);
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
+
+// Configuration functions
+void NeuroSystemSetConfiguration(const Configuration *c) {
+  assert(c);
+  configuration_ = c;
+}
+
+const Configuration *NeuroSystemGetConfiguration() {
+  return configuration_;
+}
+
+// Main functions
+Bool NeuroSystemInit() {
+  // WM global variables
+  *(Display **)&display_ = XOpenDisplay(NULL);
+  if (!display_)
+    return False;
+  *(int *)&screen_ = DefaultScreen(display_);
+  *(Window *)&root_ = RootWindow(display_, screen_);
+  *(int *)&x_res_ = XDisplayWidth(display_, screen_);
+  *(int *)&y_res_ = XDisplayHeight(display_, screen_);
+  *(Rectangle *)&screen_region_ = (Rectangle){
+      .x = NeuroSystemGetXPos, .y = NeuroSystemGetYPos, .w = x_res_, .h = y_res_ };
+
+  // Set cursors and atoms
+  set_colors_cursors_atoms();
+
+  // Check if other window manager is already running
+  XSetErrorHandler(xerror_handler_start);
+
+  // Setup root window mask
+  XSetWindowAttributes wa;
+  wa.cursor = NeuroSystemGetCursor(NeuroSystemCursorNormal);
+  wa.event_mask = ROOT_MASK;
+  XChangeWindowAttributes(display_, root_, CWEventMask|CWCursor, &wa);
+  XSelectInput(display_, root_, wa.event_mask);
+  XSync(display_, False);
+
+  // Set custom X error handler
+  XSetErrorHandler(xerror_handler);
+  XSync(display_, False);
+
+  // Grab key bindings
+  NeuroSystemGrabKeys(root_);
+
+  return True;
+}
+
+void NeuroSystemStop() {
+  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorNormal));
+  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorResize));
+  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorMove));
+  XCloseDisplay(display_);
+}
 
 // Basic functions
 Display *NeuroSystemGetDisplay() {
@@ -155,73 +192,11 @@ Atom NeuroSystemGetNetAtom(NeuroSystemNetAtom a) {
   return net_atoms_[ a ];
 }
 
-void NeuroSystemSetConfiguration(const Configuration *c) {
-  assert(c);
-  *(const char **)&normBorderColor = c->normBorderColor;
-  *(const char **)&currBorderColor = c->currBorderColor;
-  *(const char **)&prevBorderColor = c->prevBorderColor;
-  *(const char **)&freeBorderColor = c->freeBorderColor;
-  *(const char **)&urgtBorderColor = c->urgtBorderColor;
-  *(int *)&borderWidthS = c->borderWidth;
-  *(int *)&borderGapS = c->borderGap;
-  *(const Key *const **)&keyBindingsS = c->keys;
-  *(const Button *const **)&buttonBindingsS = c->buttons;
-  *(const Rule *const **)&ruleSetS = c->ruleSet;
-  *(const Workspace *const **)&workspaceSetS = c->workspaceSet;
-  *(const DzenPanel *const **)&dzenPanelSetS = c->dzenPanelSet;
-  *(const ActionChain **)&startUpHookS = c->startUpHook;
-  *(const ActionChain **)&endUpHookS = c->endUpHook;
+Color NeuroSystemGetColor(NeuroSystemColor c) {
+  return colors_[ c ];
 }
 
-Bool NeuroSystemInit() {
-  // WM global variables
-  *(Display **)&display_ = XOpenDisplay(NULL);
-  if (!display_)
-    return False;
-  *(int *)&screen_ = DefaultScreen(display_);
-  *(Window *)&root_ = RootWindow(display_, screen_);
-  *(int *)&x_res_ = XDisplayWidth(display_, screen_);
-  *(int *)&y_res_ = XDisplayHeight(display_, screen_);
-  *(Rectangle *)&screen_region_ = (Rectangle){
-      .x = NeuroSystemGetXPos, .y = NeuroSystemGetYPos, .w = x_res_, .h = y_res_ };
-  *(Color *)&normBorderColorS = NeuroSystemGetColor(normBorderColor);
-  *(Color *)&currBorderColorS = NeuroSystemGetColor(currBorderColor);
-  *(Color *)&prevBorderColorS = NeuroSystemGetColor(prevBorderColor);
-  *(Color *)&freeBorderColorS = NeuroSystemGetColor(freeBorderColor);
-  *(Color *)&urgtBorderColorS = NeuroSystemGetColor(urgtBorderColor);
-
-  // Set cursors and atoms
-  set_cursors_and_atoms();
-
-  // Check if other window manager is already running
-  XSetErrorHandler(xerror_handler_start);
-
-  // Setup root window mask
-  XSetWindowAttributes wa;
-  wa.cursor = NeuroSystemGetCursor(NeuroSystemCursorNormal);
-  wa.event_mask = ROOT_MASK;
-  XChangeWindowAttributes(display_, root_, CWEventMask|CWCursor, &wa);
-  XSelectInput(display_, root_, wa.event_mask);
-  XSync(display_, False);
-
-  // Set custom X error handler
-  XSetErrorHandler(xerror_handler);
-  XSync(display_, False);
-
-  // Grab key bindings
-  NeuroSystemGrabKeys(root_);
-
-  return True;
-}
-
-void NeuroSystemStop() {
-  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorNormal));
-  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorResize));
-  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorMove));
-  XCloseDisplay(display_);
-}
-
-Color NeuroSystemGetColor(const char* color) {
+Color NeuroSystemGetColorFromHex(const char* color) {
   assert(color);
   XColor c;
   Colormap map = DefaultColormap(display_, screen_);
@@ -294,8 +269,8 @@ void NeuroSystemGrabKeys(Window w) {
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; keyBindingsS[ i ]; ++i) {
-    k = keyBindingsS[ i ];
+  for (i = 0; configuration_->keys[ i ]; ++i) {
+    k = configuration_->keys[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
       XGrabKey(display_, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
@@ -306,8 +281,8 @@ void NeuroSystemUngrabKeys(Window w) {
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; keyBindingsS[ i ]; ++i) {
-    k = keyBindingsS[ i ];
+  for (i = 0; configuration_->keys[ i ]; ++i) {
+    k = configuration_->keys[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
       XUngrabKey(display_, code, k->mod, w);
@@ -318,8 +293,8 @@ void NeuroSystemGrabButtons(Window w) {
   XUngrabButton(display_, AnyButton, AnyModifier, w);
   const Button *b;
   int i;
-  for (i=0; buttonBindingsS[ i ]; ++i) {
-    b = buttonBindingsS[ i ];
+  for (i=0; configuration_->buttons[ i ]; ++i) {
+    b = configuration_->buttons[ i ];
     XGrabButton(display_, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask,
         GrabModeAsync, GrabModeSync, None, None);
   }
@@ -328,8 +303,8 @@ void NeuroSystemGrabButtons(Window w) {
 void NeuroSystemUngrabButtons(Window w) {
   const Button *b;
   int i;
-  for (i=0; buttonBindingsS[ i ]; ++i) {
-    b = buttonBindingsS[ i ];
+  for (i=0; configuration_->buttons[ i ]; ++i) {
+    b = configuration_->buttons[ i ];
     if (b->ungrabOnFocus)
       XUngrabButton(display_, b->button, b->mod, w);
   }

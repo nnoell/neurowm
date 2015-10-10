@@ -200,7 +200,7 @@ static void *update_thread(void *args) {
   stopUpdateWhile = False;
   while (!stopUpdateWhile) {
     for (j = 0; j < PIP.numPanels; ++j) {
-      dp = dzenPanelSetS[ j ];
+      dp = NeuroSystemGetConfiguration()->dzenPanelSet[ j ];
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
@@ -238,7 +238,8 @@ static void stop_update_thread() {
 
 // Dzen
 Bool NeuroDzenInit() {
-  PIP.numPanels = NeuroTypeArrayLength((const void const *const *)dzenPanelSetS);
+  const DzenPanel *const *const confPanelSet = NeuroSystemGetConfiguration()->dzenPanelSet;
+  PIP.numPanels = NeuroTypeArrayLength((const void const *const *)confPanelSet);
   PIP.pi = (PipeInfo *)calloc(PIP.numPanels, sizeof(PipeInfo));
   PIP.updateThread = -1;
   PIP.resetRate = 1;
@@ -249,7 +250,7 @@ Bool NeuroDzenInit() {
   for (i = 0; i < PIP.numPanels; ++i) {
     char *dzenCmd[ DZEN_ARGS_MAX ];
     char line[ DZEN_LINE_MAX ];
-    dp = dzenPanelSetS[ i ];
+    dp = confPanelSet[ i ];
     if (dp->refreshRate > PIP.resetRate)
       PIP.resetRate *= dp->refreshRate;
     get_dzen_cmd(dzenCmd, line, dp->df);
@@ -277,7 +278,7 @@ void NeuroDzenUpdate(Bool onlyEvent) {
   const DzenPanel *dp;
   int i;
   for (i=0; i < PIP.numPanels; ++i) {
-    dp = dzenPanelSetS[ i ];
+    dp = NeuroSystemGetConfiguration()->dzenPanelSet[ i ];
     if (onlyEvent) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         update_dzen_panel(dp, PIP.pi[ i ].output);

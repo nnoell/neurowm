@@ -367,7 +367,7 @@ typedef struct Configuration Configuration;
 struct Configuration {
   const char *const normBorderColor;
   const char *const currBorderColor;
-  const char *const prevBorderColor;
+  const char *const oldBorderColor;
   const char *const freeBorderColor;
   const char *const urgtBorderColor;
   const int borderWidth;
