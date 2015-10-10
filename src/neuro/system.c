@@ -78,19 +78,19 @@ static void set_colors_cursors_atoms() {
   // Cursors
   *(Cursor *)&cursors_[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
   *(Cursor *)&cursors_[ NeuroSystemCursorResize ] = XCreateFontCursor(display_, XC_bottom_right_corner);
-  *(Cursor *)&cursors_[ NeuroSystemCursorMove ]   = XCreateFontCursor(display_, XC_fleur);
+  *(Cursor *)&cursors_[ NeuroSystemCursorMove ] = XCreateFontCursor(display_, XC_fleur);
 
   // WM Atoms
-  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomProtocols ]     = XInternAtom(display_, "WM_PROTOCOLS", False);
-  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomDeleteWindow ]  = XInternAtom(display_, "WM_DELETE_WINDOW", False);
+  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomProtocols ] = XInternAtom(display_, "WM_PROTOCOLS", False);
+  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomDeleteWindow ] = XInternAtom(display_, "WM_DELETE_WINDOW", False);
 
   // Net Atoms
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomSupported ]   = XInternAtom(display_, "_NET_SUPPORTED", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomState ]       = XInternAtom(display_, "_NET_WM_STATE", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomName ]        = XInternAtom(display_, "_NET_WM_NAME", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomActive ]      = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomFullscreen ]  = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomStrut ]       = XInternAtom(display_, "_NET_WM_STRUT", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomSupported ] = XInternAtom(display_, "_NET_SUPPORTED", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomState ] = XInternAtom(display_, "_NET_WM_STATE", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomName ] = XInternAtom(display_, "_NET_WM_NAME", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomActive ] = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomFullscreen ] = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomStrut ] = XInternAtom(display_, "_NET_WM_STRUT", False);
   *(Atom *)&net_atoms_[ NeuroSystemNetAtomCloseWindow ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", False);
 
   // EWMH support per view
