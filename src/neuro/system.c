@@ -25,9 +25,9 @@ const Window root_;
 const int x_res_;
 const int y_res_;
 const Rectangle screen_region_;
-const Cursor cursors[ NeuroSystemCursorLast ];
-const Atom wmatoms[ NeuroSystemWmAtomLast ];
-const Atom netatoms[ NeuroSystemNetAtomLast ];
+const Cursor cursors_[ NeuroSystemCursorLast ];
+const Atom wm_atoms_[ NeuroSystemWmAtomLast ];
+const Atom net_atoms_[ NeuroSystemNetAtomLast ];
 
 // Global configuration
 static const char *normBorderColor;
@@ -91,26 +91,26 @@ static int xerror_handler(Display *d, XErrorEvent *ee) {
 
 static void set_cursors_and_atoms() {
   // Cursors
-  *(Cursor *)&cursors[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
-  *(Cursor *)&cursors[ NeuroSystemCursorResize ] = XCreateFontCursor(display_, XC_bottom_right_corner);
-  *(Cursor *)&cursors[ NeuroSystemCursorMove ]   = XCreateFontCursor(display_, XC_fleur);
+  *(Cursor *)&cursors_[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
+  *(Cursor *)&cursors_[ NeuroSystemCursorResize ] = XCreateFontCursor(display_, XC_bottom_right_corner);
+  *(Cursor *)&cursors_[ NeuroSystemCursorMove ]   = XCreateFontCursor(display_, XC_fleur);
 
   // WM Atoms
-  *(Atom *)&wmatoms[ NeuroSystemWmAtomProtocols ]     = XInternAtom(display_, "WM_PROTOCOLS", False);
-  *(Atom *)&wmatoms[ NeuroSystemWmAtomDeleteWindow ]  = XInternAtom(display_, "WM_DELETE_WINDOW", False);
+  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomProtocols ]     = XInternAtom(display_, "WM_PROTOCOLS", False);
+  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomDeleteWindow ]  = XInternAtom(display_, "WM_DELETE_WINDOW", False);
 
   // Net Atoms
-  *(Atom *)&netatoms[ NeuroSystemNetAtomSupported ]   = XInternAtom(display_, "_NET_SUPPORTED", False);
-  *(Atom *)&netatoms[ NeuroSystemNetAtomState ]       = XInternAtom(display_, "_NET_WM_STATE", False);
-  *(Atom *)&netatoms[ NeuroSystemNetAtomName ]        = XInternAtom(display_, "_NET_WM_NAME", False);
-  *(Atom *)&netatoms[ NeuroSystemNetAtomActive ]      = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
-  *(Atom *)&netatoms[ NeuroSystemNetAtomFullscreen ]  = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
-  *(Atom *)&netatoms[ NeuroSystemNetAtomStrut ]       = XInternAtom(display_, "_NET_WM_STRUT", False);
-  *(Atom *)&netatoms[ NeuroSystemNetAtomCloseWindow ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomSupported ]   = XInternAtom(display_, "_NET_SUPPORTED", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomState ]       = XInternAtom(display_, "_NET_WM_STATE", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomName ]        = XInternAtom(display_, "_NET_WM_NAME", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomActive ]      = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomFullscreen ]  = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomStrut ]       = XInternAtom(display_, "_NET_WM_STRUT", False);
+  *(Atom *)&net_atoms_[ NeuroSystemNetAtomCloseWindow ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", False);
 
   // EWMH support per view
-  XChangeProperty(display_, root_, netatoms[ NeuroSystemNetAtomSupported ], XA_ATOM, 32, PropModeReplace,
-      (unsigned char *)netatoms, NeuroSystemNetAtomLast);
+  XChangeProperty(display_, root_, net_atoms_[ NeuroSystemNetAtomSupported ], XA_ATOM, 32, PropModeReplace,
+      (unsigned char *)net_atoms_, NeuroSystemNetAtomLast);
 }
 
 
@@ -144,15 +144,15 @@ const Rectangle *NeuroSystemGetScreenRegion() {
 }
 
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c) {
-  return cursors[ c ];
+  return cursors_[ c ];
 }
 
 Atom NeuroSystemGetWmAtom(NeuroSystemWmAtom a) {
-  return wmatoms[ a ];
+  return wm_atoms_[ a ];
 }
 
 Atom NeuroSystemGetNetAtom(NeuroSystemNetAtom a) {
-  return netatoms[ a ];
+  return net_atoms_[ a ];
 }
 
 void NeuroSystemSetConfiguration(const Configuration *c) {
@@ -198,7 +198,7 @@ Bool NeuroSystemInit() {
 
   // Setup root window mask
   XSetWindowAttributes wa;
-  wa.cursor = cursors[ NeuroSystemCursorNormal ];
+  wa.cursor = NeuroSystemGetCursor(NeuroSystemCursorNormal);
   wa.event_mask = ROOT_MASK;
   XChangeWindowAttributes(display_, root_, CWEventMask|CWCursor, &wa);
   XSelectInput(display_, root_, wa.event_mask);
@@ -215,9 +215,9 @@ Bool NeuroSystemInit() {
 }
 
 void NeuroSystemStop() {
-  XFreeCursor(display_, cursors[ NeuroSystemCursorNormal ]);
-  XFreeCursor(display_, cursors[ NeuroSystemCursorResize ]);
-  XFreeCursor(display_, cursors[ NeuroSystemCursorMove ]);
+  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorNormal));
+  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorResize));
+  XFreeCursor(display_, NeuroSystemGetCursor(NeuroSystemCursorMove));
   XCloseDisplay(display_);
 }
 
