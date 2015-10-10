@@ -23,7 +23,7 @@
 // PRIVATE VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool stopWhile = False;
+static Bool stop_main_while_ = False;
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ int NeuroNeurowmRun(const Configuration *c) {
 
   // Main loop
   XEvent ev;
-  while (!stopWhile && !XNextEvent(NeuroSystemGetDisplay(), &ev))
+  while (!stop_main_while_ && !XNextEvent(NeuroSystemGetDisplay(), &ev))
     if (eventArray[ ev.type ])
       eventArray[ ev.type ](&ev);
 
@@ -102,7 +102,7 @@ int NeuroNeurowmRun(const Configuration *c) {
 }
 
 void NeuroNeurowmQuit() {
-  stopWhile = True;
+  stop_main_while_ = True;
 }
 
 void NeuroNeurowmReload() {
