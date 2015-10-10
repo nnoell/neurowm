@@ -18,6 +18,14 @@
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
+// Main variables
+Display *const display_;
+const int screen_;
+const Window root_;
+const int x_res_;
+const int y_res_;
+const Rectangle screen_region_;
+
 // Global configuration
 static const char *normBorderColor;
 static const char *currBorderColor;
@@ -29,14 +37,6 @@ static const char *urgtBorderColor;
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
-
-// X
-Display *const display;
-const int screen;
-const Window root;
-const int xRes;
-const int yRes;
-const Rectangle screenRegion;
 
 // Configuration
 const Color normBorderColorS;
@@ -93,23 +93,23 @@ static int xerror_handler(Display *d, XErrorEvent *ee) {
 
 static void set_cursors_and_atoms() {
   // Cursors
-  *(Cursor *)&cursors[ CurNormal ] = XCreateFontCursor(display, XC_left_ptr);
-  *(Cursor *)&cursors[ CurResize ] = XCreateFontCursor(display, XC_bottom_right_corner);
-  *(Cursor *)&cursors[ CurMove ]   = XCreateFontCursor(display, XC_fleur);
+  *(Cursor *)&cursors[ CurNormal ] = XCreateFontCursor(display_, XC_left_ptr);
+  *(Cursor *)&cursors[ CurResize ] = XCreateFontCursor(display_, XC_bottom_right_corner);
+  *(Cursor *)&cursors[ CurMove ]   = XCreateFontCursor(display_, XC_fleur);
 
   // Atoms
-  *(Atom *)&wmatoms[ WM_PROTOCOLS ]      = XInternAtom(display, "WM_PROTOCOLS", False);
-  *(Atom *)&wmatoms[ WM_DELETE_WINDOW ]  = XInternAtom(display, "WM_DELETE_WINDOW", False);
-  *(Atom *)&netatoms[ NET_SUPPORTED ]    = XInternAtom(display, "_NET_SUPPORTED", False);
-  *(Atom *)&netatoms[ NET_WM_STATE ]     = XInternAtom(display, "_NET_WM_STATE", False);
-  *(Atom *)&netatoms[ NET_WM_NAME ]      = XInternAtom(display, "_NET_WM_NAME", False);
-  *(Atom *)&netatoms[ NET_ACTIVE ]       = XInternAtom(display, "_NET_ACTIVE_WINDOW", False);
-  *(Atom *)&netatoms[ NET_FULLSCREEN ]   = XInternAtom(display, "_NET_WM_STATE_FULLSCREEN", False);
-  *(Atom *)&netatoms[ NET_STRUT ]        = XInternAtom(display, "_NET_WM_STRUT", False);
-  *(Atom *)&netatoms[ NET_CLOSE_WINDOW ] = XInternAtom(display, "_NET_CLOSE_WINDOW", False);
+  *(Atom *)&wmatoms[ WM_PROTOCOLS ]      = XInternAtom(display_, "WM_PROTOCOLS", False);
+  *(Atom *)&wmatoms[ WM_DELETE_WINDOW ]  = XInternAtom(display_, "WM_DELETE_WINDOW", False);
+  *(Atom *)&netatoms[ NET_SUPPORTED ]    = XInternAtom(display_, "_NET_SUPPORTED", False);
+  *(Atom *)&netatoms[ NET_WM_STATE ]     = XInternAtom(display_, "_NET_WM_STATE", False);
+  *(Atom *)&netatoms[ NET_WM_NAME ]      = XInternAtom(display_, "_NET_WM_NAME", False);
+  *(Atom *)&netatoms[ NET_ACTIVE ]       = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
+  *(Atom *)&netatoms[ NET_FULLSCREEN ]   = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
+  *(Atom *)&netatoms[ NET_STRUT ]        = XInternAtom(display_, "_NET_WM_STRUT", False);
+  *(Atom *)&netatoms[ NET_CLOSE_WINDOW ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", False);
 
   // EWMH support per view
-  XChangeProperty(display, root, netatoms[ NET_SUPPORTED ], XA_ATOM, 32, PropModeReplace, (unsigned char *)netatoms, \
+  XChangeProperty(display_, root_, netatoms[ NET_SUPPORTED ], XA_ATOM, 32, PropModeReplace, (unsigned char *)netatoms, \
       NET_COUNT);
 }
 
@@ -120,27 +120,27 @@ static void set_cursors_and_atoms() {
 
 // Basic functions
 Display *NeuroSystemGetDisplay() {
-  return display;
+  return display_;
 }
 
 Window NeuroSystemGetRoot() {
-  return root;
+  return root_;
 }
 
 int NeuroSystemGetScreen() {
-  return screen;
+  return screen_;
 }
 
 int NeuroSystemGetXRes() {
-  return xRes;
+  return x_res_;
 }
 
 int NeuroSystemGetYRes() {
-  return yRes;
+  return y_res_;
 }
 
 const Rectangle *NeuroSystemGetScreenRegion() {
-  return &screenRegion;
+  return &screen_region_;
 }
 
 void NeuroSystemSetConfiguration(const Configuration *c) {
@@ -163,14 +163,15 @@ void NeuroSystemSetConfiguration(const Configuration *c) {
 
 Bool NeuroSystemInit() {
   // WM global variables
-  *(Display **)&display = XOpenDisplay(NULL);
-  if (!display)
+  *(Display **)&display_ = XOpenDisplay(NULL);
+  if (!display_)
     return False;
-  *(int *)&screen = DefaultScreen(display);
-  *(Window *)&root = RootWindow(display, screen);
-  *(int *)&xRes = XDisplayWidth(display, screen);
-  *(int *)&yRes = XDisplayHeight(display, screen);
-  *(Rectangle *)&screenRegion = (Rectangle){ .x = NeuroSystemGetXPos, .y = NeuroSystemGetYPos, .w = xRes, .h = yRes };
+  *(int *)&screen_ = DefaultScreen(display_);
+  *(Window *)&root_ = RootWindow(display_, screen_);
+  *(int *)&x_res_ = XDisplayWidth(display_, screen_);
+  *(int *)&y_res_ = XDisplayHeight(display_, screen_);
+  *(Rectangle *)&screen_region_ = (Rectangle){
+      .x = NeuroSystemGetXPos, .y = NeuroSystemGetYPos, .w = x_res_, .h = y_res_ };
   *(Color *)&normBorderColorS = NeuroSystemGetColor(normBorderColor);
   *(Color *)&currBorderColorS = NeuroSystemGetColor(currBorderColor);
   *(Color *)&prevBorderColorS = NeuroSystemGetColor(prevBorderColor);
@@ -187,43 +188,43 @@ Bool NeuroSystemInit() {
   XSetWindowAttributes wa;
   wa.cursor = cursors[ CurNormal ];
   wa.event_mask = ROOT_MASK;
-  XChangeWindowAttributes(display, root, CWEventMask|CWCursor, &wa);
-  XSelectInput(display, root, wa.event_mask);
-  XSync(display, False);
+  XChangeWindowAttributes(display_, root_, CWEventMask|CWCursor, &wa);
+  XSelectInput(display_, root_, wa.event_mask);
+  XSync(display_, False);
 
   // Set custom X error handler
   XSetErrorHandler(xerror_handler);
-  XSync(display, False);
+  XSync(display_, False);
 
   // Grab key bindings
-  NeuroSystemGrabKeys(root);
+  NeuroSystemGrabKeys(root_);
 
   return True;
 }
 
 void NeuroSystemStop() {
-  XFreeCursor(display, cursors[ CurNormal ]);
-  XFreeCursor(display, cursors[ CurResize ]);
-  XFreeCursor(display, cursors[ CurMove ]);
-  XCloseDisplay(display);
+  XFreeCursor(display_, cursors[ CurNormal ]);
+  XFreeCursor(display_, cursors[ CurResize ]);
+  XFreeCursor(display_, cursors[ CurMove ]);
+  XCloseDisplay(display_);
 }
 
 Color NeuroSystemGetColor(const char* color) {
   assert(color);
   XColor c;
-  Colormap map = DefaultColormap(display, screen);
-  if (!XAllocNamedColor(display, map, color, &c, &c))
+  Colormap map = DefaultColormap(display_, screen_);
+  if (!XAllocNamedColor(display_, map, color, &c, &c))
     NeuroSystemError("NeuroSystemGetColor - Could not allocate color");
   return c.pixel;
 }
 
 void NeuroSystemChangeNeurowmName(const char *name) {
   assert(name);
-  const Atom netwmcheck = XInternAtom(display, "_NET_SUPPORTING_WM_CHECK", False);
-  const Atom netwmname = XInternAtom(display, "_NET_WM_NAME", False);
-  const Atom utf8_str = XInternAtom(display, "UTF8_STRING", False);
-  XChangeProperty(display, root, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root, 1);
-  XChangeProperty(display, root, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)name, strlen(name));
+  const Atom netwmcheck = XInternAtom(display_, "_NET_SUPPORTING_WM_CHECK", False);
+  const Atom netwmname = XInternAtom(display_, "_NET_WM_NAME", False);
+  const Atom utf8_str = XInternAtom(display_, "UTF8_STRING", False);
+  XChangeProperty(display_, root_, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root_, 1);
+  XChangeProperty(display_, root_, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)name, strlen(name));
 }
 
 void NeuroSystemChangeProcName(const char *newname) {
@@ -237,8 +238,8 @@ int NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
   if (pid == -1)
     return -1;
   if (!pid) {  // Child
-    if (display)
-      close(ConnectionNumber(display));
+    if (display_)
+      close(ConnectionNumber(display_));
     setsid();
     execvp(cmd[ 0 ], (char *const *)cmd);
     NeuroSystemError("NeuroSystemSpawn - Could not execvp");
@@ -257,8 +258,8 @@ int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p) {
   if (pid < 0)
     return -1;
   if (pid == 0) {  // Child
-    if (display)
-      close(ConnectionNumber(display));
+    if (display_)
+      close(ConnectionNumber(display_));
     setsid();
     dup2(filedes[ 0 ], STDIN_FILENO);
     close(filedes[ 0 ]);
@@ -277,15 +278,15 @@ void NeuroSystemError(const char *msg) {
 
 // Binding functions
 void NeuroSystemGrabKeys(Window w) {
-  XUngrabKey(display, AnyKey, AnyModifier, w);
+  XUngrabKey(display_, AnyKey, AnyModifier, w);
   KeyCode code;
   const Key *k;
   int i;
   for (i = 0; keyBindingsS[ i ]; ++i) {
     k = keyBindingsS[ i ];
-    code = XKeysymToKeycode(display, k->key);
+    code = XKeysymToKeycode(display_, k->key);
     if (code)
-      XGrabKey(display, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
+      XGrabKey(display_, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
   }
 }
 
@@ -295,19 +296,19 @@ void NeuroSystemUngrabKeys(Window w) {
   int i;
   for (i = 0; keyBindingsS[ i ]; ++i) {
     k = keyBindingsS[ i ];
-    code = XKeysymToKeycode(display, k->key);
+    code = XKeysymToKeycode(display_, k->key);
     if (code)
-      XUngrabKey(display, code, k->mod, w);
+      XUngrabKey(display_, code, k->mod, w);
   }
 }
 
 void NeuroSystemGrabButtons(Window w) {
-  XUngrabButton(display, AnyButton, AnyModifier, w);
+  XUngrabButton(display_, AnyButton, AnyModifier, w);
   const Button *b;
   int i;
   for (i=0; buttonBindingsS[ i ]; ++i) {
     b = buttonBindingsS[ i ];
-    XGrabButton(display, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask,
+    XGrabButton(display_, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask,
         GrabModeAsync, GrabModeSync, None, None);
   }
 }
@@ -318,7 +319,7 @@ void NeuroSystemUngrabButtons(Window w) {
   for (i=0; buttonBindingsS[ i ]; ++i) {
     b = buttonBindingsS[ i ];
     if (b->ungrabOnFocus)
-      XUngrabButton(display, b->button, b->mod, w);
+      XUngrabButton(display_, b->button, b->mod, w);
   }
 }
 
