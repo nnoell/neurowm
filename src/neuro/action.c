@@ -65,8 +65,8 @@ const Action const NeuroActionQuit[] = { {
     NeuroActionHandlerQuit, ARG_NULL } };
 const Action const NeuroActionReload[] = { {
     NeuroActionHandlerReload, ARG_NULL } };
-const Action const NeuroActionStartCpuCalc[] = { {
-    NeuroActionHandlerStartCpuCalc, ARG_NULL } };
+const Action const NeuroActionInitCpuCalc[] = { {
+    NeuroActionHandlerInitCpuCalc, ARG_NULL } };
 const Action const NeuroActionSpawn[] = { {
     NeuroActionHandlerSpawn, ARG_CMD(NeuroConfigTerminalCommand) } };
 const Action const NeuroActionSleep[] = { {
@@ -137,8 +137,8 @@ const Action *const NeuroActionChainQuit[] = {
     NeuroActionQuit, NULL };
 const Action *const NeuroActionChainReload[] = {
     NeuroActionReload, NULL };
-const Action *const NeuroActionChainStartCpuCalc[] = {
-    NeuroActionStartCpuCalc, NULL };
+const Action *const NeuroActionChainInitCpuCalc[] = {
+    NeuroActionInitCpuCalc, NULL };
 const Action *const NeuroActionChainSpawn[] = {
     NeuroActionSpawn, NULL };
 const Action *const NeuroActionChainSleep[] = {
@@ -239,9 +239,9 @@ void NeuroActionHandlerSleep(GenericArg int_arg) {
   sleep(ARG_INT_GET(int_arg));
 }
 
-void NeuroActionHandlerStartCpuCalc(GenericArg null_arg) {
+void NeuroActionHandlerInitCpuCalc(GenericArg null_arg) {
   (void)null_arg;
-  NeuroDzenStartCpuCalc();
+  NeuroDzenInitCpuCalc();
 }
 
 void NeuroActionHandlerStopCpuCalc(GenericArg null_arg) {
