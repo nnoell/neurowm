@@ -210,7 +210,7 @@ Color NeuroSystemGetColorFromHex(const char* color) {
   XColor c;
   Colormap map = DefaultColormap(display_, screen_);
   if (!XAllocNamedColor(display_, map, color, &c, &c))
-    NeuroSystemError("NeuroSystemGetColor - Could not allocate color");
+    NeuroSystemError("NeuroSystemGetColorFromHex - Could not allocate color");
   return c.pixel;
 }
 
