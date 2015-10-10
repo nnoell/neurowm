@@ -22,6 +22,8 @@
 Display *const display_;
 const int screen_;
 const Window root_;
+const int x_pos_ = 0;
+const int y_pos_ = 0;
 const int x_res_;
 const int y_res_;
 const Rectangle screen_region_;
@@ -121,8 +123,7 @@ Bool NeuroSystemInit() {
   *(Window *)&root_ = RootWindow(display_, screen_);
   *(int *)&x_res_ = XDisplayWidth(display_, screen_);
   *(int *)&y_res_ = XDisplayHeight(display_, screen_);
-  *(Rectangle *)&screen_region_ = (Rectangle){
-      .x = NeuroSystemGetXPos, .y = NeuroSystemGetYPos, .w = x_res_, .h = y_res_ };
+  *(Rectangle *)&screen_region_ = (Rectangle){ .x = y_pos_, .y = x_pos_, .w = x_res_, .h = y_res_ };
 
   // Set cursors and atoms
   set_colors_cursors_atoms();
@@ -166,6 +167,14 @@ Window NeuroSystemGetRoot() {
 
 int NeuroSystemGetScreen() {
   return screen_;
+}
+
+int NeuroSystemGetXPos() {
+  return x_pos_;
+}
+
+int NeuroSystemGetYPos() {
+  return y_pos_;
 }
 
 int NeuroSystemGetXRes() {

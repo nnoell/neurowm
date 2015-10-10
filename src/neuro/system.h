@@ -22,9 +22,6 @@
 #define CLIENT_MASK_NO_ENTER (FocusChangeMask|PropertyChangeMask|StructureNotifyMask)
 #define ROOT_MASK (SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|StructureNotifyMask|CLIENT_MASK)
 
-#define NeuroSystemGetXPos 0
-#define NeuroSystemGetYPos 0
-
 
 //----------------------------------------------------------------------------------------------------------------------
 // VARIABLE DECLARATION
@@ -86,6 +83,8 @@ void NeuroSystemStop();
 Display *NeuroSystemGetDisplay();
 Window NeuroSystemGetRoot();
 int NeuroSystemGetScreen();
+int NeuroSystemGetXPos();
+int NeuroSystemGetYPos();
 int NeuroSystemGetXRes();
 int NeuroSystemGetYRes();
 const Rectangle *NeuroSystemGetScreenRegion();
