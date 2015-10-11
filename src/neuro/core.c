@@ -280,11 +280,19 @@ static void set_layouts(Layout *l, const LayoutConf *const *lc, size_t size) {
 
 // StackSet
 Bool NeuroCoreInit() {
+  // Allocate as many stacks as we need
   const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspaceSet;
   size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSet);
   stack_set_.stacks = new_stackset(size + 1);  // We need on extra stack for NSP
   if (!stack_set_.stacks)
     return False;
+
+  // Initialize the stackset
+  stack_set_.curr = 0;
+  stack_set_.old = 0;
+  stack_set_.size = size;
+
+  // Initialize the stacks
   const Workspace *ws;
   size_t i, sizel, sizetl;
   for (i = 0; workspaceSet[ i ]; ++i) {
@@ -307,9 +315,6 @@ Bool NeuroCoreInit() {
     set_layouts(s->layouts, ws->layouts, sizel);
     set_layouts(s->togLayouts, ws->togLayouts, sizetl);
   }
-  stack_set_.curr = 0;
-  stack_set_.old = 0;
-  stack_set_.size = size;
   return True;
 }
 

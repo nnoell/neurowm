@@ -74,7 +74,7 @@ typedef enum NeuroSystemColor NeuroSystemColor;
 //----------------------------------------------------------------------------------------------------------------------
 
 // Configuration functions
-void NeuroSystemSetConfiguration(const Configuration *c);
+Bool NeuroSystemSetConfiguration(const Configuration *c);
 const Configuration *NeuroSystemGetConfiguration();
 
 // Main functions

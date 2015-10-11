@@ -104,9 +104,11 @@ static void set_colors_cursors_atoms() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Configuration functions
-void NeuroSystemSetConfiguration(const Configuration *c) {
-  assert(c);
+Bool NeuroSystemSetConfiguration(const Configuration *c) {
+  if (!c)
+    return False;
   configuration_ = c;
+  return True;
 }
 
 const Configuration *NeuroSystemGetConfiguration() {

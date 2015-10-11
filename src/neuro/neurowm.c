@@ -58,22 +58,23 @@ static void wm_signal_handler(int signo) {
 }
 
 static void init_wm(const Configuration *c) {
-  if (!c)
+  // Set the configuration
+  if (!NeuroSystemSetConfiguration(c))
     NeuroSystemError("init_wm - Could not set configuration");
 
-  // Set configuration and init base, stackset and panels
-  NeuroSystemSetConfiguration(c);
+  // Init System, Core and Panels
   if (!NeuroSystemInit())
-    NeuroSystemError("init_wm - Could not init Base");
+    NeuroSystemError("init_wm - Could not init System");
   if (!NeuroCoreInit())
-    NeuroSystemError("init_wm - Could not init StackSet");
+    NeuroSystemError("init_wm - Could not init Core");
   if (!NeuroDzenInit())
-    NeuroSystemError("init_wm - Could not init Panels");
+    NeuroSystemError("init_wm - Could not init Dzen Panels");
 
+  // Run the Startup Hook
   NeuroActionUtilRunActionChain(NeuroSystemGetConfiguration()->startUpHook);
 
   // Catch asynchronously SIGUSR1
-  // if (SIG_ERR == signal(SIGUSR1, signalHandler))
+  // if (SIG_ERR == signal(SIGUSR1, wm_signal_handler))
   //   NeuroSystemError("init_wm - Could not set SIGHUP handler");
 
   // Load existing windows if Xsesion was not closed
