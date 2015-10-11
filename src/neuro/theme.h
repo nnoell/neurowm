@@ -13,9 +13,9 @@
 #include "type.h"
 
 // Nnoell theme paths
-#define NeuroThemeNnoellDzenBoxLeftIcon  "/home/julian/.icons/xbm_icons/boxleft.xbm"
-#define NeuroThemeNnoellDzenBoxLeftIcon2 "/home/julian/.icons/xbm_icons/boxleft2.xbm"
-#define NeuroThemeNnoellDzenBoxRightIcon "/home/julian/.icons/xbm_icons/boxright.xbm"
+#define NeuroThemeNnoellDzenBoxLeftIcon  "/usr/share/themes/nnoell/neurowm/xbm_icons/boxleft.xbm"
+#define NeuroThemeNnoellDzenBoxLeftIcon2 "/usr/share/themes/nnoell/neurowm/xbm_icons/boxleft2.xbm"
+#define NeuroThemeNnoellDzenBoxRightIcon "/usr/share/themes/nnoell/neurowm/xbm_icons/boxright.xbm"
 
 // Nnoell theme colors
 #define NeuroThemeNnoellColorBlack     "#020202"
