@@ -187,27 +187,32 @@ static void do_property_notify(XEvent *e) {
   }
 }
 
+
 //----------------------------------------------------------------------------------------------------------------------
-// PUBLIC VARIABLE DEFINITION
+// PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-const EventHandler const eventArray[ LASTEvent ] = {
-  [ KeyPress ]         = do_key_press,
-  [ ButtonPress ]      = do_button_press,
-  [ MapRequest ]       = do_map_request,
-  [ UnmapNotify ]      = do_unmap_notify,
-  [ DestroyNotify ]    = do_destroy_notify,
-  [ EnterNotify ]      = do_enter_notify,
+static const NeuroEventHandler const event_handlers_[ LASTEvent ] = {
+  [ KeyPress ] = do_key_press,
+  [ ButtonPress ] = do_button_press,
+  [ MapRequest ] = do_map_request,
+  [ UnmapNotify ] = do_unmap_notify,
+  [ DestroyNotify ] = do_destroy_notify,
+  [ EnterNotify ] = do_enter_notify,
   [ ConfigureRequest ] = do_configure_request,
-  [ FocusIn ]          = do_focus_in,
-  [ ClientMessage ]    = do_client_message,
-  [ PropertyNotify ]   = do_property_notify
+  [ FocusIn ] = do_focus_in,
+  [ ClientMessage ] = do_client_message,
+  [ PropertyNotify ] = do_property_notify
 };
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
+
+NeuroEventHandler NeuroEventGetHandler(NeuroEventType t) {
+  return event_handlers_[ t ];
+}
 
 void NeuroEventManageWindow(Window w) {
   // Check if window is valid

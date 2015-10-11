@@ -22,17 +22,18 @@
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// EventHandler
-typedef void (*EventHandler)(XEvent *e);
+// NeuroEventHandler
+typedef void (*NeuroEventHandler)(XEvent *e);
 
-// Array of Events
-extern const EventHandler const eventArray[ LASTEvent ];
+// NeuroEventType
+typedef unsigned int NeuroEventType;
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
+NeuroEventHandler NeuroEventGetHandler(NeuroEventType t);
 void NeuroEventManageWindow(Window w);
 void NeuroEventUnmanageClient(ClientPtrPtr c);
 void NeuroEventLoadWindows();
