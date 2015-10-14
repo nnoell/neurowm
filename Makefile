@@ -122,6 +122,10 @@ install_no_bin:
 	@cp man/neurowm.1 /usr/local/man/man1
 	@chmod 644 /usr/local/man/man1/neurowm.1
 	@echo "OK"
+	@echo -n ":: Installin themes...   "
+	@mkdir -p /usr/share/themes/nnoell
+	@cp -r themes/nnoell/neurowm /usr/share/themes/nnoell
+	@echo "OK"
 
 # Install
 install: install_no_bin
@@ -139,6 +143,9 @@ uninstall_no_bin:
 	@echo "OK"
 	@echo -n ":: Uninstalling man page...   "
 	@rm -f /usr/local/man/man1/neurowm.1
+	@echo "OK"
+	@echo -n ":: Uninstalling themes...   "
+	@rm -rf /usr/share/themes/nnoell/neurowm
 	@echo "OK"
 
 # Uninstall
