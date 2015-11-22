@@ -36,8 +36,8 @@ struct CpuInfo {
 typedef struct CpuCalcRefreshInfo CpuCalcRefreshInfo;
 struct CpuCalcRefreshInfo {
   pthread_t thread;            // Thread that calculates cpu percent
-  pthread_mutex_t wait_mutex;  // Refresh wait mutex
-  pthread_cond_t wait_cond;    // Refresh wait condition variable
+  pthread_mutex_t wait_mutex;  // Interval wait mutex
+  pthread_cond_t wait_cond;    // Interval wait condition variable
   CpuInfo *cpu_info;
   int num_cpus;
 };
@@ -51,9 +51,10 @@ struct PipeInfo {
 
 typedef struct DzenRefreshInfo DzenRefreshInfo;
 struct DzenRefreshInfo {
-  pthread_t thread;            // Thread that displays info on the panels
-  pthread_mutex_t wait_mutex;  // Refresh wait mutex
-  pthread_cond_t wait_cond;    // Refresh wait conditional variable
+  pthread_t thread;               // Thread that displays info on the panels
+  pthread_mutex_t sync_mutex;     // Sync constrol mutex
+  pthread_mutex_t wait_mutex;     // Interval wait mutex
+  pthread_cond_t wait_cond;       // Interval wait conditional variable
   PipeInfo *pipe_info;
   int num_panels;
   int reset_rate;
@@ -241,6 +242,11 @@ static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df) {
 
 static void refresh_dzen(const DzenPanel *dp, int fd) {
   assert(dp);
+
+  // Lock
+  pthread_mutex_lock(&dzen_refresh_info_.sync_mutex);
+
+  // Refresh
   char line[ DZEN_LINE_MAX ] = "\0";
   int i;
   for (i = 0; dp->loggers[ i ]; ++i) {
@@ -256,6 +262,9 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
   // Line must be '\n' terminated so that dzen can display it
   strncat(line, "\n", DZEN_LINE_MAX - strlen(line) - 1);
   write(fd, line, strlen(line));
+
+  // Unlock
+  pthread_mutex_unlock(&dzen_refresh_info_.sync_mutex);
 }
 
 static void *refresh_dzen_thread(void *args) {
@@ -336,10 +345,17 @@ static Bool init_dzen_refresh_info() {
     if (dzen_refresh_info_.pipe_info[ i ].output == -1)
       return False;
   }
+
+  // Init sync mutex
+  pthread_mutex_init(&dzen_refresh_info_.sync_mutex, NULL);
   return True;
 }
 
 static void stop_dzen_refresh_info() {
+  // Destroy sync mutex
+  pthread_mutex_destroy(&dzen_refresh_info_.sync_mutex);
+
+  // Release pipe info
   int i;
   for (i = 0; i < dzen_refresh_info_.num_panels; ++i)
     if (kill(dzen_refresh_info_.pipe_info[ i ].pid, SIGTERM) == -1)
@@ -371,12 +387,11 @@ void NeuroDzenRefresh(Bool on_event_only) {
   int i;
   for (i=0; i < dzen_refresh_info_.num_panels; ++i) {
     dp = NeuroSystemGetConfiguration()->dzenPanelSet[ i ];
-    if (on_event_only) {
-      if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
-        refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
-    } else {
+    if (on_event_only && (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)) {
       refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
+      continue;
     }
+    refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
   }
 }
 
