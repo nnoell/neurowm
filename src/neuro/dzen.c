@@ -35,9 +35,9 @@ struct CpuInfo {
 
 typedef struct CpuCalcRefreshInfo CpuCalcRefreshInfo;
 struct CpuCalcRefreshInfo {
-  pthread_t thread;
-  pthread_mutex_t mutex;
-  pthread_cond_t cond;
+  pthread_t thread;            // Thread that calculates cpu percent
+  pthread_mutex_t wait_mutex;  // Refresh wait mutex
+  pthread_cond_t wait_cond;    // Refresh wait condition variable
   CpuInfo *cpu_info;
   int num_cpus;
 };
@@ -51,9 +51,9 @@ struct PipeInfo {
 
 typedef struct DzenRefreshInfo DzenRefreshInfo;
 struct DzenRefreshInfo {
-  pthread_t thread;
-  pthread_mutex_t mutex;
-  pthread_cond_t cond;
+  pthread_t thread;            // Thread that displays info on the panels
+  pthread_mutex_t wait_mutex;  // Refresh wait mutex
+  pthread_cond_t wait_cond;    // Refresh wait conditional variable
   PipeInfo *pipe_info;
   int num_panels;
   int reset_rate;
@@ -66,7 +66,7 @@ struct DzenRefreshInfo {
 
 // CPU Calculation
 static CpuCalcRefreshInfo cpu_calc_refresh_info_;
-static Bool cpu_stop_refresh_cond_ = False;
+static Bool cpu_calc_stop_refresh_cond_ = False;
 
 // Dzen
 static DzenRefreshInfo dzen_refresh_info_;
@@ -77,33 +77,28 @@ static Bool dzen_stop_refresh_cond_ = False;
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Returns True if it has timed out and false when the condition variable has been notified
-Bool condition_timedwait(int seconds, Bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
+// Note: Returns True if it has timed out and false when the condition variable has been notified
+static Bool cond_timedwait(int seconds, Bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
   struct timespec deadline;
   clock_gettime(CLOCK_REALTIME, &deadline);
   deadline.tv_sec += seconds;
   Bool timedout = False;
   pthread_mutex_lock(mutex);
-  while (!*cond_stop) {
-    int res = pthread_cond_timedwait(cond_var, mutex, &deadline);
-    if (ETIMEDOUT == res) {
+  while (!*cond_stop)
+    if (ETIMEDOUT == pthread_cond_timedwait(cond_var, mutex, &deadline)) {
       timedout = True;
       break;
     }
-  }
   pthread_mutex_unlock(mutex);
   return timedout;
 }
 
-static Bool refresh_cpu_calc_timedwait() {
-  return condition_timedwait(1, &cpu_stop_refresh_cond_, &cpu_calc_refresh_info_.mutex, &cpu_calc_refresh_info_.cond);
+// CPU Calculation (Thread 1)
+static Bool cpu_calc_refresh_timedwait() {
+  return cond_timedwait(1, &cpu_calc_stop_refresh_cond_, &cpu_calc_refresh_info_.wait_mutex,
+      &cpu_calc_refresh_info_.wait_cond);
 }
 
-static Bool refresh_dzen_panel_timedwait() {
-  return condition_timedwait(1, &dzen_stop_refresh_cond_, &dzen_refresh_info_.mutex, &dzen_refresh_info_.cond);
-}
-
-// CPU Calculation
 static int get_num_cpus(const char *file) {
   assert(file);
   FILE *fd = fopen(file, "r");
@@ -167,7 +162,7 @@ static void refresh_cpu_calc(const char *file, int ncpus) {
     fclose(fd);
 
     // Wait 1 second or break if the conditional variable has been signaled
-    if (!refresh_cpu_calc_timedwait())
+    if (!cpu_calc_refresh_timedwait())
       break;
   }
 }
@@ -180,8 +175,8 @@ static void *refresh_cpu_calc_thread(void *args) {
 
 static Bool init_cpu_calc_thread() {
   // Init mutex and cond
-  pthread_mutex_init(&cpu_calc_refresh_info_.mutex, NULL);
-  pthread_cond_init(&cpu_calc_refresh_info_.cond, NULL);
+  pthread_mutex_init(&cpu_calc_refresh_info_.wait_mutex, NULL);
+  pthread_cond_init(&cpu_calc_refresh_info_.wait_cond, NULL);
 
   // Create thread
   return pthread_create(&cpu_calc_refresh_info_.thread, NULL, refresh_cpu_calc_thread, NULL);
@@ -189,8 +184,8 @@ static Bool init_cpu_calc_thread() {
 
 static void stop_cpu_calc_thread() {
   // Stop calc thread
-  cpu_stop_refresh_cond_ = True;
-  pthread_cond_broadcast(&cpu_calc_refresh_info_.cond);
+  cpu_calc_stop_refresh_cond_ = True;
+  pthread_cond_broadcast(&cpu_calc_refresh_info_.wait_cond);
 
   // Join thread
   void *status;
@@ -198,8 +193,8 @@ static void stop_cpu_calc_thread() {
     perror("stop_cpu_perc_thread - Could not join thread");
 
   // Destroy cond and mutex
-  pthread_cond_destroy(&cpu_calc_refresh_info_.cond);
-  pthread_mutex_destroy(&cpu_calc_refresh_info_.mutex);
+  pthread_cond_destroy(&cpu_calc_refresh_info_.wait_cond);
+  pthread_mutex_destroy(&cpu_calc_refresh_info_.wait_mutex);
 }
 
 static Bool init_cpu_calc_refresh_info() {
@@ -215,7 +210,11 @@ static void stop_cpu_calc_refresh_info() {
   cpu_calc_refresh_info_.cpu_info = NULL;
 }
 
-// Dzen
+// Dzen (Thread 2)
+static Bool dzen_refresh_timedwait() {
+  return cond_timedwait(1, &dzen_stop_refresh_cond_, &dzen_refresh_info_.wait_mutex, &dzen_refresh_info_.wait_cond);
+}
+
 static char **str_to_cmd(char **cmd, char *str, const char *sep) {
   assert(cmd);
   assert(str);
@@ -240,22 +239,26 @@ static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df) {
   return str_to_cmd(cmd, line, " \t\n");
 }
 
-static void refresh_dzen_panel(const DzenPanel *dp, int fd) {
+static void refresh_dzen(const DzenPanel *dp, int fd) {
   assert(dp);
   char line[ DZEN_LINE_MAX ] = "\0";
   int i;
   for (i = 0; dp->loggers[ i ]; ++i) {
     char str[ LOGGER_MAX ] = "\0";
     dp->loggers[ i ](str);
-    if (i > 0 && str[ 0 ] != '\0')  // Add separator if not first and not empty str
+
+    // Add separator if not first and not empty str
+    if (i > 0 && str[ 0 ] != '\0')
       strncat(line, dp->sep, DZEN_LINE_MAX - strlen(line) - 1);
     strncat(line, str, DZEN_LINE_MAX - strlen(line) - 1);
   }
-  strncat(line, "\n", DZEN_LINE_MAX - strlen(line) - 1);  // Line must be '\n' terminated so that dzen shows it
+
+  // Line must be '\n' terminated so that dzen can display it
+  strncat(line, "\n", DZEN_LINE_MAX - strlen(line) - 1);
   write(fd, line, strlen(line));
 }
 
-static void *refresh_dzen_panel_thread(void *args) {
+static void *refresh_dzen_thread(void *args) {
   (void)args;
   const DzenPanel *dp;
   int i = 0, j;
@@ -266,13 +269,13 @@ static void *refresh_dzen_panel_thread(void *args) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
-        refresh_dzen_panel(dp, dzen_refresh_info_.pipe_info[ j ].output);
+        refresh_dzen(dp, dzen_refresh_info_.pipe_info[ j ].output);
     }
     ++i;
     i %= dzen_refresh_info_.reset_rate;
 
     // Wait 1 second or break if the conditional variable has been signaled
-    if (!refresh_dzen_panel_timedwait())
+    if (!dzen_refresh_timedwait())
       break;
   }
   pthread_exit(NULL);
@@ -283,11 +286,11 @@ static Bool init_dzen_refresh_thread() {
     return True;
 
   // Init mutex and cond
-  pthread_mutex_init(&dzen_refresh_info_.mutex, NULL);
-  pthread_cond_init(&dzen_refresh_info_.cond, NULL);
+  pthread_mutex_init(&dzen_refresh_info_.wait_mutex, NULL);
+  pthread_cond_init(&dzen_refresh_info_.wait_cond, NULL);
 
   // Create thread
-  return pthread_create(&dzen_refresh_info_.thread, NULL, refresh_dzen_panel_thread, NULL) == 0;
+  return pthread_create(&dzen_refresh_info_.thread, NULL, refresh_dzen_thread, NULL) == 0;
 }
 
 static void stop_dzen_refresh_thread() {
@@ -296,7 +299,7 @@ static void stop_dzen_refresh_thread() {
 
   // Stop refresh thread
   dzen_stop_refresh_cond_ = True;
-  pthread_cond_broadcast(&dzen_refresh_info_.cond);
+  pthread_cond_broadcast(&dzen_refresh_info_.wait_cond);
 
   // Join thread
   void *status;
@@ -304,8 +307,8 @@ static void stop_dzen_refresh_thread() {
     perror("stop_refresh_thread - Could not join thread");
 
   // Init cond and mutex
-  pthread_cond_destroy(&dzen_refresh_info_.cond);
-  pthread_mutex_destroy(&dzen_refresh_info_.mutex);
+  pthread_cond_destroy(&dzen_refresh_info_.wait_cond);
+  pthread_mutex_destroy(&dzen_refresh_info_.wait_mutex);
 }
 
 static Bool init_dzen_refresh_info() {
@@ -370,9 +373,9 @@ void NeuroDzenRefresh(Bool on_event_only) {
     dp = NeuroSystemGetConfiguration()->dzenPanelSet[ i ];
     if (on_event_only) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
-        refresh_dzen_panel(dp, dzen_refresh_info_.pipe_info[ i ].output);
+        refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
     } else {
-      refresh_dzen_panel(dp, dzen_refresh_info_.pipe_info[ i ].output);
+      refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
     }
   }
 }
