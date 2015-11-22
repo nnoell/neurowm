@@ -33,10 +33,13 @@ struct CpuInfo {
   int perc;
 };
 
-typedef struct CpuSet CpuSet;
-struct CpuSet {
-  CpuInfo *infos;
-  int size;
+typedef struct CpuCalcRefreshInfo CpuCalcRefreshInfo;
+struct CpuCalcRefreshInfo {
+  pthread_t thread;
+  pthread_mutex_t mutex;
+  pthread_cond_t cond;
+  CpuInfo *cpu_info;
+  int num_cpus;
 };
 
 // Dzen
@@ -46,13 +49,14 @@ struct PipeInfo {
   pid_t pid;
 };
 
-typedef struct PipeInfoPanels PipeInfoPanels;
-struct PipeInfoPanels {
-  PipeInfo *pipeInfo;
-  int numPanels;
-  pthread_t refreshThread;
-  pthread_attr_t attribute;
-  int resetRate;
+typedef struct DzenRefreshInfo DzenRefreshInfo;
+struct DzenRefreshInfo {
+  pthread_t thread;
+  pthread_mutex_t mutex;
+  pthread_cond_t cond;
+  PipeInfo *pipe_info;
+  int num_panels;
+  int reset_rate;
 };
 
 
@@ -61,14 +65,12 @@ struct PipeInfoPanels {
 //----------------------------------------------------------------------------------------------------------------------
 
 // CPU Calculation
-static CpuSet cpu_set_;
-static pthread_t cpu_thread_id_;
-static pthread_attr_t cpu_thread_attr_;
-static Bool cpu_stop_refresh_while_ = False;
+static CpuCalcRefreshInfo cpu_calc_refresh_info_;
+static Bool cpu_stop_refresh_cond_ = False;
 
 // Dzen
-static PipeInfoPanels dzen_pipe_info_panels_;
-static Bool dzen_stop_refresh_while_ = False;
+static DzenRefreshInfo dzen_refresh_info_;
+static Bool dzen_stop_refresh_cond_ = False;
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -92,19 +94,6 @@ static int get_num_cpus(const char *file) {
   return i;
 }
 
-static Bool init_cpu_set() {
-  cpu_set_.size = get_num_cpus(CPU_FILE_PATH);
-  if (cpu_set_.size <= 0)
-    return False;
-  cpu_set_.infos = (CpuInfo *)calloc(cpu_set_.size, sizeof(CpuInfo));
-  return cpu_set_.infos != NULL;
-}
-
-static void stop_cpu_set() {
-  free(cpu_set_.infos);
-  cpu_set_.infos = NULL;
-}
-
 static void get_perc_info(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, long prev_total) {
   assert(cpu_info);
   assert(cpu_vals);
@@ -118,19 +107,38 @@ static void get_perc_info(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, lon
   cpu_info->perc = (100 * (diffTotal - diffIdle)) / diffTotal;
 }
 
-static void refresh_cpu_perc(const char *file, int ncpus) {
+// Returns True if it has timed out and false when the condition variable has been notified
+static Bool refresh_cpu_calc_timedwait(int seconds) {
+  struct timespec deadline;
+  clock_gettime(CLOCK_REALTIME, &deadline);
+  deadline.tv_sec += seconds;
+  Bool timedout = False;
+  pthread_mutex_lock(&cpu_calc_refresh_info_.mutex);
+  while (!cpu_stop_refresh_cond_) {
+    int res = pthread_cond_timedwait(&cpu_calc_refresh_info_.cond, &cpu_calc_refresh_info_.mutex, &deadline);
+    if (ETIMEDOUT == res) {
+      timedout = True;
+      break;
+    }
+  }
+  pthread_mutex_unlock(&cpu_calc_refresh_info_.mutex);
+  return timedout;
+}
+
+static void refresh_cpu_calc(const char *file, int ncpus) {
   assert(file);
   long cpusFileInfo[ ncpus ][ CPU_MAX_VALS ];
   long prevIdle[ ncpus ], prevTotal[ ncpus ];
   memset(prevIdle, 0, sizeof(prevIdle));
   memset(prevTotal, 0, sizeof(prevTotal));
 
-  cpu_stop_refresh_while_ = False;
-  while (!cpu_stop_refresh_while_) {
+  while (True) {
+    // Open the file
     FILE *fd = fopen(file, "r");
     if (fd == NULL)
       return;
 
+    // Do the percent clalculation
     int i;
     char buf[ 256 ];
     for (i = 0; i < ncpus; ++i) {
@@ -142,34 +150,61 @@ static void refresh_cpu_perc(const char *file, int ncpus) {
           cpusFileInfo[ i ] + 6, cpusFileInfo[ i ] + 7,
           cpusFileInfo[ i ] + 8, cpusFileInfo[ i ] + 9))
         return;
-      get_perc_info(cpu_set_.infos + i, cpusFileInfo[ i ], prevIdle[ i ], prevTotal[ i ]);
-      prevIdle[ i ] = cpu_set_.infos[ i ].idle;
-      prevTotal[ i ] = cpu_set_.infos[ i ].total;
+      get_perc_info(cpu_calc_refresh_info_.cpu_info + i, cpusFileInfo[ i ], prevIdle[ i ], prevTotal[ i ]);
+      prevIdle[ i ] = cpu_calc_refresh_info_.cpu_info[ i ].idle;
+      prevTotal[ i ] = cpu_calc_refresh_info_.cpu_info[ i ].total;
     }
 
+    // Close the file
     fclose(fd);
-    sleep(1);
+
+    // Wait 1 second or break if the conditional variable has been signaled
+    if (!refresh_cpu_calc_timedwait(1))
+      break;
   }
 }
 
-static void *refresh_cpu_perc_thread(void *args) {
+static void *refresh_cpu_calc_thread(void *args) {
   (void)args;
-  refresh_cpu_perc(CPU_FILE_PATH, cpu_set_.size);
+  refresh_cpu_calc(CPU_FILE_PATH, cpu_calc_refresh_info_.num_cpus);
   pthread_exit(NULL);
 }
 
-static Bool init_cpu_perc_thread() {
-  pthread_attr_init(&cpu_thread_attr_);
-  pthread_attr_setdetachstate(&cpu_thread_attr_, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&cpu_thread_id_, &cpu_thread_attr_, refresh_cpu_perc_thread, NULL);
+static Bool init_cpu_calc_thread() {
+  // Init mutex and cond
+  pthread_mutex_init(&cpu_calc_refresh_info_.mutex, NULL);
+  pthread_cond_init(&cpu_calc_refresh_info_.cond, NULL);
+
+  // Create thread
+  return pthread_create(&cpu_calc_refresh_info_.thread, NULL, refresh_cpu_calc_thread, NULL);
 }
 
-static void stop_cpu_perc_thread() {
-  pthread_attr_destroy(&cpu_thread_attr_);
-  cpu_stop_refresh_while_ = True;
+static void stop_cpu_calc_thread() {
+  // Stop calc thread
+  cpu_stop_refresh_cond_ = True;
+  pthread_cond_broadcast(&cpu_calc_refresh_info_.cond);
+
+  // Join thread
   void *status;
-  if (pthread_join(cpu_thread_id_, &status))  // Wait
+  if (pthread_join(cpu_calc_refresh_info_.thread, &status))  // Wait
     perror("stop_cpu_perc_thread - Could not join thread");
+
+  // Destroy cond and mutex
+  pthread_cond_destroy(&cpu_calc_refresh_info_.cond);
+  pthread_mutex_destroy(&cpu_calc_refresh_info_.mutex);
+}
+
+static Bool init_cpu_calc_refresh_info() {
+  cpu_calc_refresh_info_.num_cpus = get_num_cpus(CPU_FILE_PATH);
+  if (cpu_calc_refresh_info_.num_cpus <= 0)
+    return False;
+  cpu_calc_refresh_info_.cpu_info = (CpuInfo *)calloc(cpu_calc_refresh_info_.num_cpus, sizeof(CpuInfo));
+  return cpu_calc_refresh_info_.cpu_info != NULL;
+}
+
+static void stop_cpu_calc_refresh_info() {
+  free(cpu_calc_refresh_info_.cpu_info);
+  cpu_calc_refresh_info_.cpu_info = NULL;
 }
 
 // Dzen
@@ -197,6 +232,24 @@ static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df) {
   return str_to_cmd(cmd, line, " \t\n");
 }
 
+// Returns True if it has timed out and false when the condition variable has been notified
+static Bool refresh_dzen_panel_timedwait(int seconds) {
+  struct timespec deadline;
+  clock_gettime(CLOCK_REALTIME, &deadline);
+  deadline.tv_sec += seconds;
+  Bool timedout = False;
+  pthread_mutex_lock(&dzen_refresh_info_.mutex);
+  while (!dzen_stop_refresh_cond_) {
+    int res = pthread_cond_timedwait(&dzen_refresh_info_.cond, &dzen_refresh_info_.mutex, &deadline);
+    if (ETIMEDOUT == res) {
+      timedout = True;
+      break;
+    }
+  }
+  pthread_mutex_unlock(&dzen_refresh_info_.mutex);
+  return timedout;
+}
+
 static void refresh_dzen_panel(const DzenPanel *dp, int fd) {
   assert(dp);
   char line[ DZEN_LINE_MAX ] = "\0";
@@ -216,39 +269,90 @@ static void *refresh_dzen_panel_thread(void *args) {
   (void)args;
   const DzenPanel *dp;
   int i = 0, j;
-  dzen_stop_refresh_while_ = False;
-  while (!dzen_stop_refresh_while_) {
-    for (j = 0; j < dzen_pipe_info_panels_.numPanels; ++j) {
+  while (True) {
+    // Update all panels respecting their refresh rate
+    for (j = 0; j < dzen_refresh_info_.num_panels; ++j) {
       dp = NeuroSystemGetConfiguration()->dzenPanelSet[ j ];
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
         continue;
       if (i % dp->refreshRate == 0)
-        refresh_dzen_panel(dp, dzen_pipe_info_panels_.pipeInfo[ j ].output);
+        refresh_dzen_panel(dp, dzen_refresh_info_.pipe_info[ j ].output);
     }
     ++i;
-    i %= dzen_pipe_info_panels_.resetRate;
-    sleep(1);
+    i %= dzen_refresh_info_.reset_rate;
+
+    // Wait 1 second or break if the conditional variable has been signaled
+    if (!refresh_dzen_panel_timedwait(1))
+      break;
   }
   pthread_exit(NULL);
 }
 
-static Bool init_refresh_thread() {
-  if (dzen_pipe_info_panels_.resetRate <= 0)
+static Bool init_dzen_refresh_thread() {
+  if (dzen_refresh_info_.reset_rate <= 0)
     return True;
-  pthread_attr_init(&dzen_pipe_info_panels_.attribute);
-  pthread_attr_setdetachstate(&dzen_pipe_info_panels_.attribute, PTHREAD_CREATE_JOINABLE);
-  return pthread_create(&dzen_pipe_info_panels_.refreshThread, &dzen_pipe_info_panels_.attribute,
-      refresh_dzen_panel_thread, NULL) == 0;
+
+  // Init mutex and cond
+  pthread_mutex_init(&dzen_refresh_info_.mutex, NULL);
+  pthread_cond_init(&dzen_refresh_info_.cond, NULL);
+
+  // Create thread
+  return pthread_create(&dzen_refresh_info_.thread, NULL, refresh_dzen_panel_thread, NULL) == 0;
 }
 
-static void stop_refresh_thread() {
-  if (dzen_pipe_info_panels_.resetRate <= 0)
+static void stop_dzen_refresh_thread() {
+  if (dzen_refresh_info_.reset_rate <= 0)
     return;
-  pthread_attr_destroy(&dzen_pipe_info_panels_.attribute);
-  dzen_stop_refresh_while_ = True;
+
+  // Stop refresh thread
+  dzen_stop_refresh_cond_ = True;
+  pthread_cond_broadcast(&dzen_refresh_info_.cond);
+
+  // Join thread
   void *status;
-  if (pthread_join(dzen_pipe_info_panels_.refreshThread, &status))  // Wait
+  if (pthread_join(dzen_refresh_info_.thread, &status))  // Wait
     perror("stop_refresh_thread - Could not join thread");
+
+  // Init cond and mutex
+  pthread_cond_destroy(&dzen_refresh_info_.cond);
+  pthread_mutex_destroy(&dzen_refresh_info_.mutex);
+}
+
+static Bool init_dzen_refresh_info() {
+  const DzenPanel *const *const confPanelSet = NeuroSystemGetConfiguration()->dzenPanelSet;
+  dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)confPanelSet);
+  dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(dzen_refresh_info_.num_panels, sizeof(PipeInfo));
+  if (!dzen_refresh_info_.pipe_info)
+    return False;
+  dzen_refresh_info_.reset_rate = 1;
+  const DzenPanel *dp;
+  int i;
+  for (i = 0; i < dzen_refresh_info_.num_panels; ++i) {
+    dp = confPanelSet[ i ];
+
+    // Get max refresh rate
+    if (dp->refreshRate > dzen_refresh_info_.reset_rate)
+      dzen_refresh_info_.reset_rate *= dp->refreshRate;
+
+    // Create a dzen pipe for every panel
+    char *dzen_cmd[ DZEN_ARGS_MAX ];
+    char line[ DZEN_LINE_MAX ];
+    get_dzen_cmd(dzen_cmd, line, dp->df);
+    dzen_refresh_info_.pipe_info[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzen_cmd,
+        &(dzen_refresh_info_.pipe_info[ i ].pid));
+    if (dzen_refresh_info_.pipe_info[ i ].output == -1)
+      return False;
+  }
+  return True;
+}
+
+static void stop_dzen_refresh_info() {
+  int i;
+  for (i = 0; i < dzen_refresh_info_.num_panels; ++i)
+    if (kill(dzen_refresh_info_.pipe_info[ i ].pid, SIGTERM) == -1)
+      perror("stop_dzen_pipe_info_panels - Could not kill panels");
+  free(dzen_refresh_info_.pipe_info);
+  dzen_refresh_info_.pipe_info = NULL;
 }
 
 
@@ -258,67 +362,41 @@ static void stop_refresh_thread() {
 
 // Dzen
 Bool NeuroDzenInit() {
-  const DzenPanel *const *const confPanelSet = NeuroSystemGetConfiguration()->dzenPanelSet;
-  dzen_pipe_info_panels_.numPanels = NeuroTypeArrayLength((const void const *const *)confPanelSet);
-  dzen_pipe_info_panels_.pipeInfo = (PipeInfo *)calloc(dzen_pipe_info_panels_.numPanels, sizeof(PipeInfo));
-  dzen_pipe_info_panels_.refreshThread = -1;
-  dzen_pipe_info_panels_.resetRate = 1;
-  if (!dzen_pipe_info_panels_.pipeInfo)
+  if (!init_dzen_refresh_info() || !init_dzen_refresh_thread())
     return False;
-  const DzenPanel *dp;
-  int i;
-  for (i = 0; i < dzen_pipe_info_panels_.numPanels; ++i) {
-    char *dzenCmd[ DZEN_ARGS_MAX ];
-    char line[ DZEN_LINE_MAX ];
-    dp = confPanelSet[ i ];
-    if (dp->refreshRate > dzen_pipe_info_panels_.resetRate)
-      dzen_pipe_info_panels_.resetRate *= dp->refreshRate;
-    get_dzen_cmd(dzenCmd, line, dp->df);
-    dzen_pipe_info_panels_.pipeInfo[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzenCmd,
-        &(dzen_pipe_info_panels_.pipeInfo[ i ].pid));
-    if (dzen_pipe_info_panels_.pipeInfo[ i ].output == -1)
-      return False;
-  }
-  if (!init_refresh_thread())
-    NeuroSystemError("NeuroDzenInit - Could not init thread to refresh panels");
   NeuroDzenRefresh(False);
   return True;
 }
 
 void NeuroDzenStop() {
-  stop_refresh_thread();
-  int i;
-  for (i = 0; i < dzen_pipe_info_panels_.numPanels; ++i)
-    if (kill(dzen_pipe_info_panels_.pipeInfo[ i ].pid, SIGTERM) == -1)
-      perror("NeuroDzenStop - Could not kill panels");
-  free(dzen_pipe_info_panels_.pipeInfo);
-  dzen_pipe_info_panels_.pipeInfo = NULL;
+  stop_dzen_refresh_thread();
+  stop_dzen_refresh_info();
 }
 
-void NeuroDzenRefresh(Bool onlyEvent) {
+void NeuroDzenRefresh(Bool on_event_only) {
   const DzenPanel *dp;
   int i;
-  for (i=0; i < dzen_pipe_info_panels_.numPanels; ++i) {
+  for (i=0; i < dzen_refresh_info_.num_panels; ++i) {
     dp = NeuroSystemGetConfiguration()->dzenPanelSet[ i ];
-    if (onlyEvent) {
+    if (on_event_only) {
       if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
-        refresh_dzen_panel(dp, dzen_pipe_info_panels_.pipeInfo[ i ].output);
+        refresh_dzen_panel(dp, dzen_refresh_info_.pipe_info[ i ].output);
     } else {
-      refresh_dzen_panel(dp, dzen_pipe_info_panels_.pipeInfo[ i ].output);
+      refresh_dzen_panel(dp, dzen_refresh_info_.pipe_info[ i ].output);
     }
   }
 }
 
 void NeuroDzenInitCpuCalc() {
-  if (!init_cpu_set())
+  if (!init_cpu_calc_refresh_info())
     NeuroSystemError("NeuroDzenInitCpuCalc - Could not init CPU Set");
-  if (init_cpu_perc_thread())
+  if (init_cpu_calc_thread())
     NeuroSystemError("NeuroDzenInitCpuCalc - Could not init CPU percent thread");
 }
 
 void NeuroDzenStopCpuCalc() {
-  stop_cpu_perc_thread();
-  stop_cpu_set();
+  stop_cpu_calc_thread();
+  stop_cpu_calc_refresh_info();
 }
 
 void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b) {
@@ -403,8 +481,8 @@ void NeuroDzenLoggerCpu(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
   int i;
-  for (i = 0; i < cpu_set_.size; ++i) {
-    snprintf(buf, LOGGER_MAX, "%i%% ", cpu_set_.infos[ i ].perc);
+  for (i = 0; i < cpu_calc_refresh_info_.num_cpus; ++i) {
+    snprintf(buf, LOGGER_MAX, "%i%% ", cpu_calc_refresh_info_.cpu_info[ i ].perc);
     strncat(str, buf, LOGGER_MAX - strlen(str) - 1);
   }
   str[ strlen(str) - 1 ] = '\0';
