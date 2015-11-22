@@ -306,12 +306,12 @@ void NeuroThemeNnoellLoggerRam(char *str) {
 void NeuroThemeNnoellLoggerBattery(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  if (-1 == NeuroDzenReadFile(tmp, "/sys/class/power_supply/BAT0/capacity"))
+  if (!NeuroDzenReadFirstLineFile(tmp, "/sys/class/power_supply/BAT0/capacity"))
     strncpy(tmp, "N/A", LOGGER_MAX);
   else
     strncat(tmp, "%", LOGGER_MAX);
   NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_blue_);
-  if (-1 == NeuroDzenReadFile(tmp3, "/sys/class/power_supply/BAT0/status"))
+  if (!NeuroDzenReadFirstLineFile(tmp3, "/sys/class/power_supply/BAT0/status"))
     strncpy(tmp3, "AC Conection", LOGGER_MAX);
   NeuroDzenWrapDzenBox(tmp4, tmp3, &boxpp_nnoell_white_);
   NeuroDzenWrapDzenBox(str, "BATTERY", &boxpp_nnoell_gray2_);
@@ -331,11 +331,11 @@ void NeuroThemeNnoellLoggerWifiStrength(char *str) {
 void NeuroThemeNnoellLoggerTemperature(char *str) {
   assert(str);
   static char tmp[ LOGGER_MAX ], tmp2[ LOGGER_MAX ], tmp3[ LOGGER_MAX ], tmp4[ LOGGER_MAX ];
-  if (-1 == NeuroDzenReadFile(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))
+  if (!NeuroDzenReadFirstLineFile(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))
     strncpy(tmp, "N/A", LOGGER_MAX);
   else
     snprintf(tmp, LOGGER_MAX, "%i°C", atoi(tmp) / 1000);
-  if (-1 == NeuroDzenReadFile(tmp2, "/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/temp"))
+  if (!NeuroDzenReadFirstLineFile(tmp2, "/sys/bus/acpi/devices/LNXTHERM:01/thermal_zone/temp"))
     strncpy(tmp2, "N/A", LOGGER_MAX);
   else
     snprintf(tmp2, LOGGER_MAX, "%i°C", atoi(tmp2) / 1000);

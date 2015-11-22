@@ -35,7 +35,7 @@ void NeuroDzenInitCpuCalc();
 void NeuroDzenStopCpuCalc();
 void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b);
 void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca);
-int NeuroDzenReadFile(char *buf, const char *fileName);
+Bool NeuroDzenReadFirstLineFile(char *buf, const char *path);
 
 // Loggers
 void NeuroDzenLoggerTime(char *str);

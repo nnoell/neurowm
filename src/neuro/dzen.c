@@ -416,19 +416,19 @@ void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca) {
       ca->leftClick, ca->middleClick, ca->rightClick, ca->wheelUp, ca->wheelDown, src);
 }
 
-int NeuroDzenReadFile(char *buf, const char *fileName) {
+Bool NeuroDzenReadFirstLineFile(char *buf, const char *path) {
   assert(buf);
-  assert(fileName);
+  assert(path);
   FILE *fd;
-  fd = fopen(fileName, "r");
+  fd = fopen(path, "r");
   if (!fd)
-    return -1;
+    return False;
   fgets(buf, LOGGER_MAX, fd);
   char *last = buf + strlen(buf) - 1;
   if (*last == '\n')
     *last = '\0';
   fclose(fd);
-  return 0;
+  return True;
 }
 
 // Loggers
