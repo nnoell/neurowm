@@ -18,7 +18,7 @@
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Main variables
+// Main variables (Do not make them static)
 Display *const display_;
 const int screen_;
 const Window root_;
@@ -127,7 +127,7 @@ Bool NeuroSystemInit() {
   *(int *)&y_res_ = XDisplayHeight(display_, screen_);
   *(Rectangle *)&screen_region_ = (Rectangle){ .x = y_pos_, .y = x_pos_, .w = x_res_, .h = y_res_ };
 
-  // Set cursors and atoms
+  // Set colors, cursors and atoms
   set_colors_cursors_atoms();
 
   // Check if other window manager is already running

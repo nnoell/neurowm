@@ -138,7 +138,7 @@ static void refresh_cpu_calc(const char *file, int ncpus) {
     if (fd == NULL)
       return;
 
-    // Do the percent clalculation
+    // Do the percent calculation
     int i;
     char buf[ 256 ];
     for (i = 0; i < ncpus; ++i) {
