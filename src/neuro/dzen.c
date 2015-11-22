@@ -77,6 +77,32 @@ static Bool dzen_stop_refresh_cond_ = False;
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
+// Returns True if it has timed out and false when the condition variable has been notified
+Bool condition_timedwait(int seconds, Bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
+  struct timespec deadline;
+  clock_gettime(CLOCK_REALTIME, &deadline);
+  deadline.tv_sec += seconds;
+  Bool timedout = False;
+  pthread_mutex_lock(mutex);
+  while (!*cond_stop) {
+    int res = pthread_cond_timedwait(cond_var, mutex, &deadline);
+    if (ETIMEDOUT == res) {
+      timedout = True;
+      break;
+    }
+  }
+  pthread_mutex_unlock(mutex);
+  return timedout;
+}
+
+static Bool refresh_cpu_calc_timedwait() {
+  return condition_timedwait(1, &cpu_stop_refresh_cond_, &cpu_calc_refresh_info_.mutex, &cpu_calc_refresh_info_.cond);
+}
+
+static Bool refresh_dzen_panel_timedwait() {
+  return condition_timedwait(1, &dzen_stop_refresh_cond_, &dzen_refresh_info_.mutex, &dzen_refresh_info_.cond);
+}
+
 // CPU Calculation
 static int get_num_cpus(const char *file) {
   assert(file);
@@ -105,24 +131,6 @@ static void get_perc_info(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, lon
   long diffIdle = cpu_info->idle - prev_idle;
   long diffTotal = cpu_info->total - prev_total;
   cpu_info->perc = (100 * (diffTotal - diffIdle)) / diffTotal;
-}
-
-// Returns True if it has timed out and false when the condition variable has been notified
-static Bool refresh_cpu_calc_timedwait(int seconds) {
-  struct timespec deadline;
-  clock_gettime(CLOCK_REALTIME, &deadline);
-  deadline.tv_sec += seconds;
-  Bool timedout = False;
-  pthread_mutex_lock(&cpu_calc_refresh_info_.mutex);
-  while (!cpu_stop_refresh_cond_) {
-    int res = pthread_cond_timedwait(&cpu_calc_refresh_info_.cond, &cpu_calc_refresh_info_.mutex, &deadline);
-    if (ETIMEDOUT == res) {
-      timedout = True;
-      break;
-    }
-  }
-  pthread_mutex_unlock(&cpu_calc_refresh_info_.mutex);
-  return timedout;
 }
 
 static void refresh_cpu_calc(const char *file, int ncpus) {
@@ -159,7 +167,7 @@ static void refresh_cpu_calc(const char *file, int ncpus) {
     fclose(fd);
 
     // Wait 1 second or break if the conditional variable has been signaled
-    if (!refresh_cpu_calc_timedwait(1))
+    if (!refresh_cpu_calc_timedwait())
       break;
   }
 }
@@ -232,24 +240,6 @@ static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df) {
   return str_to_cmd(cmd, line, " \t\n");
 }
 
-// Returns True if it has timed out and false when the condition variable has been notified
-static Bool refresh_dzen_panel_timedwait(int seconds) {
-  struct timespec deadline;
-  clock_gettime(CLOCK_REALTIME, &deadline);
-  deadline.tv_sec += seconds;
-  Bool timedout = False;
-  pthread_mutex_lock(&dzen_refresh_info_.mutex);
-  while (!dzen_stop_refresh_cond_) {
-    int res = pthread_cond_timedwait(&dzen_refresh_info_.cond, &dzen_refresh_info_.mutex, &deadline);
-    if (ETIMEDOUT == res) {
-      timedout = True;
-      break;
-    }
-  }
-  pthread_mutex_unlock(&dzen_refresh_info_.mutex);
-  return timedout;
-}
-
 static void refresh_dzen_panel(const DzenPanel *dp, int fd) {
   assert(dp);
   char line[ DZEN_LINE_MAX ] = "\0";
@@ -282,7 +272,7 @@ static void *refresh_dzen_panel_thread(void *args) {
     i %= dzen_refresh_info_.reset_rate;
 
     // Wait 1 second or break if the conditional variable has been signaled
-    if (!refresh_dzen_panel_timedwait(1))
+    if (!refresh_dzen_panel_timedwait())
       break;
   }
   pthread_exit(NULL);
