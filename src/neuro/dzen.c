@@ -455,14 +455,14 @@ void NeuroDzenLoggerDay(char *str) {
   time_t t = time(NULL);
   localtime_r(&t, &res);
   switch (res.tm_wday) {
-    case 1:  { strncpy(str, "Monday", LOGGER_MAX); break; }
-    case 2:  { strncpy(str, "Tuesday", LOGGER_MAX); break; }
-    case 3:  { strncpy(str, "Wednesday", LOGGER_MAX); break; }
-    case 4:  { strncpy(str, "Thursday", LOGGER_MAX); break; }
-    case 5:  { strncpy(str, "Friday", LOGGER_MAX); break; }
-    case 6:  { strncpy(str, "Saturday", LOGGER_MAX); break; }
-    case 0:  { strncpy(str, "Sunday", LOGGER_MAX); break; }
-    default: { strncpy(str, "Unknown", LOGGER_MAX); break; }
+    case 1:  strncpy(str, "Monday", LOGGER_MAX); break;
+    case 2:  strncpy(str, "Tuesday", LOGGER_MAX); break;
+    case 3:  strncpy(str, "Wednesday", LOGGER_MAX); break;
+    case 4:  strncpy(str, "Thursday", LOGGER_MAX); break;
+    case 5:  strncpy(str, "Friday", LOGGER_MAX); break;
+    case 6:  strncpy(str, "Saturday", LOGGER_MAX); break;
+    case 0:  strncpy(str, "Sunday", LOGGER_MAX); break;
+    default: strncpy(str, "Unknown", LOGGER_MAX); break;
   }
 }
 
