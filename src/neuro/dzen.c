@@ -51,10 +51,10 @@ struct PipeInfo {
 
 typedef struct DzenRefreshInfo DzenRefreshInfo;
 struct DzenRefreshInfo {
-  pthread_t thread;               // Thread that displays info on the panels
-  pthread_mutex_t sync_mutex;     // Sync control mutex
-  pthread_mutex_t wait_mutex;     // Interval wait mutex
-  pthread_cond_t wait_cond;       // Interval wait conditional variable
+  pthread_t thread;            // Thread that displays info on the panels
+  pthread_mutex_t sync_mutex;  // Sync control mutex
+  pthread_mutex_t wait_mutex;  // Interval wait mutex
+  pthread_cond_t wait_cond;    // Interval wait conditional variable
   PipeInfo *pipe_info;
   int num_panels;
   int reset_rate;
