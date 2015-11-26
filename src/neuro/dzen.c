@@ -236,7 +236,7 @@ static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df) {
   assert(line);
   assert(df);
   snprintf(line, DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
-      df->x, df->y, df->w, df->h, df->fgColor, df->bgColor, df->align, df->font, df->event, df->extras);
+      df->x, df->y, df->w, df->h, df->fg_color, df->bg_color, df->align, df->font, df->event, df->extras);
   return str_to_cmd(cmd, line, " \t\n");
 }
 
@@ -274,10 +274,10 @@ static void *refresh_dzen_thread(void *args) {
   while (True) {
     // Update all panels respecting their refresh rate
     for (j = 0; j < dzen_refresh_info_.num_panels; ++j) {
-      dp = NeuroSystemGetConfiguration()->dzenPanelSet[ j ];
-      if (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)
+      dp = NeuroSystemGetConfiguration()->dzen_panel_set[ j ];
+      if (dp->refresh_rate == WM_EVENT || dp->refresh_rate <= 0)
         continue;
-      if (i % dp->refreshRate == 0)
+      if (i % dp->refresh_rate == 0)
         refresh_dzen(dp, dzen_refresh_info_.pipe_info[ j ].output);
     }
     ++i;
@@ -321,7 +321,7 @@ static void stop_dzen_refresh_thread() {
 }
 
 static Bool init_dzen_refresh_info() {
-  const DzenPanel *const *const confPanelSet = NeuroSystemGetConfiguration()->dzenPanelSet;
+  const DzenPanel *const *const confPanelSet = NeuroSystemGetConfiguration()->dzen_panel_set;
   dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)confPanelSet);
   dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(dzen_refresh_info_.num_panels, sizeof(PipeInfo));
   if (!dzen_refresh_info_.pipe_info)
@@ -333,8 +333,8 @@ static Bool init_dzen_refresh_info() {
     dp = confPanelSet[ i ];
 
     // Get max refresh rate
-    if (dp->refreshRate > dzen_refresh_info_.reset_rate)
-      dzen_refresh_info_.reset_rate *= dp->refreshRate;
+    if (dp->refresh_rate > dzen_refresh_info_.reset_rate)
+      dzen_refresh_info_.reset_rate *= dp->refresh_rate;
 
     // Create a dzen pipe for every panel
     char *dzen_cmd[ DZEN_ARGS_MAX ];
@@ -386,8 +386,8 @@ void NeuroDzenRefresh(Bool on_event_only) {
   const DzenPanel *dp;
   int i;
   for (i=0; i < dzen_refresh_info_.num_panels; ++i) {
-    dp = NeuroSystemGetConfiguration()->dzenPanelSet[ i ];
-    if (on_event_only && (dp->refreshRate == WM_EVENT || dp->refreshRate <= 0)) {
+    dp = NeuroSystemGetConfiguration()->dzen_panel_set[ i ];
+    if (on_event_only && (dp->refresh_rate == WM_EVENT || dp->refresh_rate <= 0)) {
       refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
       continue;
     }
@@ -413,7 +413,8 @@ void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b) {
   assert(b);
   snprintf(dst, LOGGER_MAX,
       "^fg(%s)^i(%s)^ib(1)^r(1920x%i)^p(-1920x)^fg(%s)%s^fg(%s)^i(%s)^fg(%s)^r(1920x%i)^p(-1920)^fg()^ib(0)",
-      b->boxColor, b->leftIcon, b->boxHeight, b->fgColor, src, b->boxColor, b->rightIcon, b->bgColor, b->boxHeight);
+      b->box_color, b->left_icon, b->box_height, b->fg_color, src, b->box_color, b->right_icon, b->bg_color,
+      b->box_height);
 }
 
 void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca) {
@@ -421,7 +422,7 @@ void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca) {
   assert(src);
   assert(ca);
   snprintf(dst, LOGGER_MAX, "^ca(1,%s)^ca(2,%s)^ca(3,%s)^ca(4,%s)^ca(5,%s)%s^ca()^ca()^ca()^ca()^ca()",
-      ca->leftClick, ca->middleClick, ca->rightClick, ca->wheelUp, ca->wheelDown, src);
+      ca->left_click, ca->middle_click, ca->right_click, ca->wheel_up, ca->wheel_down, src);
 }
 
 Bool NeuroDzenReadFirstLineFile(char *buf, const char *path) {

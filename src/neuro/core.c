@@ -80,7 +80,7 @@ static void update_nsp_stack(Stack *s) {
   assert(s);
   Node *n;
   for (n=s->head; n; n=n->next)
-    if (n->cli->isNSP) {
+    if (n->cli->is_nsp) {
       s->nsp = n;
       return;
     }
@@ -93,7 +93,7 @@ static Node *new_node(const Client *c) {
   if (!n)
     return NULL;
   n->cli = (Client *)c;
-  memmove(&(n->region), &(c->floatRegion), sizeof(Rectangle));
+  memmove(&(n->region), &(c->float_region), sizeof(Rectangle));
   n->next = NULL;
   n->prev = NULL;
   return n;
@@ -120,7 +120,7 @@ static Client *remove_last_node(Stack *s) {
   if (s->size < 1)
     return NULL;
   Node *t = s->last;
-  Bool updateNSP = t->cli->isNSP;
+  Bool updateNSP = t->cli->is_nsp;
   if (s->size == 1) {
     s->head = NULL;
     s->last = NULL;
@@ -143,7 +143,7 @@ static Client *remove_no_last_node(Node *n) {
   Stack *s = stack_set_.stacks + n->cli->ws;
   if (s->size == 0 || s->last == n)
     return NULL;
-  Bool updateNSP = n->cli->isNSP;
+  Bool updateNSP = n->cli->is_nsp;
   set_curr_node(n->next);
   if (n == s->head) {
     s->head = n->next;
@@ -262,14 +262,14 @@ static void set_layouts(Layout *l, const LayoutConf *const *lc, size_t size) {
   assert(lc);
   size_t i;
   for (i = 0; i < size; ++i) {
-    *(ArrangerFn *)&l[ i ].arrangerFn = lc[ i ]->arrangerFn;
-    *(ColorSetterFn *)&l[ i ].borderColorSetterFn = lc[ i ]->borderColorSetterFn;
-    *(BorderSetterFn *)&l[ i ].borderWidthSetterFn = lc[ i ]->borderWidthSetterFn;
-    *(BorderSetterFn *)&l[ i ].borderGapSetterFn = lc[ i ]->borderGapSetterFn;
+    *(ArrangerFn *)&l[ i ].arranger_fn = lc[ i ]->arranger_fn;
+    *(ColorSetterFn *)&l[ i ].border_color_setter_fn = lc[ i ]->border_color_setter_fn;
+    *(BorderSetterFn *)&l[ i ].border_width_setter_fn = lc[ i ]->border_width_setter_fn;
+    *(BorderSetterFn *)&l[ i ].border_gap_setter_fn = lc[ i ]->border_gap_setter_fn;
     *(const float **)&l[ i ].region = lc[ i ]->region;
     l[ i ].mod = lc[ i ]->mod;
-    l[ i ].followMouse = lc[ i ]->followMouse;
-    memmove(l[ i ].arrangeSettings, lc[ i ]->arrangeSettings, sizeof(GenericArg)*ARRSET_MAX);
+    l[ i ].follow_mouse = lc[ i ]->follow_mouse;
+    memmove(l[ i ].arrange_settings, lc[ i ]->arrange_settings, sizeof(GenericArg)*ARRSET_MAX);
   }
 }
 
@@ -281,7 +281,7 @@ static void set_layouts(Layout *l, const LayoutConf *const *lc, size_t size) {
 // StackSet
 Bool NeuroCoreInit() {
   // Allocate as many stacks as we need
-  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspaceSet;
+  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspace_set;
   size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSet);
   stack_set_.stacks = new_stackset(size + 1);  // We need on extra stack for NSP
   if (!stack_set_.stacks)
@@ -300,7 +300,7 @@ Bool NeuroCoreInit() {
     sizel = NeuroTypeArrayLength((const void *const *const)(ws->layouts));
     if (!sizel)
       return False;
-    sizetl = NeuroTypeArrayLength((const void *const *const)(ws->togLayouts));
+    sizetl = NeuroTypeArrayLength((const void *const *const)(ws->toggled_layouts));
     Stack *s = new_stack(stack_set_.stacks + i, sizel, sizetl);
     if (!s)
       return False;
@@ -313,7 +313,7 @@ Bool NeuroCoreInit() {
     *(int *)&(s->numLayouts) = sizel;
     *(int *)&(s->numTogLayouts) = sizetl;
     set_layouts(s->layouts, ws->layouts, sizel);
-    set_layouts(s->togLayouts, ws->togLayouts, sizetl);
+    set_layouts(s->togLayouts, ws->toggled_layouts, sizetl);
   }
   return True;
 }
@@ -408,7 +408,7 @@ ClientPtrPtr NeuroCoreAddClientEnd(const Client *c) {
   Node *n = new_node(c);
   if (!n)
     return NULL;
-  if (c->isNSP)
+  if (c->is_nsp)
     s->nsp = n;
   if (s->size < 1) {
     s->head = n;
@@ -435,7 +435,7 @@ ClientPtrPtr NeuroCoreAddClientStart(const Client *c) {
   Node *n = new_node(c);
   if (!n)
     return NULL;
-  if (c->isNSP)
+  if (c->is_nsp)
     s->nsp = n;
   if (s->size < 1) {
     s->head = n;
@@ -556,11 +556,11 @@ Layout *NeuroCoreStackGetLayout(int ws, int i) {
 }
 
 const LayoutConf *NeuroCoreStackGetLayoutConf(int ws, int i) {
-  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspaceSet;
+  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspace_set;
   int s = ws % stack_set_.size;
   if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
     return workspaceSet[ s ]->layouts[ i % stack_set_.stacks[ s ].numLayouts ];
-  return workspaceSet[ s ]->togLayouts[ i % stack_set_.stacks[ s ].numTogLayouts ];
+  return workspaceSet[ s ]->toggled_layouts[ i % stack_set_.stacks[ s ].numTogLayouts ];
 }
 
 Layout *NeuroCoreStackGetCurrLayout(int ws) {

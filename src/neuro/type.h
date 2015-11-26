@@ -70,11 +70,11 @@
 #define ARG_WSF_GET(X)   ((X).GenericArgFn_.WorkspaceSelectorFn_)
 
 // Maybe Arg constructors
-#define MAYBE_ARG_NOTHING       {.isNothing = True, .value = ARG_NULL}
-#define MAYBE_ARG_JUST(X)       {.isNothing = False, .value = X}
+#define MAYBE_ARG_NOTHING       {.is_nothing = True, .value = ARG_NULL}
+#define MAYBE_ARG_JUST(X)       {.is_nothing = False, .value = X}
 
 // Maybe Arg functions
-#define MAYBE_ARG_IS_NOTHING(X) ((X).isNothing)
+#define MAYBE_ARG_IS_NOTHING(X) ((X).is_nothing)
 #define MAYBE_ARG_GET_JUST(X)   ((X).value)
 
 // Chainned Actions
@@ -144,17 +144,17 @@ typedef struct Client Client;
 struct Client {
   const Window win;
   int ws;
-  Bool isNSP;
+  Bool is_nsp;
   char class[ NAME_MAX ];
   char name[ NAME_MAX ];
   char title[ NAME_MAX ];
-  Rectangle floatRegion;
-  Bool isHidden;
-  Bool isFullScreen;
-  FreeSetterFn freeSetterFn;
-  RuleFixedPosition fixedPos;
-  int fixSize;
-  Bool isUrgent;
+  Rectangle float_region;
+  Bool is_hidden;
+  Bool is_fullscreen;
+  FreeSetterFn free_setter_fn;
+  RuleFixedPosition fixed_pos;
+  int fixed_size;
+  Bool is_urgent;
 };
 
 // ClientPtrPtr
@@ -199,7 +199,7 @@ union GenericArg {
 // GenericMaybeArg
 typedef struct GenericMaybeArg GenericMaybeArg;
 struct GenericMaybeArg {
-  const Bool isNothing;
+  const Bool is_nothing;
   const GenericArg value;
 };
 
@@ -238,11 +238,11 @@ typedef int (*BorderSetterFn)(ClientPtrPtr c);
 // Arrange
 typedef struct Arrange Arrange;
 struct Arrange {
-  int size;                     // Number of tiled clients
-  Rectangle region;             // Tiled layout region
-  Rectangle **cliRegions;       // Region of each client
-  Rectangle **cliFloatRegions;  // Float region of each client
-  GenericArg *arrangeSettings;  // Settings of the arrange
+  int size;                          // Number of tiled clients
+  Rectangle region;                  // Tiled layout region
+  Rectangle **client_regions;        // Region of each client
+  Rectangle **client_float_regions;  // Float region of each client
+  GenericArg *arrange_settings;      // Settings of the arrange
 };
 
 // ArrangerFn
@@ -251,14 +251,14 @@ typedef Arrange *(*ArrangerFn)(Arrange *);
 // Layout
 typedef struct Layout Layout;
 struct Layout {
-  const ArrangerFn arrangerFn;
-  const ColorSetterFn borderColorSetterFn;
-  const BorderSetterFn borderWidthSetterFn;
-  const BorderSetterFn borderGapSetterFn;
+  const ArrangerFn arranger_fn;
+  const ColorSetterFn border_color_setter_fn;
+  const BorderSetterFn border_width_setter_fn;
+  const BorderSetterFn border_gap_setter_fn;
   const float *const region;
   LayoutMod mod;
-  Bool followMouse;
-  GenericArg arrangeSettings[ ARRSET_MAX ];
+  Bool follow_mouse;
+  GenericArg arrange_settings[ ARRSET_MAX ];
 };
 
 
@@ -268,14 +268,14 @@ struct Layout {
 typedef struct LayoutConf LayoutConf;
 struct LayoutConf {
   const char *const name;
-  const ArrangerFn arrangerFn;
-  const ColorSetterFn borderColorSetterFn;
-  const BorderSetterFn borderWidthSetterFn;
-  const BorderSetterFn borderGapSetterFn;
+  const ArrangerFn arranger_fn;
+  const ColorSetterFn border_color_setter_fn;
+  const BorderSetterFn border_width_setter_fn;
+  const BorderSetterFn border_gap_setter_fn;
   const float region[ 4 ];
   const LayoutMod mod;
-  const Bool followMouse;
-  const GenericArg arrangeSettings[ ARRSET_MAX ];
+  const Bool follow_mouse;
+  const GenericArg arrange_settings[ ARRSET_MAX ];
 };
 
 // Workspace
@@ -284,7 +284,7 @@ struct Workspace {
   const char *const name;
   const int gaps[ 4 ];
   const LayoutConf *const *const layouts;
-  const LayoutConf *const *const togLayouts;
+  const LayoutConf *const *const toggled_layouts;
 };
 
 // Key
@@ -292,7 +292,7 @@ typedef struct Key Key;
 struct Key {
   const unsigned int mod;
   const KeySym key;
-  const ActionChain actionChain;
+  const ActionChain action_chain;
 };
 
 // Button
@@ -300,8 +300,8 @@ typedef struct Button Button;
 struct Button {
   const unsigned int mod;
   const unsigned int button;
-  const ActionChain actionChain;
-  const Bool ungrabOnFocus;
+  const ActionChain action_chain;
+  const Bool ungrab_on_focus;
 };
 
 // Rule
@@ -310,41 +310,41 @@ struct Rule {
   const char *const class;
   const char *const name;
   const char *const title;
-  const Bool isFullScreen;
-  const FreeSetterFn freeSetterFn;
-  const RuleFixedPosition fixedPos;
-  const float fixSize;
-  const WorkspaceSelectorFn workspaceSelectorFn;
-  const Bool goWorkspace;
+  const Bool is_fullscreen;
+  const FreeSetterFn free_setter_fn;
+  const RuleFixedPosition fixed_pos;
+  const float fixed_size;
+  const WorkspaceSelectorFn workspace_selector_fn;
+  const Bool follow;
 };
 
 // BoxPP
 typedef struct BoxPP BoxPP;
 struct BoxPP {
-  const char *const bgColor;
-  const char *const fgColor;
-  const char *const boxColor;
-  const char *const leftIcon;
-  const char *const rightIcon;
-  const int boxHeight;
+  const char *const bg_color;
+  const char *const fg_color;
+  const char *const box_color;
+  const char *const left_icon;
+  const char *const right_icon;
+  const int box_height;
 };
 
 // CA
 typedef struct CA CA;
 struct CA {
-  const char *const leftClick;
-  const char *const middleClick;
-  const char *const rightClick;
-  const char *const wheelUp;
-  const char *const wheelDown;
+  const char *const left_click;
+  const char *const middle_click;
+  const char *const right_click;
+  const char *const wheel_up;
+  const char *const wheel_down;
 };
 
 // DzenFlags
 typedef struct DzenFlags DzenFlags;
 struct DzenFlags {
   const int x, y, w, h;
-  const char *const fgColor;
-  const char *const bgColor;
+  const char *const fg_color;
+  const char *const bg_color;
   const char align;
   const char *const font;
   const char *const event;
@@ -360,26 +360,26 @@ struct DzenPanel {
   const DzenFlags *const df;
   const LoggerFn *const loggers;
   const char *const sep;
-  const int refreshRate;
+  const int refresh_rate;
 };
 
 // Configuration
 typedef struct Configuration Configuration;
 struct Configuration {
-  const char *const normBorderColor;
-  const char *const currBorderColor;
-  const char *const oldBorderColor;
-  const char *const freeBorderColor;
-  const char *const urgtBorderColor;
-  const int borderWidth;
-  const int borderGap;
-  const Workspace *const *const workspaceSet;
-  const Rule *const *const ruleSet;
-  const DzenPanel *const *const dzenPanelSet;
+  const char *const normal_border_color;
+  const char *const current_border_color;
+  const char *const old_border_color;
+  const char *const free_border_color;
+  const char *const urgent_border_color;
+  const int border_width;
+  const int border_gap;
+  const Workspace *const *const workspace_set;
+  const Rule *const *const rule_set;
+  const DzenPanel *const *const dzen_panel_set;
   const Key *const *const keys;
   const Button *const *const buttons;
-  const ActionChain *const startUpHook;
-  const ActionChain *const endUpHook;
+  const ActionChain *const start_up_hook;
+  const ActionChain *const end_up_hook;
 };
 
 

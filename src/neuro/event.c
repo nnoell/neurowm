@@ -39,7 +39,7 @@ static void do_key_press(XEvent *e) {
   for (i = 0; keysBindings[ i ]; ++i) {
     k = keysBindings[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
-      NeuroActionUtilRunActionChain(&k->actionChain);
+      NeuroActionUtilRunActionChain(&k->action_chain);
       NeuroDzenRefresh(True);
     }
   }
@@ -55,7 +55,7 @@ static void do_button_press(XEvent *e) {
   for (i = 0; buttonBingings[ i ]; ++i) {
     b = buttonBingings[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
-      NeuroActionUtilRunActionChain(&b->actionChain);
+      NeuroActionUtilRunActionChain(&b->action_chain);
       NeuroDzenRefresh(True);
     }
   }
@@ -101,7 +101,7 @@ static void do_enter_notify(XEvent *e) {
   int ws = NeuroCoreGetCurrStack();  // Mouse is always in the current workspace
   if (NeuroCoreStackGetSize(ws) < 2)
     return;
-  if (!NeuroCoreStackGetCurrLayout(ws)->followMouse)
+  if (!NeuroCoreStackGetCurrLayout(ws)->follow_mouse)
     return;
   ClientPtrPtr c = NeuroClientFindWindow(ev->window);
   if (!c)
@@ -235,7 +235,7 @@ void NeuroEventManageWindow(Window w) {
   // Transient windows
   Window trans = None;
   if (XGetTransientForHint(NeuroSystemGetDisplay(), CLI_GET(c).win, &trans)) {
-    CLI_GET(c).freeSetterFn = NeuroRuleFreeSetterDefault;
+    CLI_GET(c).free_setter_fn = NeuroRuleFreeSetterDefault;
     ClientPtrPtr t = NeuroClientFindWindow(trans);
     if (t)  // Always true, but still
       NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));

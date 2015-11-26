@@ -29,17 +29,17 @@ Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
     return NULL;
   *(Window *)&c->win = w;  // Pointer casted away because of const
   c->ws = 0;
-  c->isNSP = False;
+  c->is_nsp = False;
   c->class[ 0 ] = '\0';
   c->name[ 0 ] = '\0';
   c->title[ 0 ] = '\0';
-  c->isHidden = False;
-  c->freeSetterFn = NeuroRuleFreeSetterNull;
-  c->fixedPos = RuleFixedPositionNull;
-  c->fixSize = 0;
-  c->isUrgent = False;
-  c->isFullScreen = False;
-  NeuroGeometrySetRectangle(&(c->floatRegion), wa->x, wa->y, wa->width, wa->height);
+  c->is_hidden = False;
+  c->free_setter_fn = NeuroRuleFreeSetterNull;
+  c->fixed_pos = RuleFixedPositionNull;
+  c->fixed_size = 0;
+  c->is_urgent = False;
+  c->is_fullscreen = False;
+  NeuroGeometrySetRectangle(&(c->float_region), wa->x, wa->y, wa->width, wa->height);
   return c;
 }
 

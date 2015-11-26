@@ -34,7 +34,7 @@ typedef void (*WorkspaceClientFn)(ClientPtrPtr c, const void *data);
 
 static Bool is_above_tiled_client(const ClientPtrPtr c) {
   assert(c);
-  return (CLI_GET(c).freeSetterFn != NeuroRuleFreeSetterNull) || CLI_GET(c).isFullScreen;
+  return (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull) || CLI_GET(c).is_fullscreen;
 }
 
 static void focus_client(ClientPtrPtr c) {
@@ -73,7 +73,7 @@ static void send_client(ClientPtrPtr c, const void *data) {
   if (oldws == ws)
     return;
   Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  const Bool isFree = CLI_GET(c).freeSetterFn != NeuroRuleFreeSetterNull;
+  const Bool isFree = CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull;
   const Bool doRules = True;
   if (oldws == currws)
     NeuroClientHide(c, (const void *)&doRules);

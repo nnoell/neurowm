@@ -69,11 +69,11 @@ static int xerror_handler(Display *d, XErrorEvent *ee) {
 
 static void set_colors_cursors_atoms() {
   // Colors
-  *(Color *)&colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(configuration_->normBorderColor);
-  *(Color *)&colors_[ NeuroSystemColorCurrent ] = NeuroSystemGetColorFromHex(configuration_->currBorderColor);
-  *(Color *)&colors_[ NeuroSystemColorOld ] = NeuroSystemGetColorFromHex(configuration_->oldBorderColor);
-  *(Color *)&colors_[ NeuroSystemColorFree ] = NeuroSystemGetColorFromHex(configuration_->freeBorderColor);
-  *(Color *)&colors_[ NeuroSystemColorUrgent ] = NeuroSystemGetColorFromHex(configuration_->urgtBorderColor);
+  *(Color *)&colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(configuration_->normal_border_color);
+  *(Color *)&colors_[ NeuroSystemColorCurrent ] = NeuroSystemGetColorFromHex(configuration_->current_border_color);
+  *(Color *)&colors_[ NeuroSystemColorOld ] = NeuroSystemGetColorFromHex(configuration_->old_border_color);
+  *(Color *)&colors_[ NeuroSystemColorFree ] = NeuroSystemGetColorFromHex(configuration_->free_border_color);
+  *(Color *)&colors_[ NeuroSystemColorUrgent ] = NeuroSystemGetColorFromHex(configuration_->urgent_border_color);
 
   // Cursors
   *(Cursor *)&cursors_[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
@@ -316,7 +316,7 @@ void NeuroSystemUngrabButtons(Window w) {
   int i;
   for (i=0; configuration_->buttons[ i ]; ++i) {
     b = configuration_->buttons[ i ];
-    if (b->ungrabOnFocus)
+    if (b->ungrab_on_focus)
       XUngrabButton(display_, b->button, b->mod, w);
   }
 }
