@@ -52,7 +52,7 @@ struct PipeInfo {
 typedef struct DzenRefreshInfo DzenRefreshInfo;
 struct DzenRefreshInfo {
   pthread_t thread;               // Thread that displays info on the panels
-  pthread_mutex_t sync_mutex;     // Sync constrol mutex
+  pthread_mutex_t sync_mutex;     // Sync control mutex
   pthread_mutex_t wait_mutex;     // Interval wait mutex
   pthread_cond_t wait_cond;       // Interval wait conditional variable
   PipeInfo *pipe_info;
@@ -78,7 +78,7 @@ static Bool dzen_stop_refresh_cond_ = False;
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Note: Returns True if it has timed out and false when the condition variable has been notified
+// Note: Returns True if it has timed out or false when the condition variable has been notified
 static Bool cond_timedwait(int seconds, Bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
   struct timespec deadline;
   clock_gettime(CLOCK_REALTIME, &deadline);
