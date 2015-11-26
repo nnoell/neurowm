@@ -124,17 +124,17 @@ static void get_perc_info(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, lon
   int i;
   for (i = 0; i < CPU_MAX_VALS; ++i)
     cpu_info->total += cpu_vals[ i ];
-  long diffIdle = cpu_info->idle - prev_idle;
-  long diffTotal = cpu_info->total - prev_total;
-  cpu_info->perc = (100 * (diffTotal - diffIdle)) / diffTotal;
+  const long diff_idle = cpu_info->idle - prev_idle;
+  const long diff_total = cpu_info->total - prev_total;
+  cpu_info->perc = (100 * (diff_total - diff_idle)) / diff_total;
 }
 
 static void refresh_cpu_calc(const char *file, int ncpus) {
   assert(file);
-  long cpusFileInfo[ ncpus ][ CPU_MAX_VALS ];
-  long prevIdle[ ncpus ], prevTotal[ ncpus ];
-  memset(prevIdle, 0, sizeof(prevIdle));
-  memset(prevTotal, 0, sizeof(prevTotal));
+  long cpus_file_info[ ncpus ][ CPU_MAX_VALS ];
+  long prev_idle[ ncpus ], prev_total[ ncpus ];
+  memset(prev_idle, 0, sizeof(prev_idle));
+  memset(prev_total, 0, sizeof(prev_total));
 
   while (True) {
     // Open the file
@@ -148,15 +148,15 @@ static void refresh_cpu_calc(const char *file, int ncpus) {
     for (i = 0; i < ncpus; ++i) {
       fgets(buf, sizeof(buf), fd);
       if (EOF == sscanf(buf + 5, "%li %li %li %li %li %li %li %li %li %li",
-          cpusFileInfo[ i ] + 0, cpusFileInfo[ i ] + 1,
-          cpusFileInfo[ i ] + 2, cpusFileInfo[ i ] + 3,
-          cpusFileInfo[ i ] + 4, cpusFileInfo[ i ] + 5,
-          cpusFileInfo[ i ] + 6, cpusFileInfo[ i ] + 7,
-          cpusFileInfo[ i ] + 8, cpusFileInfo[ i ] + 9))
+          cpus_file_info[ i ] + 0, cpus_file_info[ i ] + 1,
+          cpus_file_info[ i ] + 2, cpus_file_info[ i ] + 3,
+          cpus_file_info[ i ] + 4, cpus_file_info[ i ] + 5,
+          cpus_file_info[ i ] + 6, cpus_file_info[ i ] + 7,
+          cpus_file_info[ i ] + 8, cpus_file_info[ i ] + 9))
         return;
-      get_perc_info(cpu_calc_refresh_info_.cpu_info + i, cpusFileInfo[ i ], prevIdle[ i ], prevTotal[ i ]);
-      prevIdle[ i ] = cpu_calc_refresh_info_.cpu_info[ i ].idle;
-      prevTotal[ i ] = cpu_calc_refresh_info_.cpu_info[ i ].total;
+      get_perc_info(cpu_calc_refresh_info_.cpu_info + i, cpus_file_info[ i ], prev_idle[ i ], prev_total[ i ]);
+      prev_idle[ i ] = cpu_calc_refresh_info_.cpu_info[ i ].idle;
+      prev_total[ i ] = cpu_calc_refresh_info_.cpu_info[ i ].total;
     }
 
     // Close the file
@@ -220,12 +220,12 @@ static char **str_to_cmd(char **cmd, char *str, const char *sep) {
   assert(cmd);
   assert(str);
   assert(sep);
-  char *token, *saveptr;
-  token = strtok_r(str, sep, &saveptr);
+  char *token, *save_ptr;
+  token = strtok_r(str, sep, &save_ptr);
   int i;
   for (i = 0; token; ++i) {
     cmd[ i ] = token;
-    token = strtok_r(NULL, sep, &saveptr);
+    token = strtok_r(NULL, sep, &save_ptr);
   }
   cmd[ i ] = NULL;
   return cmd;
@@ -500,18 +500,18 @@ void NeuroDzenLoggerCpu(char *str) {
 void NeuroDzenLoggerRam(char *str) {
   assert(str);
   char buf[ LOGGER_MAX ];
-  unsigned long memTotal = 0UL, memAvailable = 0UL;
   FILE *fd = fopen("/proc/meminfo", "r");
   if (!fd)
     return;
   fgets(buf, LOGGER_MAX, fd);
-  sscanf(buf, "%*s %lu\n", &memTotal);
+  unsigned long mem_total = 0UL, mem_available = 0UL;
+  sscanf(buf, "%*s %lu\n", &mem_total);
   fgets(buf, LOGGER_MAX, fd);
   fgets(buf, LOGGER_MAX, fd);
-  sscanf(buf, "%*s %lu\n", &memAvailable);
-  unsigned long memUsed = memTotal - memAvailable;
-  int perc = (int)((memUsed * 100UL) / memTotal);
-  snprintf(str, LOGGER_MAX, "%i%% %luMB", perc, memUsed / 1024UL);
+  sscanf(buf, "%*s %lu\n", &mem_available);
+  const unsigned long mem_used = mem_total - mem_available;
+  int perc = (int)((mem_used * 100UL) / mem_total);
+  snprintf(str, LOGGER_MAX, "%i%% %luMB", perc, mem_used / 1024UL);
   fclose(fd);
 }
 
@@ -539,8 +539,7 @@ void NeuroDzenLoggerCurrWorkspace(char *str) {
 
 void NeuroDzenLoggerCurrLayout(char *str) {
   assert(str);
-  int ws = NeuroCoreGetCurrStack();
-  const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(ws);
+  const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(NeuroCoreGetCurrStack());
   if (lc)
     strncpy(str, lc->name, LOGGER_MAX);
 }
