@@ -322,8 +322,8 @@ static void stop_dzen_refresh_thread() {
 }
 
 static Bool init_dzen_refresh_info() {
-  const DzenPanel *const *const confPanelSet = NeuroSystemGetConfiguration()->dzen_panel_set;
-  dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)confPanelSet);
+  const DzenPanel *const *const panel_set = NeuroSystemGetConfiguration()->dzen_panel_set;
+  dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)panel_set);
   dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(dzen_refresh_info_.num_panels, sizeof(PipeInfo));
   if (!dzen_refresh_info_.pipe_info)
     return False;
@@ -331,7 +331,7 @@ static Bool init_dzen_refresh_info() {
   const DzenPanel *dp;
   int i;
   for (i = 0; i < dzen_refresh_info_.num_panels; ++i) {
-    dp = confPanelSet[ i ];
+    dp = panel_set[ i ];
 
     // Get max refresh rate
     if (dp->refresh_rate > dzen_refresh_info_.reset_rate)
