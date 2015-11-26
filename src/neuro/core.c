@@ -282,7 +282,7 @@ static void set_layouts(Layout *l, const LayoutConf *const *lc, size_t size) {
 Bool NeuroCoreInit() {
   // Allocate as many stacks as we need
   const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspace_set;
-  size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSet);
+  const size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSet);
   stack_set_.stacks = new_stackset(size + 1);  // We need on extra stack for NSP
   if (!stack_set_.stacks)
     return False;
@@ -517,31 +517,31 @@ int NeuroCoreStackGetMinimizedNum(int ws) {
 }
 
 int NeuroCoreStackGetNumLayouts(int ws) {
-  int s = ws % stack_set_.size;
+  const int s = ws % stack_set_.size;
   if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
     return stack_set_.stacks[ s ].numLayouts;
   return stack_set_.stacks[ s ].numTogLayouts;
 }
 
 int NeuroCoreStackGetLayoutIdx(int ws) {
-  int s = ws % stack_set_.size;
+  const int s = ws % stack_set_.size;
   if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
     return stack_set_.stacks[ s ].currLayoutIdx;
   return stack_set_.stacks[ s ].currTogLayoutIdx;
 }
 
 Bool NeuroCoreStackIsCurrToggledLayout(int ws) {
-  int s = ws % stack_set_.size;
+  const int s = ws % stack_set_.size;
   return stack_set_.stacks[ s ].currTogLayoutIdx != -1;
 }
 
 void NeuroCoreStackSetLayoutIdx(int ws, int i) {
-  int s = ws % stack_set_.size;
+  const int s = ws % stack_set_.size;
   stack_set_.stacks[ s ].currLayoutIdx = i % stack_set_.stacks[ s ].numLayouts;
 }
 
 void NeuroCoreStackSetToggledLayout(int ws, int i) {
-  int s = ws % stack_set_.size;
+  const int s = ws % stack_set_.size;
   if (i != -1)
     stack_set_.stacks[ s ].currTogLayoutIdx = i % stack_set_.stacks[ s ].numTogLayouts;
   else
@@ -557,7 +557,7 @@ Layout *NeuroCoreStackGetLayout(int ws, int i) {
 
 const LayoutConf *NeuroCoreStackGetLayoutConf(int ws, int i) {
   const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspace_set;
-  int s = ws % stack_set_.size;
+  const int s = ws % stack_set_.size;
   if (stack_set_.stacks[ s ].currTogLayoutIdx == -1)
     return workspaceSet[ s ]->layouts[ i % stack_set_.stacks[ s ].numLayouts ];
   return workspaceSet[ s ]->toggled_layouts[ i % stack_set_.stacks[ s ].numTogLayouts ];

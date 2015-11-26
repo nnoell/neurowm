@@ -480,10 +480,10 @@ void NeuroDzenLoggerUptime(char *str) {
   assert(str);
   struct sysinfo info;
   sysinfo(&info);
-  int hours = (int)(info.uptime / 3600UL);
-  int hrest = (int)(info.uptime % 3600UL);
-  int minutes = hrest / 60;
-  int seconds = hrest % 60;
+  const int hours = (int)(info.uptime / 3600UL);
+  const int hrest = (int)(info.uptime % 3600UL);
+  const int minutes = hrest / 60;
+  const int seconds = hrest % 60;
   snprintf(str, LOGGER_MAX, "%ih %im %is", hours, minutes, seconds);
 }
 
@@ -511,7 +511,7 @@ void NeuroDzenLoggerRam(char *str) {
   fgets(buf, LOGGER_MAX, fd);
   sscanf(buf, "%*s %lu\n", &mem_available);
   const unsigned long mem_used = mem_total - mem_available;
-  int perc = (int)((mem_used * 100UL) / mem_total);
+  const int perc = (int)((mem_used * 100UL) / mem_total);
   snprintf(str, LOGGER_MAX, "%i%% %luMB", perc, mem_used / 1024UL);
   fclose(fd);
 }
@@ -547,7 +547,7 @@ void NeuroDzenLoggerCurrLayout(char *str) {
 
 void NeuroDzenLoggerCurrTitle(char *str) {
   assert(str);
-  ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
+  const ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c)
     strncpy(str, CLI_GET(c).title, LOGGER_MAX);
 }
