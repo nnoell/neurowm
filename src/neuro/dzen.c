@@ -95,8 +95,8 @@ static Bool cond_timedwait(int seconds, Bool *cond_stop, pthread_mutex_t *mutex,
 }
 
 // CPU Calculation (Thread 1)
-static Bool cpu_calc_refresh_timedwait() {
-  return cond_timedwait(1, &cpu_calc_stop_refresh_cond_, &cpu_calc_refresh_info_.wait_mutex,
+static Bool cpu_calc_refresh_timedwait(int seconds) {
+  return cond_timedwait(seconds, &cpu_calc_stop_refresh_cond_, &cpu_calc_refresh_info_.wait_mutex,
       &cpu_calc_refresh_info_.wait_cond);
 }
 
@@ -163,7 +163,7 @@ static void refresh_cpu_calc(const char *file, int ncpus) {
     fclose(fd);
 
     // Wait 1 second or break if the conditional variable has been signaled
-    if (!cpu_calc_refresh_timedwait())
+    if (!cpu_calc_refresh_timedwait(1))
       break;
   }
 }
@@ -212,8 +212,9 @@ static void stop_cpu_calc_refresh_info() {
 }
 
 // Dzen (Thread 2)
-static Bool dzen_refresh_timedwait() {
-  return cond_timedwait(1, &dzen_stop_refresh_cond_, &dzen_refresh_info_.wait_mutex, &dzen_refresh_info_.wait_cond);
+static Bool dzen_refresh_timedwait(int seconds) {
+  return cond_timedwait(seconds, &dzen_stop_refresh_cond_, &dzen_refresh_info_.wait_mutex,
+      &dzen_refresh_info_.wait_cond);
 }
 
 static char **str_to_cmd(char **cmd, char *str, const char *sep) {
@@ -284,7 +285,7 @@ static void *refresh_dzen_thread(void *args) {
     i %= dzen_refresh_info_.reset_rate;
 
     // Wait 1 second or break if the conditional variable has been signaled
-    if (!dzen_refresh_timedwait())
+    if (!dzen_refresh_timedwait(1))
       break;
   }
   pthread_exit(NULL);
