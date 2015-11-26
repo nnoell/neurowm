@@ -30,7 +30,7 @@
 // Basic Functions
 Bool NeuroDzenInit();
 void NeuroDzenStop();
-void NeuroDzenRefresh(int onlyEvent);
+void NeuroDzenRefresh(Bool on_event_only);
 void NeuroDzenInitCpuCalc();
 void NeuroDzenStopCpuCalc();
 void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b);
