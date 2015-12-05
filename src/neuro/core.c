@@ -603,19 +603,19 @@ ClientPtrPtr NeuroCoreStackFindClient(int ws, const ClientTesterFn ctf, const vo
 
 // Client
 Bool NeuroCoreClientIsCurr(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].curr;
+  return c && (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].curr;
 }
 
 Bool NeuroCoreClientIsPrev(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].prev;
+  return c && (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].prev;
 }
 
 Bool NeuroCoreClientIsHead(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].head;
+  return c && (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].head;
 }
 
 Bool NeuroCoreClientIsLast(const ClientPtrPtr c) {
-  return !c ? False : (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].last;
+  return c && (Node *)c == stack_set_.stacks[ CLI_GET(c).ws ].last;
 }
 
 Rectangle *NeuroCoreClientGetRegion(const ClientPtrPtr c) {
