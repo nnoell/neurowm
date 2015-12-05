@@ -53,14 +53,14 @@ static int loop_run_neurowm(int argc, const char *const *argv);
 // VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Flags                                        NAME           HANDLER           DESC
-static const FlagHandlers help_flag[]      = { { "--help",      help_handler,      "Print this message"           } };
-static const FlagHandlers version_flag[]   = { { "--version",   version_handler,   "Print the version number"     } };
-static const FlagHandlers recompile_flag[] = { { "--recompile", recompile_handler, "Recompile your configuration" } };
-// static const FlagHandlers reload_flag[]   = { { "--reload",    reload_handler,    "Reload the window manager"    } };
+// Flags                                          NAME           HANDLER            DESC
+static const FlagHandlers help_flag_[]      = { { "--help",      help_handler,      "Print this message"           } };
+static const FlagHandlers version_flag_[]   = { { "--version",   version_handler,   "Print the version number"     } };
+static const FlagHandlers recompile_flag_[] = { { "--recompile", recompile_handler, "Recompile your configuration" } };
+// static const FlagHandlers reload_flag_[] = { { "--reload",    reload_handler,    "Reload the window manager"    } };
 
 // Flags array
-static const FlagHandlers *flag_set[] = { help_flag, version_flag, recompile_flag, NULL };  // Removed reload_flag
+static const FlagHandlers *flag_set_[] = { help_flag_, version_flag_, recompile_flag_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -93,8 +93,8 @@ static int run_cmd(const char *const *cmd) {
 static int help_handler() {
   printf("Usage: neurowm [OPTION]\nOptions:\n");
   int i;
-  for (i=0; flag_set[ i ]; ++i)
-    printf("  %s\t\t%s\n", flag_set[ i ]->name, flag_set[ i ]->desc);
+  for (i=0; flag_set_[ i ]; ++i)
+    printf("  %s\t\t%s\n", flag_set_[ i ]->name, flag_set_[ i ]->desc);
   return 0;
 }
 
@@ -135,9 +135,9 @@ static int run_neurowm(int argc, const char *const *argv) {
 static int run_flag(const char *flgname) {
   assert(flgname);
   int i;
-  for (i=0; flag_set[ i ]; ++i)
-    if (!strcmp(flgname, flag_set[ i ]->name)) {
-      int res = flag_set[ i ]->handler();
+  for (i=0; flag_set_[ i ]; ++i)
+    if (!strcmp(flgname, flag_set_[ i ]->name)) {
+      int res = flag_set_[ i ]->handler();
       if (res == -1)
         perror(flgname);
       return res;
