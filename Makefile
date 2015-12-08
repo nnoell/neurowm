@@ -129,7 +129,7 @@ install_no_bin:
 	@mkdir -p /usr/lib/neuro
 	@cp ${TARGET_LIB_DIR}/${TARGET_STATIC_LIB_NAME} /usr/lib/neuro
 	@cp ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} /usr/lib/neuro
-	@ln -s -r /usr/lib/neuro/${TARGET_SHARED_LIB_NAME} /usr/lib/neuro/${TARGET_SHARED_LNK_NAME}
+	@ln -s -r -f /usr/lib/neuro/${TARGET_SHARED_LIB_NAME} /usr/lib/neuro/${TARGET_SHARED_LNK_NAME}
 	@echo "OK"
 	@echo -n ":: Installing man page...   "
 	@mkdir -p /usr/local/man/man1
