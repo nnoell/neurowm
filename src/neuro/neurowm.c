@@ -31,12 +31,7 @@ static Bool stop_main_while_ = False;
 //----------------------------------------------------------------------------------------------------------------------
 
 static int recompile_wm(pid_t *pid) {
-  char out[ NAME_MAX ] = "", src[ NAME_MAX ] = "";
-  snprintf(out, NAME_MAX, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
-  snprintf(src, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
-  char lib[ NAME_MAX ] = "/usr/lib/neuro/lib" WM_NAME ".a";
-  const char *const cmd[] = { "/usr/bin/cc", "-O3", "-o", out, src, lib, "-lX11", "-pthread", NULL };
-  return NeuroSystemSpawn(cmd, pid);
+  return NeuroSystemSpawn(NeuroSystemGetRecompileCommand(NULL, NULL), pid);
 }
 
 static void stop_wm() {

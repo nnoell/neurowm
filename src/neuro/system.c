@@ -14,6 +14,7 @@
 // Includes
 #include "system.h"
 
+
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
@@ -34,6 +35,23 @@ const Color colors_[ NeuroSystemColorCount ];
 
 // Configuration
 static const Configuration *configuration_;
+
+// Recompile command
+static const char recompile_cmd_output_[ NAME_MAX ];
+static const char recompile_cmd_source_[ NAME_MAX ];
+static const char *const recompile_cmd_[] = {
+  "/usr/bin/cc",
+  "-fpic",
+  "-O3",
+  "-o",
+  recompile_cmd_output_,
+  recompile_cmd_source_,
+  "-L/usr/lib/neuro",
+  "-l" WM_NAME,
+  "-lX11",
+  "-pthread",
+  NULL
+};
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -115,7 +133,7 @@ const Configuration *NeuroSystemGetConfiguration() {
   return configuration_;
 }
 
-// Main functions
+// X functions
 Bool NeuroSystemInit() {
   // WM global variables
   *(Display **)&display_ = XOpenDisplay(NULL);
@@ -214,6 +232,17 @@ Color NeuroSystemGetColorFromHex(const char* color) {
   if (!XAllocNamedColor(display_, map, color, &c, &c))
     NeuroSystemError("NeuroSystemGetColorFromHex - Could not allocate color");
   return c.pixel;
+}
+
+// System functions
+const char * const *NeuroSystemGetRecompileCommand(const char **output, const char **source) {
+  snprintf((char *)recompile_cmd_output_, NAME_MAX, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
+  snprintf((char *)recompile_cmd_source_, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
+  if (output)
+    *output = recompile_cmd_output_;
+  if (source)
+    *source = recompile_cmd_source_;
+  return recompile_cmd_;
 }
 
 void NeuroSystemChangeNeurowmName(const char *name) {
