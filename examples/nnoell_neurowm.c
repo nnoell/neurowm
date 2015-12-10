@@ -172,7 +172,7 @@ static const Rule rule04[] = { {
   False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, False
 } };
 static const Rule rule05[] = { {
-  "Chromium", NULL, NULL,
+  "chromium", NULL, NULL,
   False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, False
 } };
 static const Rule rule06[] = { {
