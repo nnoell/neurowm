@@ -630,11 +630,11 @@ static const Button *myButtons[] = { button00, button01, button02, button03, but
 //----------------------------------------------------------------------------------------------------------------------
 
 static const Configuration myConfiguration = {
-  NeuroConfigNormBorderColor,
-  NeuroConfigCurrBorderColor,
-  NeuroConfigPrevBorderColor,
+  NeuroConfigNormalBorderColor,
+  NeuroConfigCurrentBorderColor,
+  NeuroConfigOldBorderColor,
   NeuroConfigFreeBorderColor,
-  NeuroConfigUrgtBorderColor,
+  NeuroConfigUrgentBorderColor,
   myBorderWidth,
   myBorderGap,
   myWorkspaceSet,

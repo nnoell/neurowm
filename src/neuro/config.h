@@ -18,11 +18,11 @@
 #include "type.h"
 
 // Colors
-#define NeuroConfigNormBorderColor "#1c1c1c"
-#define NeuroConfigCurrBorderColor "#b5b3b3"
-#define NeuroConfigPrevBorderColor "#444444"
-#define NeuroConfigFreeBorderColor "#f7a16e"
-#define NeuroConfigUrgtBorderColor "#66ff66"
+#define NeuroConfigNormalBorderColor  "#1c1c1c"
+#define NeuroConfigCurrentBorderColor "#b5b3b3"
+#define NeuroConfigOldBorderColor     "#444444"
+#define NeuroConfigFreeBorderColor    "#f7a16e"
+#define NeuroConfigUrgentBorderColor  "#66ff66"
 
 // Borders
 #define NeuroConfigBorderWidth 2

@@ -260,11 +260,11 @@ const Button *NeuroConfigButtons[] = { button00, button01, button02, button03, b
 //----------------------------------------------------------------------------------------------------------------------
 
 const Configuration NeuroConfigConfiguration = {
-  NeuroConfigNormBorderColor,
-  NeuroConfigCurrBorderColor,
-  NeuroConfigPrevBorderColor,
+  NeuroConfigNormalBorderColor,
+  NeuroConfigCurrentBorderColor,
+  NeuroConfigOldBorderColor,
   NeuroConfigFreeBorderColor,
-  NeuroConfigUrgtBorderColor,
+  NeuroConfigUrgentBorderColor,
   NeuroConfigBorderWidth,
   NeuroConfigBorderGap,
   NeuroConfigWorkspaceSet,
