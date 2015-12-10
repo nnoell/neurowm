@@ -224,9 +224,9 @@ void NeuroActionHandlerReload(GenericArg null_arg) {
   NeuroWmReload();
 }
 
-void NeuroActionHandlerChangeNeurowmName(GenericArg string_arg) {
+void NeuroActionHandlerChangeWmName(GenericArg string_arg) {
   assert(ARG_STR_GET(string_arg));
-  NeuroSystemChangeNeurowmName(ARG_STR_GET(string_arg));
+  NeuroSystemChangeWmName(ARG_STR_GET(string_arg));
 }
 
 void NeuroActionHandlerSpawn(GenericArg command_arg) {

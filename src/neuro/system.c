@@ -245,7 +245,7 @@ const char * const *NeuroSystemGetRecompileCommand(const char **output, const ch
   return recompile_cmd_;
 }
 
-void NeuroSystemChangeNeurowmName(const char *name) {
+void NeuroSystemChangeWmName(const char *name) {
   assert(name);
   const Atom netwmcheck = XInternAtom(display_, "_NET_SUPPORTING_WM_CHECK", False);
   const Atom netwmname = XInternAtom(display_, "_NET_WM_NAME", False);

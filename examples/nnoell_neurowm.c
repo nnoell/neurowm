@@ -46,7 +46,7 @@ static const char* songpcmd[] = { "/usr/bin/mpc", "prev", NULL };
 //----------------------------------------------------------------------------------------------------------------------
 
 // STARTUP
-static const Action action0[] = { { NeuroActionHandlerChangeNeurowmName, ARG_STR("LG3D") } };
+static const Action action0[] = { { NeuroActionHandlerChangeWmName, ARG_STR("LG3D") } };
 static const Action action1[] = { { NeuroActionHandlerSpawn, ARG_CMD(xdefload) } };
 static const Action action2[] = { { NeuroActionHandlerSpawn, ARG_CMD(wallcmd) } };
 

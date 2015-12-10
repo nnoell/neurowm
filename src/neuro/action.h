@@ -122,7 +122,7 @@ extern const Action *const NeuroActionChainToggleFreePtrClient[];
 void NeuroActionHandlerNothing(GenericArg null_arg);
 void NeuroActionHandlerQuit(GenericArg null_arg);
 void NeuroActionHandlerReload(GenericArg null_arg);
-void NeuroActionHandlerChangeNeurowmName(GenericArg string_arg);
+void NeuroActionHandlerChangeWmName(GenericArg string_arg);
 void NeuroActionHandlerSpawn(GenericArg command_arg);
 void NeuroActionHandlerSleep(GenericArg int_arg);
 void NeuroActionHandlerInitCpuCalc(GenericArg null_arg);
