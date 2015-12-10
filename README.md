@@ -42,7 +42,7 @@ The **default neurowm configuration** lies within the config module, so, to run 
 	#include <neuro/neurowm.h>
 
 	int main() {
-		return NeuroNeurowmRun(&NeuroConfigConfiguration);
+		return NeuroWmRun(&NeuroConfigConfiguration);
 	}
 
 Once you have written your own neurowm.c file, compile it using the `--recompile` flag:

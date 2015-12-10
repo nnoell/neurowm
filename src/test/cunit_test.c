@@ -16,7 +16,7 @@
 #include <CUnit/Basic.h>
 #include "../neuro/system.h"
 #include "../neuro/core.h"
-#include "../neuro/neurowm.h"
+#include "../neuro/wm.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------

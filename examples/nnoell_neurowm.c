@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
-#include <neuro/neurowm.h>
+#include <neuro/wm.h>
 
 // Fonts
 #define DZENPANELFONT "-*-terminus-medium-r-normal-*-11-*-*-*-*-*-*-*"
@@ -654,7 +654,7 @@ static const Configuration myConfiguration = {
 int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
-  return NeuroNeurowmRun(&myConfiguration);
-  // return NeuroNeurowmRun(&NeuroConfigConfiguration);
+  return NeuroWmRun(&myConfiguration);
+  // return NeuroWmRun(&NeuroConfigConfiguration);
 }
 

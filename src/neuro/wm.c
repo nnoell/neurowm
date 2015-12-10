@@ -12,7 +12,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
-#include "neurowm.h"
+#include "wm.h"
 #include "system.h"
 #include "core.h"
 #include "event.h"
@@ -81,7 +81,7 @@ static void init_wm(const Configuration *c) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-int NeuroNeurowmRun(const Configuration *c) {
+int NeuroWmRun(const Configuration *c) {
   // Init window manager
   init_wm(c);
 
@@ -99,11 +99,11 @@ int NeuroNeurowmRun(const Configuration *c) {
   return EXIT_SUCCESS;
 }
 
-void NeuroNeurowmQuit() {
+void NeuroWmQuit() {
   stop_main_while_ = True;
 }
 
-void NeuroNeurowmReload() {
+void NeuroWmReload() {
   wm_signal_handler(SIGUSR1);
 }
 

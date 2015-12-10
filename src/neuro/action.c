@@ -17,7 +17,7 @@
 #include "system.h"
 #include "core.h"
 #include "dzen.h"
-#include "neurowm.h"
+#include "wm.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -216,12 +216,12 @@ void NeuroActionHandlerNothing(GenericArg null_arg) {
 
 void NeuroActionHandlerQuit(GenericArg null_arg) {
   (void)null_arg;
-  NeuroNeurowmQuit();
+  NeuroWmQuit();
 }
 
 void NeuroActionHandlerReload(GenericArg null_arg) {
   (void)null_arg;
-  NeuroNeurowmReload();
+  NeuroWmReload();
 }
 
 void NeuroActionHandlerChangeNeurowmName(GenericArg string_arg) {
