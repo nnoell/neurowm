@@ -22,7 +22,7 @@
 // Commands
 const char* NeuroConfigTerminalCommand[] = { "/usr/bin/xterm", NULL };
 const char* NeuroConfigLauncherCommand[] = { "/usr/bin/gmrun", NULL };
-const char* NeuroConfigScratchpadCommand[] = { "/usr/bin/xterm", "-name", WM_SCRATCHPAD_NAME, NULL };
+const char* NeuroConfigScratchpadCommand[] = { "/usr/bin/xterm", "-name", RULE_SCRATCHPAD_NAME, NULL };
 
 // Startup
 const ActionChain NeuroConfigStartupHook[] = { CHAIN_NULL(NeuroActionChainNothing) };

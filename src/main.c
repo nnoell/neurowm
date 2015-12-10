@@ -80,7 +80,7 @@ static int run_cmd(const char *const *cmd) {
 
 //  static pid_t get_neurowm_pid() {
 //    char pidstr[ NAME_MAX ];
-//    FILE *cmd = popen("/usr/bin/pidof -s " WM_MYNAME, "r");
+//    FILE *cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
 //    fgets(pidstr, NAME_MAX, cmd);
 //    return (pid_t)strtoul(pidstr, NULL, 10);
 //  }
@@ -94,7 +94,7 @@ static int help_handler() {
 }
 
 static int version_handler() {
-  printf(WM_NAME " " VERSION "\n");
+  printf(PKG_NAME " " PKG_VERSION "\n");
   return 0;
 }
 

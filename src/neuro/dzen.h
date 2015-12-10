@@ -18,9 +18,10 @@
 #include "type.h"
 
 // Defines
+#define DZEN_ON_EVENT 0
 #define DZEN_LINE_MAX 16384
 #define DZEN_ARGS_MAX 64
-#define LOGGER_MAX    8192
+#define DZEN_LOGGER_MAX 8192
 
 
 //----------------------------------------------------------------------------------------------------------------------

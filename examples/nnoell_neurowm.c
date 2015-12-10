@@ -31,7 +31,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 static const char* termcmd[]  = { "/usr/bin/urxvt", NULL };
-static const char* nspcmd[]   = { "/usr/bin/urxvt", "-name", WM_SCRATCHPAD_NAME, NULL };
+static const char* nspcmd[]   = { "/usr/bin/urxvt", "-name", RULE_SCRATCHPAD_NAME, NULL };
 static const char* xdefload[] = { "/usr/bin/xrdb", "-load", "/home/julian/.config/xorg/Xdefaults", NULL };
 static const char* wallcmd[]  = { "/usr/bin/feh", "--bg-scale", "/home/julian/Pictures/wallpapers/neurowm.png", NULL };
 static const char* lchrcmd[]  = { "/usr/bin/gmrun", NULL };
@@ -152,7 +152,7 @@ static const Workspace *myWorkspaceSet[] = { ws0, ws1, ws2, ws3, ws4, ws5, ws6, 
 
 // RULES (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
 static const Rule rule00[] = { {
-  "URxvt", WM_SCRATCHPAD_NAME, "urxvt",
+  "URxvt", RULE_SCRATCHPAD_NAME, "urxvt",
   False, NeuroRuleFreeSetterScratchpad, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
 } };
 static const Rule rule01[] = { {
@@ -269,10 +269,10 @@ static const LoggerFn botRightLoggers[] = {
 };
 
 // DZENPANELS (DZENFLAGS, LOGGERS, SEP, REFRESH)
-static const DzenPanel topLeftPanel[]  = { { topLeftDzenFlags,  topLeftLoggers,  " ",  WM_EVENT } };
-static const DzenPanel topRightPanel[] = { { topRightDzenFlags, topRightLoggers, " ",  1        } };
-static const DzenPanel botLeftPanel[]  = { { botLeftDzenFlags,  botLeftLoggers,  " ",  WM_EVENT } };
-static const DzenPanel botRightPanel[] = { { botRightDzenFlags, botRightLoggers, " ",  1        } };
+static const DzenPanel topLeftPanel[]  = { { topLeftDzenFlags,  topLeftLoggers,  " ",  DZEN_ON_EVENT } };
+static const DzenPanel topRightPanel[] = { { topRightDzenFlags, topRightLoggers, " ",  1             } };
+static const DzenPanel botLeftPanel[]  = { { botLeftDzenFlags,  botLeftLoggers,  " ",  DZEN_ON_EVENT } };
+static const DzenPanel botRightPanel[] = { { botRightDzenFlags, botRightLoggers, " ",  1             } };
 
 // DZENPANELSET
 static const DzenPanel *myDzenPanelSet[] = { topLeftPanel, topRightPanel, botLeftPanel, botRightPanel, NULL };

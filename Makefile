@@ -2,13 +2,15 @@
 # CONFIG
 #-----------------------------------------------------------------------------------------------------------------------
 
-# Version
-VERSION = 0.20
+# Version and Name
+PKG_VERSION = 0.20
+PKG_NAME = neurowm
+PKG_MYNAME = my${PKG_NAME}
 
 # Compiler flags
 CC = gcc
-#DFLAGS = -DVERSION=\"${VERSION}\"
-DFLAGS = -DNDEBUG -DVERSION=\"${VERSION}\"
+#DFLAGS = -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
+DFLAGS = -DNDEBUG -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
 CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -fpic -O3 ${DFLAGS}
 LDADD = -lX11 -pthread
 LDADDTEST = -lX11 -pthread -lcunit
@@ -19,20 +21,20 @@ MOD_NAMES = neurowm config dzen event rule workspace layout client core system g
 
 # Source names
 SOURCE_BIN_NAME = main.c
-SOURCE_NEUROWM_TEST_NAME = neurowm_test.c
+SOURCE_NEUROWM_TEST_NAME = ${PKG_NAME}_test.c
 SOURCE_CUNIT_TEST_NAME = cunit_test.c
 
 # Object names
 OBJECT_BIN_NAME = main.o
-OBJECT_NEUROWM_TEST_NAME = neurowm_test.o
+OBJECT_NEUROWM_TEST_NAME = ${PKG_NAME}_test.o
 OBJECT_CUNIT_TEST_NAME = cunit_test.o
 
 # Target names
-TARGET_BIN_NAME = neurowm
+TARGET_BIN_NAME = ${PKG_NAME}
 TARGET_STATIC_LIB_NAME = lib${TARGET_BIN_NAME}.a
-TARGET_SHARED_LIB_NAME = lib${TARGET_BIN_NAME}.so.${VERSION}
+TARGET_SHARED_LIB_NAME = lib${TARGET_BIN_NAME}.so.${PKG_VERSION}
 TARGET_SHARED_LNK_NAME = lib${TARGET_BIN_NAME}.so
-TARGET_NEUROWM_TEST_NAME = myneurowm_test
+TARGET_NEUROWM_TEST_NAME = ${PKG_MYNAME}_test
 TARGET_CUNIT_TEST_NAME = cunit_test
 
 # Source directories

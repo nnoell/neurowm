@@ -36,12 +36,6 @@
 #include <time.h>
 #include <assert.h>
 
-// WM
-#define WM_NAME            "neurowm"
-#define WM_MYNAME          "myneurowm"
-#define WM_SCRATCHPAD_NAME "neurowm_scratchpad"
-#define WM_EVENT           0
-
 // Arg constructors
 #define ARG_NULL     {.pointer_ = NULL}
 #define ARG_PTR(X)   {.pointer_ = (X)}

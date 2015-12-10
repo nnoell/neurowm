@@ -21,6 +21,7 @@
 #include "client.h"
 #include "workspace.h"
 #include "action.h"
+#include "dzen.h"
 #include "theme.h"
 
 

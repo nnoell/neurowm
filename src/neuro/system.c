@@ -47,7 +47,7 @@ static const char *const recompile_cmd_[] = {
   recompile_cmd_output_,
   recompile_cmd_source_,
   "-L/usr/lib/neuro",
-  "-l" WM_NAME,
+  "-l" PKG_NAME,
   "-lX11",
   "-pthread",
   NULL
@@ -236,8 +236,8 @@ Color NeuroSystemGetColorFromHex(const char* color) {
 
 // System functions
 const char * const *NeuroSystemGetRecompileCommand(const char **output, const char **source) {
-  snprintf((char *)recompile_cmd_output_, NAME_MAX, "%s/." WM_NAME "/" WM_MYNAME, getenv("HOME"));
-  snprintf((char *)recompile_cmd_source_, NAME_MAX, "%s/." WM_NAME "/" WM_NAME ".c", getenv("HOME"));
+  snprintf((char *)recompile_cmd_output_, NAME_MAX, "%s/." PKG_NAME "/" PKG_MYNAME, getenv("HOME"));
+  snprintf((char *)recompile_cmd_source_, NAME_MAX, "%s/." PKG_NAME "/" PKG_NAME ".c", getenv("HOME"));
   if (output)
     *output = recompile_cmd_output_;
   if (source)

@@ -103,7 +103,7 @@ Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
       break;
     }
   }
-  if (!strcmp(c->name, WM_SCRATCHPAD_NAME))
+  if (!strcmp(c->name, RULE_SCRATCHPAD_NAME))
     c->is_nsp = True;
   return c;
 }

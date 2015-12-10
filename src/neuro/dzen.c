@@ -251,7 +251,7 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
   char line[ DZEN_LINE_MAX ] = "\0";
   int i;
   for (i = 0; dp->loggers[ i ]; ++i) {
-    char str[ LOGGER_MAX ] = "\0";
+    char str[ DZEN_LOGGER_MAX ] = "\0";
     dp->loggers[ i ](str);
 
     // Add separator if not first and not empty str
@@ -276,7 +276,7 @@ static void *refresh_dzen_thread(void *args) {
     // Update all panels respecting their refresh rate
     for (j = 0; j < dzen_refresh_info_.num_panels; ++j) {
       dp = NeuroSystemGetConfiguration()->dzen_panel_set[ j ];
-      if (dp->refresh_rate == WM_EVENT || dp->refresh_rate <= 0)
+      if (dp->refresh_rate == DZEN_ON_EVENT || dp->refresh_rate <= 0)
         continue;
       if (i % dp->refresh_rate == 0)
         refresh_dzen(dp, dzen_refresh_info_.pipe_info[ j ].output);
@@ -388,7 +388,7 @@ void NeuroDzenRefresh(Bool on_event_only) {
   int i;
   for (i=0; i < dzen_refresh_info_.num_panels; ++i) {
     dp = NeuroSystemGetConfiguration()->dzen_panel_set[ i ];
-    if (on_event_only && (dp->refresh_rate == WM_EVENT || dp->refresh_rate <= 0)) {
+    if (on_event_only && (dp->refresh_rate == DZEN_ON_EVENT || dp->refresh_rate <= 0)) {
       refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
       continue;
     }
@@ -412,7 +412,7 @@ void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b) {
   assert(dst);
   assert(src);
   assert(b);
-  snprintf(dst, LOGGER_MAX,
+  snprintf(dst, DZEN_LOGGER_MAX,
       "^fg(%s)^i(%s)^ib(1)^r(1920x%i)^p(-1920x)^fg(%s)%s^fg(%s)^i(%s)^fg(%s)^r(1920x%i)^p(-1920)^fg()^ib(0)",
       b->box_color, b->left_icon, b->box_height, b->fg_color, src, b->box_color, b->right_icon, b->bg_color,
       b->box_height);
@@ -422,7 +422,7 @@ void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca) {
   assert(dst);
   assert(src);
   assert(ca);
-  snprintf(dst, LOGGER_MAX, "^ca(1,%s)^ca(2,%s)^ca(3,%s)^ca(4,%s)^ca(5,%s)%s^ca()^ca()^ca()^ca()^ca()",
+  snprintf(dst, DZEN_LOGGER_MAX, "^ca(1,%s)^ca(2,%s)^ca(3,%s)^ca(4,%s)^ca(5,%s)%s^ca()^ca()^ca()^ca()^ca()",
       ca->left_click, ca->middle_click, ca->right_click, ca->wheel_up, ca->wheel_down, src);
 }
 
@@ -433,7 +433,7 @@ Bool NeuroDzenReadFirstLineFile(char *buf, const char *path) {
   fd = fopen(path, "r");
   if (!fd)
     return False;
-  fgets(buf, LOGGER_MAX, fd);
+  fgets(buf, DZEN_LOGGER_MAX, fd);
   char *last = buf + strlen(buf) - 1;
   if (*last == '\n')
     *last = '\0';
@@ -447,7 +447,7 @@ void NeuroDzenLoggerTime(char *str) {
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
-  snprintf(str, LOGGER_MAX, "%02d:%02d:%02d", res.tm_hour, res.tm_min, res.tm_sec);
+  snprintf(str, DZEN_LOGGER_MAX, "%02d:%02d:%02d", res.tm_hour, res.tm_min, res.tm_sec);
 }
 
 
@@ -456,7 +456,7 @@ void NeuroDzenLoggerDate(char *str) {
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
-  snprintf(str, LOGGER_MAX, "%d.%02d.%02d", res.tm_year + 1900, res.tm_mon + 1, res.tm_mday);
+  snprintf(str, DZEN_LOGGER_MAX, "%d.%02d.%02d", res.tm_year + 1900, res.tm_mon + 1, res.tm_mday);
 }
 
 void NeuroDzenLoggerDay(char *str) {
@@ -465,14 +465,14 @@ void NeuroDzenLoggerDay(char *str) {
   time_t t = time(NULL);
   localtime_r(&t, &res);
   switch (res.tm_wday) {
-    case 1:  strncpy(str, "Monday", LOGGER_MAX); break;
-    case 2:  strncpy(str, "Tuesday", LOGGER_MAX); break;
-    case 3:  strncpy(str, "Wednesday", LOGGER_MAX); break;
-    case 4:  strncpy(str, "Thursday", LOGGER_MAX); break;
-    case 5:  strncpy(str, "Friday", LOGGER_MAX); break;
-    case 6:  strncpy(str, "Saturday", LOGGER_MAX); break;
-    case 0:  strncpy(str, "Sunday", LOGGER_MAX); break;
-    default: strncpy(str, "Unknown", LOGGER_MAX); break;
+    case 1:  strncpy(str, "Monday", DZEN_LOGGER_MAX); break;
+    case 2:  strncpy(str, "Tuesday", DZEN_LOGGER_MAX); break;
+    case 3:  strncpy(str, "Wednesday", DZEN_LOGGER_MAX); break;
+    case 4:  strncpy(str, "Thursday", DZEN_LOGGER_MAX); break;
+    case 5:  strncpy(str, "Friday", DZEN_LOGGER_MAX); break;
+    case 6:  strncpy(str, "Saturday", DZEN_LOGGER_MAX); break;
+    case 0:  strncpy(str, "Sunday", DZEN_LOGGER_MAX); break;
+    default: strncpy(str, "Unknown", DZEN_LOGGER_MAX); break;
   }
 }
 
@@ -484,50 +484,50 @@ void NeuroDzenLoggerUptime(char *str) {
   const int hrest = (int)(info.uptime % 3600UL);
   const int minutes = hrest / 60;
   const int seconds = hrest % 60;
-  snprintf(str, LOGGER_MAX, "%ih %im %is", hours, minutes, seconds);
+  snprintf(str, DZEN_LOGGER_MAX, "%ih %im %is", hours, minutes, seconds);
 }
 
 void NeuroDzenLoggerCpu(char *str) {
   assert(str);
-  char buf[ LOGGER_MAX ];
+  char buf[ DZEN_LOGGER_MAX ];
   int i;
   for (i = 0; i < cpu_calc_refresh_info_.num_cpus; ++i) {
-    snprintf(buf, LOGGER_MAX, "%i%% ", cpu_calc_refresh_info_.cpu_info[ i ].perc);
-    strncat(str, buf, LOGGER_MAX - strlen(str) - 1);
+    snprintf(buf, DZEN_LOGGER_MAX, "%i%% ", cpu_calc_refresh_info_.cpu_info[ i ].perc);
+    strncat(str, buf, DZEN_LOGGER_MAX - strlen(str) - 1);
   }
   str[ strlen(str) - 1 ] = '\0';
 }
 
 void NeuroDzenLoggerRam(char *str) {
   assert(str);
-  char buf[ LOGGER_MAX ];
+  char buf[ DZEN_LOGGER_MAX ];
   FILE *fd = fopen("/proc/meminfo", "r");
   if (!fd)
     return;
-  fgets(buf, LOGGER_MAX, fd);
+  fgets(buf, DZEN_LOGGER_MAX, fd);
   unsigned long mem_total = 0UL, mem_available = 0UL;
   sscanf(buf, "%*s %lu\n", &mem_total);
-  fgets(buf, LOGGER_MAX, fd);
-  fgets(buf, LOGGER_MAX, fd);
+  fgets(buf, DZEN_LOGGER_MAX, fd);
+  fgets(buf, DZEN_LOGGER_MAX, fd);
   sscanf(buf, "%*s %lu\n", &mem_available);
   const unsigned long mem_used = mem_total - mem_available;
   const int perc = (int)((mem_used * 100UL) / mem_total);
-  snprintf(str, LOGGER_MAX, "%i%% %luMB", perc, mem_used / 1024UL);
+  snprintf(str, DZEN_LOGGER_MAX, "%i%% %luMB", perc, mem_used / 1024UL);
   fclose(fd);
 }
 
 void NeuroDzenLoggerWifiStrength(char *str) {
   assert(str);
-  char buf[ LOGGER_MAX ];
+  char buf[ DZEN_LOGGER_MAX ];
   FILE *fd = fopen("/proc/net/wireless", "r");
   if (!fd)
     return;
   int strength = 0, tmp = 0;
-  fgets(buf, LOGGER_MAX, fd);
-  fgets(buf, LOGGER_MAX, fd);
-  fgets(buf, LOGGER_MAX, fd);
+  fgets(buf, DZEN_LOGGER_MAX, fd);
+  fgets(buf, DZEN_LOGGER_MAX, fd);
+  fgets(buf, DZEN_LOGGER_MAX, fd);
   sscanf(buf, "%*s %i   %i\n", &tmp, &strength);
-  snprintf(str, LOGGER_MAX, "%i%%", strength);
+  snprintf(str, DZEN_LOGGER_MAX, "%i%%", strength);
   fclose(fd);
 }
 
@@ -535,20 +535,20 @@ void NeuroDzenLoggerCurrWorkspace(char *str) {
   assert(str);
   const char *name = NeuroCoreStackGetName(NeuroCoreGetCurrStack());
   if (name)
-    strncpy(str, name, LOGGER_MAX);
+    strncpy(str, name, DZEN_LOGGER_MAX);
 }
 
 void NeuroDzenLoggerCurrLayout(char *str) {
   assert(str);
   const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(NeuroCoreGetCurrStack());
   if (lc)
-    strncpy(str, lc->name, LOGGER_MAX);
+    strncpy(str, lc->name, DZEN_LOGGER_MAX);
 }
 
 void NeuroDzenLoggerCurrTitle(char *str) {
   assert(str);
   const ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
   if (c)
-    strncpy(str, CLI_GET(c).title, LOGGER_MAX);
+    strncpy(str, CLI_GET(c).title, DZEN_LOGGER_MAX);
 }
 
