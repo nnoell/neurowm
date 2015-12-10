@@ -158,7 +158,8 @@ void NeuroThemeNnoellLoggerCurrWorkspace(char *str) {
   const char *name = NeuroCoreStackGetName(ws);
   if (name) {
     static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
-    snprintf(tmp2, DZEN_LOGGER_MAX, "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
+    snprintf(tmp2, DZEN_LOGGER_MAX,
+        "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
         (ws + 1) % NeuroCoreGetSize(), name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(str, "WORKSPACE", &boxpp_nnoell_blue2_);
