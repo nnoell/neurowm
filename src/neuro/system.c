@@ -13,6 +13,7 @@
 
 // Includes
 #include "system.h"
+#include "config.h"
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -32,9 +33,6 @@ const Cursor cursors_[ NeuroSystemCursorCount ];
 const Atom wm_atoms_[ NeuroSystemWmAtomCount ];
 const Atom net_atoms_[ NeuroSystemNetAtomCount ];
 const Color colors_[ NeuroSystemColorCount ];
-
-// Configuration
-static const Configuration *configuration_;
 
 // Recompile command
 static const char recompile_cmd_output_[ NAME_MAX ];
@@ -85,13 +83,18 @@ static int xerror_handler(Display *d, XErrorEvent *ee) {
   return -1;
 }
 
-static void set_colors_cursors_atoms() {
+static Bool set_colors_cursors_atoms() {
+  if (!NeuroConfigGet()->normal_border_color || !NeuroConfigGet()->current_border_color ||
+      !NeuroConfigGet()->old_border_color || !NeuroConfigGet()->free_border_color ||
+      !NeuroConfigGet()->urgent_border_color)
+    return False;
+
   // Colors
-  *(Color *)&colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(configuration_->normal_border_color);
-  *(Color *)&colors_[ NeuroSystemColorCurrent ] = NeuroSystemGetColorFromHex(configuration_->current_border_color);
-  *(Color *)&colors_[ NeuroSystemColorOld ] = NeuroSystemGetColorFromHex(configuration_->old_border_color);
-  *(Color *)&colors_[ NeuroSystemColorFree ] = NeuroSystemGetColorFromHex(configuration_->free_border_color);
-  *(Color *)&colors_[ NeuroSystemColorUrgent ] = NeuroSystemGetColorFromHex(configuration_->urgent_border_color);
+  *(Color *)&colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->normal_border_color);
+  *(Color *)&colors_[ NeuroSystemColorCurrent ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->current_border_color);
+  *(Color *)&colors_[ NeuroSystemColorOld ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->old_border_color);
+  *(Color *)&colors_[ NeuroSystemColorFree ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->free_border_color);
+  *(Color *)&colors_[ NeuroSystemColorUrgent ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->urgent_border_color);
 
   // Cursors
   *(Cursor *)&cursors_[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
@@ -114,24 +117,14 @@ static void set_colors_cursors_atoms() {
   // EWMH support per view
   XChangeProperty(display_, root_, net_atoms_[ NeuroSystemNetAtomSupported ], XA_ATOM, 32, PropModeReplace,
       (unsigned char *)net_atoms_, NeuroSystemNetAtomCount);
+
+  return True;
 }
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
-
-// Configuration functions
-Bool NeuroSystemSetConfiguration(const Configuration *c) {
-  if (!c)
-    return False;
-  configuration_ = c;
-  return True;
-}
-
-const Configuration *NeuroSystemGetConfiguration() {
-  return configuration_;
-}
 
 // X functions
 Bool NeuroSystemInit() {
@@ -146,7 +139,8 @@ Bool NeuroSystemInit() {
   *(Rectangle *)&screen_region_ = (Rectangle){ .x = y_pos_, .y = x_pos_, .w = x_res_, .h = y_res_ };
 
   // Set colors, cursors and atoms
-  set_colors_cursors_atoms();
+  if (!set_colors_cursors_atoms())
+    return False;
 
   // Check if other window manager is already running
   XSetErrorHandler(xerror_handler_start);
@@ -164,7 +158,7 @@ Bool NeuroSystemInit() {
   XSync(display_, False);
 
   // Grab key bindings
-  NeuroSystemGrabKeys(root_);
+  NeuroSystemGrabKeys(root_, NeuroConfigGet()->key_set);
 
   return True;
 }
@@ -304,47 +298,55 @@ void NeuroSystemError(const char *msg) {
 }
 
 // Binding functions
-void NeuroSystemGrabKeys(Window w) {
+void NeuroSystemGrabKeys(Window w, const Key *const *key_set) {
+  if (!key_set)
+    return;
   XUngrabKey(display_, AnyKey, AnyModifier, w);
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; configuration_->keys[ i ]; ++i) {
-    k = configuration_->keys[ i ];
+  for (i = 0; key_set[ i ]; ++i) {
+    k = key_set[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
       XGrabKey(display_, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
   }
 }
 
-void NeuroSystemUngrabKeys(Window w) {
+void NeuroSystemUngrabKeys(Window w, const Key *const *key_set) {
+  if (!key_set)
+    return;
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; configuration_->keys[ i ]; ++i) {
-    k = configuration_->keys[ i ];
+  for (i = 0; key_set[ i ]; ++i) {
+    k = key_set[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
       XUngrabKey(display_, code, k->mod, w);
   }
 }
 
-void NeuroSystemGrabButtons(Window w) {
+void NeuroSystemGrabButtons(Window w, const Button *const *button_set) {
+  if (!button_set)
+    return;
   XUngrabButton(display_, AnyButton, AnyModifier, w);
   const Button *b;
   int i;
-  for (i=0; configuration_->buttons[ i ]; ++i) {
-    b = configuration_->buttons[ i ];
-    XGrabButton(display_, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask,
-        GrabModeAsync, GrabModeSync, None, None);
+  for (i=0; button_set[ i ]; ++i) {
+    b = button_set[ i ];
+    XGrabButton(display_, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask, GrabModeAsync, GrabModeSync,
+        None, None);
   }
 }
 
-void NeuroSystemUngrabButtons(Window w) {
+void NeuroSystemUngrabButtons(Window w, const Button *const *button_set) {
+  if (!button_set)
+    return;
   const Button *b;
   int i;
-  for (i=0; configuration_->buttons[ i ]; ++i) {
-    b = configuration_->buttons[ i ];
+  for (i=0; button_set[ i ]; ++i) {
+    b = button_set[ i ];
     if (b->ungrab_on_focus)
       XUngrabButton(display_, b->button, b->mod, w);
   }

@@ -14,56 +14,45 @@
 // Includes
 #include "../neuro/wm.h"
 
-// Fonts
-#define DZENPANELFONT "-*-terminus-medium-r-normal-*-11-*-*-*-*-*-*-*"
-
-// Sizes
-#define myBorderWidth 1
-#define myBorderGap 0
-
-// Modmask
-// #define myModMask Mod4Mask
-#define myModMask Mod1Mask
+// Defines
+// #define mod_mask_ Mod4Mask
+#define mod_mask_ Mod1Mask
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // COMMANDS
 //----------------------------------------------------------------------------------------------------------------------
 
-static const char* termcmd[]  = { "/usr/bin/urxvt", NULL };
-static const char* nspcmd[]   = { "/usr/bin/urxvt", "-name", RULE_SCRATCHPAD_NAME, NULL };
-static const char* xdefload[] = { "/usr/bin/xrdb", "-load", "/home/julian/.config/xorg/Xdefaults", NULL };
-static const char* wallcmd[]  = { "/usr/bin/feh", "--bg-scale", "/home/julian/Pictures/wallpapers/neurowm.png", NULL };
-static const char* lchrcmd[]  = { "/usr/bin/gmrun", NULL };
-static const char* volupcmd[] = { "/home/julian/bin/voldzen.sh", "+", "-d", NULL };
-static const char* voldocmd[] = { "/home/julian/bin/voldzen.sh", "-", "-d", NULL };
-static const char* songncmd[] = { "/usr/bin/mpc", "next", NULL };
-static const char* songpcmd[] = { "/usr/bin/mpc", "prev", NULL };
+// COMMAND
+static const char* termcmd_[]  = { "/usr/bin/urxvt", NULL };
+static const char* nspcmd_[]   = { "/usr/bin/urxvt", "-name", RULE_SCRATCHPAD_NAME, NULL };
+static const char* xdefload_[] = { "/usr/bin/xrdb", "-load", "/home/julian/.config/xorg/Xdefaults", NULL };
+static const char* wallcmd_[]  = { "/usr/bin/feh", "--bg-scale", "/home/julian/Pictures/wallpapers/neurowm.png", NULL };
+static const char* volupcmd_[] = { "/home/julian/bin/voldzen.sh", "+", "-d", NULL };
+static const char* voldocmd_[] = { "/home/julian/bin/voldzen.sh", "-", "-d", NULL };
+static const char* songncmd_[] = { "/usr/bin/mpc", "next", NULL };
+static const char* songpcmd_[] = { "/usr/bin/mpc", "prev", NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
-// START/END UP HOOK
+// ACTIONS
 //----------------------------------------------------------------------------------------------------------------------
 
-// STARTUP
-static const Action action0[] = { { NeuroActionHandlerChangeWmName, ARG_STR("LG3D") } };
-static const Action action1[] = { { NeuroActionHandlerSpawn, ARG_CMD(xdefload) } };
-static const Action action2[] = { { NeuroActionHandlerSpawn, ARG_CMD(wallcmd) } };
+// ACTION (HANDLER, ARG)
+static const Action action0_ = { NeuroActionHandlerChangeWmName, ARG_STR("LG3D") };
+static const Action action1_ = { NeuroActionHandlerSpawn, ARG_CMD(xdefload_) };
+static const Action action2_ = { NeuroActionHandlerSpawn, ARG_CMD(wallcmd_) };
 
-static const Action *startUpHookActions[] = { action0, action1, action2, NeuroActionInitCpuCalc, NULL };
-
-static const ActionChain myStartUpHook[] = { CHAIN_NULL(startUpHookActions) };
-
-// ENDUP
-static const ActionChain myEndUpHook[] = { CHAIN_NULL(NeuroActionChainStopCpuCalc) };
+// ACTIONSET
+static const Action* init_action_set_[] = { &action0_, &action1_, &action2_, &NeuroActionInitCpuCalc, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // LAYOUTS
 //----------------------------------------------------------------------------------------------------------------------
 
-// LAYOUTCONFS (NAME, ARRANGERF, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
-static const LayoutConf tile[] = { {
+// LAYOUTCONF (NAME, ARRANGERF, BORDERCOLORF, BORDERWIDTHF, BORDERGAPF, REGION (XYWH), MOD, FOLLOWMOUSE, ARGS)
+static const LayoutConf tile_ = {
   "Tile",
   NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll,
@@ -73,8 +62,8 @@ static const LayoutConf tile[] = { {
   LayoutModNull,
   True,
   {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
-} };
-static const LayoutConf mirr[] = { {
+};
+static const LayoutConf mirror_ = {
   "Mirr",
   NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll,
@@ -84,8 +73,8 @@ static const LayoutConf mirr[] = { {
   LayoutModMirror,
   True,
   {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
-} };
-static const LayoutConf grid[] = { {
+};
+static const LayoutConf grid_ = {
   "Grid",
   NeuroLayoutArrangerGrid,
   NeuroClientColorSetterAll,
@@ -95,8 +84,8 @@ static const LayoutConf grid[] = { {
   LayoutModMirror|LayoutModReflectX|LayoutModReflectY,
   True,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
-} };
-static const LayoutConf full[] = { {
+};
+static const LayoutConf full_ = {
   "Full",
   NeuroLayoutArrangerFull,
   NeuroClientColorSetterAll,
@@ -106,8 +95,8 @@ static const LayoutConf full[] = { {
   LayoutModNull,
   True,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
-} };
-static const LayoutConf floa[] = { {
+};
+static const LayoutConf float_ = {
   "Float",
   NeuroLayoutArrangerFloat,
   NeuroClientColorSetterAll,
@@ -117,93 +106,92 @@ static const LayoutConf floa[] = { {
   LayoutModNull,
   False,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
-} };
+};
 
 // LAYOUTSET
-static const LayoutConf *myLayoutSet[] = { tile, mirr, grid, NULL };
-
-// TOGLAYOUTSET
-static const LayoutConf *myTogLayoutSet[] = { full, floa, NULL };
+static const LayoutConf* layout_set_[] = { &tile_, &mirror_, &grid_, NULL };
+static const LayoutConf* toggled_layout_set_[] = { &full_, &float_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // WORKSPACES
 //----------------------------------------------------------------------------------------------------------------------
 
-// WORKSPACES (NAME, GAPS (UDLR), LAYOUTS, TOGLAYOUTS)
-static const Workspace ws0[] = { { "Terminal",    {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws1[] = { { "Network",     {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws2[] = { { "Development", {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws3[] = { { "Graphics",    {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws4[] = { { "Chatting",    {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws5[] = { { "Video",       {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws6[] = { { "Alternate1",  {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws7[] = { { "Alternate2",  {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws8[] = { { "Alternate3",  {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
-static const Workspace ws9[] = { { "Alternate4",  {16, 16, 0, 0},  myLayoutSet, myTogLayoutSet } };
+// WORKSPACE (NAME, GAPS (UDLR), LAYOUTS, TOGLAYOUTS)
+static const Workspace ws0_ = { "Terminal",    {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws1_ = { "Network",     {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws2_ = { "Development", {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws3_ = { "Graphics",    {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws4_ = { "Chatting",    {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws5_ = { "Video",       {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws6_ = { "Alternate1",  {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws7_ = { "Alternate2",  {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws8_ = { "Alternate3",  {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
+static const Workspace ws9_ = { "Alternate4",  {16, 16, 0, 0},  layout_set_, toggled_layout_set_ };
 
 // WORKSPACESET
-static const Workspace *myWorkspaceSet[] = { ws0, ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9, NULL };
+static const Workspace* workspace_set_[] = {
+    &ws0_, &ws1_, &ws2_, &ws3_, &ws4_, &ws5_, &ws6_, &ws7_, &ws8_, &ws9_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // RULES
 //----------------------------------------------------------------------------------------------------------------------
 
-// RULES (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
-static const Rule rule00[] = { {
+// RULE (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
+static const Rule rule00_ = {
   "URxvt", RULE_SCRATCHPAD_NAME, "urxvt",
   False, NeuroRuleFreeSetterScratchpad, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
-} };
-static const Rule rule01[] = { {
+};
+static const Rule rule01_ = {
   NULL, NULL, "Firefox Preferences",
   False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
-} };
-static const Rule rule02[] = { {
+};
+static const Rule rule02_ = {
   NULL, NULL, "Buddy List",
   False, NeuroRuleFreeSetterNull, RuleFixedPositionLeft, 0.2f, NeuroWorkspaceSelector4, False
-} };
-static const Rule rule03[] = { {
+};
+static const Rule rule03_ = {
   "Pidgin", NULL, NULL,
   False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector4, False
-} };
-static const Rule rule04[] = { {
+};
+static const Rule rule04_ = {
   "Firefox", NULL, NULL,
   False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, False
-} };
-static const Rule rule05[] = { {
+};
+static const Rule rule05_ = {
   "chromium", NULL, NULL,
   False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, False
-} };
-static const Rule rule06[] = { {
+};
+static const Rule rule06_ = {
   "MPlayer", NULL, NULL,
   False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
-} };
-static const Rule rule07[] = { {
+};
+static const Rule rule07_ = {
   "Gmrun", NULL, NULL,
   False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
-} };
-static const Rule rule08[] = { {
+};
+static const Rule rule08_ = {
   "Xephyr", NULL, NULL,
   True, NeuroRuleFreeSetterBigCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
-} };
-static const Rule rule09[] = { {
+};
+static const Rule rule09_ = {
   "Transmission-gtk", NULL, NULL,
   False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector9, True
-} };
-static const Rule rule10[] = { {
+};
+static const Rule rule10_ = {
   "PPSSPPSDL", "PPSSPPSDL", NULL,
   False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
-} };
-static const Rule rule11[] = { {
+};
+static const Rule rule11_ = {
   "XCalc", NULL, NULL,
   False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
-} };
+};
 
 // RULESET
-static const Rule *myRuleSet[] = {
-  rule00, rule01, rule02, rule03, rule04, rule05, rule06, rule07, rule08, rule09,
-  rule10, rule11, NULL
+static const Rule* rule_set_[] = {
+  &rule00_, &rule01_, &rule02_, &rule03_, &rule04_, &rule05_, &rule06_, &rule07_, &rule08_, &rule09_,
+  &rule10_, &rule11_, NULL
 };
 
 
@@ -212,13 +200,13 @@ static const Rule *myRuleSet[] = {
 //----------------------------------------------------------------------------------------------------------------------
 
 // TOP LEFT
-static const DzenFlags topLeftDzenFlags[] = { {
+static const DzenFlags top_left_dzen_flags_ = {
   0, 0, 1500, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
-  'l', DZENPANELFONT, "onstart=lower", "-p"
-} };
-static const LoggerFn topLeftLoggers[] = {
+  'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+};
+static const LoggerFn top_left_loggers_[] = {
   NeuroThemeNnoellLoggerCurrLayout,
   NeuroThemeNnoellLoggerLayoutMod,
   NeuroThemeNnoellLoggerCurrWorkspace,
@@ -227,26 +215,26 @@ static const LoggerFn topLeftLoggers[] = {
 };
 
 // TOP RIGHT
-static const DzenFlags topRightDzenFlags[] = { {
+static const DzenFlags top_right_dzen_flags_ = {
   1500, 0, 420, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
-  'r', DZENPANELFONT, "onstart=lower", "-p"
-} };
-static const LoggerFn topRightLoggers[] = {
+  'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+};
+static const LoggerFn top_right_loggers_[] = {
   NeuroThemeNnoellLoggerUptime,
   NeuroThemeNnoellLoggerDateTime,
   NULL
 };
 
 // BOTTOM LEFT
-static const DzenFlags botLeftDzenFlags[] = { {
+static const DzenFlags bottom_left_dzen_flags_ = {
   0, 1064, 920, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
-  'l', DZENPANELFONT, "onstart=lower", "-p"
-} };
-static const LoggerFn botLeftLoggers[] = {
+  'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+};
+static const LoggerFn bottom_left_loggers_[] = {
   NeuroThemeNnoellLoggerWorkspaceList,
   NeuroThemeNnoellLoggerStackSize,
   NeuroThemeNnoellLoggerMinimizedCount,
@@ -254,13 +242,13 @@ static const LoggerFn botLeftLoggers[] = {
 };
 
 // BOTTOM RIGHT
-static const DzenFlags botRightDzenFlags[] = { {
+static const DzenFlags bottom_right_dzen_flags_ = {
   920, 1064, 1000, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
-  'r', DZENPANELFONT, "onstart=lower", "-p"
-} };
-static const LoggerFn botRightLoggers[] = {
+  'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+};
+static const LoggerFn bottom_right_loggers_[] = {
   NeuroThemeNnoellLoggerCpu,
   NeuroThemeNnoellLoggerRam,
   NeuroThemeNnoellLoggerTemperature,
@@ -268,14 +256,15 @@ static const LoggerFn botRightLoggers[] = {
   NULL
 };
 
-// DZENPANELS (DZENFLAGS, LOGGERS, SEP, REFRESH)
-static const DzenPanel topLeftPanel[]  = { { topLeftDzenFlags,  topLeftLoggers,  " ",  DZEN_ON_EVENT } };
-static const DzenPanel topRightPanel[] = { { topRightDzenFlags, topRightLoggers, " ",  1             } };
-static const DzenPanel botLeftPanel[]  = { { botLeftDzenFlags,  botLeftLoggers,  " ",  DZEN_ON_EVENT } };
-static const DzenPanel botRightPanel[] = { { botRightDzenFlags, botRightLoggers, " ",  1             } };
+// DZENPANEL (DZENFLAGS, LOGGERS, SEP, REFRESH)
+static const DzenPanel top_left_panel_     = { &top_left_dzen_flags_,     top_left_loggers_,     " ",  DZEN_ON_EVENT };
+static const DzenPanel top_right_panel_    = { &top_right_dzen_flags_,    top_right_loggers_,    " ",  1             };
+static const DzenPanel bottom_left_panel_  = { &bottom_left_dzen_flags_,  bottom_left_loggers_,  " ",  DZEN_ON_EVENT };
+static const DzenPanel bottom_right_panel_ = { &bottom_right_dzen_flags_, bottom_right_loggers_, " ",  1             };
 
 // DZENPANELSET
-static const DzenPanel *myDzenPanelSet[] = { topLeftPanel, topRightPanel, botLeftPanel, botRightPanel, NULL };
+static const DzenPanel* dzen_panel_set_[] = {
+    &top_left_panel_, &top_right_panel_, &bottom_left_panel_, &bottom_right_panel_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -283,321 +272,321 @@ static const DzenPanel *myDzenPanelSet[] = { topLeftPanel, topRightPanel, botLef
 //----------------------------------------------------------------------------------------------------------------------
 
 // KEY (MOD, KEY, ACTIONCHAIN)
-static const Key key00[] = { {  // Launches the terminal (urxvtc)
-  myModMask|ShiftMask, XK_Return,
-  CHAIN(NeuroActionChainSpawn, ARG_CMD(termcmd))
-} };
-static const Key key01[] = { {  // Closes the current client
-  myModMask, XK_c,
-  CHAIN_NULL(NeuroActionChainKillClient)
-} };
-static const Key key02[] = { {  // Selects the next client
-  myModMask, XK_j,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorNext))
-} };
-static const Key key03[] = { {  // Selects the previous client
-  myModMask, XK_k,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorPrev))
-} };
-static const Key key04[] = { {  // Selects the previous selected client
-  myModMask, XK_Tab,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorOld))
-} };
-static const Key key05[] = { {  // Selects the master client
-  myModMask, XK_m,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorHead))
-} };
-static const Key key06[] = { {  // Swaps the current client with the next one
-  myModMask|ShiftMask, XK_j,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorNext))
-} };
-static const Key key07[] = { {  // Swaps the current client with the previous one
-  myModMask|ShiftMask, XK_k,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorPrev))
-} };
-static const Key key08[] = { {  // Swaps the current client with the previous selected one
-  myModMask|ShiftMask, XK_p,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorOld))
-} };
-static const Key key09[] = { {  // Swaps the current client with the master one
-  myModMask|ShiftMask, XK_m,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorHead))
-} };
-static const Key key10[] = { {  // Selects the upper client by position
-  myModMask, XK_Up,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorUp))
-} };
-static const Key key11[] = { {  // Selects the lower client by position
-  myModMask, XK_Down,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorDown))
-} };
-static const Key key12[] = { {  // Selects the left client by position
-  myModMask, XK_Left,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorLeft))
-} };
-static const Key key13[] = { {  // Selects the right client by position
-  myModMask, XK_Right,
-  CHAIN(NeuroActionChainFocusCurrClient, ARG_CSF(NeuroClientSelectorRight))
-} };
-static const Key key14[] = { {  // Swaps the current client with the upper one by position
-  myModMask|ShiftMask, XK_Up,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorUp))
-} };
-static const Key key15[] = { {  // Swaps the current client with the lower one by position
-  myModMask|ShiftMask, XK_Down,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorDown))
-} };
-static const Key key16[] = { {  // Swaps the current client with the left one by position
-  myModMask|ShiftMask, XK_Left,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorLeft))
-} };
-static const Key key17[] = { {  // Swaps the current client with the right one by position
-  myModMask|ShiftMask, XK_Right,
-  CHAIN(NeuroActionChainSwapCurrClient, ARG_CSF(NeuroClientSelectorRight))
-} };
-static const Key key18[] = { {  // Cicles through all the layouts
-  myModMask, XK_space,
-  CHAIN_NULL(NeuroActionChainChangeLayout)
-} };
-static const Key key19[] = { {  // Toggles the selected client into tile/free mode
-  myModMask, XK_t,
-  CHAIN_NULL(NeuroActionChainToggleFreeCurrClient)
-} };
-static const Key key20[] = { {  // Toggles mirror mod to the current layout
-  myModMask, XK_z,
-  CHAIN(NeuroActionChainToggleModLayout, ARG_LMOD(LayoutModMirror))
-} };
-static const Key key21[] = { {  // Toggles reflect X mod to the current layout
-  myModMask, XK_x,
-  CHAIN(NeuroActionChainToggleModLayout, ARG_LMOD(LayoutModReflectX))
-} };
-static const Key key22[] = { {  // Toggles reflect Y mod to the current layout
-  myModMask, XK_y,
-  CHAIN(NeuroActionChainToggleModLayout, ARG_LMOD(LayoutModReflectY))
-} };
-static const Key key23[] = { {  // Toggles the full layout
-  myModMask, XK_f,
-  CHAIN(NeuroActionChainToggleLayout, ARG_INT(0))
-} };
-static const Key key24[] = { {  // Toggles the float layout
-  myModMask, XK_o,
-  CHAIN(NeuroActionChainToggleLayout, ARG_INT(1))
-} };
-static const Key key25[] = { {  // Toggles the selected client into normal/fullscreen mode
-  myModMask|ShiftMask, XK_f,
-  CHAIN_NULL(NeuroActionChainToggleFullscreenCurrClient)
-} };
-static const Key key26[] = { {  // Increases the number of clients in the master area
-  myModMask, XK_comma,
-  CHAIN_NULL(NeuroActionChainIncreaseMasterLayout)
-} };
-static const Key key27[] = { {  // Reduces the number of clients in the master area
-  myModMask, XK_period,
-  CHAIN(NeuroActionChainIncreaseMasterLayout, ARG_INT(-1))
-} };
-static const Key key28[] = { {  // Increases layout's master size
-  myModMask, XK_l,
-  CHAIN_NULL(NeuroActionChainResizeMasterLayout)
-} };
-static const Key key29[] = { {  // Reduces layout's master size
-  myModMask, XK_h,
-  CHAIN(NeuroActionChainResizeMasterLayout, ARG_FLOAT(-1.0f))
-} };
-static const Key key30[] = { {  // Changes to workspace 0
-  myModMask, XK_1,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector0))
-} };
-static const Key key31[] = { {  // Changes to workspace 1
-  myModMask, XK_2,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector1))
-} };
-static const Key key32[] = { {  // Changes to workspace 2
-  myModMask, XK_3,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector2))
-} };
-static const Key key33[] = { {  // Changes to workspace 3
-  myModMask, XK_4,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector3))
-} };
-static const Key key34[] = { {  // Changes to workspace 4
-  myModMask, XK_5,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector4))
-} };
-static const Key key35[] = { {  // Changes to workspace 5
-  myModMask, XK_6,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector5))
-} };
-static const Key key36[] = { {  // Changes to workspace 6
-  myModMask, XK_7,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector6))
-} };
-static const Key key37[] = { {  // Changes to workspace 7
-  myModMask, XK_8,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector7))
-} };
-static const Key key38[] = { {  // Changes to workspace 8
-  myModMask, XK_9,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector8))
-} };
-static const Key key39[] = { {  // Changes to workspace 9
-  myModMask, XK_0,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector9))
-} };
-static const Key key40[] = { {  // Changes to the previous workspace
+static const Key key00_ = {  // Launches the terminal (urxvtc)
+  mod_mask_|ShiftMask, XK_Return,
+  CHAIN(NeuroActionSetSpawn, ARG_CMD(termcmd_))
+};
+static const Key key01_ = {  // Closes the current client
+  mod_mask_, XK_c,
+  CHAIN_NULL(NeuroActionSetKillClient)
+};
+static const Key key02_ = {  // Selects the next client
+  mod_mask_, XK_j,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorNext))
+};
+static const Key key03_ = {  // Selects the previous client
+  mod_mask_, XK_k,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorPrev))
+};
+static const Key key04_ = {  // Selects the previous selected client
+  mod_mask_, XK_Tab,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorOld))
+};
+static const Key key05_ = {  // Selects the master client
+  mod_mask_, XK_m,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorHead))
+};
+static const Key key06_ = {  // Swaps the current client with the next one
+  mod_mask_|ShiftMask, XK_j,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorNext))
+};
+static const Key key07_ = {  // Swaps the current client with the previous one
+  mod_mask_|ShiftMask, XK_k,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorPrev))
+};
+static const Key key08_ = {  // Swaps the current client with the previous selected one
+  mod_mask_|ShiftMask, XK_p,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorOld))
+};
+static const Key key09_ = {  // Swaps the current client with the master one
+  mod_mask_|ShiftMask, XK_m,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorHead))
+};
+static const Key key10_ = {  // Selects the upper client by position
+  mod_mask_, XK_Up,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorUp))
+};
+static const Key key11_ = {  // Selects the lower client by position
+  mod_mask_, XK_Down,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorDown))
+};
+static const Key key12_ = {  // Selects the left client by position
+  mod_mask_, XK_Left,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorLeft))
+};
+static const Key key13_ = {  // Selects the right client by position
+  mod_mask_, XK_Right,
+  CHAIN(NeuroActionSetFocusCurrClient, ARG_CSF(NeuroClientSelectorRight))
+};
+static const Key key14_ = {  // Swaps the current client with the upper one by position
+  mod_mask_|ShiftMask, XK_Up,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorUp))
+};
+static const Key key15_ = {  // Swaps the current client with the lower one by position
+  mod_mask_|ShiftMask, XK_Down,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorDown))
+};
+static const Key key16_ = {  // Swaps the current client with the left one by position
+  mod_mask_|ShiftMask, XK_Left,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorLeft))
+};
+static const Key key17_ = {  // Swaps the current client with the right one by position
+  mod_mask_|ShiftMask, XK_Right,
+  CHAIN(NeuroActionSetSwapCurrClient, ARG_CSF(NeuroClientSelectorRight))
+};
+static const Key key18_ = {  // Cicles through all the layouts
+  mod_mask_, XK_space,
+  CHAIN_NULL(NeuroActionSetChangeLayout)
+};
+static const Key key19_ = {  // Toggles the selected client into tile/free mode
+  mod_mask_, XK_t,
+  CHAIN_NULL(NeuroActionSetToggleFreeCurrClient)
+};
+static const Key key20_ = {  // Toggles mirror mod to the current layout
+  mod_mask_, XK_z,
+  CHAIN(NeuroActionSetToggleModLayout, ARG_LMOD(LayoutModMirror))
+};
+static const Key key21_ = {  // Toggles reflect X mod to the current layout
+  mod_mask_, XK_x,
+  CHAIN(NeuroActionSetToggleModLayout, ARG_LMOD(LayoutModReflectX))
+};
+static const Key key22_ = {  // Toggles reflect Y mod to the current layout
+  mod_mask_, XK_y,
+  CHAIN(NeuroActionSetToggleModLayout, ARG_LMOD(LayoutModReflectY))
+};
+static const Key key23_ = {  // Toggles the full layout
+  mod_mask_, XK_f,
+  CHAIN(NeuroActionSetToggleLayout, ARG_INT(0))
+};
+static const Key key24_ = {  // Toggles the float layout
+  mod_mask_, XK_o,
+  CHAIN(NeuroActionSetToggleLayout, ARG_INT(1))
+};
+static const Key key25_ = {  // Toggles the selected client into normal/fullscreen mode
+  mod_mask_|ShiftMask, XK_f,
+  CHAIN_NULL(NeuroActionSetToggleFullscreenCurrClient)
+};
+static const Key key26_ = {  // Increases the number of clients in the master area
+  mod_mask_, XK_comma,
+  CHAIN_NULL(NeuroActionSetIncreaseMasterLayout)
+};
+static const Key key27_ = {  // Reduces the number of clients in the master area
+  mod_mask_, XK_period,
+  CHAIN(NeuroActionSetIncreaseMasterLayout, ARG_INT(-1))
+};
+static const Key key28_ = {  // Increases layout's master size
+  mod_mask_, XK_l,
+  CHAIN_NULL(NeuroActionSetResizeMasterLayout)
+};
+static const Key key29_ = {  // Reduces layout's master size
+  mod_mask_, XK_h,
+  CHAIN(NeuroActionSetResizeMasterLayout, ARG_FLOAT(-1.0f))
+};
+static const Key key30_ = {  // Changes to workspace 0
+  mod_mask_, XK_1,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector0))
+};
+static const Key key31_ = {  // Changes to workspace 1
+  mod_mask_, XK_2,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector1))
+};
+static const Key key32_ = {  // Changes to workspace 2
+  mod_mask_, XK_3,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector2))
+};
+static const Key key33_ = {  // Changes to workspace 3
+  mod_mask_, XK_4,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector3))
+};
+static const Key key34_ = {  // Changes to workspace 4
+  mod_mask_, XK_5,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector4))
+};
+static const Key key35_ = {  // Changes to workspace 5
+  mod_mask_, XK_6,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector5))
+};
+static const Key key36_ = {  // Changes to workspace 6
+  mod_mask_, XK_7,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector6))
+};
+static const Key key37_ = {  // Changes to workspace 7
+  mod_mask_, XK_8,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector7))
+};
+static const Key key38_ = {  // Changes to workspace 8
+  mod_mask_, XK_9,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector8))
+};
+static const Key key39_ = {  // Changes to workspace 9
+  mod_mask_, XK_0,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelector9))
+};
+static const Key key40_ = {  // Changes to the previous workspace
   ControlMask|Mod1Mask, XK_Left,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorPrev))
-} };
-static const Key key41[] = { {  // Changes to the next workspace
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorPrev))
+};
+static const Key key41_ = {  // Changes to the next workspace
   ControlMask|Mod1Mask, XK_Right,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorNext))
-} };
-static const Key key42[] = { {  // Changes to the previous selected workspace
-  myModMask|ShiftMask, XK_Tab,
-  CHAIN(NeuroActionChainChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorOld))
-} };
-static const Key key43[] = { {  // Sends the selected client to workspace 0
-  myModMask|ShiftMask, XK_1,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector0))
-} };
-static const Key key44[] = { {  // Sends the selected client to workspace 1
-  myModMask|ShiftMask, XK_2,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector1))
-} };
-static const Key key45[] = { {  // Sends the selected client to workspace 2
-  myModMask|ShiftMask, XK_3,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector2))
-} };
-static const Key key46[] = { {  // Sends the selected client to workspace 3
-  myModMask|ShiftMask, XK_4,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector3))
-} };
-static const Key key47[] = { {  // Sends the selected client to workspace 4
-  myModMask|ShiftMask, XK_5,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector4))
-} };
-static const Key key48[] = { {  // Sends the selected client to workspace 5
-  myModMask|ShiftMask, XK_6,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector5))
-} };
-static const Key key49[] = { {  // Sends the selected client to workspace 6
-  myModMask|ShiftMask, XK_7,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector6))
-} };
-static const Key key50[] = { {  // Sends the selected client to workspace 7
-  myModMask|ShiftMask, XK_8,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector7))
-} };
-static const Key key51[] = { {  // Sends the selected client to workspace 8
-  myModMask|ShiftMask, XK_9,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector8))
-} };
-static const Key key52[] = { {  // Sends the selected client to workspace 9
-  myModMask|ShiftMask, XK_0,
-  CHAIN(NeuroActionChainSendCurrClient, ARG_WSF(NeuroWorkspaceSelector9))
-} };
-static const Key key53[] = { {  // Sends the selected client to workspace 0 and follows it
-  myModMask|ControlMask, XK_1,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector0))
-} };
-static const Key key54[] = { {  // Sends the selected client to workspace 1 and follows it
-  myModMask|ControlMask, XK_2,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector1))
-} };
-static const Key key55[] = { {  // Sends the selected client to workspace 2 and follows it
-  myModMask|ControlMask, XK_3,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector2))
-} };
-static const Key key56[] = { {  // Sends the selected client to workspace 3 and follows it
-  myModMask|ControlMask, XK_4,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector3))
-} };
-static const Key key57[] = { {  // Sends the selected client to workspace 4 and follows it
-  myModMask|ControlMask, XK_5,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector4))
-} };
-static const Key key58[] = { {  // Sends the selected client to workspace 5 and follows it
-  myModMask|ControlMask, XK_6,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector5))
-} };
-static const Key key59[] = { {  // Sends the selected client to workspace 6 and follows it
-  myModMask|ControlMask, XK_7,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector6))
-} };
-static const Key key60[] = { {  // Sends the selected client to workspace 7 and follows it
-  myModMask|ControlMask, XK_8,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector7))
-} };
-static const Key key61[] = { {  // Sends the selected client to workspace 8 and follows it
-  myModMask|ControlMask, XK_9,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector8))
-} };
-static const Key key62[] = { {  // Sends the selected client to workspace 9 and follows it
-  myModMask|ControlMask, XK_0,
-  CHAIN(NeuroActionChainSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector9))
-} };
-static const Key key63[] = { {  // Exits the window manager
-  myModMask|ShiftMask, XK_q,
-  CHAIN_NULL(NeuroActionChainQuit)
-} };
-static const Key key64[] = { {  // Reloads the window manager
-  myModMask, XK_q,
-  CHAIN_NULL(NeuroActionChainReload)
-} };
-static const Key key65[] = { {  // Launches the application launcher (gmrun)
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorNext))
+};
+static const Key key42_ = {  // Changes to the previous selected workspace
+  mod_mask_|ShiftMask, XK_Tab,
+  CHAIN(NeuroActionSetChangeWorkspace, ARG_WSF(NeuroWorkspaceSelectorOld))
+};
+static const Key key43_ = {  // Sends the selected client to workspace 0
+  mod_mask_|ShiftMask, XK_1,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector0))
+};
+static const Key key44_ = {  // Sends the selected client to workspace 1
+  mod_mask_|ShiftMask, XK_2,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector1))
+};
+static const Key key45_ = {  // Sends the selected client to workspace 2
+  mod_mask_|ShiftMask, XK_3,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector2))
+};
+static const Key key46_ = {  // Sends the selected client to workspace 3
+  mod_mask_|ShiftMask, XK_4,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector3))
+};
+static const Key key47_ = {  // Sends the selected client to workspace 4
+  mod_mask_|ShiftMask, XK_5,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector4))
+};
+static const Key key48_ = {  // Sends the selected client to workspace 5
+  mod_mask_|ShiftMask, XK_6,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector5))
+};
+static const Key key49_ = {  // Sends the selected client to workspace 6
+  mod_mask_|ShiftMask, XK_7,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector6))
+};
+static const Key key50_ = {  // Sends the selected client to workspace 7
+  mod_mask_|ShiftMask, XK_8,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector7))
+};
+static const Key key51_ = {  // Sends the selected client to workspace 8
+  mod_mask_|ShiftMask, XK_9,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector8))
+};
+static const Key key52_ = {  // Sends the selected client to workspace 9
+  mod_mask_|ShiftMask, XK_0,
+  CHAIN(NeuroActionSetSendCurrClient, ARG_WSF(NeuroWorkspaceSelector9))
+};
+static const Key key53_ = {  // Sends the selected client to workspace 0 and follows it
+  mod_mask_|ControlMask, XK_1,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector0))
+};
+static const Key key54_ = {  // Sends the selected client to workspace 1 and follows it
+  mod_mask_|ControlMask, XK_2,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector1))
+};
+static const Key key55_ = {  // Sends the selected client to workspace 2 and follows it
+  mod_mask_|ControlMask, XK_3,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector2))
+};
+static const Key key56_ = {  // Sends the selected client to workspace 3 and follows it
+  mod_mask_|ControlMask, XK_4,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector3))
+};
+static const Key key57_ = {  // Sends the selected client to workspace 4 and follows it
+  mod_mask_|ControlMask, XK_5,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector4))
+};
+static const Key key58_ = {  // Sends the selected client to workspace 5 and follows it
+  mod_mask_|ControlMask, XK_6,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector5))
+};
+static const Key key59_ = {  // Sends the selected client to workspace 6 and follows it
+  mod_mask_|ControlMask, XK_7,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector6))
+};
+static const Key key60_ = {  // Sends the selected client to workspace 7 and follows it
+  mod_mask_|ControlMask, XK_8,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector7))
+};
+static const Key key61_ = {  // Sends the selected client to workspace 8 and follows it
+  mod_mask_|ControlMask, XK_9,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector8))
+};
+static const Key key62_ = {  // Sends the selected client to workspace 9 and follows it
+  mod_mask_|ControlMask, XK_0,
+  CHAIN(NeuroActionSetSendFollowCurrClient, ARG_WSF(NeuroWorkspaceSelector9))
+};
+static const Key key63_ = {  // Exits the window manager
+  mod_mask_|ShiftMask, XK_q,
+  CHAIN_NULL(NeuroActionSetQuit)
+};
+static const Key key64_ = {  // Reloads the window manager
+  mod_mask_, XK_q,
+  CHAIN_NULL(NeuroActionSetReload)
+};
+static const Key key65_ = {  // Launches the application launcher (gmrun)
   Mod1Mask, XK_F2,
-  CHAIN(NeuroActionChainSpawn, ARG_CMD(lchrcmd))
-} };
-static const Key key66[] = { {  // Resets the current layout to itds default values
-  myModMask|ShiftMask, XK_space,
-  CHAIN_NULL(NeuroActionChainResetLayout)
-} };
-static const Key key67[] = { {  // Minimizes the selected client
-  myModMask, XK_n,
-  CHAIN_NULL(NeuroActionChainMinimizeCurrClient)
-} };
-static const Key key68[] = { {  // Restores the last minimized client
-  myModMask|ShiftMask, XK_n,
-  CHAIN_NULL(NeuroActionChainRestoreLastMinimized)
-} };
-static const Key key69[] = { {  // Sets the selected client into big center free mode
-  myModMask|ShiftMask, XK_t,
-  CHAIN(NeuroActionChainFreeCurrClient, ARG_FSF(NeuroRuleFreeSetterBigCenter))
-} };
-static const Key key70[] = { {  // Toggles the scratchpad
-  myModMask, XK_grave,
-  CHAIN(NeuroActionChainToggleScratchpad, ARG_CMD(nspcmd))
-} };
-static const Key key71[] = { {  // Toggles the scratchpad
-  myModMask, XK_masculine,
-  CHAIN(NeuroActionChainToggleScratchpad, ARG_CMD(nspcmd))
-} };
-static const Key key72[] = { {  // Rises the volume
+  CHAIN(NeuroActionSetSpawn, ARG_CMD(NeuroConfigDefaultLauncherCommand))
+};
+static const Key key66_ = {  // Resets the current layout to itds default values
+  mod_mask_|ShiftMask, XK_space,
+  CHAIN_NULL(NeuroActionSetResetLayout)
+};
+static const Key key67_ = {  // Minimizes the selected client
+  mod_mask_, XK_n,
+  CHAIN_NULL(NeuroActionSetMinimizeCurrClient)
+};
+static const Key key68_ = {  // Restores the last minimized client
+  mod_mask_|ShiftMask, XK_n,
+  CHAIN_NULL(NeuroActionSetRestoreLastMinimized)
+};
+static const Key key69_ = {  // Sets the selected client into big center free mode
+  mod_mask_|ShiftMask, XK_t,
+  CHAIN(NeuroActionSetFreeCurrClient, ARG_FSF(NeuroRuleFreeSetterBigCenter))
+};
+static const Key key70_ = {  // Toggles the scratchpad
+  mod_mask_, XK_grave,
+  CHAIN(NeuroActionSetToggleScratchpad, ARG_CMD(nspcmd_))
+};
+static const Key key71_ = {  // Toggles the scratchpad
+  mod_mask_, XK_masculine,
+  CHAIN(NeuroActionSetToggleScratchpad, ARG_CMD(nspcmd_))
+};
+static const Key key72_ = {  // Rises the volume
   Mod1Mask, XK_Up,
-  CHAIN(NeuroActionChainSpawn, ARG_CMD(volupcmd))
-} };
-static const Key key73[] = { {  // Lowers the volume
+  CHAIN(NeuroActionSetSpawn, ARG_CMD(volupcmd_))
+};
+static const Key key73_ = {  // Lowers the volume
   Mod1Mask, XK_Down,
-  CHAIN(NeuroActionChainSpawn, ARG_CMD(voldocmd))
-} };
-static const Key key74[] = { {  // Jumps to the next song
+  CHAIN(NeuroActionSetSpawn, ARG_CMD(voldocmd_))
+};
+static const Key key74_ = {  // Jumps to the next song
   Mod1Mask, XK_Right,
-  CHAIN(NeuroActionChainSpawn, ARG_CMD(songncmd))
-} };
-static const Key key75[] = { {  // Jumps to the previous song
+  CHAIN(NeuroActionSetSpawn, ARG_CMD(songncmd_))
+};
+static const Key key75_ = {  // Jumps to the previous song
   Mod1Mask, XK_Left,
-  CHAIN(NeuroActionChainSpawn, ARG_CMD(songpcmd))
-} };
+  CHAIN(NeuroActionSetSpawn, ARG_CMD(songpcmd_))
+};
 
-// KEYS
-static const Key *myKeys[] = {
-  key00, key01, key02, key03, key04, key05, key06, key07, key08, key09,
-  key10, key11, key12, key13, key14, key15, key16, key17, key18, key19,
-  key20, key21, key22, key23, key24, key25, key26, key27, key28, key29,
-  key30, key31, key32, key33, key34, key35, key36, key37, key38, key39,
-  key40, key41, key42, key43, key44, key45, key46, key47, key48, key49,
-  key50, key51, key52, key53, key54, key55, key56, key57, key58, key59,
-  key60, key61, key62, key63, key64, key65, key66, key67, key68, key69,
-  key70, key71, key72, key73, key74, key75, NULL
+// KEYSET
+static const Key* key_set_[] = {
+  &key00_, &key01_, &key02_, &key03_, &key04_, &key05_, &key06_, &key07_, &key08_, &key09_,
+  &key10_, &key11_, &key12_, &key13_, &key14_, &key15_, &key16_, &key17_, &key18_, &key19_,
+  &key20_, &key21_, &key22_, &key23_, &key24_, &key25_, &key26_, &key27_, &key28_, &key29_,
+  &key30_, &key31_, &key32_, &key33_, &key34_, &key35_, &key36_, &key37_, &key38_, &key39_,
+  &key40_, &key41_, &key42_, &key43_, &key44_, &key45_, &key46_, &key47_, &key48_, &key49_,
+  &key50_, &key51_, &key52_, &key53_, &key54_, &key55_, &key56_, &key57_, &key58_, &key59_,
+  &key60_, &key61_, &key62_, &key63_, &key64_, &key65_, &key66_, &key67_, &key68_, &key69_,
+  &key70_, &key71_, &key72_, &key73_, &key74_, &key75_, NULL
 };
 
 
@@ -606,44 +595,45 @@ static const Key *myKeys[] = {
 //----------------------------------------------------------------------------------------------------------------------
 
 // BUTTON (MOD, BUTTON, ACTIONCHAIN, UNWRAPONFOCUS)
-static const Button button00[] = { {
-    NULL_MASK,           Button1, CHAIN_NULL(NeuroActionChainFocusPtrClient),            True  } };
-static const Button button01[] = { {
-    myModMask,           Button1, CHAIN_NULL(NeuroActionChainFreeMovePtrClient),         False } };
-static const Button button02[] = { {
-    myModMask,           Button2, CHAIN_NULL(NeuroActionChainToggleFreePtrClient),       False } };
-static const Button button03[] = { {
-    myModMask,           Button3, CHAIN_NULL(NeuroActionChainFreeResizePtrClient),       False } };
-static const Button button04[] = { {
-    myModMask|ShiftMask, Button1, CHAIN_NULL(NeuroActionChainFloatMovePtrClient),        False } };
-static const Button button05[] = { {
-    myModMask|ShiftMask, Button2, CHAIN_NULL(NeuroActionChainToggleFullscreenPtrClient), False } };
-static const Button button06[] = { {
-    myModMask|ShiftMask, Button3, CHAIN_NULL(NeuroActionChainFloatResizePtrClient),      False } };
+static const Button button0_ = {
+    NULL_MASK,           Button1, CHAIN_NULL(NeuroActionSetFocusPtrClient),            True  };
+static const Button button1_ = {
+    mod_mask_,           Button1, CHAIN_NULL(NeuroActionSetFreeMovePtrClient),         False };
+static const Button button2_ = {
+    mod_mask_,           Button2, CHAIN_NULL(NeuroActionSetToggleFreePtrClient),       False };
+static const Button button3_ = {
+    mod_mask_,           Button3, CHAIN_NULL(NeuroActionSetFreeResizePtrClient),       False };
+static const Button button4_ = {
+    mod_mask_|ShiftMask, Button1, CHAIN_NULL(NeuroActionSetFloatMovePtrClient),        False };
+static const Button button5_ = {
+    mod_mask_|ShiftMask, Button2, CHAIN_NULL(NeuroActionSetToggleFullscreenPtrClient), False };
+static const Button button6_ = {
+    mod_mask_|ShiftMask, Button3, CHAIN_NULL(NeuroActionSetFloatResizePtrClient),      False };
 
-// BUTTONS
-static const Button *myButtons[] = { button00, button01, button02, button03, button04, button05, button06, NULL };
+// BUTTONSET
+static const Button* button_set_[] = {
+    &button0_, &button1_, &button2_, &button3_, &button4_, &button5_, &button6_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
-// PUBLIC VARIABLE DEFINITION
+// CONFIGURATION
 //----------------------------------------------------------------------------------------------------------------------
 
-static const Configuration myConfiguration = {
-  NeuroConfigNormalBorderColor,
-  NeuroConfigCurrentBorderColor,
-  NeuroConfigOldBorderColor,
-  NeuroConfigFreeBorderColor,
-  NeuroConfigUrgentBorderColor,
-  myBorderWidth,
-  myBorderGap,
-  myWorkspaceSet,
-  myRuleSet,
-  myDzenPanelSet,  // Dzen must be installed
-  myKeys,
-  myButtons,
-  myStartUpHook,
-  myEndUpHook
+static const Configuration configuration_ = {
+  CHAIN_NULL(init_action_set_),
+  CHAIN_NULL(NeuroActionSetStopCpuCalc),
+  NeuroConfigDefaultNormalBorderColor,
+  NeuroConfigDefaultCurrentBorderColor,
+  NeuroConfigDefaultOldBorderColor,
+  NeuroConfigDefaultFreeBorderColor,
+  NeuroConfigDefaultUrgentBorderColor,
+  NeuroConfigDefaultBorderWidth,
+  NeuroConfigDefaultBorderGap,
+  workspace_set_,
+  rule_set_,
+  dzen_panel_set_,  // Dzen must be installed
+  key_set_,
+  button_set_,
 };
 
 
@@ -654,7 +644,7 @@ static const Configuration myConfiguration = {
 int main(int argc, char **argv) {
   (void)argc;
   (void)argv;
-  return NeuroWmRun(&myConfiguration);
-  // return NeuroWmRun(&NeuroConfigConfiguration);
+  return NeuroWmRun(&configuration_);
+  // return NeuroWmRun(NULL);
 }
 

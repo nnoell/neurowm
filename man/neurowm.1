@@ -272,21 +272,22 @@ In order to configure neurowm, you must code a neurowm.c file in C language
 under \f[I]~/.neurowm\f[] directory, then you must compile it and run it in order to
 see your applied changes.
 
-A neurowm configuration is just a big struct of type \f[I]WMConfig\f[]. This struct must be passed as a parameter to a function called \f[I]neurowm\f[] within \f[I]neurowm.h\f[] module. There is already an initialized WMConfig struct called \f[I]defWMConfig\f[] in 
-\f[I]config.h\f[] with the default neurowm configuration. Therefore, the simpliest
-\f[I]neurowm.c\f[] you can write is the following:
+A neurowm configuration is just a big struct of type \f[I]Configuration\f[]. This struct must be passed as a parameter
+to a function called \f[I]NeuroWmRun\f[] within the \f[I]wm.h\f[] module. You can either implement your own Configure
+structure, or use the default one in \f[I]config.h\f[]. Also, if you pass a \f[I[NULL\f[] pointer, the window manager
+will pick up the default configuration. The simpliest \f[I]neurowm.c\f[] you can write is the following:
 .IP
 .nf
 \f[C]
-#include <neuro/neurowm.h>
+#include <neuro/wm.h>
 
 int\ main()\ {
-\ \ \ \ return\ NeuroWmRun(&NeuroConfigConfiguration);
+\ \ \ \ return\ NeuroWmRun(NULL);
 }
 \f[]
 .fi
 .PP
-Now, in order to load this default configuration, you need to compile it with the neurowm binary: \f[I]neurowm --recompile\f[]
+Compile it using the neurowm binary and restart X: \f[I]neurowm --recompile\f[]
 .SH WIKI
 .PP
 Visit \f[I]https://github.com/nnoell/neurowm/wiki\f[]

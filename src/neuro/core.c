@@ -13,6 +13,7 @@
 
 // Includes
 #include "system.h"
+#include "config.h"
 #include "geometry.h"
 #include "core.h"
 
@@ -281,8 +282,12 @@ static void set_layouts(Layout *l, const LayoutConf *const *lc, size_t size) {
 // StackSet
 Bool NeuroCoreInit() {
   // Allocate as many stacks as we need
-  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspace_set;
-  const size_t size = NeuroTypeArrayLength((const void *const *const)workspaceSet);
+  const Workspace *const *const workspace_set = NeuroConfigGet()->workspace_set;
+  if (!workspace_set)
+    return False;
+  const size_t size = NeuroTypeArrayLength((const void *const *const)workspace_set);
+  if (size <= 0)
+    return False;
   stack_set_.stacks = new_stackset(size + 1);  // We need on extra stack for NSP
   if (!stack_set_.stacks)
     return False;
@@ -295,8 +300,8 @@ Bool NeuroCoreInit() {
   // Initialize the stacks
   const Workspace *ws;
   size_t i, sizel, sizetl;
-  for (i = 0; workspaceSet[ i ]; ++i) {
-    ws = workspaceSet[ i ];
+  for (i = 0; workspace_set[ i ]; ++i) {
+    ws = workspace_set[ i ];
     sizel = NeuroTypeArrayLength((const void *const *const)(ws->layouts));
     if (!sizel)
       return False;
@@ -556,11 +561,12 @@ Layout *NeuroCoreStackGetLayout(int ws, int i) {
 }
 
 const LayoutConf *NeuroCoreStackGetLayoutConf(int ws, int i) {
-  const Workspace *const *const workspaceSet = NeuroSystemGetConfiguration()->workspace_set;
+  assert(NeuroConfigGet()->workspace_set);
+  const Workspace *const *const workspace_set = NeuroConfigGet()->workspace_set;
   const int s = ws % stack_set_.size;
   if (stack_set_.stacks[ s ].curr_toggled_layout_index == -1)
-    return workspaceSet[ s ]->layouts[ i % stack_set_.stacks[ s ].num_layouts ];
-  return workspaceSet[ s ]->toggled_layouts[ i % stack_set_.stacks[ s ].num_toggled_layouts ];
+    return workspace_set[ s ]->layouts[ i % stack_set_.stacks[ s ].num_layouts ];
+  return workspace_set[ s ]->toggled_layouts[ i % stack_set_.stacks[ s ].num_toggled_layouts ];
 }
 
 Layout *NeuroCoreStackGetCurrLayout(int ws) {

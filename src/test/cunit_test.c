@@ -23,8 +23,6 @@
 // STACKSET SUITE
 //----------------------------------------------------------------------------------------------------------------------
 int init_stackset_suite(void) {
-  if (!NeuroSystemSetConfiguration(&NeuroConfigConfiguration))
-    return -1;
   if (!NeuroCoreInit())
     return -1;
   return 0;

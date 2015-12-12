@@ -73,10 +73,6 @@ typedef enum NeuroSystemColor NeuroSystemColor;
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Configuration functions
-Bool NeuroSystemSetConfiguration(const Configuration *c);
-const Configuration *NeuroSystemGetConfiguration();
-
 // X functions
 Bool NeuroSystemInit();
 void NeuroSystemStop();
@@ -103,10 +99,10 @@ int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p);
 void NeuroSystemError(const char *msg);
 
 // Binding functions
-void NeuroSystemGrabKeys(Window w);
-void NeuroSystemUngrabKeys(Window w);
-void NeuroSystemGrabButtons(Window w);
-void NeuroSystemUngrabButtons(Window w);
+void NeuroSystemGrabKeys(Window w, const Key *const *key_set);
+void NeuroSystemUngrabKeys(Window w, const Key *const *key_set);
+void NeuroSystemGrabButtons(Window w, const Button *const *button_set);
+void NeuroSystemUngrabButtons(Window w, const Button *const *button_set);
 
 #endif  // NEURO_SYSTEM_H_
 

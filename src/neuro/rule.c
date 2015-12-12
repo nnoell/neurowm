@@ -15,6 +15,7 @@
 #include "rule.h"
 #include "geometry.h"
 #include "system.h"
+#include "config.h"
 #include "core.h"
 #include "client.h"
 #include "workspace.h"
@@ -78,6 +79,24 @@ static void set_rule(Client *c, const Rule *r) {
     NeuroWorkspaceChange(c->ws);
 }
 
+static void apply_rules(Client *c) {
+  assert(c);
+  const Rule *const *const rule_set = NeuroConfigGet()->rule_set;
+  if (!rule_set)
+    return;
+  const Rule *r;
+  int i;
+  for (i = 0; rule_set[ i ]; ++i) {
+    r = rule_set[ i ];
+    if (has_rule(c, r)) {
+      set_rule(c, r);
+      break;
+    }
+  }
+  if (!strcmp(c->name, RULE_SCRATCHPAD_NAME))
+    c->is_nsp = True;
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DEFINITION
@@ -93,18 +112,7 @@ Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   c->ws = NeuroCoreGetCurrStack();
   NeuroClientUpdateClassAndName(&c, NULL);
   NeuroClientUpdateTitle(&c, NULL);
-  const Rule *const *const ruleSet = NeuroSystemGetConfiguration()->rule_set;
-  const Rule *r;
-  int i;
-  for (i = 0; ruleSet[ i ]; ++i) {
-    r = ruleSet[ i ];
-    if (has_rule(c, r)) {
-      set_rule(c, r);
-      break;
-    }
-  }
-  if (!strcmp(c->name, RULE_SCRATCHPAD_NAME))
-    c->is_nsp = True;
+  apply_rules(c);
   return c;
 }
 

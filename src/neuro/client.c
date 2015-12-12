@@ -15,6 +15,7 @@
 #include "client.h"
 #include "geometry.h"
 #include "system.h"
+#include "config.h"
 #include "core.h"
 #include "layout.h"
 #include "rule.h"
@@ -502,7 +503,7 @@ Color NeuroClientColorSetterNone(const ClientPtrPtr c) {
 // Border Width Setters
 int NeuroClientBorderWidthSetterAlways(const ClientPtrPtr c) {
   (void)c;
-  return NeuroSystemGetConfiguration()->border_width;
+  return NeuroConfigGet()->border_width;
 }
 
 int NeuroClientBorderWidthSetterNever(const ClientPtrPtr c) {
@@ -515,24 +516,24 @@ int NeuroClientBorderWidthSetterSmart(const ClientPtrPtr c) {
   if (CLI_GET(c).is_fullscreen)
     return 0;
   if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
-    return NeuroSystemGetConfiguration()->border_width;
+    return NeuroConfigGet()->border_width;
   Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (l->arranger_fn == NeuroLayoutArrangerFloat)
-    return NeuroSystemGetConfiguration()->border_width;
+    return NeuroConfigGet()->border_width;
   if (NeuroWorkspaceClientFindFixed(CLI_GET(c).ws))
-    return NeuroSystemGetConfiguration()->border_width;
+    return NeuroConfigGet()->border_width;
   Rectangle *rc = NeuroCoreClientGetRegion(c);
   Rectangle *rs = NeuroCoreStackGetRegion(CLI_GET(c).ws);
   if ((rc->w == rs->w && rc->h == rs->h) ||
       (rc->w == NeuroSystemGetScreenRegion()->w && rc->h == NeuroSystemGetScreenRegion()->h))
     return 0;
-  return NeuroSystemGetConfiguration()->border_width;
+  return NeuroConfigGet()->border_width;
 }
 
 int NeuroClientBorderWidthSetterCurr(const ClientPtrPtr c) {
   assert(c);
   if (NeuroCoreClientIsCurr(c))
-    return NeuroSystemGetConfiguration()->border_width;
+    return NeuroConfigGet()->border_width;
   return 0;
 }
 
@@ -545,7 +546,7 @@ int NeuroClientBorderGapSetterAlways(const ClientPtrPtr c) {
   if (CLI_GET(c).is_fullscreen || CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull ||
       l->arranger_fn == NeuroLayoutArrangerFloat)
     return 0;
-  return NeuroSystemGetConfiguration()->border_gap;
+  return NeuroConfigGet()->border_gap;
 }
 
 int NeuroClientBorderGapSetterNever(const ClientPtrPtr c) {
@@ -566,7 +567,7 @@ int NeuroClientBorderGapSetterSmart(const ClientPtrPtr c) {
   if ((a->w == as->w && a->h == as->h) ||
       (a->w == NeuroSystemGetScreenRegion()->w && a->h == NeuroSystemGetScreenRegion()->h))
     return 0;
-  return NeuroSystemGetConfiguration()->border_gap;
+  return NeuroConfigGet()->border_gap;
 }
 
 int NeuroClientBorderGapSetterCurr(const ClientPtrPtr c) {
@@ -579,6 +580,6 @@ int NeuroClientBorderGapSetterCurr(const ClientPtrPtr c) {
     return 0;
   if (!NeuroCoreClientIsCurr(c))
     return 0;
-  return NeuroSystemGetConfiguration()->border_gap;
+  return NeuroConfigGet()->border_gap;
 }
 

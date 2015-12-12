@@ -36,6 +36,9 @@
 #define NeuroThemeNnoellColorGreen     "#66ff66"
 #define NeuroThemeNnoellColorGreenAlt  "#558965"
 
+// Nnoell theme fonts
+#define NeuroThemeNnoellFontDzenPanel "-*-terminus-medium-r-normal-*-11-*-*-*-*-*-*-*"
+
 
 //----------------------------------------------------------------------------------------------------------------------
 // PUBLIC FUNCTION DECLARATION

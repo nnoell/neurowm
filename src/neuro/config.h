@@ -17,42 +17,44 @@
 // Includes
 #include "type.h"
 
-// Colors
-#define NeuroConfigNormalBorderColor  "#1c1c1c"
-#define NeuroConfigCurrentBorderColor "#b5b3b3"
-#define NeuroConfigOldBorderColor     "#444444"
-#define NeuroConfigFreeBorderColor    "#f7a16e"
-#define NeuroConfigUrgentBorderColor  "#66ff66"
-
-// Borders
-#define NeuroConfigBorderWidth 2
-#define NeuroConfigBorderGap 0
+// Defines
+#define NeuroConfigDefaultInitActionChain CHAIN_NULL(NeuroActionSetNothing)
+#define NeuroConfigDefaultStopActionChain CHAIN_NULL(NeuroActionSetNothing)
+#define NeuroConfigDefaultNormalBorderColor "#1c1c1c"
+#define NeuroConfigDefaultCurrentBorderColor "#b5b3b3"
+#define NeuroConfigDefaultOldBorderColor "#444444"
+#define NeuroConfigDefaultFreeBorderColor "#f7a16e"
+#define NeuroConfigDefaultUrgentBorderColor "#66ff66"
+#define NeuroConfigDefaultBorderWidth 1
+#define NeuroConfigDefaultBorderGap 0
+#define NeuroConfigDefaultRuleSet NULL
+#define NeuroConfigDefaultDzenPanelSet NULL
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Default Commands
-extern const char* NeuroConfigTerminalCommand[];
-extern const char* NeuroConfigLauncherCommand[];
-extern const char* NeuroConfigScratchpadCommand[];
+// Commands
+extern const char* NeuroConfigDefaultTerminalCommand[];
+extern const char* NeuroConfigDefaultLauncherCommand[];
+extern const char* NeuroConfigDefaultScratchpadCommand[];
 
-// Default Layout Sets
-extern const LayoutConf* NeuroConfigLayoutSet[];
-extern const LayoutConf* NeuroConfigToggledLayoutSet[];
+// Configuration fields
+extern const LayoutConf* NeuroConfigDefaultLayoutSet[];
+extern const LayoutConf* NeuroConfigDefaultToggledLayoutSet[];
+extern const Workspace* NeuroConfigDefaultWorkspaceSet[];
+extern const Key* NeuroConfigDefaultKeySet[];
+extern const Button* NeuroConfigDefaultButtonSet[];
 
-// Default Configuration Fields
-extern const ActionChain NeuroConfigStartupHook[];
-extern const ActionChain NeuroConfigEndupHook[];
-extern const Button* NeuroConfigButtons[];
-extern const Key* NeuroConfigKeys[];
-extern const DzenPanel* NeuroConfigDzenPanelSet[];
-extern const Rule* NeuroConfigRuleSet[];
-extern const Workspace* NeuroConfigWorkspaceSet[];
 
-// Default Configuration
-extern const Configuration NeuroConfigConfiguration;
+//----------------------------------------------------------------------------------------------------------------------
+// FUNCTION DECLARATION
+//----------------------------------------------------------------------------------------------------------------------
+
+// Configuration functions
+void NeuroConfigSet(const Configuration *c);
+const Configuration *NeuroConfigGet();
 
 #endif  // NEURO_CONFIG_H_
 

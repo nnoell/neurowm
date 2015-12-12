@@ -14,6 +14,7 @@
 // Includes
 #include "wm.h"
 #include "system.h"
+#include "config.h"
 #include "core.h"
 #include "event.h"
 #include "dzen.h"
@@ -35,7 +36,7 @@ static int recompile_wm(pid_t *pid) {
 }
 
 static void stop_wm() {
-  NeuroActionUtilRunActionChain(NeuroSystemGetConfiguration()->end_up_hook);
+  NeuroActionRunActionChain(&NeuroConfigGet()->stop_action_chain);
   NeuroDzenStop();
   NeuroCoreStop();
   NeuroSystemStop();
@@ -54,8 +55,7 @@ static void wm_signal_handler(int signo) {
 
 static void init_wm(const Configuration *c) {
   // Set the configuration
-  if (!NeuroSystemSetConfiguration(c))
-    NeuroSystemError("init_wm - Could not set configuration");
+  NeuroConfigSet(c);
 
   // Init System, Core and Panels
   if (!NeuroSystemInit())
@@ -65,8 +65,8 @@ static void init_wm(const Configuration *c) {
   if (!NeuroDzenInit())
     NeuroSystemError("init_wm - Could not init Dzen Panels");
 
-  // Run the Startup Hook
-  NeuroActionUtilRunActionChain(NeuroSystemGetConfiguration()->start_up_hook);
+  // Run the init action chain
+  NeuroActionRunActionChain(&NeuroConfigGet()->init_action_chain);
 
   // Catch asynchronously SIGUSR1
   // if (SIG_ERR == signal(SIGUSR1, wm_signal_handler))

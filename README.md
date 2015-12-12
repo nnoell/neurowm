@@ -37,12 +37,13 @@ Configuration
 
 In order to run *neurowm*, you must firstly write your own **neurowm.c** configuration file in **~/.neurowm** folder. If the folder does not exist, create it. There are examples of **neurowm.c** configuration files under the **examples** folder.
 
-The **default neurowm configuration** lies within the config module, so, to run *neurowm* with its default parameters, you just need to load the already defined `NeuroConfigConfiguration` structure. Here is an example of the simpliest neurowm.c:
+The configuration file is actually a C file that will launch the window manager. The function that runs neurowm is called `NeuroWmRun` and it needs a pointer to a `struct Configuration` structure as parameter. You can either implement your own
+configuration or use the default one. If you pass `NULL`, neurowm will load the default configuration so the simplest neurowm.c file you can write is the following:
 
-	#include <neuro/neurowm.h>
+	#include <neuro/wm.h>
 
 	int main() {
-		return NeuroWmRun(&NeuroConfigConfiguration);
+		return NeuroWmRun(NULL);
 	}
 
 Once you have written your own neurowm.c file, compile it using the `--recompile` flag:

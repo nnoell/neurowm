@@ -72,8 +72,8 @@
 #define MAYBE_ARG_GET_JUST(X)   ((X).value)
 
 // Chainned Actions
-#define CHAIN_NULL(X)     {.chain = (X), .arg = MAYBE_ARG_NOTHING}
-#define CHAIN(X, Y)       {.chain = (X), .arg = MAYBE_ARG_JUST(Y)}
+#define CHAIN_NULL(X)     {.action_set = (X), .arg = MAYBE_ARG_NOTHING}
+#define CHAIN(X, Y)       {.action_set = (X), .arg = MAYBE_ARG_JUST(Y)}
 
 // Default sizes
 #define NAME_MAX    256
@@ -213,7 +213,7 @@ struct Action {
 // ActionChain
 typedef struct ActionChain ActionChain;
 struct ActionChain {
-  const Action *const *const chain;
+  const Action *const *const action_set;
   const GenericMaybeArg arg;
 };
 
@@ -360,6 +360,8 @@ struct DzenPanel {
 // Configuration
 typedef struct Configuration Configuration;
 struct Configuration {
+  const ActionChain init_action_chain;
+  const ActionChain stop_action_chain;
   const char *const normal_border_color;
   const char *const current_border_color;
   const char *const old_border_color;
@@ -370,10 +372,8 @@ struct Configuration {
   const Workspace *const *const workspace_set;
   const Rule *const *const rule_set;
   const DzenPanel *const *const dzen_panel_set;
-  const Key *const *const keys;
-  const Button *const *const buttons;
-  const ActionChain *const start_up_hook;
-  const ActionChain *const end_up_hook;
+  const Key *const *const key_set;
+  const Button *const *const button_set;
 };
 
 

@@ -16,34 +16,10 @@
 
 
 //----------------------------------------------------------------------------------------------------------------------
-// CONFIGURATION
-//----------------------------------------------------------------------------------------------------------------------
-
-static const Configuration configuration_ = {
-  NeuroConfigDefaultInitActionChain,
-  NeuroConfigDefaultStopActionChain,
-  NeuroConfigDefaultNormalBorderColor,
-  NeuroConfigDefaultCurrentBorderColor,
-  NeuroConfigDefaultOldBorderColor,
-  NeuroConfigDefaultFreeBorderColor,
-  NeuroConfigDefaultUrgentBorderColor,
-  NeuroConfigDefaultBorderWidth,
-  NeuroConfigDefaultBorderGap,
-  NeuroConfigDefaultWorkspaceSet,
-  NeuroConfigDefaultRuleSet,
-  NeuroConfigDefaultDzenPanelSet,
-  NeuroConfigDefaultKeySet,
-  NeuroConfigDefaultButtonSet
-};
-
-
-//----------------------------------------------------------------------------------------------------------------------
 // MAIN
 //----------------------------------------------------------------------------------------------------------------------
 
-int main(int argc, char **argv) {
-  (void)argc;
-  (void)argv;
-  return NeuroWmRun(&configuration_);
+int main() {
+  return NeuroWmRun(NULL);
 }
 
