@@ -131,6 +131,9 @@ install_no_bin:
 	@cp ${TARGET_LIB_DIR}/${TARGET_STATIC_LIB_NAME} /usr/lib/neuro
 	@cp ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} /usr/lib/neuro
 	@ln -s -r -f /usr/lib/neuro/${TARGET_SHARED_LIB_NAME} /usr/lib/neuro/${TARGET_SHARED_LNK_NAME}
+	@mkdir -p /etc/ld.so.conf.d/
+	@echo "/usr/lib/neuro" > /etc/ld.so.conf.d/neuro.conf
+	@ldconfig
 	@echo "OK"
 	@echo -n ":: Installing man page...   "
 	@mkdir -p /usr/local/man/man1
@@ -155,6 +158,8 @@ uninstall_no_bin:
 	@echo "OK"
 	@echo -n ":: Uninstalling libraries...   "
 	@rm -rf /usr/lib/neuro
+	@rm -f /etc/ld.so.conf.d/neuro.conf
+	@ldconfig
 	@echo "OK"
 	@echo -n ":: Uninstalling man page...   "
 	@rm -f /usr/local/man/man1/neurowm.1
