@@ -248,16 +248,16 @@ void NeuroSystemChangeWmName(const char *name) {
   XChangeProperty(display_, root_, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)name, strlen(name));
 }
 
-void NeuroSystemChangeProcName(const char *newname) {
-  assert(newname);
-  prctl(PR_SET_NAME, (unsigned long)newname, 0, 0, 0);
+void NeuroSystemChangeProcName(const char *name) {
+  assert(name);
+  prctl(PR_SET_NAME, (unsigned long)name, 0, 0, 0);
 }
 
-int NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
+Bool NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
   assert(cmd);
   pid_t pid = fork();
   if (pid == -1)
-    return -1;
+    return False;
   if (!pid) {  // Child
     if (display_)
       close(ConnectionNumber(display_));
@@ -267,7 +267,7 @@ int NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
   }
   if (p)
     *p = pid;
-  return 0;
+  return True;
 }
 
 int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p) {

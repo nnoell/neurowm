@@ -31,7 +31,7 @@ static Bool stop_main_while_ = False;
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int recompile_wm(pid_t *pid) {
+static Bool recompile_wm(pid_t *pid) {
   return NeuroSystemSpawn(NeuroSystemGetRecompileCommand(NULL, NULL), pid);
 }
 
@@ -46,7 +46,7 @@ static void wm_signal_handler(int signo) {
   if (signo == SIGUSR1) {
     stop_wm();
     pid_t pid;
-    if (recompile_wm(&pid) == -1)
+    if (!recompile_wm(&pid))
       perror("wm_signal_handler - Could not recompile neurowm");
     waitpid(pid, NULL, WUNTRACED);
     exit(EXIT_RELOAD);
