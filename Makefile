@@ -47,6 +47,20 @@ TARGET_OBJ_DIR = ${TARGET_DIR}/obj
 TARGET_LIB_DIR = ${TARGET_DIR}/lib
 TARGET_BIN_DIR = ${TARGET_DIR}/bin
 
+# Install names
+INSTALL_MOD_NAME = neuro
+INSTALL_LDCONF_NAME = ${INSTALL_MOD_NAME}.conf
+INSTALL_MAN_NAME = ${TARGET_BIN_NAME}.1
+INSTALL_THEME_NAME = nnoell
+
+# Install directories
+INSTALL_BIN_DIR = /usr/bin
+INSTALL_LIB_DIR = /usr/lib/${INSTALL_MOD_NAME}
+INSTALL_HDR_DIR = /usr/include/${INSTALL_MOD_NAME}
+INSTALL_LDCONF_DIR = /etc/ld.so.conf.d
+INSTALL_MAN_DIR = /usr/local/man/man1
+INSTALL_THEME_DIR = /usr/share/themes
+
 # Do not change
 OBJS = $(addprefix ${TARGET_OBJ_DIR}/, $(addsuffix .o, ${MOD_NAMES}))
 HDRS = $(addprefix ${SOURCE_NEURO_DIR}/, $(addsuffix .h, ${MOD_NAMES}))
@@ -123,53 +137,53 @@ clean:
 # Install no bin
 install_no_bin:
 	@echo -n ":: Installing headers...   "
-	@mkdir -p /usr/include/neuro
-	@cp ${HDRS} /usr/include/neuro
+	@mkdir -p ${INSTALL_HDR_DIR}
+	@cp ${HDRS} ${INSTALL_HDR_DIR}
 	@echo "OK"
 	@echo -n ":: Installing libraries...   "
-	@mkdir -p /usr/lib/neuro
-	@cp ${TARGET_LIB_DIR}/${TARGET_STATIC_LIB_NAME} /usr/lib/neuro
-	@cp ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} /usr/lib/neuro
-	@ln -s -r -f /usr/lib/neuro/${TARGET_SHARED_LIB_NAME} /usr/lib/neuro/${TARGET_SHARED_LNK_NAME}
-	@mkdir -p /etc/ld.so.conf.d/
-	@echo "/usr/lib/neuro" > /etc/ld.so.conf.d/neuro.conf
+	@mkdir -p ${INSTALL_LIB_DIR}
+	@cp ${TARGET_LIB_DIR}/${TARGET_STATIC_LIB_NAME} ${INSTALL_LIB_DIR}
+	@cp ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}
+	@ln -s -r -f ${INSTALL_LIB_DIR}/${TARGET_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}/${TARGET_SHARED_LNK_NAME}
+	@mkdir -p ${INSTALL_LDCONF_DIR}
+	@echo ${INSTALL_LIB_DIR} > ${INSTALL_LDCONF_DIR}/${INSTALL_LDCONF_NAME}
 	@ldconfig
 	@echo "OK"
 	@echo -n ":: Installing man page...   "
-	@mkdir -p /usr/local/man/man1
-	@cp man/neurowm.1 /usr/local/man/man1
-	@chmod 644 /usr/local/man/man1/neurowm.1
+	@mkdir -p ${INSTALL_MAN_DIR}
+	@cp man/${INSTALL_MAN_NAME} ${INSTALL_MAN_DIR}
+	@chmod 644 ${INSTALL_MAN_DIR}/${INSTALL_MAN_NAME}
 	@echo "OK"
 	@echo -n ":: Installin themes...   "
-	@mkdir -p /usr/share/themes/nnoell
-	@cp -r themes/nnoell/neurowm /usr/share/themes/nnoell
+	@mkdir -p ${INSTALL_THEME_DIR}
+	@cp -r themes/${INSTALL_THEME_NAME} ${INSTALL_THEME_DIR}
 	@echo "OK"
 
 # Install
 install: install_no_bin
 	@echo -n ":: Installing binary...   "
-	@cp ${TARGET_BIN_DIR}/${TARGET_BIN_NAME} /usr/bin
+	@cp ${TARGET_BIN_DIR}/${TARGET_BIN_NAME} ${INSTALL_BIN_DIR}
 	@echo "OK"
 
 # Uninstall no bin
 uninstall_no_bin:
 	@echo -n ":: Uninstalling headers...   "
-	@rm -rf /usr/include/neuro
+	@rm -rf ${INSTALL_HDR_DIR}
 	@echo "OK"
 	@echo -n ":: Uninstalling libraries...   "
-	@rm -rf /usr/lib/neuro
-	@rm -f /etc/ld.so.conf.d/neuro.conf
+	@rm -rf ${INSTALL_LIB_DIR}
+	@rm -f ${INSTALL_LDCONF_DIR}/${INSTALL_LDCONF_NAME}
 	@ldconfig
 	@echo "OK"
 	@echo -n ":: Uninstalling man page...   "
-	@rm -f /usr/local/man/man1/neurowm.1
+	@rm -f ${INSTALL_MAN_DIR}/${INSTALL_MAN_NAME}
 	@echo "OK"
 	@echo -n ":: Uninstalling themes...   "
-	@rm -rf /usr/share/themes/nnoell/neurowm
+	@rm -rf ${INSTALL_THEME_DIR}/${INSTALL_THEME_NAME}
 	@echo "OK"
 
 # Uninstall
 uninstall: uninstall_no_bin
 	@echo -n ":: Uninstalling binary...   "
-	@rm -f /usr/bin/neurowm
+	@rm -f ${INSTALL_BIN_DIR}/${TARGET_BIN_NAME}
 	@echo "OK"
