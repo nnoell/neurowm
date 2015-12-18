@@ -20,7 +20,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // FlagHandlerFn
-typedef int (*const FlagHandlerFn)();
+typedef Bool (*const FlagHandlerFn)();
 
 // Flag
 typedef struct Flag Flag;
@@ -35,15 +35,15 @@ struct Flag {
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int run_cmd(const char *const *cmd);
 // static pid_t get_neurowm_pid();
-static int help_handler();
-static int version_handler();
-static int recompile_handler();
-// static int reload_handler();
-static int run_neurowm(int argc, const char *const *argv);
-static int run_flag(const char *flgname);
-static int loop_run_neurowm(int argc, const char *const *argv);
+static Bool run_cmd(const char *const *cmd, int *status);
+static Bool help_handler();
+static Bool version_handler();
+static Bool recompile_handler();
+// static Bool reload_handler();
+static Bool run_neurowm(int argc, const char *const *argv, int *status);
+static Bool run_flag(const char *flgname);
+static Bool loop_run_neurowm(int argc, const char *const *argv);
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -64,20 +64,6 @@ static const Flag *flag_set_[] = { help_flag_, version_flag_, recompile_flag_, N
 // FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int run_cmd(const char *const *cmd) {
-  assert(cmd);
-  int res = 0, status;
-  const pid_t pid = fork();
-  if (pid == -1)
-    NeuroSystemError("run_cmd - Could not fork");
-  if (!pid) {  // Child
-    res = execvp(cmd[ 0 ], (char *const *)cmd);
-    exit(EXIT_FAILURE);
-  }
-  waitpid(pid, &status, WUNTRACED);
-  return res == -1 ? res : status;
-}
-
 //  static pid_t get_neurowm_pid() {
 //    char pidstr[ NAME_MAX ];
 //    FILE *cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
@@ -85,31 +71,45 @@ static int run_cmd(const char *const *cmd) {
 //    return (pid_t)strtoul(pidstr, NULL, 10);
 //  }
 
-static int help_handler() {
+static Bool run_cmd(const char *const *cmd, int *status) {
+  assert(cmd);
+  const pid_t pid = fork();
+  if (pid == -1)
+    return False;
+  if (!pid) {  // Child
+    execvp(cmd[ 0 ], (char *const *)cmd);
+    NeuroSystemError("run_cmd - Could not execvp");
+  }
+  waitpid(pid, status, WUNTRACED);
+  return True;
+}
+
+static Bool help_handler() {
   printf("Usage: neurowm [OPTION]\nOptions:\n");
   int i;
   for (i=0; flag_set_[ i ]; ++i)
     printf("  %s\t\t%s\n", flag_set_[ i ]->name, flag_set_[ i ]->desc);
-  return 0;
+  return True;
 }
 
-static int version_handler() {
+static Bool version_handler() {
   printf(PKG_NAME " " PKG_VERSION "\n");
-  return 0;
+  return True;
 }
 
-static int recompile_handler() {
-  return run_cmd(NeuroSystemGetRecompileCommand(NULL, NULL));
+static Bool recompile_handler() {
+  int status;
+  return run_cmd(NeuroSystemGetRecompileCommand(NULL, NULL), &status);
 }
 
-//  static int reload_handler() {
+//  static Bool reload_handler() {
 //    const pid_t wmpid = get_neurowm_pid();
 //    if (wmpid <= 0)
 //      return 0;
-//    return kill(wmpid, SIGUSR1) == -1 ? -1 : 0;
+//    return kill(wmpid, SIGUSR1) != -1;
 //  }
 
-static int run_neurowm(int argc, const char *const *argv) {
+static Bool run_neurowm(int argc, const char *const *argv, int *status) {
   assert(argv);
   const char *cmd[ argc + 1 ];
   NeuroSystemGetRecompileCommand(cmd + 0, NULL);
@@ -117,29 +117,30 @@ static int run_neurowm(int argc, const char *const *argv) {
   int i;
   for (i = 1; i < argc; ++i)
     cmd[ i ] = argv[ i ];
-  return run_cmd((const char *const *)cmd);
+  return run_cmd((const char *const *)cmd, status);
 }
 
-static int run_flag(const char *flgname) {
+static Bool run_flag(const char *flgname) {
   assert(flgname);
   int i;
   for (i=0; flag_set_[ i ]; ++i)
     if (!strcmp(flgname, flag_set_[ i ]->name)) {
-      int res = flag_set_[ i ]->handler();
-      if (res == -1)
+      Bool res = flag_set_[ i ]->handler();
+      if (!res)
         perror(flgname);
-      return res;
+      return True;
     }
-  return 1;
+  return False;
 }
 
-static int loop_run_neurowm(int argc, const char *const *argv) {
+static Bool loop_run_neurowm(int argc, const char *const *argv) {
   assert(argv);
-  int res;
+  int status;
   do {
-    res = run_neurowm(argc, argv);
-  } while (WEXITSTATUS(res) == EXIT_RELOAD);
-  return res;
+    if (!run_neurowm(argc, argv, &status))
+      return False;
+  } while (WEXITSTATUS(status) == EXIT_RELOAD);
+  return True;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -147,16 +148,13 @@ static int loop_run_neurowm(int argc, const char *const *argv) {
 //----------------------------------------------------------------------------------------------------------------------
 
 int main(int argc, const char *const *argv) {
-  Bool runwm = True;
+  Bool runwm = True, reswm = True;
   if (argc > 1) {
-    int i, res;
-    for (i = 1; i < argc; ++i) {
-      res = run_flag(argv[ i ]);
-      runwm = res != -1 && res != 0;  // res: -1 error, 0 dont run, 1 run wm
-    }
+    int i;
+    for (i = 1; i < argc; ++i)
+      runwm = !run_flag(argv[ i ]);
   }
-  int reswm = 0;
   if (runwm)
     reswm = loop_run_neurowm(argc, argv);
-  return reswm == -1 ? EXIT_FAILURE : EXIT_SUCCESS;
+  return reswm ? EXIT_SUCCESS : EXIT_FAILURE;
 }
