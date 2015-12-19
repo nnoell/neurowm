@@ -276,7 +276,7 @@ static void *refresh_dzen_thread(void *args) {
   while (True) {
     // Update all panels respecting their refresh rate
     for (j = 0; j < dzen_refresh_info_.num_panels; ++j) {
-      dp = NeuroConfigGet()->dzen_panel_set[ j ];
+      dp = NeuroConfigGet()->dzen_panel_list[ j ];
       if (dp->refresh_rate == DZEN_ON_EVENT || dp->refresh_rate <= 0)
         continue;
       if (i % dp->refresh_rate == 0)
@@ -323,10 +323,10 @@ static void stop_dzen_refresh_thread() {
 }
 
 static Bool init_dzen_refresh_info() {
-  const DzenPanel *const *const panel_set = NeuroConfigGet()->dzen_panel_set;
-  if (!panel_set)
+  const DzenPanel *const *const panel_list = NeuroConfigGet()->dzen_panel_list;
+  if (!panel_list)
     return True;
-  dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)panel_set);
+  dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)panel_list);
   dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(dzen_refresh_info_.num_panels, sizeof(PipeInfo));
   if (!dzen_refresh_info_.pipe_info)
     return False;
@@ -334,7 +334,7 @@ static Bool init_dzen_refresh_info() {
   const DzenPanel *dp;
   int i;
   for (i = 0; i < dzen_refresh_info_.num_panels; ++i) {
-    dp = panel_set[ i ];
+    dp = panel_list[ i ];
 
     // Get max refresh rate
     if (dp->refresh_rate > dzen_refresh_info_.reset_rate)
@@ -390,7 +390,7 @@ void NeuroDzenRefresh(Bool on_event_only) {
   const DzenPanel *dp;
   int i;
   for (i=0; i < dzen_refresh_info_.num_panels; ++i) {
-    dp = NeuroConfigGet()->dzen_panel_set[ i ];
+    dp = NeuroConfigGet()->dzen_panel_list[ i ];
     if (on_event_only && (dp->refresh_rate == DZEN_ON_EVENT || dp->refresh_rate <= 0)) {
       refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
       continue;

@@ -20,23 +20,24 @@
 
 
 //----------------------------------------------------------------------------------------------------------------------
-// STACKSET SUITE
+// CORE SUITE
 //----------------------------------------------------------------------------------------------------------------------
-int init_stackset_suite(void) {
+
+int init_core_suite(void) {
   if (!NeuroCoreInit())
     return -1;
   return 0;
 }
 
-int clean_stackset_suite(void) {
+int clean_core_suite(void) {
   NeuroCoreStop();
   return 0;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-// STACKSET TESTS
-//----------------------------------------------------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------------------------------------------------
+// CORE TESTS
+//----------------------------------------------------------------------------------------------------------------------
 
 void add_remove_client(void) {
   // Create a fake client
@@ -45,11 +46,11 @@ void add_remove_client(void) {
   Client *cli = NeuroTypeNewClient(w, &wa);
   CU_ASSERT_PTR_NOT_NULL(cli);
 
-  // Add it to the stackset
+  // Add it to the stack list
   ClientPtrPtr c = NeuroCoreAddClientStart(cli);
   CU_ASSERT_PTR_NOT_NULL(c);
 
-  // Remove it from the stackset
+  // Remove it from the stack list
   Client *cli2 = NeuroCoreRemoveClient(c);
   CU_ASSERT_PTR_NOT_NULL(cli2);
   CU_ASSERT(cli == cli2);
@@ -74,15 +75,15 @@ int main() {
     return CU_get_error();
 
   // Add a suite to the registry
-  CU_pSuite stackset_suite = CU_add_suite("StackSet_Suite", init_stackset_suite, clean_stackset_suite);
-  if (NULL == stackset_suite) {
+  CU_pSuite core_suite = CU_add_suite("Core_Suite", init_core_suite, clean_core_suite);
+  if (NULL == core_suite) {
     CU_cleanup_registry();
     return CU_get_error();
   }
 
   // Add the tests to the suite
-  if ((NULL == CU_add_test(stackset_suite, "add_remove_client()", add_remove_client)) ||
-      (NULL == CU_add_test(stackset_suite, "set_curr_stack()", set_curr_stack))) {
+  if ((NULL == CU_add_test(core_suite, "add_remove_client()", add_remove_client)) ||
+      (NULL == CU_add_test(core_suite, "set_curr_stack()", set_curr_stack))) {
     CU_cleanup_registry();
     return CU_get_error();
   }

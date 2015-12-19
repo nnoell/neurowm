@@ -57,7 +57,7 @@ static const Flag recompile_flag_ = { "--recompile", recompile_handler, "Recompi
 // static const Flag reload_flag_ = { "--reload",    reload_handler,    "Reload the window manager"    };
 
 // Flags array
-static const Flag* flag_set_[] = { &help_flag_, &version_flag_, &recompile_flag_, NULL };
+static const Flag* flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -87,8 +87,8 @@ static Bool run_cmd(const char *const *cmd, int *status) {
 static Bool help_handler() {
   printf("Usage: neurowm [OPTION]\nOptions:\n");
   int i;
-  for (i=0; flag_set_[ i ]; ++i)
-    printf("  %s\t\t%s\n", flag_set_[ i ]->name, flag_set_[ i ]->desc);
+  for (i=0; flag_list_[ i ]; ++i)
+    printf("  %s\t\t%s\n", flag_list_[ i ]->name, flag_list_[ i ]->desc);
   return True;
 }
 
@@ -123,9 +123,9 @@ static Bool run_neurowm(int argc, const char *const *argv, int *status) {
 static Bool run_flag(const char *flgname) {
   assert(flgname);
   int i;
-  for (i=0; flag_set_[ i ]; ++i)
-    if (!strcmp(flgname, flag_set_[ i ]->name)) {
-      Bool res = flag_set_[ i ]->handler();
+  for (i=0; flag_list_[ i ]; ++i)
+    if (!strcmp(flgname, flag_list_[ i ]->name)) {
+      Bool res = flag_list_[ i ]->handler();
       if (!res)
         perror(flgname);
       return True;

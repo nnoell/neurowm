@@ -31,16 +31,16 @@
 
 static void do_key_press(XEvent *e) {
   assert(e);
-  const Key *const *const key_set = NeuroConfigGet()->key_set;
-  if (!key_set)
+  const Key *const *const key_list = NeuroConfigGet()->key_list;
+  if (!key_list)
     return;
   XKeyEvent ke = e->xkey;
   int ks;
   KeySym *keysym = XGetKeyboardMapping(NeuroSystemGetDisplay(), ke.keycode, 1, &ks);
   const Key *k;
   int i;
-  for (i = 0; key_set[ i ]; ++i) {
-    k = key_set[ i ];
+  for (i = 0; key_list[ i ]; ++i) {
+    k = key_list[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
       NeuroActionRunActionChain(&k->action_chain);
       NeuroDzenRefresh(True);
@@ -51,14 +51,14 @@ static void do_key_press(XEvent *e) {
 
 static void do_button_press(XEvent *e) {
   assert(e);
-  const Button *const *const button_set = NeuroConfigGet()->button_set;
-  if (!button_set)
+  const Button *const *const button_list = NeuroConfigGet()->button_list;
+  if (!button_list)
     return;
   XButtonPressedEvent *ev = &e->xbutton;
   const Button *b;
   int i;
-  for (i = 0; button_set[ i ]; ++i) {
-    b = button_set[ i ];
+  for (i = 0; button_list[ i ]; ++i) {
+    b = button_list[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       NeuroActionRunActionChain(&b->action_chain);
       NeuroDzenRefresh(True);
@@ -229,7 +229,7 @@ void NeuroEventManageWindow(Window w) {
   if (NeuroClientFindWindow(w))
     return;
 
-  // Add client to the stackset
+  // Add client to the stack list
   Client *cli = NeuroRuleNewClient(w, &wa);
   if (!cli)
     NeuroSystemError("NeuroEventManageWindow - Could not alloc Client and set rules");
@@ -255,7 +255,7 @@ void NeuroEventManageWindow(Window w) {
   Bool doRules = False;
   NeuroClientHide(c, (const void*)&doRules);
   XMapWindow(NeuroSystemGetDisplay(), CLI_GET(c).win);
-  NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_set);
+  NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
   const int ws = CLI_GET(c).ws;
   if (!NeuroCoreStackIsCurr(ws))
     return;

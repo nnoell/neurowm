@@ -41,7 +41,7 @@ static Bool is_above_tiled_client(const ClientPtrPtr c) {
 static void focus_client(ClientPtrPtr c) {
   assert(c);
   NeuroClientUnsetUrgent(c, NULL);
-  NeuroSystemUngrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_set);
+  NeuroSystemUngrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
   XSetInputFocus(NeuroSystemGetDisplay(), CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), NeuroSystemGetNetAtom(NeuroSystemNetAtomActive),
       XA_WINDOW, 32, PropModeReplace, (unsigned char *)&(CLI_GET(c).win), 1);
@@ -50,7 +50,7 @@ static void focus_client(ClientPtrPtr c) {
 
 static void unfocus_client(ClientPtrPtr c) {
   assert(c);
-  NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_set);
+  NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
   NeuroClientUpdate(c, NULL);
 }
 

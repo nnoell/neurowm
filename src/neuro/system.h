@@ -99,10 +99,10 @@ int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p);
 void NeuroSystemError(const char *msg);
 
 // Binding functions
-void NeuroSystemGrabKeys(Window w, const Key *const *key_set);
-void NeuroSystemUngrabKeys(Window w, const Key *const *key_set);
-void NeuroSystemGrabButtons(Window w, const Button *const *button_set);
-void NeuroSystemUngrabButtons(Window w, const Button *const *button_set);
+void NeuroSystemGrabKeys(Window w, const Key *const *key_list);
+void NeuroSystemUngrabKeys(Window w, const Key *const *key_list);
+void NeuroSystemGrabButtons(Window w, const Button *const *button_list);
+void NeuroSystemUngrabButtons(Window w, const Button *const *button_list);
 
 #endif  // NEURO_SYSTEM_H_
 

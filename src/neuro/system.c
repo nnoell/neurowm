@@ -158,7 +158,7 @@ Bool NeuroSystemInit() {
   XSync(display_, False);
 
   // Grab key bindings
-  NeuroSystemGrabKeys(root_, NeuroConfigGet()->key_set);
+  NeuroSystemGrabKeys(root_, NeuroConfigGet()->key_list);
 
   return True;
 }
@@ -298,55 +298,55 @@ void NeuroSystemError(const char *msg) {
 }
 
 // Binding functions
-void NeuroSystemGrabKeys(Window w, const Key *const *key_set) {
-  if (!key_set)
+void NeuroSystemGrabKeys(Window w, const Key *const *key_list) {
+  if (!key_list)
     return;
   XUngrabKey(display_, AnyKey, AnyModifier, w);
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; key_set[ i ]; ++i) {
-    k = key_set[ i ];
+  for (i = 0; key_list[ i ]; ++i) {
+    k = key_list[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
       XGrabKey(display_, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
   }
 }
 
-void NeuroSystemUngrabKeys(Window w, const Key *const *key_set) {
-  if (!key_set)
+void NeuroSystemUngrabKeys(Window w, const Key *const *key_list) {
+  if (!key_list)
     return;
   KeyCode code;
   const Key *k;
   int i;
-  for (i = 0; key_set[ i ]; ++i) {
-    k = key_set[ i ];
+  for (i = 0; key_list[ i ]; ++i) {
+    k = key_list[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
       XUngrabKey(display_, code, k->mod, w);
   }
 }
 
-void NeuroSystemGrabButtons(Window w, const Button *const *button_set) {
-  if (!button_set)
+void NeuroSystemGrabButtons(Window w, const Button *const *button_list) {
+  if (!button_list)
     return;
   XUngrabButton(display_, AnyButton, AnyModifier, w);
   const Button *b;
   int i;
-  for (i=0; button_set[ i ]; ++i) {
-    b = button_set[ i ];
+  for (i=0; button_list[ i ]; ++i) {
+    b = button_list[ i ];
     XGrabButton(display_, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask, GrabModeAsync, GrabModeSync,
         None, None);
   }
 }
 
-void NeuroSystemUngrabButtons(Window w, const Button *const *button_set) {
-  if (!button_set)
+void NeuroSystemUngrabButtons(Window w, const Button *const *button_list) {
+  if (!button_list)
     return;
   const Button *b;
   int i;
-  for (i=0; button_set[ i ]; ++i) {
-    b = button_set[ i ];
+  for (i=0; button_list[ i ]; ++i) {
+    b = button_list[ i ];
     if (b->ungrab_on_focus)
       XUngrabButton(display_, b->button, b->mod, w);
   }

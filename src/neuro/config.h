@@ -18,8 +18,8 @@
 #include "type.h"
 
 // Defines
-#define NeuroConfigDefaultInitActionChain CHAIN_NULL(NeuroActionSetNothing)
-#define NeuroConfigDefaultStopActionChain CHAIN_NULL(NeuroActionSetNothing)
+#define NeuroConfigDefaultInitActionChain CHAIN_NULL(NeuroActionListNothing)
+#define NeuroConfigDefaultStopActionChain CHAIN_NULL(NeuroActionListNothing)
 #define NeuroConfigDefaultNormalBorderColor "#1c1c1c"
 #define NeuroConfigDefaultCurrentBorderColor "#b5b3b3"
 #define NeuroConfigDefaultOldBorderColor "#444444"
@@ -27,8 +27,8 @@
 #define NeuroConfigDefaultUrgentBorderColor "#66ff66"
 #define NeuroConfigDefaultBorderWidth 1
 #define NeuroConfigDefaultBorderGap 0
-#define NeuroConfigDefaultRuleSet NULL
-#define NeuroConfigDefaultDzenPanelSet NULL
+#define NeuroConfigDefaultRuleList NULL
+#define NeuroConfigDefaultDzenPanelList NULL
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -41,11 +41,11 @@ extern const char* NeuroConfigDefaultLauncherCommand[];
 extern const char* NeuroConfigDefaultScratchpadCommand[];
 
 // Configuration fields
-extern const LayoutConf* NeuroConfigDefaultLayoutSet[];
-extern const LayoutConf* NeuroConfigDefaultToggledLayoutSet[];
-extern const Workspace* NeuroConfigDefaultWorkspaceSet[];
-extern const Key* NeuroConfigDefaultKeySet[];
-extern const Button* NeuroConfigDefaultButtonSet[];
+extern const LayoutConf* NeuroConfigDefaultLayoutList[];
+extern const LayoutConf* NeuroConfigDefaultToggledLayoutList[];
+extern const Workspace* NeuroConfigDefaultWorkspaceList[];
+extern const Key* NeuroConfigDefaultKeyList[];
+extern const Button* NeuroConfigDefaultButtonList[];
 
 
 //----------------------------------------------------------------------------------------------------------------------

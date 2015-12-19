@@ -67,51 +67,51 @@ extern const Action NeuroActionToggleFullscreenPtrClient;
 extern const Action NeuroActionFreePtrClient;
 extern const Action NeuroActionToggleFreePtrClient;
 
-// Window Manager (Action Sets)
-extern const Action* NeuroActionSetNothing[];
-extern const Action* NeuroActionSetQuit[];
-extern const Action* NeuroActionSetReload[];
-extern const Action* NeuroActionSetSpawn[];
-extern const Action* NeuroActionSetSleep[];
-extern const Action* NeuroActionSetInitCpuCalc[];
-extern const Action* NeuroActionSetStopCpuCalc[];
+// Window Manager (Action Lists)
+extern const Action* NeuroActionListNothing[];
+extern const Action* NeuroActionListQuit[];
+extern const Action* NeuroActionListReload[];
+extern const Action* NeuroActionListSpawn[];
+extern const Action* NeuroActionListSleep[];
+extern const Action* NeuroActionListInitCpuCalc[];
+extern const Action* NeuroActionListStopCpuCalc[];
 
-// Layout (Action Sets)
-extern const Action* NeuroActionSetChangeLayout[];
-extern const Action* NeuroActionSetResetLayout[];
-extern const Action* NeuroActionSetToggleLayout[];
-extern const Action* NeuroActionSetToggleModLayout[];
-extern const Action* NeuroActionSetIncreaseMasterLayout[];
-extern const Action* NeuroActionSetResizeMasterLayout[];
+// Layout (Action Lists)
+extern const Action* NeuroActionListChangeLayout[];
+extern const Action* NeuroActionListResetLayout[];
+extern const Action* NeuroActionListToggleLayout[];
+extern const Action* NeuroActionListToggleModLayout[];
+extern const Action* NeuroActionListIncreaseMasterLayout[];
+extern const Action* NeuroActionListResizeMasterLayout[];
 
-// Workspace (Action Sets)
-extern const Action* NeuroActionSetChangeWorkspace[];
-extern const Action* NeuroActionSetRestoreLastMinimized[];
-extern const Action* NeuroActionSetToggleScratchpad[];
+// Workspace (Action Lists)
+extern const Action* NeuroActionListChangeWorkspace[];
+extern const Action* NeuroActionListRestoreLastMinimized[];
+extern const Action* NeuroActionListToggleScratchpad[];
 
-// CurrClient (Action Sets)
-extern const Action* NeuroActionSetFocusCurrClient[];
-extern const Action* NeuroActionSetSwapCurrClient[];
-extern const Action* NeuroActionSetSendCurrClient[];
-extern const Action* NeuroActionSetSendFollowCurrClient[];
-extern const Action* NeuroActionSetKillClient[];
-extern const Action* NeuroActionSetTileCurrClient[];
-extern const Action* NeuroActionSetNormalCurrClient[];
-extern const Action* NeuroActionSetFullscreenCurrClient[];
-extern const Action* NeuroActionSetToggleFullscreenCurrClient[];
-extern const Action* NeuroActionSetMinimizeCurrClient[];
-extern const Action* NeuroActionSetFreeCurrClient[];
-extern const Action* NeuroActionSetToggleFreeCurrClient[];
+// CurrClient (Action Lists)
+extern const Action* NeuroActionListFocusCurrClient[];
+extern const Action* NeuroActionListSwapCurrClient[];
+extern const Action* NeuroActionListSendCurrClient[];
+extern const Action* NeuroActionListSendFollowCurrClient[];
+extern const Action* NeuroActionListKillClient[];
+extern const Action* NeuroActionListTileCurrClient[];
+extern const Action* NeuroActionListNormalCurrClient[];
+extern const Action* NeuroActionListFullscreenCurrClient[];
+extern const Action* NeuroActionListToggleFullscreenCurrClient[];
+extern const Action* NeuroActionListMinimizeCurrClient[];
+extern const Action* NeuroActionListFreeCurrClient[];
+extern const Action* NeuroActionListToggleFreeCurrClient[];
 
-// PtrClient (Action Sets)
-extern const Action* NeuroActionSetFocusPtrClient[];
-extern const Action* NeuroActionSetFreeMovePtrClient[];
-extern const Action* NeuroActionSetFreeResizePtrClient[];
-extern const Action* NeuroActionSetFloatMovePtrClient[];
-extern const Action* NeuroActionSetFloatResizePtrClient[];
-extern const Action* NeuroActionSetToggleFullscreenPtrClient[];
-extern const Action* NeuroActionSetFreePtrClient[];
-extern const Action* NeuroActionSetToggleFreePtrClient[];
+// PtrClient (Action Lists)
+extern const Action* NeuroActionListFocusPtrClient[];
+extern const Action* NeuroActionListFreeMovePtrClient[];
+extern const Action* NeuroActionListFreeResizePtrClient[];
+extern const Action* NeuroActionListFloatMovePtrClient[];
+extern const Action* NeuroActionListFloatResizePtrClient[];
+extern const Action* NeuroActionListToggleFullscreenPtrClient[];
+extern const Action* NeuroActionListFreePtrClient[];
+extern const Action* NeuroActionListToggleFreePtrClient[];
 
 
 //----------------------------------------------------------------------------------------------------------------------

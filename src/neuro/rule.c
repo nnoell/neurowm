@@ -81,13 +81,13 @@ static void set_rule(Client *c, const Rule *r) {
 
 static void apply_rules(Client *c) {
   assert(c);
-  const Rule *const *const rule_set = NeuroConfigGet()->rule_set;
-  if (!rule_set)
+  const Rule *const *const rule_list = NeuroConfigGet()->rule_list;
+  if (!rule_list)
     return;
   const Rule *r;
   int i;
-  for (i = 0; rule_set[ i ]; ++i) {
-    r = rule_set[ i ];
+  for (i = 0; rule_list[ i ]; ++i) {
+    r = rule_list[ i ];
     if (has_rule(c, r)) {
       set_rule(c, r);
       break;
