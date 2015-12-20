@@ -183,8 +183,8 @@ void NeuroClientHide(ClientPtrPtr c, const void *doRules) {  // Move off screen
   if (*(Bool *)doRules)
     NeuroRuleUnapply(c);
   Rectangle *regc = NeuroCoreClientGetRegion(c);
-  regc->x += NeuroSystemGetXRes();
-  regc->y += NeuroSystemGetYRes();
+  regc->x += NeuroSystemGetScreenRegion()->w;
+  regc->y += NeuroSystemGetScreenRegion()->h;
   XMoveWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y);
   CLI_GET(c).is_hidden = True;
 }
@@ -195,8 +195,8 @@ void NeuroClientShow(ClientPtrPtr c, const void *doRules) {  // Move back to scr
   if (!CLI_GET(c).is_hidden)
     return;
   Rectangle *regc = NeuroCoreClientGetRegion(c);
-  regc->x -= NeuroSystemGetXRes();
-  regc->y -= NeuroSystemGetYRes();
+  regc->x -= NeuroSystemGetScreenRegion()->w;
+  regc->y -= NeuroSystemGetScreenRegion()->h;
   if (*(Bool *)doRules)
     NeuroRuleApply(c);
   XMoveWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y);
@@ -248,7 +248,8 @@ void NeuroClientMinimize(ClientPtrPtr c, const void *data) {
   if (!NeuroCorePushMinimizedClient(cli))
     NeuroSystemError("NeuroClientMinimize - Could not minimize client");
   // Move client off screen
-  XMoveWindow(NeuroSystemGetDisplay(), cli->win, NeuroSystemGetXRes() + 1, NeuroSystemGetYRes() + 1);
+  XMoveWindow(NeuroSystemGetDisplay(), cli->win, NeuroSystemGetScreenRegion()->w + 1,
+      NeuroSystemGetScreenRegion()->h + 1);
   NeuroLayoutRunCurr(cli->ws);
   NeuroWorkspaceFocus(cli->ws);
 }

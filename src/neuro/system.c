@@ -20,14 +20,10 @@
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Main variables (Do not make them static)
+// Main variables (Do not make display_ static)
 Display *const display_;
 const int screen_;
 const Window root_;
-const int x_pos_ = 0;
-const int y_pos_ = 0;
-const int x_res_;
-const int y_res_;
 const Rectangle screen_region_;
 const Cursor cursors_[ NeuroSystemCursorCount ];
 const Atom wm_atoms_[ NeuroSystemWmAtomCount ];
@@ -134,9 +130,8 @@ Bool NeuroSystemInit() {
     return False;
   *(int *)&screen_ = DefaultScreen(display_);
   *(Window *)&root_ = RootWindow(display_, screen_);
-  *(int *)&x_res_ = XDisplayWidth(display_, screen_);
-  *(int *)&y_res_ = XDisplayHeight(display_, screen_);
-  *(Rectangle *)&screen_region_ = (Rectangle){ .x = y_pos_, .y = x_pos_, .w = x_res_, .h = y_res_ };
+  *(Rectangle *)&screen_region_ = (Rectangle){ 0, 0, XDisplayWidth(display_, screen_),
+      XDisplayHeight(display_, screen_) };
 
   // Set colors, cursors and atoms
   if (!set_colors_cursors_atoms())
@@ -181,22 +176,6 @@ Window NeuroSystemGetRoot() {
 
 int NeuroSystemGetScreen() {
   return screen_;
-}
-
-int NeuroSystemGetXPos() {
-  return x_pos_;
-}
-
-int NeuroSystemGetYPos() {
-  return y_pos_;
-}
-
-int NeuroSystemGetXRes() {
-  return x_res_;
-}
-
-int NeuroSystemGetYRes() {
-  return y_res_;
 }
 
 const Rectangle *NeuroSystemGetScreenRegion() {
