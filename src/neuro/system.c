@@ -253,6 +253,13 @@ void NeuroSystemChangeProcName(const char *name) {
   prctl(PR_SET_NAME, (unsigned long)name, 0, 0, 0);
 }
 
+pid_t NeuroSystemGetWmPid() {
+  char pidstr[ NAME_MAX ];
+  FILE *cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
+  fgets(pidstr, NAME_MAX, cmd);
+  return (pid_t)strtoul(pidstr, NULL, 10);
+}
+
 Bool NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
   assert(cmd);
   pid_t pid = fork();

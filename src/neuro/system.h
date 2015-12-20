@@ -91,9 +91,10 @@ Color NeuroSystemGetColor(NeuroSystemColor c);
 Color NeuroSystemGetColorFromHex(const char *color);
 
 // System functions
-const char * const *NeuroSystemGetRecompileCommand(const char **output, const char **source);
+const char *const *NeuroSystemGetRecompileCommand(const char **output, const char **source);
 void NeuroSystemChangeWmName(const char *name);
 void NeuroSystemChangeProcName(const char *name);
+pid_t NeuroSystemGetWmPid();
 Bool NeuroSystemSpawn(const char *const *cmd, pid_t *p);
 int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p);
 void NeuroSystemError(const char *msg);

@@ -35,7 +35,6 @@ struct Flag {
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// static pid_t get_neurowm_pid();
 static Bool run_cmd(const char *const *cmd, int *status);
 static Bool help_handler();
 static Bool version_handler();
@@ -63,13 +62,6 @@ static const Flag* flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag
 //----------------------------------------------------------------------------------------------------------------------
 // FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
-
-//  static pid_t get_neurowm_pid() {
-//    char pidstr[ NAME_MAX ];
-//    FILE *cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
-//    fgets(pidstr, NAME_MAX, cmd);
-//    return (pid_t)strtoul(pidstr, NULL, 10);
-//  }
 
 static Bool run_cmd(const char *const *cmd, int *status) {
   assert(cmd);
@@ -103,10 +95,7 @@ static Bool recompile_handler() {
 }
 
 //  static Bool reload_handler() {
-//    const pid_t wmpid = get_neurowm_pid();
-//    if (wmpid <= 0)
-//      return 0;
-//    return kill(wmpid, SIGUSR1) != -1;
+//    return kill(NeuroSystemGetWmPid(), SIGUSR1) != -1;
 //  }
 
 static Bool run_neurowm(int argc, const char *const *argv, int *status) {
