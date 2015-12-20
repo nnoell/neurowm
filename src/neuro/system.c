@@ -20,15 +20,15 @@
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Main variables (Do not make display_ static)
-Display *const display_;
-const int screen_;
-const Window root_;
-const Rectangle screen_region_;
-const Cursor cursors_[ NeuroSystemCursorCount ];
-const Atom wm_atoms_[ NeuroSystemWmAtomCount ];
-const Atom net_atoms_[ NeuroSystemNetAtomCount ];
-const Color colors_[ NeuroSystemColorCount ];
+// Main variables
+static Display *display_;
+static int screen_;
+static Window root_;
+static Rectangle screen_region_;
+static Cursor cursors_[ NeuroSystemCursorCount ];
+static Atom wm_atoms_[ NeuroSystemWmAtomCount ];
+static Atom net_atoms_[ NeuroSystemNetAtomCount ];
+static Color colors_[ NeuroSystemColorCount ];
 
 // Recompile command
 static const char recompile_cmd_output_[ NAME_MAX ];
@@ -86,29 +86,29 @@ static Bool set_colors_cursors_atoms() {
     return False;
 
   // Colors
-  *(Color *)&colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->normal_border_color);
-  *(Color *)&colors_[ NeuroSystemColorCurrent ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->current_border_color);
-  *(Color *)&colors_[ NeuroSystemColorOld ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->old_border_color);
-  *(Color *)&colors_[ NeuroSystemColorFree ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->free_border_color);
-  *(Color *)&colors_[ NeuroSystemColorUrgent ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->urgent_border_color);
+  colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->normal_border_color);
+  colors_[ NeuroSystemColorCurrent ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->current_border_color);
+  colors_[ NeuroSystemColorOld ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->old_border_color);
+  colors_[ NeuroSystemColorFree ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->free_border_color);
+  colors_[ NeuroSystemColorUrgent ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->urgent_border_color);
 
   // Cursors
-  *(Cursor *)&cursors_[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
-  *(Cursor *)&cursors_[ NeuroSystemCursorResize ] = XCreateFontCursor(display_, XC_bottom_right_corner);
-  *(Cursor *)&cursors_[ NeuroSystemCursorMove ] = XCreateFontCursor(display_, XC_fleur);
+  cursors_[ NeuroSystemCursorNormal ] = XCreateFontCursor(display_, XC_left_ptr);
+  cursors_[ NeuroSystemCursorResize ] = XCreateFontCursor(display_, XC_bottom_right_corner);
+  cursors_[ NeuroSystemCursorMove ] = XCreateFontCursor(display_, XC_fleur);
 
   // WM Atoms
-  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomProtocols ] = XInternAtom(display_, "WM_PROTOCOLS", False);
-  *(Atom *)&wm_atoms_[ NeuroSystemWmAtomDeleteWindow ] = XInternAtom(display_, "WM_DELETE_WINDOW", False);
+  wm_atoms_[ NeuroSystemWmAtomProtocols ] = XInternAtom(display_, "WM_PROTOCOLS", False);
+  wm_atoms_[ NeuroSystemWmAtomDeleteWindow ] = XInternAtom(display_, "WM_DELETE_WINDOW", False);
 
   // Net Atoms
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomSupported ] = XInternAtom(display_, "_NET_SUPPORTED", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomState ] = XInternAtom(display_, "_NET_WM_STATE", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomName ] = XInternAtom(display_, "_NET_WM_NAME", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomActive ] = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomFullscreen ] = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomStrut ] = XInternAtom(display_, "_NET_WM_STRUT", False);
-  *(Atom *)&net_atoms_[ NeuroSystemNetAtomCloseWindow ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", False);
+  net_atoms_[ NeuroSystemNetAtomSupported ] = XInternAtom(display_, "_NET_SUPPORTED", False);
+  net_atoms_[ NeuroSystemNetAtomState ] = XInternAtom(display_, "_NET_WM_STATE", False);
+  net_atoms_[ NeuroSystemNetAtomName ] = XInternAtom(display_, "_NET_WM_NAME", False);
+  net_atoms_[ NeuroSystemNetAtomActive ] = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
+  net_atoms_[ NeuroSystemNetAtomFullscreen ] = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
+  net_atoms_[ NeuroSystemNetAtomStrut ] = XInternAtom(display_, "_NET_WM_STRUT", False);
+  net_atoms_[ NeuroSystemNetAtomCloseWindow ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", False);
 
   // EWMH support per view
   XChangeProperty(display_, root_, net_atoms_[ NeuroSystemNetAtomSupported ], XA_ATOM, 32, PropModeReplace,
@@ -125,13 +125,12 @@ static Bool set_colors_cursors_atoms() {
 // X functions
 Bool NeuroSystemInit() {
   // WM global variables
-  *(Display **)&display_ = XOpenDisplay(NULL);
+  display_ = XOpenDisplay(NULL);
   if (!display_)
     return False;
-  *(int *)&screen_ = DefaultScreen(display_);
-  *(Window *)&root_ = RootWindow(display_, screen_);
-  *(Rectangle *)&screen_region_ = (Rectangle){ 0, 0, XDisplayWidth(display_, screen_),
-      XDisplayHeight(display_, screen_) };
+  screen_ = DefaultScreen(display_);
+  root_ = RootWindow(display_, screen_);
+  screen_region_ = (Rectangle){ 0, 0, XDisplayWidth(display_, screen_), XDisplayHeight(display_, screen_) };
 
   // Set colors, cursors and atoms
   if (!set_colors_cursors_atoms())
