@@ -35,11 +35,13 @@ struct Flag {
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool run_cmd(const char *const *cmd, int *status);
+// Flag Handlers
 static Bool help_handler();
 static Bool version_handler();
 static Bool recompile_handler();
 // static Bool reload_handler();
+
+// Main
 static Bool run_neurowm(int argc, const char *const *argv, int *status);
 static Bool run_flag(const char *flgname);
 static Bool loop_run_neurowm(int argc, const char *const *argv);
@@ -63,19 +65,6 @@ static const Flag* flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag
 // FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool run_cmd(const char *const *cmd, int *status) {
-  assert(cmd);
-  const pid_t pid = fork();
-  if (pid == -1)
-    return False;
-  if (!pid) {  // Child
-    execvp(cmd[ 0 ], (char *const *)cmd);
-    NeuroSystemError("run_cmd - Could not execvp");
-  }
-  waitpid(pid, status, WUNTRACED);
-  return True;
-}
-
 static Bool help_handler() {
   printf("Usage: neurowm [OPTION]\nOptions:\n");
   int i;
@@ -90,8 +79,12 @@ static Bool version_handler() {
 }
 
 static Bool recompile_handler() {
+  int pid;
+  if (!NeuroSystemSpawn(NeuroSystemGetRecompileCommand(NULL, NULL), &pid))
+    return False;
   int status;
-  return run_cmd(NeuroSystemGetRecompileCommand(NULL, NULL), &status);
+  waitpid(pid, &status, WUNTRACED);
+  return True;
 }
 
 //  static Bool reload_handler() {
@@ -106,7 +99,11 @@ static Bool run_neurowm(int argc, const char *const *argv, int *status) {
   int i;
   for (i = 1; i < argc; ++i)
     cmd[ i ] = argv[ i ];
-  return run_cmd((const char *const *)cmd, status);
+  int pid;
+  if (!NeuroSystemSpawn((const char *const *)cmd, &pid))
+    return False;
+  waitpid(pid, status, WUNTRACED);
+  return True;
 }
 
 static Bool run_flag(const char *flgname) {
