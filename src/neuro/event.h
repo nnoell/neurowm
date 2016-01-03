@@ -23,7 +23,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // NeuroEventHandler
-typedef void (*NeuroEventHandler)(XEvent *e);
+typedef void (*NeuroEventHandlerFn)(XEvent *e);
 
 // NeuroEventType
 typedef unsigned int NeuroEventType;
@@ -33,7 +33,7 @@ typedef unsigned int NeuroEventType;
 // VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-NeuroEventHandler NeuroEventGetHandler(NeuroEventType t);
+NeuroEventHandlerFn NeuroEventGetHandler(NeuroEventType t);
 void NeuroEventManageWindow(Window w);
 void NeuroEventUnmanageClient(ClientPtrPtr c);
 void NeuroEventLoadWindows();

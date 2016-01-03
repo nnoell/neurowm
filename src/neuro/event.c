@@ -197,7 +197,7 @@ static void do_property_notify(XEvent *e) {
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static const NeuroEventHandler const event_handlers_[ LASTEvent ] = {
+static const NeuroEventHandlerFn const event_handlers_[ LASTEvent ] = {
   [ KeyPress ] = do_key_press,
   [ ButtonPress ] = do_button_press,
   [ MapRequest ] = do_map_request,
@@ -215,7 +215,7 @@ static const NeuroEventHandler const event_handlers_[ LASTEvent ] = {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-NeuroEventHandler NeuroEventGetHandler(NeuroEventType t) {
+NeuroEventHandlerFn NeuroEventGetHandler(NeuroEventType t) {
   return event_handlers_[ t ];
 }
 

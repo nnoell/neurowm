@@ -88,7 +88,7 @@ int NeuroWmRun(const Configuration *c) {
   // Main loop
   XEvent ev;
   while (!stop_main_while_ && !XNextEvent(NeuroSystemGetDisplay(), &ev)) {
-    const NeuroEventHandler eh = NeuroEventGetHandler(ev.type);
+    const NeuroEventHandlerFn eh = NeuroEventGetHandler(ev.type);
     if (eh)
       eh(&ev);
   }
