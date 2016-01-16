@@ -23,27 +23,27 @@
 static const LayoutConf tile_ = {
   "Tile", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf mirror_ = {
   "Mirr", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModMirror, True, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModMirror, true, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf grid_ = {
   "Grid", NeuroLayoutArrangerGrid,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 static const LayoutConf full_ = {
   "Full", NeuroLayoutArrangerFull,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, True, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 static const LayoutConf float_ = {
   "Float", NeuroLayoutArrangerFloat,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterAlways, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, False, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, false, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 
 // Workspace
@@ -210,19 +210,19 @@ static const Key key68_ = {
 
 // Button
 static const Button button0_ = {
-    NULL_MASK,          Button1, CHAIN_NULL(NeuroActionListFocusPtrClient),            True  };
+    NULL_MASK,          Button1, CHAIN_NULL(NeuroActionListFocusPtrClient),            true  };
 static const Button button1_ = {
-    Mod1Mask,           Button1, CHAIN_NULL(NeuroActionListFreeMovePtrClient),         False };
+    Mod1Mask,           Button1, CHAIN_NULL(NeuroActionListFreeMovePtrClient),         false };
 static const Button button2_ = {
-    Mod1Mask,           Button2, CHAIN_NULL(NeuroActionListToggleFreePtrClient),       False };
+    Mod1Mask,           Button2, CHAIN_NULL(NeuroActionListToggleFreePtrClient),       false };
 static const Button button3_ = {
-    Mod1Mask,           Button3, CHAIN_NULL(NeuroActionListFreeResizePtrClient),       False };
+    Mod1Mask,           Button3, CHAIN_NULL(NeuroActionListFreeResizePtrClient),       false };
 static const Button button4_ = {
-    Mod1Mask|ShiftMask, Button1, CHAIN_NULL(NeuroActionListFloatMovePtrClient),        False };
+    Mod1Mask|ShiftMask, Button1, CHAIN_NULL(NeuroActionListFloatMovePtrClient),        false };
 static const Button button5_ = {
-    Mod1Mask|ShiftMask, Button2, CHAIN_NULL(NeuroActionListToggleFullscreenPtrClient), False };
+    Mod1Mask|ShiftMask, Button2, CHAIN_NULL(NeuroActionListToggleFullscreenPtrClient), false };
 static const Button button6_ = {
-    Mod1Mask|ShiftMask, Button3, CHAIN_NULL(NeuroActionListFloatResizePtrClient),      False };
+    Mod1Mask|ShiftMask, Button3, CHAIN_NULL(NeuroActionListFloatResizePtrClient),      false };
 
 // Default configuration
 static const Configuration default_ = {

@@ -28,6 +28,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <unistd.h>
@@ -63,8 +64,8 @@
 #define ARG_WSF_GET(X)   ((X).GenericArgFn_.WorkspaceSelectorFn_)
 
 // Maybe Arg constructors
-#define MAYBE_ARG_NOTHING       {.is_nothing = True, .value = ARG_NULL}
-#define MAYBE_ARG_JUST(X)       {.is_nothing = False, .value = X}
+#define MAYBE_ARG_NOTHING       {.is_nothing = true, .value = ARG_NULL}
+#define MAYBE_ARG_JUST(X)       {.is_nothing = false, .value = X}
 
 // Maybe Arg functions
 #define MAYBE_ARG_IS_NOTHING(X) ((X).is_nothing)
@@ -137,24 +138,24 @@ typedef struct Client Client;
 struct Client {
   const Window win;
   int ws;
-  Bool is_nsp;
+  bool is_nsp;
   char class[ NAME_MAX ];
   char name[ NAME_MAX ];
   char title[ NAME_MAX ];
   Rectangle float_region;
-  Bool is_hidden;
-  Bool is_fullscreen;
+  bool is_hidden;
+  bool is_fullscreen;
   FreeSetterFn free_setter_fn;
   RuleFixedPosition fixed_pos;
   int fixed_size;
-  Bool is_urgent;
+  bool is_urgent;
 };
 
 // ClientPtrPtr
 typedef Client *const *ClientPtrPtr;
 
 // ClientTesterFn
-typedef Bool (*ClientTesterFn)(ClientPtrPtr c, const void *p);
+typedef bool (*ClientTesterFn)(ClientPtrPtr c, const void *p);
 
 // ClientSelectorFn
 typedef ClientPtrPtr (*ClientSelectorFn)(ClientPtrPtr c);
@@ -192,7 +193,7 @@ union GenericArg {
 // GenericMaybeArg
 typedef struct GenericMaybeArg GenericMaybeArg;
 struct GenericMaybeArg {
-  const Bool is_nothing;
+  const bool is_nothing;
   const GenericArg value;
 };
 
@@ -250,7 +251,7 @@ struct Layout {
   const BorderSetterFn border_gap_setter_fn;
   const float *const region;
   LayoutMod mod;
-  Bool follow_mouse;
+  bool follow_mouse;
   GenericArg arrange_settings[ ARRSET_MAX ];
 };
 
@@ -267,7 +268,7 @@ struct LayoutConf {
   const BorderSetterFn border_gap_setter_fn;
   const float region[ 4 ];
   const LayoutMod mod;
-  const Bool follow_mouse;
+  const bool follow_mouse;
   const GenericArg arrange_settings[ ARRSET_MAX ];
 };
 
@@ -294,7 +295,7 @@ struct Button {
   const unsigned int mod;
   const unsigned int button;
   const ActionChain action_chain;
-  const Bool ungrab_on_focus;
+  const bool ungrab_on_focus;
 };
 
 // Rule
@@ -303,12 +304,12 @@ struct Rule {
   const char *const class;
   const char *const name;
   const char *const title;
-  const Bool is_fullscreen;
+  const bool is_fullscreen;
   const FreeSetterFn free_setter_fn;
   const RuleFixedPosition fixed_pos;
   const float fixed_size;
   const WorkspaceSelectorFn workspace_selector_fn;
-  const Bool follow;
+  const bool follow;
 };
 
 // BoxPP

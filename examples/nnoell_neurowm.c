@@ -60,7 +60,7 @@ static const LayoutConf tile_ = {
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
   LayoutModNull,
-  True,
+  true,
   {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf mirror_ = {
@@ -71,7 +71,7 @@ static const LayoutConf mirror_ = {
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
   LayoutModMirror,
-  True,
+  true,
   {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf grid_ = {
@@ -82,7 +82,7 @@ static const LayoutConf grid_ = {
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
   LayoutModMirror|LayoutModReflectX|LayoutModReflectY,
-  True,
+  true,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 static const LayoutConf full_ = {
@@ -93,7 +93,7 @@ static const LayoutConf full_ = {
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
   LayoutModNull,
-  True,
+  true,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 static const LayoutConf float_ = {
@@ -104,7 +104,7 @@ static const LayoutConf float_ = {
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
   LayoutModNull,
-  False,
+  false,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 
@@ -141,51 +141,51 @@ static const Workspace* workspace_list_[] = {
 // RULE (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
 static const Rule rule00_ = {
   "URxvt", RULE_SCRATCHPAD_NAME, "urxvt",
-  False, NeuroRuleFreeSetterScratchpad, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
+  false, NeuroRuleFreeSetterScratchpad, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule01_ = {
   NULL, NULL, "Firefox Preferences",
-  False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
+  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule02_ = {
   NULL, NULL, "Buddy List",
-  False, NeuroRuleFreeSetterNull, RuleFixedPositionLeft, 0.2f, NeuroWorkspaceSelector4, False
+  false, NeuroRuleFreeSetterNull, RuleFixedPositionLeft, 0.2f, NeuroWorkspaceSelector4, false
 };
 static const Rule rule03_ = {
   "Pidgin", NULL, NULL,
-  False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector4, False
+  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector4, false
 };
 static const Rule rule04_ = {
   "Firefox", NULL, NULL,
-  False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, False
+  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, false
 };
 static const Rule rule05_ = {
   "chromium", NULL, NULL,
-  False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, False
+  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, false
 };
 static const Rule rule06_ = {
   "MPlayer", NULL, NULL,
-  False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
+  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule07_ = {
   "Gmrun", NULL, NULL,
-  False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
+  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule08_ = {
   "Xephyr", NULL, NULL,
-  True, NeuroRuleFreeSetterBigCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
+  true, NeuroRuleFreeSetterBigCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule09_ = {
   "Transmission-gtk", NULL, NULL,
-  False, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector9, True
+  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector9, true
 };
 static const Rule rule10_ = {
   "PPSSPPSDL", "PPSSPPSDL", NULL,
-  False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
+  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule11_ = {
   "XCalc", NULL, NULL,
-  False, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, False
+  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 
 // RULESET
@@ -596,19 +596,19 @@ static const Key* key_list_[] = {
 
 // BUTTON (MOD, BUTTON, ACTIONCHAIN, UNWRAPONFOCUS)
 static const Button button0_ = {
-    NULL_MASK,           Button1, CHAIN_NULL(NeuroActionListFocusPtrClient),            True  };
+    NULL_MASK,           Button1, CHAIN_NULL(NeuroActionListFocusPtrClient),            true  };
 static const Button button1_ = {
-    mod_mask_,           Button1, CHAIN_NULL(NeuroActionListFreeMovePtrClient),         False };
+    mod_mask_,           Button1, CHAIN_NULL(NeuroActionListFreeMovePtrClient),         false };
 static const Button button2_ = {
-    mod_mask_,           Button2, CHAIN_NULL(NeuroActionListToggleFreePtrClient),       False };
+    mod_mask_,           Button2, CHAIN_NULL(NeuroActionListToggleFreePtrClient),       false };
 static const Button button3_ = {
-    mod_mask_,           Button3, CHAIN_NULL(NeuroActionListFreeResizePtrClient),       False };
+    mod_mask_,           Button3, CHAIN_NULL(NeuroActionListFreeResizePtrClient),       false };
 static const Button button4_ = {
-    mod_mask_|ShiftMask, Button1, CHAIN_NULL(NeuroActionListFloatMovePtrClient),        False };
+    mod_mask_|ShiftMask, Button1, CHAIN_NULL(NeuroActionListFloatMovePtrClient),        false };
 static const Button button5_ = {
-    mod_mask_|ShiftMask, Button2, CHAIN_NULL(NeuroActionListToggleFullscreenPtrClient), False };
+    mod_mask_|ShiftMask, Button2, CHAIN_NULL(NeuroActionListToggleFullscreenPtrClient), false };
 static const Button button6_ = {
-    mod_mask_|ShiftMask, Button3, CHAIN_NULL(NeuroActionListFloatResizePtrClient),      False };
+    mod_mask_|ShiftMask, Button3, CHAIN_NULL(NeuroActionListFloatResizePtrClient),      false };
 
 // BUTTONSET
 static const Button* button_list_[] = {

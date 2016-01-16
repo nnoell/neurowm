@@ -68,27 +68,27 @@ struct DzenRefreshInfo {
 
 // CPU Calculation
 static CpuCalcRefreshInfo cpu_calc_refresh_info_;
-static Bool cpu_calc_stop_refresh_cond_ = False;
+static bool cpu_calc_stop_refresh_cond_ = false;
 
 // Dzen
 static DzenRefreshInfo dzen_refresh_info_;
-static Bool dzen_stop_refresh_cond_ = False;
+static bool dzen_stop_refresh_cond_ = false;
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Note: Returns True if it has timed out or false when the condition variable has been notified
-static Bool cond_timedwait(int seconds, Bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
+// Note: Returns true if it has timed out or false when the condition variable has been notified
+static bool cond_timedwait(int seconds, bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
   struct timespec deadline;
   clock_gettime(CLOCK_REALTIME, &deadline);
   deadline.tv_sec += seconds;
-  Bool timedout = False;
+  bool timedout = false;
   pthread_mutex_lock(mutex);
   while (!*cond_stop)
     if (ETIMEDOUT == pthread_cond_timedwait(cond_var, mutex, &deadline)) {
-      timedout = True;
+      timedout = true;
       break;
     }
   pthread_mutex_unlock(mutex);
@@ -96,7 +96,7 @@ static Bool cond_timedwait(int seconds, Bool *cond_stop, pthread_mutex_t *mutex,
 }
 
 // CPU Calculation (Thread 1)
-static Bool cpu_calc_refresh_timedwait(int seconds) {
+static bool cpu_calc_refresh_timedwait(int seconds) {
   return cond_timedwait(seconds, &cpu_calc_stop_refresh_cond_, &cpu_calc_refresh_info_.wait_mutex,
       &cpu_calc_refresh_info_.wait_cond);
 }
@@ -137,7 +137,7 @@ static void refresh_cpu_calc(const char *file, int ncpus) {
   memset(prev_idle, 0, sizeof(prev_idle));
   memset(prev_total, 0, sizeof(prev_total));
 
-  while (True) {
+  while (true) {
     // Open the file
     FILE *fd = fopen(file, "r");
     if (fd == NULL)
@@ -175,7 +175,7 @@ static void *refresh_cpu_calc_thread(void *args) {
   pthread_exit(NULL);
 }
 
-static Bool init_cpu_calc_thread() {
+static bool init_cpu_calc_thread() {
   // Init mutex and cond
   pthread_mutex_init(&cpu_calc_refresh_info_.wait_mutex, NULL);
   pthread_cond_init(&cpu_calc_refresh_info_.wait_cond, NULL);
@@ -186,7 +186,7 @@ static Bool init_cpu_calc_thread() {
 
 static void stop_cpu_calc_thread() {
   // Stop calc thread
-  cpu_calc_stop_refresh_cond_ = True;
+  cpu_calc_stop_refresh_cond_ = true;
   pthread_cond_broadcast(&cpu_calc_refresh_info_.wait_cond);
 
   // Join thread
@@ -199,10 +199,10 @@ static void stop_cpu_calc_thread() {
   pthread_mutex_destroy(&cpu_calc_refresh_info_.wait_mutex);
 }
 
-static Bool init_cpu_calc_refresh_info() {
+static bool init_cpu_calc_refresh_info() {
   cpu_calc_refresh_info_.num_cpus = get_num_cpus(CPU_FILE_PATH);
   if (cpu_calc_refresh_info_.num_cpus <= 0)
-    return False;
+    return false;
   cpu_calc_refresh_info_.cpu_info = (CpuInfo *)calloc(cpu_calc_refresh_info_.num_cpus, sizeof(CpuInfo));
   return cpu_calc_refresh_info_.cpu_info != NULL;
 }
@@ -213,7 +213,7 @@ static void stop_cpu_calc_refresh_info() {
 }
 
 // Dzen (Thread 2)
-static Bool dzen_refresh_timedwait(int seconds) {
+static bool dzen_refresh_timedwait(int seconds) {
   return cond_timedwait(seconds, &dzen_stop_refresh_cond_, &dzen_refresh_info_.wait_mutex,
       &dzen_refresh_info_.wait_cond);
 }
@@ -273,7 +273,7 @@ static void *refresh_dzen_thread(void *args) {
   (void)args;
   const DzenPanel *dp;
   int i = 0, j;
-  while (True) {
+  while (true) {
     // Update all panels respecting their refresh rate
     for (j = 0; j < dzen_refresh_info_.num_panels; ++j) {
       dp = NeuroConfigGet()->dzen_panel_list[ j ];
@@ -292,9 +292,9 @@ static void *refresh_dzen_thread(void *args) {
   pthread_exit(NULL);
 }
 
-static Bool init_dzen_refresh_thread() {
+static bool init_dzen_refresh_thread() {
   if (dzen_refresh_info_.reset_rate <= 0)
-    return True;
+    return true;
 
   // Init mutex and cond
   pthread_mutex_init(&dzen_refresh_info_.wait_mutex, NULL);
@@ -309,7 +309,7 @@ static void stop_dzen_refresh_thread() {
     return;
 
   // Stop refresh thread
-  dzen_stop_refresh_cond_ = True;
+  dzen_stop_refresh_cond_ = true;
   pthread_cond_broadcast(&dzen_refresh_info_.wait_cond);
 
   // Join thread
@@ -322,14 +322,14 @@ static void stop_dzen_refresh_thread() {
   pthread_mutex_destroy(&dzen_refresh_info_.wait_mutex);
 }
 
-static Bool init_dzen_refresh_info() {
+static bool init_dzen_refresh_info() {
   const DzenPanel *const *const panel_list = NeuroConfigGet()->dzen_panel_list;
   if (!panel_list)
-    return True;
+    return true;
   dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)panel_list);
   dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(dzen_refresh_info_.num_panels, sizeof(PipeInfo));
   if (!dzen_refresh_info_.pipe_info)
-    return False;
+    return false;
   dzen_refresh_info_.reset_rate = 1;
   const DzenPanel *dp;
   int i;
@@ -347,12 +347,12 @@ static Bool init_dzen_refresh_info() {
     dzen_refresh_info_.pipe_info[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzen_cmd,
         &(dzen_refresh_info_.pipe_info[ i ].pid));
     if (dzen_refresh_info_.pipe_info[ i ].output == -1)
-      return False;
+      return false;
   }
 
   // Init sync mutex
   pthread_mutex_init(&dzen_refresh_info_.sync_mutex, NULL);
-  return True;
+  return true;
 }
 
 static void stop_dzen_refresh_info() {
@@ -374,11 +374,11 @@ static void stop_dzen_refresh_info() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Dzen
-Bool NeuroDzenInit() {
+bool NeuroDzenInit() {
   if (!init_dzen_refresh_info() || !init_dzen_refresh_thread())
-    return False;
-  NeuroDzenRefresh(False);
-  return True;
+    return false;
+  NeuroDzenRefresh(false);
+  return true;
 }
 
 void NeuroDzenStop() {
@@ -386,7 +386,7 @@ void NeuroDzenStop() {
   stop_dzen_refresh_info();
 }
 
-void NeuroDzenRefresh(Bool on_event_only) {
+void NeuroDzenRefresh(bool on_event_only) {
   const DzenPanel *dp;
   int i;
   for (i=0; i < dzen_refresh_info_.num_panels; ++i) {
@@ -429,19 +429,19 @@ void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca) {
       ca->left_click, ca->middle_click, ca->right_click, ca->wheel_up, ca->wheel_down, src);
 }
 
-Bool NeuroDzenReadFirstLineFile(char *buf, const char *path) {
+bool NeuroDzenReadFirstLineFile(char *buf, const char *path) {
   assert(buf);
   assert(path);
   FILE *fd;
   fd = fopen(path, "r");
   if (!fd)
-    return False;
+    return false;
   fgets(buf, DZEN_LOGGER_MAX, fd);
   char *last = buf + strlen(buf) - 1;
   if (*last == '\n')
     *last = '\0';
   fclose(fd);
-  return True;
+  return true;
 }
 
 // Loggers

@@ -24,14 +24,14 @@
 // PRIVATE VARIABLE DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool stop_main_while_ = False;
+static bool stop_main_while_ = false;
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool recompile_wm(pid_t *pid) {
+static bool recompile_wm(pid_t *pid) {
   return NeuroSystemSpawn(NeuroSystemGetRecompileCommand(NULL, NULL), pid);
 }
 
@@ -100,7 +100,7 @@ int NeuroWmRun(const Configuration *c) {
 }
 
 void NeuroWmQuit() {
-  stop_main_while_ = True;
+  stop_main_while_ = true;
 }
 
 void NeuroWmReload() {

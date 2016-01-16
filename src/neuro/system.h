@@ -73,7 +73,7 @@ typedef enum NeuroSystemColor NeuroSystemColor;
 //----------------------------------------------------------------------------------------------------------------------
 
 // X functions
-Bool NeuroSystemInit();
+bool NeuroSystemInit();
 void NeuroSystemStop();
 Display *NeuroSystemGetDisplay();
 Window NeuroSystemGetRoot();
@@ -90,7 +90,7 @@ const char *const *NeuroSystemGetRecompileCommand(const char **output, const cha
 void NeuroSystemChangeWmName(const char *name);
 void NeuroSystemChangeProcName(const char *name);
 pid_t NeuroSystemGetWmPid();
-Bool NeuroSystemSpawn(const char *const *cmd, pid_t *p);
+bool NeuroSystemSpawn(const char *const *cmd, pid_t *p);
 int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p);
 void NeuroSystemError(const char *msg);
 

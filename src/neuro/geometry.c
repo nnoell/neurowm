@@ -115,16 +115,16 @@ Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle
   return rect;
 }
 
-Bool NeuroGeometryIsPointInRectangle(const Rectangle *a, int x, int y) {
+bool NeuroGeometryIsPointInRectangle(const Rectangle *a, int x, int y) {
   assert(a);
   if (x < a->x)
-    return False;
+    return false;
   if (y < a->y)
-    return False;
+    return false;
   if (x > a->x + a->w)
-    return False;
+    return false;
   if (y > a->y + a->h)
-    return False;
-  return True;
+    return false;
+  return true;
 }
 

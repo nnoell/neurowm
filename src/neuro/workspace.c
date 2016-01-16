@@ -33,7 +33,7 @@ typedef void (*WorkspaceClientFn)(ClientPtrPtr c, const void *data);
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static Bool is_above_tiled_client(const ClientPtrPtr c) {
+static bool is_above_tiled_client(const ClientPtrPtr c) {
   assert(c);
   return (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull) || CLI_GET(c).is_fullscreen;
 }
@@ -74,8 +74,8 @@ static void send_client(ClientPtrPtr c, const void *data) {
   if (oldws == ws)
     return;
   Rectangle oldRegion = (Rectangle){ .x = 0, .y = 0, .h = 0, .w = 0 };
-  const Bool isFree = CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull;
-  const Bool doRules = True;
+  const bool isFree = CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull;
+  const bool doRules = true;
   if (oldws == currws)
     NeuroClientHide(c, (const void *)&doRules);
   if (isFree)
@@ -104,8 +104,8 @@ void NeuroWorkspaceChange(int ws) {
   int new = NeuroCoreGetCurrStack();
   if (old == new)
     return;
-  NeuroWorkspaceHide(old, True);
-  NeuroWorkspaceShow(new, True);
+  NeuroWorkspaceHide(old, true);
+  NeuroWorkspaceShow(new, true);
   NeuroLayoutRunCurr(new);
   NeuroWorkspaceFocus(new);
 }
@@ -156,13 +156,13 @@ void NeuroWorkspaceFocus(int ws) {
   XRestackWindows(NeuroSystemGetDisplay(), windows, n);
 }
 
-void NeuroWorkspaceHide(int ws, Bool doRules) {
+void NeuroWorkspaceHide(int ws, bool doRules) {
   ClientPtrPtr c;
   for (c=NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     NeuroClientHide(c, (const void *)&doRules);
 }
 
-void NeuroWorkspaceShow(int ws, Bool doRules) {
+void NeuroWorkspaceShow(int ws, bool doRules) {
   ClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     NeuroClientShow(c, (const void *)&doRules);

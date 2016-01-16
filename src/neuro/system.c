@@ -79,11 +79,11 @@ static int xerror_handler(Display *d, XErrorEvent *ee) {
   return -1;
 }
 
-static Bool set_colors_cursors_atoms() {
+static bool set_colors_cursors_atoms() {
   if (!NeuroConfigGet()->normal_border_color || !NeuroConfigGet()->current_border_color ||
       !NeuroConfigGet()->old_border_color || !NeuroConfigGet()->free_border_color ||
       !NeuroConfigGet()->urgent_border_color)
-    return False;
+    return false;
 
   // Colors
   colors_[ NeuroSystemColorNormal ] = NeuroSystemGetColorFromHex(NeuroConfigGet()->normal_border_color);
@@ -98,23 +98,23 @@ static Bool set_colors_cursors_atoms() {
   cursors_[ NeuroSystemCursorMove ] = XCreateFontCursor(display_, XC_fleur);
 
   // WM Atoms
-  wm_atoms_[ NeuroSystemWmAtomProtocols ] = XInternAtom(display_, "WM_PROTOCOLS", False);
-  wm_atoms_[ NeuroSystemWmAtomDeleteWindow ] = XInternAtom(display_, "WM_DELETE_WINDOW", False);
+  wm_atoms_[ NeuroSystemWmAtomProtocols ] = XInternAtom(display_, "WM_PROTOCOLS", false);
+  wm_atoms_[ NeuroSystemWmAtomDeleteWindow ] = XInternAtom(display_, "WM_DELETE_WINDOW", false);
 
   // Net Atoms
-  net_atoms_[ NeuroSystemNetAtomSupported ] = XInternAtom(display_, "_NET_SUPPORTED", False);
-  net_atoms_[ NeuroSystemNetAtomState ] = XInternAtom(display_, "_NET_WM_STATE", False);
-  net_atoms_[ NeuroSystemNetAtomName ] = XInternAtom(display_, "_NET_WM_NAME", False);
-  net_atoms_[ NeuroSystemNetAtomActive ] = XInternAtom(display_, "_NET_ACTIVE_WINDOW", False);
-  net_atoms_[ NeuroSystemNetAtomFullscreen ] = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", False);
-  net_atoms_[ NeuroSystemNetAtomStrut ] = XInternAtom(display_, "_NET_WM_STRUT", False);
-  net_atoms_[ NeuroSystemNetAtomCloseWindow ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", False);
+  net_atoms_[ NeuroSystemNetAtomSupported ] = XInternAtom(display_, "_NET_SUPPORTED", false);
+  net_atoms_[ NeuroSystemNetAtomState ] = XInternAtom(display_, "_NET_WM_STATE", false);
+  net_atoms_[ NeuroSystemNetAtomName ] = XInternAtom(display_, "_NET_WM_NAME", false);
+  net_atoms_[ NeuroSystemNetAtomActive ] = XInternAtom(display_, "_NET_ACTIVE_WINDOW", false);
+  net_atoms_[ NeuroSystemNetAtomFullscreen ] = XInternAtom(display_, "_NET_WM_STATE_FULLSCREEN", false);
+  net_atoms_[ NeuroSystemNetAtomStrut ] = XInternAtom(display_, "_NET_WM_STRUT", false);
+  net_atoms_[ NeuroSystemNetAtomCloseWindow ] = XInternAtom(display_, "_NET_CLOSE_WINDOW", false);
 
   // EWMH support per view
   XChangeProperty(display_, root_, net_atoms_[ NeuroSystemNetAtomSupported ], XA_ATOM, 32, PropModeReplace,
       (unsigned char *)net_atoms_, NeuroSystemNetAtomCount);
 
-  return True;
+  return true;
 }
 
 
@@ -123,18 +123,18 @@ static Bool set_colors_cursors_atoms() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // X functions
-Bool NeuroSystemInit() {
+bool NeuroSystemInit() {
   // WM global variables
   display_ = XOpenDisplay(NULL);
   if (!display_)
-    return False;
+    return false;
   screen_ = DefaultScreen(display_);
   root_ = RootWindow(display_, screen_);
   screen_region_ = (Rectangle){ 0, 0, XDisplayWidth(display_, screen_), XDisplayHeight(display_, screen_) };
 
   // Set colors, cursors and atoms
   if (!set_colors_cursors_atoms())
-    return False;
+    return false;
 
   // Check if other window manager is already running
   XSetErrorHandler(xerror_handler_start);
@@ -145,16 +145,16 @@ Bool NeuroSystemInit() {
   wa.event_mask = ROOT_MASK;
   XChangeWindowAttributes(display_, root_, CWEventMask|CWCursor, &wa);
   XSelectInput(display_, root_, wa.event_mask);
-  XSync(display_, False);
+  XSync(display_, false);
 
   // Set custom X error handler
   XSetErrorHandler(xerror_handler);
-  XSync(display_, False);
+  XSync(display_, false);
 
   // Grab key bindings
   NeuroSystemGrabKeys(root_, NeuroConfigGet()->key_list);
 
-  return True;
+  return true;
 }
 
 void NeuroSystemStop() {
@@ -219,9 +219,9 @@ const char * const *NeuroSystemGetRecompileCommand(const char **output, const ch
 
 void NeuroSystemChangeWmName(const char *name) {
   assert(name);
-  const Atom netwmcheck = XInternAtom(display_, "_NET_SUPPORTING_WM_CHECK", False);
-  const Atom netwmname = XInternAtom(display_, "_NET_WM_NAME", False);
-  const Atom utf8_str = XInternAtom(display_, "UTF8_STRING", False);
+  const Atom netwmcheck = XInternAtom(display_, "_NET_SUPPORTING_WM_CHECK", false);
+  const Atom netwmname = XInternAtom(display_, "_NET_WM_NAME", false);
+  const Atom utf8_str = XInternAtom(display_, "UTF8_STRING", false);
   XChangeProperty(display_, root_, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root_, 1);
   XChangeProperty(display_, root_, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)name, strlen(name));
 }
@@ -238,11 +238,11 @@ pid_t NeuroSystemGetWmPid() {
   return (pid_t)strtoul(pidstr, NULL, 10);
 }
 
-Bool NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
+bool NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
   assert(cmd);
   pid_t pid = fork();
   if (pid == -1)
-    return False;
+    return false;
   if (!pid) {  // Child
     if (display_)
       close(ConnectionNumber(display_));
@@ -252,7 +252,7 @@ Bool NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
   }
   if (p)
     *p = pid;
-  return True;
+  return true;
 }
 
 int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p) {
@@ -294,7 +294,7 @@ void NeuroSystemGrabKeys(Window w, const Key *const *key_list) {
     k = key_list[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
-      XGrabKey(display_, code, k->mod, w, True, GrabModeAsync, GrabModeAsync);
+      XGrabKey(display_, code, k->mod, w, true, GrabModeAsync, GrabModeAsync);
   }
 }
 
@@ -320,7 +320,7 @@ void NeuroSystemGrabButtons(Window w, const Button *const *button_list) {
   int i;
   for (i=0; button_list[ i ]; ++i) {
     b = button_list[ i ];
-    XGrabButton(display_, b->button, b->mod, w, False, ButtonPressMask|ButtonReleaseMask, GrabModeAsync, GrabModeSync,
+    XGrabButton(display_, b->button, b->mod, w, false, ButtonPressMask|ButtonReleaseMask, GrabModeAsync, GrabModeSync,
         None, None);
   }
 }

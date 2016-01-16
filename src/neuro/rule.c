@@ -46,14 +46,14 @@ static int is_free_size_hints(Client *c) {
   return maxw && minw && maxh && minh && maxw == minw && maxh == minh;
 }
 
-static Bool has_rule(const Client *c, const Rule *r) {
+static bool has_rule(const Client *c, const Rule *r) {
   assert(c);
   assert(r);
   if (!c)
-    return False;
+    return false;
   if (!r->class && !r->name && !r->title)
-    return False;
-  Bool res_class = True, res_name = True, res_title = True;
+    return false;
+  bool res_class = true, res_name = true, res_title = true;
   if (r->class)
     res_class = strcmp(c->class, r->class) == 0;
   if (r->name)
@@ -94,7 +94,7 @@ static void apply_rules(Client *c) {
     }
   }
   if (!strcmp(c->name, RULE_SCRATCHPAD_NAME))
-    c->is_nsp = True;
+    c->is_nsp = true;
 }
 
 

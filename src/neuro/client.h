@@ -64,9 +64,9 @@ ClientPtrPtr NeuroClientSelectorLeft(const ClientPtrPtr c);   // The left client
 ClientPtrPtr NeuroClientSelectorRight(const ClientPtrPtr c);  // The right client (layout position) of c
 
 // Client Testers
-Bool NeuroClientTesterWindow(const ClientPtrPtr c, const void *w);
-Bool NeuroClientTesterUrgent(const ClientPtrPtr c, const void *data);
-Bool NeuroClientTesterFixed(const ClientPtrPtr c, const void *data);
+bool NeuroClientTesterWindow(const ClientPtrPtr c, const void *w);
+bool NeuroClientTesterUrgent(const ClientPtrPtr c, const void *data);
+bool NeuroClientTesterFixed(const ClientPtrPtr c, const void *data);
 
 // Color Setters
 Color NeuroClientColorSetterCurr(const ClientPtrPtr c);
