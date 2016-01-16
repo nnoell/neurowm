@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_CORE_H_
-#define NEURO_CORE_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -76,6 +75,4 @@ Rectangle *NeuroCoreClientGetRegion(const ClientPtrPtr c);
 ClientPtrPtr NeuroCoreClientGetNext(const ClientPtrPtr c);
 ClientPtrPtr NeuroCoreClientGetPrev(const ClientPtrPtr c);
 ClientPtrPtr NeuroCoreClientSwap(const ClientPtrPtr c1, const ClientPtrPtr c2);
-
-#endif  // NEURO_CORE_H_
 

@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_LAYOUT_H_
-#define NEURO_LAYOUT_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -38,6 +37,4 @@ Arrange *NeuroLayoutArrangerTall(Arrange *a);
 Arrange *NeuroLayoutArrangerGrid(Arrange *a);
 Arrange *NeuroLayoutArrangerFull(Arrange *a);
 Arrange *NeuroLayoutArrangerFloat(Arrange *a);
-
-#endif  // NEURO_LAYOUT_H_
 

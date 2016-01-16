@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_SYSTEM_H_
-#define NEURO_SYSTEM_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -100,6 +99,4 @@ void NeuroSystemGrabKeys(Window w, const Key *const *key_list);
 void NeuroSystemUngrabKeys(Window w, const Key *const *key_list);
 void NeuroSystemGrabButtons(Window w, const Button *const *button_list);
 void NeuroSystemUngrabButtons(Window w, const Button *const *button_list);
-
-#endif  // NEURO_SYSTEM_H_
 

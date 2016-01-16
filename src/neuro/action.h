@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_ACTION_H_
-#define NEURO_ACTION_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -167,6 +166,4 @@ void NeuroActionHandlerToggleFreePtrClient(GenericArg freeSetterFn_arg);
 // Run
 void NeuroActionRunAction(const Action *a, const GenericMaybeArg *arg);
 void NeuroActionRunActionChain(const ActionChain *ac);
-
-#endif  // NEURO_ACTION_H_
 

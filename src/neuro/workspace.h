@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_WORKSPACE_H_
-#define NEURO_WORKSPACE_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -72,6 +71,4 @@ int NeuroWorkspaceSelectorCurr();
 int NeuroWorkspaceSelectorPrev();
 int NeuroWorkspaceSelectorNext();
 int NeuroWorkspaceSelectorOld();
-
-#endif  // NEURO_WORKSPACE_H_
 

@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_RULE_H_
-#define NEURO_RULE_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -36,6 +35,4 @@ void NeuroRuleFreeSetterDefault(Rectangle *a, const Rectangle *r);
 void NeuroRuleFreeSetterCenter(Rectangle *a, const Rectangle *r);
 void NeuroRuleFreeSetterBigCenter(Rectangle *a, const Rectangle *r);
 void NeuroRuleFreeSetterScratchpad(Rectangle *a, const Rectangle *r);
-
-#endif  // NEURO_RULE_H_
 

@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_CONFIG_H_
-#define NEURO_CONFIG_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -55,6 +54,4 @@ extern const Button* NeuroConfigDefaultButtonList[];
 // Configuration functions
 void NeuroConfigSet(const Configuration *c);
 const Configuration *NeuroConfigGet();
-
-#endif  // NEURO_CONFIG_H_
 

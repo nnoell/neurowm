@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_GEOMETRY_H_
-#define NEURO_GEOMETRY_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -33,6 +32,4 @@ Rectangle *NeuroGeometryTranspRectangle(Rectangle *rect);
 Rectangle *NeuroGeometryNeuroGeometryTranspRectangle(Rectangle *rect, const Rectangle *reg);
 Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle *reg);
 Bool NeuroGeometryIsPointInRectangle(const Rectangle *a, int x, int y);
-
-#endif  // NEURO_GEOMETRY_H_
 

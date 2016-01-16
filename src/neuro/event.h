@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_EVENT_H_
-#define NEURO_EVENT_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -37,6 +36,4 @@ NeuroEventHandlerFn NeuroEventGetHandler(NeuroEventType t);
 void NeuroEventManageWindow(Window w);
 void NeuroEventUnmanageClient(ClientPtrPtr c);
 void NeuroEventLoadWindows();
-
-#endif  // NEURO_EVENT_H_
 

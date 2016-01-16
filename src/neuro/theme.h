@@ -6,8 +6,7 @@
 // Stability   :  stable
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_THEME_H_
-#define NEURO_THEME_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -63,6 +62,4 @@ void NeuroThemeNnoellLoggerRam(char *str);
 void NeuroThemeNnoellLoggerBattery(char *str);
 void NeuroThemeNnoellLoggerWifiStrength(char *str);
 void NeuroThemeNnoellLoggerTemperature(char *str);
-
-#endif  // NEURO_THEME_H_
 

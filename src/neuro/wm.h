@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_WM_H_
-#define NEURO_WM_H_
+#pragma once
 
 // Includes
 #include "config.h"
@@ -32,6 +31,4 @@
 int NeuroWmRun(const Configuration *c);
 void NeuroWmQuit();
 void NeuroWmReload();
-
-#endif  // NEURO_WM_H_
 

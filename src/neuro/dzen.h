@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_DZEN_H_
-#define NEURO_DZEN_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -49,6 +48,4 @@ void NeuroDzenLoggerWifiStrength(char *str);
 void NeuroDzenLoggerCurrWorkspace(char *str);
 void NeuroDzenLoggerCurrLayout(char *str);
 void NeuroDzenLoggerCurrTitle(char *str);
-
-#endif  // NEURO_DZEN_H_
 

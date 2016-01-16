@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_TYPE_H_
-#define NEURO_TYPE_H_
+#pragma once
 
 // Includes
 #include <X11/keysym.h>
@@ -387,6 +386,4 @@ void NeuroTypeDeleteClient(Client *c);
 
 // Basic Functions
 size_t NeuroTypeArrayLength(const void *const *arrayPtr);
-
-#endif  // NEURO_TYPE_H_
 

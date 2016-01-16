@@ -11,8 +11,7 @@
 // PREPROCESSOR
 //----------------------------------------------------------------------------------------------------------------------
 
-#ifndef NEURO_CLIENT_H_
-#define NEURO_CLIENT_H_
+#pragma once
 
 // Includes
 #include "type.h"
@@ -85,6 +84,4 @@ int NeuroClientBorderGapSetterAlways(const ClientPtrPtr c);
 int NeuroClientBorderGapSetterNever(const ClientPtrPtr c);
 int NeuroClientBorderGapSetterSmart(const ClientPtrPtr c);
 int NeuroClientBorderGapSetterCurr(const ClientPtrPtr c);
-
-#endif  // NEURO_CLIENT_H_
 
