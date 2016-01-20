@@ -159,10 +159,10 @@ void NeuroLayoutToggleModCurr(int ws, unsigned int mod) {
 }
 
 void NeuroLayoutToggle(int ws, int i) {
-  int tl = i;
   if (NeuroCoreStackIsCurrToggledLayout(ws))
-    tl = -1;
-  NeuroCoreStackSetToggledLayout(ws, tl);
+    NeuroCoreStackSetToggledLayout(ws, NULL);
+  else
+    NeuroCoreStackSetToggledLayout(ws, &i);
   NeuroLayoutRunCurr(ws);
   NeuroWorkspaceFocus(ws);
 }

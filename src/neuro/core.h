@@ -54,7 +54,7 @@ int NeuroCoreStackGetNumLayouts(int ws);
 int NeuroCoreStackGetLayoutIdx(int ws);
 bool NeuroCoreStackIsCurrToggledLayout(int ws);
 void NeuroCoreStackSetLayoutIdx(int ws, int i);
-void NeuroCoreStackSetToggledLayout(int ws, int i);
+void NeuroCoreStackSetToggledLayout(int ws, int *i);
 Layout *NeuroCoreStackGetLayout(int ws, int i);
 const LayoutConf *NeuroCoreStackGetLayoutConf(int ws, int i);
 Layout *NeuroCoreStackGetCurrLayout(int ws);
