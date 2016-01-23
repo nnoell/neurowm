@@ -311,7 +311,7 @@ bool NeuroCoreInit() {
     s->name = ws->name;
     s->curr = NULL; s->prev = NULL; s->head = NULL; s->last = NULL; s->nsp = NULL;
     s->size = 0;
-    NeuroGeometryGetAbsoluteRelativeRectangle(&s->region, NeuroSystemGetScreenRegion(), ws->gaps);
+    NeuroGeometryGetAbsoluteRectangle(&s->region, NeuroSystemGetScreenRegion(), ws->gaps);
     s->curr_layout_index = 0;
     s->curr_toggled_layout_index = 0;
     s->is_toggled_layout = false;

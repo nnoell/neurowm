@@ -30,7 +30,7 @@ Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *sr
   return dst;
 }
 
-Rectangle *NeuroGeometryGetAbsoluteRelativeRectangle(Rectangle *dst, const Rectangle *src, const int *gaps) {
+Rectangle *NeuroGeometryGetAbsoluteRectangle(Rectangle *dst, const Rectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);

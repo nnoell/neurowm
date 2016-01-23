@@ -22,7 +22,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *src, const float *rel);
-Rectangle *NeuroGeometryGetAbsoluteRelativeRectangle(Rectangle *dst, const Rectangle *src, const int *gaps);
+Rectangle *NeuroGeometryGetAbsoluteRectangle(Rectangle *dst, const Rectangle *src, const int *gaps);
 Rectangle *NeuroGeometrySetRectangle(Rectangle *r, int x, int y, int w, int h);
 Rectangle *NeuroGeometrySetRectangleBorderWidth(Rectangle *r, int width);
 Rectangle *NeuroGeometrySetRectangleBorderGap(Rectangle *r, int gap);
