@@ -16,6 +16,8 @@
 #include "system.h"
 #include "config.h"
 #include "core.h"
+#include "monitor.h"
+#include "geometry.h"
 
 // Defines
 #define CPU_FILE_PATH "/proc/stat"
@@ -46,6 +48,8 @@ struct CpuCalcRefreshInfo {
 // Dzen
 typedef struct PipeInfo PipeInfo;
 struct PipeInfo {
+  const DzenPanel *dzen_panel;
+  const Monitor *monitor;
   int output;
   pid_t pid;
 };
@@ -56,6 +60,7 @@ struct DzenRefreshInfo {
   pthread_mutex_t sync_mutex;  // Sync control mutex
   pthread_mutex_t wait_mutex;  // Interval wait mutex
   pthread_cond_t wait_cond;    // Interval wait conditional variable
+  const DzenPanel *const *const dzen_panel_list;
   PipeInfo *pipe_info;
   size_t num_panels;
   uint32_t reset_rate;
@@ -232,16 +237,18 @@ static char **str_to_cmd(char **cmd, char *str, const char *sep) {
   return cmd;
 }
 
-static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df) {
+static char **get_dzen_cmd(char **cmd, char *line, const DzenFlags *df, const Monitor *m) {
   assert(cmd);
   assert(line);
   assert(df);
+  assert(m);
   snprintf(line, DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
-      df->x, df->y, df->w, df->h, df->fg_color, df->bg_color, df->align, df->font, df->event, df->extras);
+      m->region.x - m->gaps[ 2 ] + df->x, m->region.y - m->gaps[ 0 ] + df->y, df->w, df->h, df->fg_color, df->bg_color,
+      df->align, df->font, df->event, df->extras);
   return str_to_cmd(cmd, line, " \t\n");
 }
 
-static void refresh_dzen(const DzenPanel *dp, int fd) {
+static void refresh_dzen(const Monitor *m, const DzenPanel *dp, int fd) {
   assert(dp);
 
   // Lock
@@ -251,7 +258,7 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
   char line[ DZEN_LINE_MAX ] = "\0";
   for (size_t i = 0U; dp->loggers[ i ]; ++i) {
     char str[ DZEN_LOGGER_MAX ] = "\0";
-    dp->loggers[ i ](str);
+    dp->loggers[ i ](m, str);
 
     // Add separator if not first and not empty str
     if (i > 0U && str[ 0 ] != '\0')
@@ -269,16 +276,14 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
 
 static void *refresh_dzen_thread(void *args) {
   (void)args;
-  const DzenPanel *dp;
   uint32_t i = 0U;
   while (true) {
-    // Update all panels respecting their refresh rate
     for (size_t j = 0U; j < dzen_refresh_info_.num_panels; ++j) {
-      dp = NeuroConfigGet()->dzen_panel_list[ j ];
-      if (dp->refresh_rate == DZEN_ON_EVENT)
+      const PipeInfo *const pi = dzen_refresh_info_.pipe_info + j;
+      if (pi->dzen_panel->refresh_rate == DZEN_ON_EVENT)
         continue;
-      if (i % dp->refresh_rate == 0U)
-        refresh_dzen(dp, dzen_refresh_info_.pipe_info[ j ].output);
+      if (i % pi->dzen_panel->refresh_rate == 0U)
+        refresh_dzen(pi->monitor, pi->dzen_panel, dzen_refresh_info_.pipe_info[ j ].output);
     }
     ++i;
     i %= dzen_refresh_info_.reset_rate;
@@ -321,30 +326,45 @@ static void stop_dzen_refresh_thread() {
 }
 
 static bool init_dzen_refresh_info() {
-  const DzenPanel *const *const panel_list = NeuroConfigGet()->dzen_panel_list;
-  if (!panel_list)
-    return true;
-  dzen_refresh_info_.num_panels = NeuroTypeArrayLength((const void const *const *)panel_list);
-  dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(dzen_refresh_info_.num_panels, sizeof(PipeInfo));
+  // Get the number of pannels
+  size_t num_panels = 0U;
+  for (const Monitor *m = NeuroMonitorSelectorHead(NULL); m; m = NeuroMonitorSelectorNext(m)) {
+    const size_t size = NeuroTypeArrayLength((const void *const *)m->dzen_panel_list);
+    for (size_t i = 0U; i < size; ++i)
+      ++num_panels;
+  }
+
+  // Allocate
+  dzen_refresh_info_.num_panels = num_panels;
+  dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(num_panels, sizeof(PipeInfo));
   if (!dzen_refresh_info_.pipe_info)
     return false;
+
+  // Initialize
+  size_t panel_iterator = 0U;
   dzen_refresh_info_.reset_rate = 1U;
-  const DzenPanel *dp;
-  for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i) {
-    dp = panel_list[ i ];
+  for (const Monitor *m = NeuroMonitorSelectorLast(NULL); m; m = NeuroMonitorSelectorPrev(m)) {
+    const size_t size = NeuroTypeArrayLength((const void *const *)m->dzen_panel_list);
+    for (size_t i = 0U; i < size; ++i) {
+      const DzenPanel *const dp = m->dzen_panel_list[ i ];
 
-    // Get max refresh rate
-    if (dp->refresh_rate > dzen_refresh_info_.reset_rate)
-      dzen_refresh_info_.reset_rate *= dp->refresh_rate;
+      // Get max refresh rate
+      if (dp->refresh_rate > dzen_refresh_info_.reset_rate)
+        dzen_refresh_info_.reset_rate *= dp->refresh_rate;
 
-    // Create a dzen pipe for every panel
-    char *dzen_cmd[ DZEN_ARGS_MAX ];
-    char line[ DZEN_LINE_MAX ];
-    get_dzen_cmd(dzen_cmd, line, dp->df);
-    dzen_refresh_info_.pipe_info[ i ].output = NeuroSystemSpawnPipe((const char *const *)dzen_cmd,
-        &(dzen_refresh_info_.pipe_info[ i ].pid));
-    if (dzen_refresh_info_.pipe_info[ i ].output == -1)
-      return false;
+      // Create a dzen pipe for every panel
+      char *dzen_cmd[ DZEN_ARGS_MAX ];
+      char line[ DZEN_LINE_MAX ];
+      get_dzen_cmd(dzen_cmd, line, dp->df, m);
+      dzen_refresh_info_.pipe_info[ panel_iterator ].output = NeuroSystemSpawnPipe((const char *const *)dzen_cmd,
+          &(dzen_refresh_info_.pipe_info[ panel_iterator ].pid));
+      if (dzen_refresh_info_.pipe_info[ panel_iterator ].output == -1)
+        return false;
+      dzen_refresh_info_.pipe_info[ panel_iterator ].dzen_panel = dp;
+      dzen_refresh_info_.pipe_info[ panel_iterator ].monitor = m;
+
+      ++panel_iterator;
+    }
   }
 
   // Init sync mutex
@@ -383,14 +403,13 @@ void NeuroDzenStop() {
 }
 
 void NeuroDzenRefresh(bool on_event_only) {
-  const DzenPanel *dp;
   for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i) {
-    dp = NeuroConfigGet()->dzen_panel_list[ i ];
-    if (on_event_only && (dp->refresh_rate == DZEN_ON_EVENT)) {
-      refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
+    const PipeInfo *const pi = dzen_refresh_info_.pipe_info + i;
+    if (on_event_only && (pi->dzen_panel->refresh_rate == DZEN_ON_EVENT)) {
+      refresh_dzen(pi->monitor, pi->dzen_panel, dzen_refresh_info_.pipe_info[ i ].output);
       continue;
     }
-    refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
+    refresh_dzen(pi->monitor, pi->dzen_panel, dzen_refresh_info_.pipe_info[ i ].output);
   }
 }
 
@@ -440,8 +459,10 @@ bool NeuroDzenReadFirstLineFile(char *buf, const char *path) {
 }
 
 // Loggers
-void NeuroDzenLoggerTime(char *str) {
+void NeuroDzenLoggerTime(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
+  (void)m;
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
@@ -449,16 +470,20 @@ void NeuroDzenLoggerTime(char *str) {
 }
 
 
-void NeuroDzenLoggerDate(char *str) {
+void NeuroDzenLoggerDate(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
+  (void)m;
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
   snprintf(str, DZEN_LOGGER_MAX, "%d.%02d.%02d", res.tm_year + 1900, res.tm_mon + 1, res.tm_mday);
 }
 
-void NeuroDzenLoggerDay(char *str) {
+void NeuroDzenLoggerDay(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
+  (void)m;
   struct tm res;
   time_t t = time(NULL);
   localtime_r(&t, &res);
@@ -474,8 +499,10 @@ void NeuroDzenLoggerDay(char *str) {
   }
 }
 
-void NeuroDzenLoggerUptime(char *str) {
+void NeuroDzenLoggerUptime(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
+  (void)m;
   struct sysinfo info;
   sysinfo(&info);
   const uint32_t hours = (uint32_t)(info.uptime / 3600UL);
@@ -485,8 +512,10 @@ void NeuroDzenLoggerUptime(char *str) {
   snprintf(str, DZEN_LOGGER_MAX, "%" PRIu32 "h %" PRIu32 "m %" PRIu32 "s", hours, minutes, seconds);
 }
 
-void NeuroDzenLoggerCpu(char *str) {
+void NeuroDzenLoggerCpu(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
+  (void)m;
   char buf[ DZEN_LOGGER_MAX ];
   for (size_t i = 0U; i < cpu_calc_refresh_info_.num_cpus; ++i) {
     snprintf(buf, DZEN_LOGGER_MAX, "%" PRIu32 "%% ", cpu_calc_refresh_info_.cpu_info[ i ].perc);
@@ -495,8 +524,10 @@ void NeuroDzenLoggerCpu(char *str) {
   str[ strlen(str) - 1 ] = '\0';
 }
 
-void NeuroDzenLoggerRam(char *str) {
+void NeuroDzenLoggerRam(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
+  (void)m;
   char buf[ DZEN_LOGGER_MAX ];
   FILE *fd = fopen("/proc/meminfo", "r");
   if (!fd)
@@ -513,8 +544,10 @@ void NeuroDzenLoggerRam(char *str) {
   fclose(fd);
 }
 
-void NeuroDzenLoggerWifiStrength(char *str) {
+void NeuroDzenLoggerWifiStrength(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
+  (void)m;
   char buf[ DZEN_LOGGER_MAX ];
   FILE *fd = fopen("/proc/net/wireless", "r");
   if (!fd)
@@ -528,24 +561,48 @@ void NeuroDzenLoggerWifiStrength(char *str) {
   fclose(fd);
 }
 
-void NeuroDzenLoggerCurrWorkspace(char *str) {
+void NeuroDzenLoggerMonitorWorkspace(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
-  const char *name = NeuroCoreStackGetName(NeuroCoreGetCurrStack());
+  const char *name = NeuroCoreStackGetName(NeuroCoreGetMonitorStack(m));
   if (name)
     strncpy(str, name, DZEN_LOGGER_MAX);
 }
 
-void NeuroDzenLoggerCurrLayout(char *str) {
+void NeuroDzenLoggerMonitorCurrLayout(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
-  const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(NeuroCoreGetCurrStack());
+  const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(NeuroCoreGetMonitorStack(m));
   if (lc)
     strncpy(str, lc->name, DZEN_LOGGER_MAX);
 }
 
-void NeuroDzenLoggerCurrTitle(char *str) {
+void NeuroDzenLoggerMonitorCurrTitle(const Monitor *m, char *str) {
+  assert(m);
   assert(str);
-  const ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
+  const ClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetMonitorStack(m));
   if (c)
     strncpy(str, CLI_GET(c).title, DZEN_LOGGER_MAX);
+}
+
+void NeuroDzenLoggerScreen(const Monitor *m, char *str) {
+  assert(m);
+  assert(str);
+  (void)m;
+  const Rectangle *const r = NeuroSystemGetScreenRegion();
+  snprintf(str, DZEN_LOGGER_MAX, "[screen: %i,%i %ix%i]", r->x, r->y, r->w, r->h);
+}
+
+void NeuroDzenLoggerMonitorList(const Monitor *m, char *str) {
+  assert(m);
+  assert(str);
+  (void)m;
+  for (const Monitor *m = NeuroMonitorSelectorHead(NULL); m; m = NeuroMonitorSelectorNext(m)) {
+    static char buf[ DZEN_LINE_MAX ];
+    static Rectangle r = { 0 };
+    NeuroGeometryUnsetRectangleGaps(&r, &m->region, m->gaps);
+    snprintf(buf, DZEN_LOGGER_MAX, "[%s: %ix%i]", m->name ? m->name : "Unknown", r.w, r.h);
+    strncat(str, buf, DZEN_LINE_MAX - strlen(str) - 1);
+  }
 }
 

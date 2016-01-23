@@ -38,14 +38,16 @@ void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca);
 bool NeuroDzenReadFirstLineFile(char *buf, const char *path);
 
 // Loggers
-void NeuroDzenLoggerTime(char *str);
-void NeuroDzenLoggerDate(char *str);
-void NeuroDzenLoggerDay(char *str);
-void NeuroDzenLoggerUptime(char *str);
-void NeuroDzenLoggerCpu(char *str);
-void NeuroDzenLoggerRam(char *str);
-void NeuroDzenLoggerWifiStrength(char *str);
-void NeuroDzenLoggerCurrWorkspace(char *str);
-void NeuroDzenLoggerCurrLayout(char *str);
-void NeuroDzenLoggerCurrTitle(char *str);
+void NeuroDzenLoggerTime(const Monitor *m, char *str);
+void NeuroDzenLoggerDate(const Monitor *m, char *str);
+void NeuroDzenLoggerDay(const Monitor *m, char *str);
+void NeuroDzenLoggerUptime(const Monitor *m, char *str);
+void NeuroDzenLoggerCpu(const Monitor *m, char *str);
+void NeuroDzenLoggerRam(const Monitor *m, char *str);
+void NeuroDzenLoggerWifiStrength(const Monitor *m, char *str);
+void NeuroDzenLoggerMonitorWorkspace(const Monitor *m, char *str);
+void NeuroDzenLoggerMonitorCurrLayout(const Monitor *m, char *str);
+void NeuroDzenLoggerMonitorCurrTitle(const Monitor *m, char *str);
+void NeuroDzenLoggerScreen(const Monitor *m, char *str);
+void NeuroDzenLoggerMonitorList(const Monitor *m, char *str);
 

@@ -79,6 +79,8 @@ Display *NeuroSystemGetDisplay();
 Window NeuroSystemGetRoot();
 int NeuroSystemGetScreen();
 const Rectangle *NeuroSystemGetScreenRegion();
+const Rectangle *NeuroSystemGetHiddenRegion();
+const int *NeuroSystemGetHiddenGaps();
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c);
 Atom NeuroSystemGetWmAtom(NeuroSystemWmAtom a);
 Atom NeuroSystemGetNetAtom(NeuroSystemNetAtom a);

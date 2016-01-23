@@ -27,8 +27,8 @@
 
 // Basic Functions
 Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa);
-void NeuroRuleApply(const ClientPtrPtr c);
-void NeuroRuleUnapply(const ClientPtrPtr c);
+void NeuroRuleSetLayoutRegion(Rectangle *r, const ClientPtrPtr c);
+void NeuroRuleSetClientRegion(Rectangle *r, const ClientPtrPtr c);
 
 // Free Setters
 void NeuroRuleFreeSetterDefault(Rectangle *a, const Rectangle *r);

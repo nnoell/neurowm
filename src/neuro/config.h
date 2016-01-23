@@ -27,7 +27,6 @@
 #define NeuroConfigDefaultBorderWidth 1
 #define NeuroConfigDefaultBorderGap 0
 #define NeuroConfigDefaultRuleList NULL
-#define NeuroConfigDefaultDzenPanelList NULL
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -40,6 +39,7 @@ extern const char* NeuroConfigDefaultLauncherCommand[];
 extern const char* NeuroConfigDefaultScratchpadCommand[];
 
 // Configuration fields
+extern const MonitorConf* NeuroConfigDefaultMonitorList[];
 extern const LayoutConf* NeuroConfigDefaultLayoutList[];
 extern const LayoutConf* NeuroConfigDefaultToggledLayoutList[];
 extern const Workspace* NeuroConfigDefaultWorkspaceList[];

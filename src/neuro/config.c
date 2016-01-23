@@ -46,27 +46,20 @@ static const LayoutConf float_ = {
   {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, false, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 
+// Monitors
+static const MonitorConf m0_ = { "Main", 0U, {0, 0, 0, 0}, NULL };
+
 // Workspace
-static const Workspace ws0_ = {
-    "ws1", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws1_ = {
-    "ws2", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws2_ = {
-    "ws3", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws3_ = {
-    "ws4", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws4_ = {
-    "ws5", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws5_ = {
-    "ws6", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws6_ = {
-    "ws7", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws7_ = {
-    "ws8", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws8_ = {
-    "ws9", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
-static const Workspace ws9_ = {
-    "ws0", {0, 0, 0, 0},  NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws0_ = { "ws1", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws1_ = { "ws2", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws2_ = { "ws3", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws3_ = { "ws4", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws4_ = { "ws5", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws5_ = { "ws6", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws6_ = { "ws7", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws7_ = { "ws8", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws8_ = { "ws9", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
+static const Workspace ws9_ = { "ws0", NeuroConfigDefaultLayoutList, NeuroConfigDefaultToggledLayoutList };
 
 // Key
 static const Key key00_ = {
@@ -235,9 +228,9 @@ static const Configuration default_ = {
   NeuroConfigDefaultUrgentBorderColor,
   NeuroConfigDefaultBorderWidth,
   NeuroConfigDefaultBorderGap,
+  NeuroConfigDefaultMonitorList,
   NeuroConfigDefaultWorkspaceList,
   NeuroConfigDefaultRuleList,
-  NeuroConfigDefaultDzenPanelList,
   NeuroConfigDefaultKeyList,
   NeuroConfigDefaultButtonList
 };
@@ -254,6 +247,9 @@ static const Configuration *configuration_ = &default_;
 const char* NeuroConfigDefaultTerminalCommand[] = { "/usr/bin/xterm", NULL };
 const char* NeuroConfigDefaultLauncherCommand[] = { "/usr/bin/gmrun", NULL };
 const char* NeuroConfigDefaultScratchpadCommand[] = { "/usr/bin/xterm", "-name", RULE_SCRATCHPAD_NAME, NULL };
+
+// Monitor List
+const MonitorConf* NeuroConfigDefaultMonitorList[] = { &m0_, NULL };
 
 // Layout List
 const LayoutConf* NeuroConfigDefaultLayoutList[] = { &tile_, &mirror_, &grid_, NULL };

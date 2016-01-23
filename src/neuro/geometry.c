@@ -30,14 +30,25 @@ Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *sr
   return dst;
 }
 
-Rectangle *NeuroGeometryGetAbsoluteRectangle(Rectangle *dst, const Rectangle *src, const int *gaps) {
+Rectangle *NeuroGeometrySetRectangleGaps(Rectangle *dst, const Rectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);
-  dst->x = src->x + gaps[ 2 ];
-  dst->y = src->y + gaps[ 0 ];
-  dst->w = src->w - (gaps[ 3 ] + gaps[ 2 ]);
-  dst->h = src->h - (gaps[ 1 ] + gaps[ 0 ]);
+  dst->x = src->x + (gaps[ 2 ]);
+  dst->y = src->y + (gaps[ 0 ]);
+  dst->w = src->w - (gaps[ 2 ] + gaps[ 3 ]);
+  dst->h = src->h - (gaps[ 0 ] + gaps[ 1 ]);
+  return dst;
+}
+
+Rectangle *NeuroGeometryUnsetRectangleGaps(Rectangle *dst, const Rectangle *src, const int *gaps) {
+  assert(dst);
+  assert(src);
+  assert(gaps);
+  dst->x = src->x - (gaps[ 2 ]);
+  dst->y = src->y - (gaps[ 0 ]);
+  dst->w = src->w + (gaps[ 2 ] + gaps[ 3 ]);
+  dst->h = src->h + (gaps[ 0 ] + gaps[ 1 ]);
   return dst;
 }
 

@@ -25,8 +25,6 @@
 void NeuroClientUpdate(ClientPtrPtr c, const void *data);
 void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data);
 void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data);
-void NeuroClientHide(ClientPtrPtr c, const void *do_rules);
-void NeuroClientShow(ClientPtrPtr c, const void *do_rules);
 void NeuroClientSetUrgent(ClientPtrPtr c, const void *data);
 void NeuroClientUnsetUrgent(ClientPtrPtr c, const void *data);
 void NeuroClientKill(ClientPtrPtr c, const void *data);

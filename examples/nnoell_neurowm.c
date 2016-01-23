@@ -24,10 +24,10 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // COMMAND
-static const char* termcmd_[]  = { "/usr/bin/urxvt", NULL };
-static const char* nspcmd_[]   = { "/usr/bin/urxvt", "-name", RULE_SCRATCHPAD_NAME, NULL };
+static const char* termcmd_[] = { "/usr/bin/urxvt", NULL };
+static const char* nspcmd_[] = { "/usr/bin/urxvt", "-name", RULE_SCRATCHPAD_NAME, NULL };
 static const char* xdefload_[] = { "/usr/bin/xrdb", "-load", "/home/julian/.config/xorg/Xdefaults", NULL };
-static const char* wallcmd_[]  = { "/usr/bin/feh", "--bg-scale", "/home/julian/Pictures/wallpapers/neurowm.png", NULL };
+static const char* wallcmd_[] = { "/usr/bin/feh", "--bg-scale", "/home/julian/Pictures/wallpapers/neurowm.png", NULL };
 static const char* volupcmd_[] = { "/home/julian/bin/voldzen.sh", "+", "-d", NULL };
 static const char* voldocmd_[] = { "/home/julian/bin/voldzen.sh", "-", "-d", NULL };
 static const char* songncmd_[] = { "/usr/bin/mpc", "next", NULL };
@@ -43,7 +43,7 @@ static const Action action0_ = { NeuroActionHandlerChangeWmName, ARG_STR("LG3D")
 static const Action action1_ = { NeuroActionHandlerSpawn, ARG_CMD(xdefload_) };
 static const Action action2_ = { NeuroActionHandlerSpawn, ARG_CMD(wallcmd_) };
 
-// ACTIONSET
+// ACTION LIST
 static const Action* init_action_list_[] = { &action0_, &action1_, &action2_, &NeuroActionInitCpuCalc, NULL };
 
 
@@ -108,7 +108,7 @@ static const LayoutConf float_ = {
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 
-// LAYOUTSET
+// LAYOUT LIST
 static const LayoutConf* layout_list_[] = { &tile_, &mirror_, &grid_, NULL };
 static const LayoutConf* toggled_layout_list_[] = { &full_, &float_, NULL };
 
@@ -117,19 +117,19 @@ static const LayoutConf* toggled_layout_list_[] = { &full_, &float_, NULL };
 // WORKSPACES
 //----------------------------------------------------------------------------------------------------------------------
 
-// WORKSPACE (NAME, GAPS (UDLR), LAYOUTS, TOGLAYOUTS)
-static const Workspace ws0_ = { "Terminal",    {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws1_ = { "Network",     {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws2_ = { "Development", {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws3_ = { "Graphics",    {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws4_ = { "Chatting",    {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws5_ = { "Video",       {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws6_ = { "Alternate1",  {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws7_ = { "Alternate2",  {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws8_ = { "Alternate3",  {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
-static const Workspace ws9_ = { "Alternate4",  {16, 16, 0, 0},  layout_list_, toggled_layout_list_ };
+// WORKSPACE (NAME, LAYOUTS, TOGLAYOUTS)
+static const Workspace ws0_ = { "Terminal",    layout_list_, toggled_layout_list_ };
+static const Workspace ws1_ = { "Network",     layout_list_, toggled_layout_list_ };
+static const Workspace ws2_ = { "Development", layout_list_, toggled_layout_list_ };
+static const Workspace ws3_ = { "Graphics",    layout_list_, toggled_layout_list_ };
+static const Workspace ws4_ = { "Chatting",    layout_list_, toggled_layout_list_ };
+static const Workspace ws5_ = { "Video",       layout_list_, toggled_layout_list_ };
+static const Workspace ws6_ = { "Alternate1",  layout_list_, toggled_layout_list_ };
+static const Workspace ws7_ = { "Alternate2",  layout_list_, toggled_layout_list_ };
+static const Workspace ws8_ = { "Alternate3",  layout_list_, toggled_layout_list_ };
+static const Workspace ws9_ = { "Alternate4",  layout_list_, toggled_layout_list_ };
 
-// WORKSPACESET
+// WORKSPACE LIST
 static const Workspace* workspace_list_[] = {
     &ws0_, &ws1_, &ws2_, &ws3_, &ws4_, &ws5_, &ws6_, &ws7_, &ws8_, &ws9_, NULL };
 
@@ -177,7 +177,7 @@ static const Rule rule08_ = {
 };
 static const Rule rule09_ = {
   "Transmission-gtk", NULL, NULL,
-  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector9, true
+  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector8, false
 };
 static const Rule rule10_ = {
   "PPSSPPSDL", "PPSSPPSDL", NULL,
@@ -188,7 +188,7 @@ static const Rule rule11_ = {
   false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 
-// RULESET
+// RULE LIST
 static const Rule* rule_list_[] = {
   &rule00_, &rule01_, &rule02_, &rule03_, &rule04_, &rule05_, &rule06_, &rule07_, &rule08_, &rule09_,
   &rule10_, &rule11_, NULL
@@ -200,55 +200,81 @@ static const Rule* rule_list_[] = {
 //----------------------------------------------------------------------------------------------------------------------
 
 // TOP LEFT
-static const DzenFlags top_left_dzen_flags_ = {
+static const DzenFlags top_left_dzen_flags0_ = {
+  0, 0, 1200, 16,
+  NeuroThemeNnoellColorWhiteAlt,
+  NeuroThemeNnoellColorBlack,
+  'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+};
+static const LoggerFn top_left_loggers0_[] = {
+  NeuroThemeNnoellLoggerMonitorCurrLayout,
+  NeuroThemeNnoellLoggerMonitorCurrLayoutMod,
+  NeuroThemeNnoellLoggerMonitorWorkspace,
+  NeuroThemeNnoellLoggerMonitorCurrTitle,
+  NULL
+};
+static const DzenFlags top_left_dzen_flags1_ = {
   0, 0, 1500, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
   'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
 };
-static const LoggerFn top_left_loggers_[] = {
-  NeuroThemeNnoellLoggerCurrLayout,
-  NeuroThemeNnoellLoggerLayoutMod,
-  NeuroThemeNnoellLoggerCurrWorkspace,
-  NeuroThemeNnoellLoggerCurrTitle,
+static const LoggerFn top_left_loggers1_[] = {
+  NeuroThemeNnoellLoggerMonitorCurrLayout,
+  NeuroThemeNnoellLoggerMonitorCurrLayoutMod,
+  NeuroThemeNnoellLoggerMonitorWorkspace,
+  NeuroThemeNnoellLoggerMonitorCurrTitle,
   NULL
 };
 
 // TOP RIGHT
-static const DzenFlags top_right_dzen_flags_ = {
+static const DzenFlags top_right_dzen_flags0_ = {
+  1200, 0, 240, 16,
+  NeuroThemeNnoellColorWhiteAlt,
+  NeuroThemeNnoellColorBlack,
+  'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+};
+static const LoggerFn top_right_loggers0_[] = {
+  NeuroThemeNnoellLoggerMonitorStackSize,
+  NeuroThemeNnoellLoggerMonitorNumMinimized,
+  NULL
+};
+static const DzenFlags top_right_dzen_flags1_ = {
   1500, 0, 420, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
   'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
 };
-static const LoggerFn top_right_loggers_[] = {
+static const LoggerFn top_right_loggers1_[] = {
   NeuroThemeNnoellLoggerUptime,
   NeuroThemeNnoellLoggerDateTime,
   NULL
 };
 
 // BOTTOM LEFT
-static const DzenFlags bottom_left_dzen_flags_ = {
+static const DzenFlags bottom_left_dzen_flags1_ = {
   0, 1064, 920, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
   'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
 };
-static const LoggerFn bottom_left_loggers_[] = {
+static const LoggerFn bottom_left_loggers1_[] = {
   NeuroThemeNnoellLoggerWorkspaceList,
-  NeuroThemeNnoellLoggerStackSize,
-  NeuroThemeNnoellLoggerMinimizedCount,
+  NeuroThemeNnoellLoggerMonitorStackSize,
+  NeuroThemeNnoellLoggerMonitorNumMinimized,
+  NeuroThemeNnoellLoggerScreen,
+  NeuroThemeNnoellLoggerMonitorList,
   NULL
 };
 
 // BOTTOM RIGHT
-static const DzenFlags bottom_right_dzen_flags_ = {
+static const DzenFlags bottom_right_dzen_flags1_ = {
   920, 1064, 1000, 16,
   NeuroThemeNnoellColorWhiteAlt,
   NeuroThemeNnoellColorBlack,
   'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
 };
-static const LoggerFn bottom_right_loggers_[] = {
+static const LoggerFn bottom_right_loggers1_[] = {
   NeuroThemeNnoellLoggerCpu,
   NeuroThemeNnoellLoggerRam,
   NeuroThemeNnoellLoggerTemperature,
@@ -257,14 +283,36 @@ static const LoggerFn bottom_right_loggers_[] = {
 };
 
 // DZENPANEL (DZENFLAGS, LOGGERS, SEP, REFRESH)
-static const DzenPanel top_left_panel_     = { &top_left_dzen_flags_,     top_left_loggers_,     " ",  DZEN_ON_EVENT };
-static const DzenPanel top_right_panel_    = { &top_right_dzen_flags_,    top_right_loggers_,    " ",  1             };
-static const DzenPanel bottom_left_panel_  = { &bottom_left_dzen_flags_,  bottom_left_loggers_,  " ",  DZEN_ON_EVENT };
-static const DzenPanel bottom_right_panel_ = { &bottom_right_dzen_flags_, bottom_right_loggers_, " ",  1             };
+static const DzenPanel top_left_panel0_     = {
+    &top_left_dzen_flags0_,     top_left_loggers0_,     " ",  DZEN_ON_EVENT };
+static const DzenPanel top_left_panel1_     = {
+    &top_left_dzen_flags1_,     top_left_loggers1_,     " ",  DZEN_ON_EVENT };
+static const DzenPanel top_right_panel0_    = {
+    &top_right_dzen_flags0_,    top_right_loggers0_,    " ",  DZEN_ON_EVENT };
+static const DzenPanel top_right_panel1_    = {
+    &top_right_dzen_flags1_,    top_right_loggers1_,    " ",  1             };
+static const DzenPanel bottom_left_panel1_  = {
+    &bottom_left_dzen_flags1_,  bottom_left_loggers1_,  " ",  DZEN_ON_EVENT };
+static const DzenPanel bottom_right_panel1_ = {
+    &bottom_right_dzen_flags1_, bottom_right_loggers1_, " ",  1             };
 
-// DZENPANELSET
-static const DzenPanel* dzen_panel_list_[] = {
-    &top_left_panel_, &top_right_panel_, &bottom_left_panel_, &bottom_right_panel_, NULL };
+// DZENPANEL LIST
+static const DzenPanel* dzen_panel_list0_[] = {
+    &top_left_panel0_, &top_right_panel0_, NULL };
+static const DzenPanel* dzen_panel_list1_[] = {
+    &top_left_panel1_, &top_right_panel1_, &bottom_left_panel1_, &bottom_right_panel1_, NULL };
+
+
+//----------------------------------------------------------------------------------------------------------------------
+// MONITORS
+//----------------------------------------------------------------------------------------------------------------------
+
+// MONITORCONF (NAME, DEFAULT_WORKSPACE, GAPS (UDLR), DZENPANELS)
+static const MonitorConf m0_ = { "DVI",  1U, {16, 0, 0, 0},  dzen_panel_list0_ };
+static const MonitorConf m1_ = { "HDMI", 0U, {16, 16, 0, 0}, dzen_panel_list1_ };
+
+// MONITORCONF LIST
+const MonitorConf* monitor_list_[] = { &m0_, &m1_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -576,8 +624,16 @@ static const Key key75_ = {  // Jumps to the previous song
   Mod1Mask, XK_Left,
   CHAIN(NeuroActionListSpawn, ARG_CMD(songpcmd_))
 };
+static const Key key76_ = {  // Selects the previous monitor
+  mod_mask_|ControlMask, XK_Right,
+  CHAIN(NeuroActionListSelectMonitor, ARG_MSF(NeuroMonitorSelectorPrev))
+};
+static const Key key77_ = {  // Selects the next monitor
+  mod_mask_|ControlMask, XK_Left,
+  CHAIN(NeuroActionListSelectMonitor, ARG_MSF(NeuroMonitorSelectorNext))
+};
 
-// KEYSET
+// KEY LIST
 static const Key* key_list_[] = {
   &key00_, &key01_, &key02_, &key03_, &key04_, &key05_, &key06_, &key07_, &key08_, &key09_,
   &key10_, &key11_, &key12_, &key13_, &key14_, &key15_, &key16_, &key17_, &key18_, &key19_,
@@ -586,7 +642,7 @@ static const Key* key_list_[] = {
   &key40_, &key41_, &key42_, &key43_, &key44_, &key45_, &key46_, &key47_, &key48_, &key49_,
   &key50_, &key51_, &key52_, &key53_, &key54_, &key55_, &key56_, &key57_, &key58_, &key59_,
   &key60_, &key61_, &key62_, &key63_, &key64_, &key65_, &key66_, &key67_, &key68_, &key69_,
-  &key70_, &key71_, &key72_, &key73_, &key74_, &key75_, NULL
+  &key70_, &key71_, &key72_, &key73_, &key74_, &key75_, &key76_, &key77_, NULL
 };
 
 
@@ -610,7 +666,7 @@ static const Button button5_ = {
 static const Button button6_ = {
     mod_mask_|ShiftMask, Button3, CHAIN_NULL(NeuroActionListFloatResizePtrClient),      false };
 
-// BUTTONSET
+// BUTTON LIST
 static const Button* button_list_[] = {
     &button0_, &button1_, &button2_, &button3_, &button4_, &button5_, &button6_, NULL };
 
@@ -629,9 +685,9 @@ static const Configuration configuration_ = {
   NeuroConfigDefaultUrgentBorderColor,
   NeuroConfigDefaultBorderWidth,
   NeuroConfigDefaultBorderGap,
+  monitor_list_,
   workspace_list_,
   rule_list_,
-  dzen_panel_list_,  // Dzen must be installed
   key_list_,
   button_list_,
 };

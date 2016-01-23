@@ -25,6 +25,8 @@ static Display *display_;
 static int screen_;
 static Window root_;
 static Rectangle screen_region_;
+static Rectangle hidden_region_;
+static const int hidden_gaps_[ 4 ] = { 0 };
 static Cursor cursors_[ NeuroSystemCursorCount ];
 static Atom wm_atoms_[ NeuroSystemWmAtomCount ];
 static Atom net_atoms_[ NeuroSystemNetAtomCount ];
@@ -43,6 +45,7 @@ static const char *const recompile_cmd_[] = {
   "-L/usr/lib/neuro",
   "-l" PKG_NAME,
   "-lX11",
+  "-lXrandr",
   "-pthread",
   NULL
 };
@@ -130,7 +133,12 @@ bool NeuroSystemInit() {
     return false;
   screen_ = DefaultScreen(display_);
   root_ = RootWindow(display_, screen_);
-  screen_region_ = (Rectangle){ 0, 0, XDisplayWidth(display_, screen_), XDisplayHeight(display_, screen_) };
+
+  // Get the regions
+  const int width = XDisplayWidth(display_, screen_);
+  const int height = XDisplayHeight(display_, screen_);
+  screen_region_ = (Rectangle){ 0, 0, width, height };
+  hidden_region_ = (Rectangle){ width, height, 1920, 1080 };
 
   // Set colors, cursors and atoms
   if (!set_colors_cursors_atoms())
@@ -179,6 +187,14 @@ int NeuroSystemGetScreen() {
 
 const Rectangle *NeuroSystemGetScreenRegion() {
   return &screen_region_;
+}
+
+const Rectangle *NeuroSystemGetHiddenRegion() {
+  return &hidden_region_;
+}
+
+const int *NeuroSystemGetHiddenGaps() {
+  return hidden_gaps_;
 }
 
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c) {

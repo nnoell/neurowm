@@ -25,8 +25,7 @@
 void NeuroWorkspaceChange(size_t ws);
 void NeuroWorkspaceUpdate(size_t ws);
 void NeuroWorkspaceFocus(size_t ws);
-void NeuroWorkspaceHide(size_t ws, bool doRules);
-void NeuroWorkspaceShow(size_t ws, bool doRules);
+void NeuroWorkspaceUnfocus(size_t ws);
 void NeuroWorkspaceTile(size_t ws);
 void NeuroWorkspaceFree(size_t ws, const void *free_setter_fn);
 void NeuroWorkspaceMinimize(size_t ws);

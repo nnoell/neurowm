@@ -29,9 +29,9 @@ static const Configuration configuration_ = {
   NeuroConfigDefaultUrgentBorderColor,
   NeuroConfigDefaultBorderWidth,
   NeuroConfigDefaultBorderGap,
+  NeuroConfigDefaultMonitorList,
   NeuroConfigDefaultWorkspaceList,
   NeuroConfigDefaultRuleList,
-  NeuroConfigDefaultDzenPanelList,
   NeuroConfigDefaultKeyList,
   NeuroConfigDefaultButtonList
 };

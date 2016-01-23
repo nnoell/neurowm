@@ -13,6 +13,11 @@
 
 #pragma once
 
+// Conditional Includes
+#ifdef XRANDR
+  #include <X11/extensions/Xrandr.h>
+#endif
+
 // Includes
 #include <X11/keysym.h>
 #include <X11/XF86keysym.h>
@@ -52,6 +57,7 @@
 #define ARG_FSF(X)    {.GenericArgFn_.FreeSetterFn_ = (X)}
 #define ARG_CSF(X)    {.GenericArgFn_.ClientSelectorFn_ = (X)}
 #define ARG_WSF(X)    {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
+#define ARG_MSF(X)    {.GenericArgFn_.MonitorSelectorFn_ = (X)}
 
 // Arg functions
 #define ARG_PTR_GET(X)    ((X).pointer_)
@@ -67,6 +73,7 @@
 #define ARG_FLF_GET(X)    ((X).GenericArgFn_.FreeSetterFn_)
 #define ARG_CSF_GET(X)    ((X).GenericArgFn_.ClientSelectorFn_)
 #define ARG_WSF_GET(X)    ((X).GenericArgFn_.WorkspaceSelectorFn_)
+#define ARG_MSF_GET(X)    ((X).GenericArgFn_.MonitorSelectorFn_)
 
 // Maybe Arg constructors
 #define MAYBE_ARG_NOTHING       {.is_nothing = true, .value = ARG_NULL}
@@ -148,11 +155,10 @@ struct Client {
   char name[ NAME_MAX ];
   char title[ NAME_MAX ];
   Rectangle float_region;
-  bool is_hidden;
   bool is_fullscreen;
   FreeSetterFn free_setter_fn;
   RuleFixedPosition fixed_pos;
-  int fixed_size;
+  float fixed_size;
   bool is_urgent;
 };
 
@@ -164,6 +170,80 @@ typedef bool (*ClientTesterFn)(ClientPtrPtr c, const void *p);
 
 // ClientSelectorFn
 typedef ClientPtrPtr (*ClientSelectorFn)(ClientPtrPtr c);
+
+
+// DZEN TYPES ----------------------------------------------------------------------------------------------------------
+
+// BoxPP
+typedef struct BoxPP BoxPP;
+struct BoxPP {
+  const char *const bg_color;
+  const char *const fg_color;
+  const char *const box_color;
+  const char *const left_icon;
+  const char *const right_icon;
+  const int box_height;
+};
+
+// CA
+typedef struct CA CA;
+struct CA {
+  const char *const left_click;
+  const char *const middle_click;
+  const char *const right_click;
+  const char *const wheel_up;
+  const char *const wheel_down;
+};
+
+// DzenFlags
+typedef struct DzenFlags DzenFlags;
+struct DzenFlags {
+  const int x, y, w, h;
+  const char *const fg_color;
+  const char *const bg_color;
+  const char align;
+  const char *const font;
+  const char *const event;
+  const char *const extras;
+};
+
+// LoggerFn
+typedef struct Monitor Monitor;  // Forward declaration
+typedef void (*const LoggerFn)(const Monitor *m, char *);
+
+// DzenPanel
+typedef struct DzenPanel DzenPanel;
+struct DzenPanel {
+  const DzenFlags *const df;
+  const LoggerFn *const loggers;
+  const char *const sep;
+  const uint32_t refresh_rate;
+};
+
+
+// MONITOR TYPES -----------------------------------------------------------------------------------------------------
+
+// MonitorConf
+typedef struct MonitorConf MonitorConf;
+struct MonitorConf {
+  const char *const name;
+  const size_t default_ws;
+  const int gaps[ 4 ];
+  const DzenPanel *const *const dzen_panel_list;
+};
+
+// Monitor
+typedef struct Monitor Monitor;
+struct Monitor {
+  const char *const name;
+  const size_t default_ws;
+  const int *const gaps;
+  const Rectangle region;  // The region does not include the gaps (region + gaps = total_monitor_area)
+  const DzenPanel *const *const dzen_panel_list;
+};
+
+// MonitorSelectorFn
+typedef const Monitor *(*MonitorSelectorFn)(const Monitor *m);
 
 
 // WORKSPACE TYPES -----------------------------------------------------------------------------------------------------
@@ -180,6 +260,7 @@ union GenericArgFn {
   const FreeSetterFn FreeSetterFn_;
   const ClientSelectorFn ClientSelectorFn_;
   const WorkspaceSelectorFn WorkspaceSelectorFn_;
+  const MonitorSelectorFn MonitorSelectorFn_;
 };
 
 // GenericArg
@@ -239,11 +320,11 @@ typedef int (*BorderSetterFn)(ClientPtrPtr c);
 // Arrange
 typedef struct Arrange Arrange;
 struct Arrange {
-  size_t size;                     // Number of tiled clients
+  size_t size;                       // Number of tiled clients
   Rectangle region;                  // Tiled layout region
   Rectangle **client_regions;        // Region of each client
   Rectangle **client_float_regions;  // Float region of each client
-  GenericArg *arrange_settings;      // Settings of the arrange
+  GenericArg *parameters;            // Parameters of the arrange
 };
 
 // ArrangerFn
@@ -259,7 +340,7 @@ struct Layout {
   const float *const region;
   LayoutMod mod;
   bool follow_mouse;
-  GenericArg arrange_settings[ ARRSET_MAX ];
+  GenericArg parameters[ ARRSET_MAX ];
 };
 
 
@@ -276,14 +357,13 @@ struct LayoutConf {
   const float region[ 4 ];
   const LayoutMod mod;
   const bool follow_mouse;
-  const GenericArg arrange_settings[ ARRSET_MAX ];
+  const GenericArg parameters[ ARRSET_MAX ];
 };
 
 // Workspace
 typedef struct Workspace Workspace;
 struct Workspace {
   const char *const name;
-  const int gaps[ 4 ];
   const LayoutConf *const *const layouts;
   const LayoutConf *const *const toggled_layouts;
 };
@@ -319,51 +399,6 @@ struct Rule {
   const bool follow;
 };
 
-// BoxPP
-typedef struct BoxPP BoxPP;
-struct BoxPP {
-  const char *const bg_color;
-  const char *const fg_color;
-  const char *const box_color;
-  const char *const left_icon;
-  const char *const right_icon;
-  const int box_height;
-};
-
-// CA
-typedef struct CA CA;
-struct CA {
-  const char *const left_click;
-  const char *const middle_click;
-  const char *const right_click;
-  const char *const wheel_up;
-  const char *const wheel_down;
-};
-
-// DzenFlags
-typedef struct DzenFlags DzenFlags;
-struct DzenFlags {
-  const int x, y, w, h;
-  const char *const fg_color;
-  const char *const bg_color;
-  const char align;
-  const char *const font;
-  const char *const event;
-  const char *const extras;
-};
-
-// LoggerFn
-typedef void (*const LoggerFn)(char *);
-
-// DzenPanel
-typedef struct DzenPanel DzenPanel;
-struct DzenPanel {
-  const DzenFlags *const df;
-  const LoggerFn *const loggers;
-  const char *const sep;
-  const uint32_t refresh_rate;
-};
-
 // Configuration
 typedef struct Configuration Configuration;
 struct Configuration {
@@ -376,9 +411,9 @@ struct Configuration {
   const char *const urgent_border_color;
   const int border_width;
   const int border_gap;
+  const MonitorConf *const *const monitor_list;
   const Workspace *const *const workspace_list;
   const Rule *const *const rule_list;
-  const DzenPanel *const *const dzen_panel_list;
   const Key *const *const key_list;
   const Button *const *const button_list;
 };
@@ -393,5 +428,5 @@ Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa);
 void NeuroTypeDeleteClient(Client *c);
 
 // Basic Functions
-size_t NeuroTypeArrayLength(const void *const *arrayPtr);
+size_t NeuroTypeArrayLength(const void *const *array_ptr);
 

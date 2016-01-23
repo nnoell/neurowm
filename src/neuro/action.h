@@ -40,6 +40,7 @@ extern const Action NeuroActionResizeMasterLayout;
 
 // Workspace (Actions)
 extern const Action NeuroActionChangeWorkspace;
+extern const Action NeuroActionSelectMonitor;
 extern const Action NeuroActionRestoreLastMinimized;
 extern const Action NeuroActionToggleScatchpad;
 
@@ -85,6 +86,7 @@ extern const Action* NeuroActionListResizeMasterLayout[];
 
 // Workspace (Action Lists)
 extern const Action* NeuroActionListChangeWorkspace[];
+extern const Action* NeuroActionListSelectMonitor[];
 extern const Action* NeuroActionListRestoreLastMinimized[];
 extern const Action* NeuroActionListToggleScratchpad[];
 
@@ -137,6 +139,7 @@ void NeuroActionHandlerResizeMasterLayout(GenericArg float_arg);
 
 // Workspace (Handlers)
 void NeuroActionHandlerChangeWorkspace(GenericArg WorkspaceSelectorFn_arg);
+void NeuroActionHandlerSelectMonitor(GenericArg MonitorSelectorFn_arg);
 void NeuroActionHandlerRestoreLastMinimized(GenericArg null_arg);
 void NeuroActionHandlerToggleScratchpad(GenericArg command_arg);
 

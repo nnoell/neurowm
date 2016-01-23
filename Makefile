@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------------------------------------------------
-# CONFIG
+# CONFIGURE (Only edit this section)
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Version and Name
@@ -7,16 +7,32 @@ PKG_VERSION = 0.21
 PKG_NAME = neurowm
 PKG_MYNAME = my${PKG_NAME}
 
+# Build options (can be one of the following)
+#  -DNDEBUG -DNXRANDR -> Without multi-head support (release build)
+#  -DNDEBUG -DXRANDR  -> With multi-head support, needs libxrandr library (release build)
+#  -DDEBUG -DNXRANDR  -> Without multi-head support (debug build)
+#  -DDEBUG -DXRANDR   -> With multi-head support, needs libxrandr library (debug build)
+PKG_BUILD_OPTIONS = -DNDEBUG -DXRANDR
+
+# Link options (<empty> | -lXrandr)
+#  <empty>  -> Only if building with -DNXRANDR
+#  -lXrandr -> Only if building with -DXRANDR
+PKG_LINK_OPTIONS = -lXrandr
+
+
+#-----------------------------------------------------------------------------------------------------------------------
+# DEFAULT VALUES
+#-----------------------------------------------------------------------------------------------------------------------
+
 # Compiler flags
 CC = gcc
-#DFLAGS = -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
-DFLAGS = -DNDEBUG -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
+DFLAGS = ${PKG_BUILD_OPTIONS} -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
 CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -fpic -O3 ${DFLAGS}
-LDADD = -lX11 -pthread
-LDADDTEST = -lX11 -pthread -lcunit
+LDADD = -lX11 ${PKG_LINK_OPTIONS} -pthread
+LDADDTEST = -lX11 ${PKG_LINK_OPTIONS} -pthread -lcunit
 
 # Mod names
-MOD_NAMES = wm config dzen event rule workspace layout client core system geometry type theme action
+MOD_NAMES = wm config dzen event rule workspace layout client core system geometry type theme action monitor
 
 # Source names
 SOURCE_BIN_NAME = main.c
@@ -61,9 +77,11 @@ INSTALL_LDCONF_DIR = /etc/ld.so.conf.d
 INSTALL_MAN_DIR = /usr/local/man/man1
 INSTALL_THEME_DIR = /usr/share/themes
 
-# Do not change
+# Objects and Headers
 OBJS = $(addprefix ${TARGET_OBJ_DIR}/, $(addsuffix .o, ${MOD_NAMES}))
 HDRS = $(addprefix ${SOURCE_NEURO_DIR}/, $(addsuffix .h, ${MOD_NAMES}))
+
+# Clean
 CLEANEXTS = ${SOURCE_NEURO_DIR}/*~ ${SOURCE_TEST_DIR}/*~ ${SOURCE_DIR}/*~ ${SOURCE_TEST_DIR}/*~ ${OBJS} \
             ${TARGET_LIB_DIR}/${TARGET_STATIC_LIB_NAME} ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} \
             ${TARGET_LIB_DIR}/${TARGET_SHARED_LNK_NAME} ${TARGET_BIN_DIR}/${TARGET_BIN_NAME} \
@@ -123,7 +141,7 @@ shared_lib: obj
 	@echo "Creating  ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME}"
 
 shared_lnk: shared_lib
-	@ln -s -r ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} ${TARGET_LIB_DIR}/${TARGET_SHARED_LNK_NAME}
+	@ln -s -r -f ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} ${TARGET_LIB_DIR}/${TARGET_SHARED_LNK_NAME}
 	@echo "Creating  ${TARGET_LIB_DIR}/${TARGET_SHARED_LNK_NAME}"
 
 clean:

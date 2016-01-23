@@ -33,7 +33,6 @@ Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
   c->class[ 0 ] = '\0';
   c->name[ 0 ] = '\0';
   c->title[ 0 ] = '\0';
-  c->is_hidden = false;
   c->free_setter_fn = NeuroRuleFreeSetterNull;
   c->fixed_pos = RuleFixedPositionNull;
   c->fixed_size = 0;
@@ -51,10 +50,11 @@ void NeuroTypeDeleteClient(Client *c) {
 }
 
 // Basic Functions
-size_t NeuroTypeArrayLength(const void *const *arrayPtr) {
-  assert(arrayPtr);
+size_t NeuroTypeArrayLength(const void *const *array_ptr) {
+  if (!array_ptr)
+    return 0U;
   size_t i = 0U;
-  for ( ; arrayPtr[ i ]; ++i)
+  for ( ; array_ptr[ i ]; ++i)
     continue;
   return i;
 }

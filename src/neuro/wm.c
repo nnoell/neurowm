@@ -39,6 +39,7 @@ static void stop_wm() {
   NeuroActionRunActionChain(&NeuroConfigGet()->stop_action_chain);
   NeuroDzenStop();
   NeuroCoreStop();
+  NeuroMonitorStop();
   NeuroSystemStop();
 }
 
@@ -57,13 +58,18 @@ static void init_wm(const Configuration *c) {
   // Set the configuration
   NeuroConfigSet(c);
 
-  // Init System, Core and Panels
+  // Init System, Monitor, Core and Panels
   if (!NeuroSystemInit())
-    NeuroSystemError("init_wm - Could not init System");
+    NeuroSystemError("init_wm - Could not init System module");
+  if (!NeuroMonitorInit())
+    NeuroSystemError("init_wm - Could not init Monitor module");
   if (!NeuroCoreInit())
-    NeuroSystemError("init_wm - Could not init Core");
+    NeuroSystemError("init_wm - Could not init Core module");
   if (!NeuroDzenInit())
-    NeuroSystemError("init_wm - Could not init Dzen Panels");
+    NeuroSystemError("init_wm - Could not init Dzen module");
+
+  // Change to the default workspace
+  NeuroWorkspaceChange(NeuroMonitorSelectorHead(NULL)->default_ws);
 
   // Run the init action chain
   NeuroActionRunActionChain(&NeuroConfigGet()->init_action_chain);

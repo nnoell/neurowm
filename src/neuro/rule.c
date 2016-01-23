@@ -70,11 +70,7 @@ static void set_rule(Client *c, const Rule *r) {
   c->is_fullscreen = r->is_fullscreen;
   c->free_setter_fn = r->free_setter_fn;
   c->fixed_pos = r->fixed_pos;
-  Rectangle *reg = NeuroCoreStackGetRegion(c->ws);
-  if (c->fixed_pos == RuleFixedPositionUp || c->fixed_pos == RuleFixedPositionDown)
-    c->fixed_size = r->fixed_size * reg->h;
-  else if (c->fixed_pos == RuleFixedPositionLeft || c->fixed_pos == RuleFixedPositionRigth)
-    c->fixed_size = r->fixed_size * reg->w;
+  c->fixed_size = r->fixed_size;
   if (r->follow)
     NeuroWorkspaceChange(c->ws);
 }
@@ -107,7 +103,7 @@ Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   if (!c)
     return NULL;
   if (is_free_size_hints(c))
-    c->free_setter_fn = NeuroRuleFreeSetterDefault;
+    c->free_setter_fn = NeuroRuleFreeSetterCenter;
   c->ws = NeuroCoreGetCurrStack();
   NeuroClientUpdateClassAndName(&c, NULL);
   NeuroClientUpdateTitle(&c, NULL);
@@ -115,66 +111,52 @@ Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   return c;
 }
 
-void NeuroRuleApply(const ClientPtrPtr c) {
-  assert(c);
-  Rectangle *reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
-  Rectangle *regc = NeuroCoreClientGetRegion(c);
+void NeuroRuleSetLayoutRegion(Rectangle *r, const ClientPtrPtr c) {
+  if (!r || !c || CLI_GET(c).fixed_pos == RuleFixedPositionNull)
+    return;
+
+  // Update the layout region
   if (CLI_GET(c).fixed_pos == RuleFixedPositionUp) {
-    regc->x = reg->x;
-    regc->y = reg->y;
-    regc->w = reg->w;
-    regc->h = CLI_GET(c).fixed_size;
-    if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
-      return;
-    reg->y += CLI_GET(c).fixed_size;
-    reg->h -= CLI_GET(c).fixed_size;
-    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    r->y += CLI_GET(c).fixed_size * r->h;
+    r->h -= CLI_GET(c).fixed_size * r->h;
   } else if (CLI_GET(c).fixed_pos == RuleFixedPositionDown) {
-    regc->x = reg->x;
-    regc->y = reg->h - CLI_GET(c).fixed_size;
-    regc->w = reg->w;
-    regc->h = CLI_GET(c).fixed_size;
-    if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
-      return;
-    reg->h -= CLI_GET(c).fixed_size;
-    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    r->h -= CLI_GET(c).fixed_size * r->h;
   } else if (CLI_GET(c).fixed_pos == RuleFixedPositionLeft) {
-    regc->x = reg->x;
-    regc->y = reg->y;
-    regc->w = CLI_GET(c).fixed_size;
-    regc->h = reg->h;
-    if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
-      return;
-    reg->x += CLI_GET(c).fixed_size;
-    reg->w -= CLI_GET(c).fixed_size;
-    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    r->x += CLI_GET(c).fixed_size * r->w;
+    r->w -= CLI_GET(c).fixed_size * r->w;
   } else if (CLI_GET(c).fixed_pos ==  RuleFixedPositionRigth) {
-    regc->x = reg->w - CLI_GET(c).fixed_size;
-    regc->y = reg->y;
-    regc->w = CLI_GET(c).fixed_size;
-    regc->h = reg->h;
-    if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
-      return;
-    reg->w -= CLI_GET(c).fixed_size;
-    XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y, regc->w, regc->h);
+    r->w -= CLI_GET(c).fixed_size * r->w;
   }
 }
 
-void NeuroRuleUnapply(const ClientPtrPtr c) {
-  assert(c);
-  if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
+void NeuroRuleSetClientRegion(Rectangle *r, const ClientPtrPtr c) {
+  if (!c || CLI_GET(c).fixed_pos == RuleFixedPositionNull)
     return;
-  Rectangle *reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
+
+  // Get the stack region
+  Rectangle *const stack_reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
+
+  // Update the client region
   if (CLI_GET(c).fixed_pos == RuleFixedPositionUp) {
-    reg->y -= CLI_GET(c).fixed_size;
-    reg->h += CLI_GET(c).fixed_size;
+    r->x = stack_reg->x;
+    r->y = stack_reg->y;
+    r->w = stack_reg->w;
+    r->h = CLI_GET(c).fixed_size * stack_reg->h;
   } else if (CLI_GET(c).fixed_pos == RuleFixedPositionDown) {
-    reg->h += CLI_GET(c).fixed_size;
+    r->x = stack_reg->x;
+    r->y = stack_reg->h - CLI_GET(c).fixed_size;
+    r->w = stack_reg->w;
+    r->h = CLI_GET(c).fixed_size * stack_reg->h;
   } else if (CLI_GET(c).fixed_pos == RuleFixedPositionLeft) {
-    reg->x -= CLI_GET(c).fixed_size;
-    reg->w += CLI_GET(c).fixed_size;
-  } else if (CLI_GET(c).fixed_pos == RuleFixedPositionRigth) {
-    reg->w += CLI_GET(c).fixed_size;
+    r->x = stack_reg->x;
+    r->y = stack_reg->y;
+    r->w = CLI_GET(c).fixed_size * stack_reg->w;
+    r->h = stack_reg->h;
+  } else if (CLI_GET(c).fixed_pos ==  RuleFixedPositionRigth) {
+    r->x = stack_reg->w - CLI_GET(c).fixed_size;
+    r->y = stack_reg->y;
+    r->w = CLI_GET(c).fixed_size * stack_reg->w;
+    r->h = stack_reg->h;
   }
 }
 

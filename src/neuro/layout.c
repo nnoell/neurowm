@@ -28,32 +28,51 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 static Arrange *new_arrange(size_t ws, Layout *l) {
-  assert(l);
+  if (!l)
+    return NULL;
+
+  // Allocate a new arrange
+  Arrange *const a = (Arrange *)malloc(sizeof(Arrange));
+  if (!a)
+    return NULL;
+
+  // Set the region
+  NeuroGeometryGetRelativeRectangle(&a->region, NeuroCoreStackGetRegion(ws), l->region);
+
+  // Set the clients
   Rectangle **rs = NULL, **frs = NULL;
   size_t i = 0U, size = 0U;
   for (ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c)) {
-    if (CLI_GET(c).free_setter_fn == NeuroRuleFreeSetterNull && !CLI_GET(c).fixed_pos && !CLI_GET(c).is_hidden &&
-        !CLI_GET(c).is_fullscreen) {
-      if (i >= size || i <= 0) {  // Realloc if memory is needed
-        size += STEP_SIZE_REALLOC;
-        rs = (Rectangle **)realloc(rs, size*sizeof(void *));
-        frs = (Rectangle **)realloc(frs, size*sizeof(void *));
-        if (!rs || !frs)
-          return NULL;
-      }
-      rs[ i ] = NeuroCoreClientGetRegion(c);
-      frs[ i ] = &(CLI_GET(c).float_region);
-      ++i;
+    // Skip free and fullscreen clients
+    if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull || CLI_GET(c).is_fullscreen)
+      continue;
+
+    // Update region if there are fixed clients
+    if (CLI_GET(c).fixed_pos != RuleFixedPositionNull) {
+      NeuroRuleSetLayoutRegion(&a->region, c);
+      continue;
     }
+
+    // Realloc if memory is needed
+    if (i >= size || i <= 0) {
+      size += STEP_SIZE_REALLOC;
+      rs = (Rectangle **)realloc(rs, size*sizeof(void *));
+      frs = (Rectangle **)realloc(frs, size*sizeof(void *));
+      if (!rs || !frs)
+        return NULL;
+    }
+
+    // Set rs and frs arrays
+    rs[ i ] = NeuroCoreClientGetRegion(c);
+    frs[ i ] = &(CLI_GET(c).float_region);
+    ++i;
   }
-  Arrange *a = (Arrange *)malloc(sizeof(Arrange));
-  if (!a)
-    return NULL;
+
+  // Complete the arrange
   a->size = i;
-  NeuroGeometryGetRelativeRectangle(&a->region, NeuroCoreStackGetRegion(ws), l->region);
   a->client_regions = rs;
   a->client_float_regions = frs;
-  a->arrange_settings = l->arrange_settings;
+  a->parameters = l->parameters;
   return a;
 }
 
@@ -72,7 +91,7 @@ static void get_best_positions_and_sizes(size_t n, int total, int *positions, in
   assert(positions);
   assert(sizes);
   assert(n > 0);
-  int position = 0, size;
+  int position = 0, size = 0;
   for (size_t i = 0U; i < n; ++i) {
     size = total / (n - i);
     positions[ i ] = position;
@@ -122,8 +141,8 @@ static Arrange *reflect_y_mod(Arrange *a) {
 //----------------------------------------------------------------------------------------------------------------------
 
 void NeuroLayoutRun(size_t ws, size_t i) {
-  Layout *l = NeuroCoreStackGetLayout(ws, i);
-  Arrange *a = new_arrange(ws, l);
+  Layout *const l = NeuroCoreStackGetLayout(ws, i);
+  Arrange *const a = new_arrange(ws, l);
   if (!a)
     NeuroSystemError("NeuroLayoutRun - Could not run layout");
   if (a->size) {  // Then run layout
@@ -144,7 +163,7 @@ void NeuroLayoutRunCurr(size_t ws) {
 }
 
 void NeuroLayoutToggleMod(size_t ws, size_t i, LayoutMod mod) {
-  Layout *l = NeuroCoreStackGetLayout(ws, i);
+  Layout *const l = NeuroCoreStackGetLayout(ws, i);
   l->mod ^= mod;
   NeuroLayoutRun(ws, i);
   NeuroWorkspaceUpdate(ws);
@@ -164,31 +183,28 @@ void NeuroLayoutToggle(size_t ws, size_t i) {
 }
 
 void NeuroLayoutChange(size_t ws, int step) {
-  size_t i = NeuroCoreStackGetLayoutIdx(ws) + step;
+  const size_t i = NeuroCoreStackGetLayoutIdx(ws) + step;
   NeuroCoreStackSetLayoutIdx(ws, i);
   NeuroLayoutRunCurr(ws);
   NeuroWorkspaceFocus(ws);
 }
 
 void NeuroLayoutReset(size_t ws) {
-  Layout *l;
-  const LayoutConf *lc;
-  const size_t num_layouts = NeuroCoreStackGetNumLayouts(ws);
-  for (size_t i = 0U; i < num_layouts; ++i) {
-    l = NeuroCoreStackGetLayout(ws, i);
-    lc = NeuroCoreStackGetLayoutConf(ws, i);
+  for (size_t i = 0U; i < NeuroCoreStackGetNumLayouts(ws); ++i) {
+    Layout *const l = NeuroCoreStackGetLayout(ws, i);
+    const LayoutConf *const lc = NeuroCoreStackGetLayoutConf(ws, i);
     l->mod = lc->mod;
     l->follow_mouse = lc->follow_mouse;
-    memmove(l->arrange_settings, lc->arrange_settings, sizeof(GenericArg)*ARRSET_MAX);
+    memmove(l->parameters, lc->parameters, sizeof(GenericArg)*ARRSET_MAX);
   }
   NeuroWorkspaceTile(ws);
-  NeuroCoreStackSetLayoutIdx(ws, 0);
+  NeuroCoreStackSetLayoutIdx(ws, 0U);
   NeuroLayoutRunCurr(ws);
   NeuroWorkspaceFocus(ws);
 }
 
 void NeuroLayoutIncreaseMaster(size_t ws, int step) {
-  GenericArg *as = NeuroCoreStackGetCurrLayout(ws)->arrange_settings;
+  GenericArg *const as = NeuroCoreStackGetCurrLayout(ws)->parameters;
   const int res = as[ 0 ].int_ + step;
   if (res < 1)
     return;
@@ -198,11 +214,11 @@ void NeuroLayoutIncreaseMaster(size_t ws, int step) {
 }
 
 void NeuroLayoutResizeMaster(size_t ws, float factor) {
-  GenericArg *as = NeuroCoreStackGetCurrLayout(ws)->arrange_settings;
-  const float newmsize = factor * as[ 2 ].float_ + as[ 1 ].float_;
-  if (newmsize <= 0.0f || newmsize >= 1.0f)
+  const GenericArg *const as = NeuroCoreStackGetCurrLayout(ws)->parameters;
+  const float new_master_size = factor * as[ 2 ].float_ + as[ 1 ].float_;
+  if (new_master_size <= 0.0f || new_master_size >= 1.0f)
     return;
-  *(float *)&(as[ 1 ].float_) = newmsize;
+  *(float *)&(as[ 1 ].float_) = new_master_size;
   NeuroLayoutRunCurr(ws);
   NeuroWorkspaceFocus(ws);
 }
@@ -210,10 +226,8 @@ void NeuroLayoutResizeMaster(size_t ws, float factor) {
 // Layout Arrangers
 Arrange *NeuroLayoutArrangerTall(Arrange *a) {
   assert(a);
-  size_t n = a->size;
-  size_t mn = a->arrange_settings[ 0 ].idx_;
-  size_t nwindows = n <= mn ? n : mn;
-  int ms = (int)(a->arrange_settings[ 1 ].float_ * a->region.w);
+  const size_t n = a->size, mn = a->parameters[ 0 ].idx_, nwindows = n <= mn ? n : mn;
+  const int ms = (int)(a->parameters[ 1 ].float_ * a->region.w);
   int ys[ n ], hs[ n ];
   memset(ys, 0, sizeof(ys));
   memset(hs, 0, sizeof(hs));
@@ -233,12 +247,12 @@ Arrange *NeuroLayoutArrangerTall(Arrange *a) {
 
 Arrange *NeuroLayoutArrangerGrid(Arrange *a) {
   assert(a);
-  size_t n = a->size;
+  const size_t n = a->size;
   size_t cols = 0U;
   for ( ; cols <= n/2; ++cols)
-    if (cols*cols >= n)
+    if (cols * cols >= n)
       break;
-  size_t rows = n/cols;
+  size_t rows = n / cols;
   int xs[ cols ], ws[ cols ];
   memset(xs, 0, sizeof(xs));
   memset(ws, 0, sizeof(ws));
@@ -270,9 +284,8 @@ Arrange *NeuroLayoutArrangerFull(Arrange *a) {
 
 Arrange *NeuroLayoutArrangerFloat(Arrange *a) {
   assert(a);
-  Rectangle *fr;
   for (size_t i = 0U; i < a->size; ++i) {
-    fr = a->client_float_regions[ i ];
+    const Rectangle *const fr = a->client_float_regions[ i ];
     NeuroGeometrySetRectangle(a->client_regions[ i ], fr->x, fr->y, fr->w, fr->h);
     NeuroGeometryNeuroGeometryTranspRectangle(a->client_regions[ i ], &a->region);
   }
