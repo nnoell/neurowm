@@ -43,7 +43,7 @@ static bool reload_handler();
 
 // Main
 static bool run_neurowm(int argc, const char *const *argv, int *status);
-static bool run_flag(const char *flgname);
+static bool run_flag(const char *flag_name);
 static bool loop_run_neurowm(int argc, const char *const *argv);
 
 
@@ -104,12 +104,12 @@ static bool run_neurowm(int argc, const char *const *argv, int *status) {
   return true;
 }
 
-static bool run_flag(const char *flgname) {
-  assert(flgname);
+static bool run_flag(const char *flag_name) {
+  assert(flag_name);
   for (size_t i = 0U; flag_list_[ i ]; ++i)
-    if (!strcmp(flgname, flag_list_[ i ]->name)) {
+    if (!strcmp(flag_name, flag_list_[ i ]->name)) {
       if (!flag_list_[ i ]->handler())
-        perror(flgname);
+        perror(flag_name);
       return true;
     }
   return false;
@@ -132,13 +132,14 @@ static bool loop_run_neurowm(int argc, const char *const *argv) {
 
 int main(int argc, const char *const *argv) {
   // Run the flags
-  bool runwm = true, reswm = true;
-  if (argc > 1)
+  bool run = true, res = true;
+  if (argc > 1) {
     for (int i = 1; i < argc; ++i)
-      runwm = !run_flag(argv[ i ]);
+      run = !run_flag(argv[ i ]);
+  }
 
   // Run the window manager if needed
-  if (runwm)
-    reswm = loop_run_neurowm(argc, argv);
-  return reswm ? EXIT_SUCCESS : EXIT_FAILURE;
+  if (run)
+    res = loop_run_neurowm(argc, argv);
+  return res ? EXIT_SUCCESS : EXIT_FAILURE;
 }

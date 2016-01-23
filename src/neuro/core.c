@@ -142,7 +142,7 @@ static Client *remove_last_node(Stack *s) {
 static Client *remove_no_last_node(Node *n) {
   assert(n);
   Stack *const s = stack_list_.stacks + n->cli->ws;
-  if (s->size == 0 || s->last == n)
+  if (s->size == 0U || s->last == n)
     return NULL;
   const bool update_nsp = n->cli->is_nsp;
   set_curr_node(n->next);
@@ -588,7 +588,7 @@ ClientPtrPtr NeuroCoreStackGetLastClient(size_t ws) {
 }
 
 ClientPtrPtr NeuroCoreStackFindClient(size_t ws, const ClientTesterFn ctf, const void *data) {
-  assert(tcfn);
+  assert(ctf);
   Stack *const s = stack_list_.stacks + (ws % stack_list_.size);
   for (Node *n = s->head; n; n = n->next)
     if (ctf((ClientPtrPtr)n, data))

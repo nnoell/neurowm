@@ -138,7 +138,7 @@ static void refresh_cpu_calc(const char *file, size_t ncpus) {
 
   while (true) {
     // Open the file
-    FILE *fd = fopen(file, "r");
+    FILE *const fd = fopen(file, "r");
     if (fd == NULL)
       return;
 
@@ -254,7 +254,7 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
     dp->loggers[ i ](str);
 
     // Add separator if not first and not empty str
-    if (i > 0 && str[ 0 ] != '\0')
+    if (i > 0U && str[ 0 ] != '\0')
       strncat(line, dp->sep, DZEN_LINE_MAX - strlen(line) - 1);
     strncat(line, str, DZEN_LINE_MAX - strlen(line) - 1);
   }
@@ -270,7 +270,7 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
 static void *refresh_dzen_thread(void *args) {
   (void)args;
   const DzenPanel *dp;
-  uint32_t i = 0;
+  uint32_t i = 0U;
   while (true) {
     // Update all panels respecting their refresh rate
     for (size_t j = 0U; j < dzen_refresh_info_.num_panels; ++j) {
@@ -291,7 +291,7 @@ static void *refresh_dzen_thread(void *args) {
 }
 
 static bool init_dzen_refresh_thread() {
-  if (dzen_refresh_info_.reset_rate <= 0)
+  if (dzen_refresh_info_.reset_rate == 0U)
     return true;
 
   // Init mutex and cond
@@ -303,7 +303,7 @@ static bool init_dzen_refresh_thread() {
 }
 
 static void stop_dzen_refresh_thread() {
-  if (dzen_refresh_info_.reset_rate <= 0)
+  if (dzen_refresh_info_.reset_rate == 0U)
     return;
 
   // Stop refresh thread
@@ -328,7 +328,7 @@ static bool init_dzen_refresh_info() {
   dzen_refresh_info_.pipe_info = (PipeInfo *)calloc(dzen_refresh_info_.num_panels, sizeof(PipeInfo));
   if (!dzen_refresh_info_.pipe_info)
     return false;
-  dzen_refresh_info_.reset_rate = 1;
+  dzen_refresh_info_.reset_rate = 1U;
   const DzenPanel *dp;
   for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i) {
     dp = panel_list[ i ];

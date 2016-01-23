@@ -28,7 +28,7 @@ void NeuroWorkspaceFocus(size_t ws);
 void NeuroWorkspaceHide(size_t ws, bool doRules);
 void NeuroWorkspaceShow(size_t ws, bool doRules);
 void NeuroWorkspaceTile(size_t ws);
-void NeuroWorkspaceFree(size_t ws, const void *freeSetterFn);
+void NeuroWorkspaceFree(size_t ws, const void *free_setter_fn);
 void NeuroWorkspaceMinimize(size_t ws);
 void NeuroWorkspaceRestoreLastMinimized(size_t ws);
 void NeuroWorkspaceAddEnterNotifyMask(size_t ws);
@@ -47,7 +47,7 @@ void NeuroWorkspaceClientKill(ClientPtrPtr ref, const ClientSelectorFn csf, cons
 void NeuroWorkspaceClientMinimize(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
 void NeuroWorkspaceClientTile(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
 void NeuroWorkspaceClientFree(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn);
-void NeuroWorkspaceClientToggleFree(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn);
+void NeuroWorkspaceClientToggleFree(ClientPtrPtr ref, const ClientSelectorFn csf, const void *free_setter_fn);
 void NeuroWorkspaceClientNormal(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
 void NeuroWorkspaceClientFullscreen(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
 void NeuroWorkspaceClientToggleFullscreen(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);

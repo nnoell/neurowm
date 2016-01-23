@@ -25,22 +25,22 @@
 void NeuroClientUpdate(ClientPtrPtr c, const void *data);
 void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data);
 void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data);
-void NeuroClientHide(ClientPtrPtr c, const void *doRules);
-void NeuroClientShow(ClientPtrPtr c, const void *doRules);
+void NeuroClientHide(ClientPtrPtr c, const void *do_rules);
+void NeuroClientShow(ClientPtrPtr c, const void *do_rules);
 void NeuroClientSetUrgent(ClientPtrPtr c, const void *data);
 void NeuroClientUnsetUrgent(ClientPtrPtr c, const void *data);
 void NeuroClientKill(ClientPtrPtr c, const void *data);
 void NeuroClientMinimize(ClientPtrPtr c, const void *data);
 void NeuroClientTile(ClientPtrPtr c, const void *data);
 void NeuroClientFree(ClientPtrPtr c, const void *freeSetterFn);
-void NeuroClientToggleFree(ClientPtrPtr c, const void *freeSetterFn);
+void NeuroClientToggleFree(ClientPtrPtr c, const void *free_setter_fn);
 void NeuroClientNormal(ClientPtrPtr c, const void *data);
 void NeuroClientFullscreen(ClientPtrPtr c, const void *data);
 void NeuroClientToggleFullscreen(ClientPtrPtr c, const void *data);
 void NeuroClientFloatMove(ClientPtrPtr c, const void *data);
 void NeuroClientFloatResize(ClientPtrPtr c, const void *data);
-void NeuroClientFreeMove(ClientPtrPtr c, const void *freeSetterFn);
-void NeuroClientFreeResize(ClientPtrPtr c, const void *freeSetterFn);
+void NeuroClientFreeMove(ClientPtrPtr c, const void *free_setter_fn);
+void NeuroClientFreeResize(ClientPtrPtr c, const void *free_setter_fn);
 
 // Find
 ClientPtrPtr NeuroClientFindWindow(Window w);

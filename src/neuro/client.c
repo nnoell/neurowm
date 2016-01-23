@@ -27,7 +27,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // XMotionUpdaterFn
-typedef void (*XMotionUpdaterFn)(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py);
+typedef void (*XMotionUpdaterFn)(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
+    int py);
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -155,7 +156,7 @@ void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data) {
     return;
   CLI_GET(c).class[ 0 ] = '\0';
   CLI_GET(c).name[ 0 ] = '\0';
-  XClassHint ch = (XClassHint){.res_name = NULL, .res_class = NULL};
+  XClassHint ch = { 0 };
   if (!XGetClassHint(NeuroSystemGetDisplay(), CLI_GET(c).win, &ch))
     return;
   strncpy(CLI_GET(c).class, ch.res_class, NAME_MAX);
@@ -175,12 +176,12 @@ void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data) {
     set_title_atom(*c, XA_WM_NAME);
 }
 
-void NeuroClientHide(ClientPtrPtr c, const void *doRules) {  // Move off screen
+void NeuroClientHide(ClientPtrPtr c, const void *do_rules) {  // Move off screen
   if (!c)
     return;
   if (CLI_GET(c).is_hidden)
     return;
-  if (*(bool *)doRules)
+  if (*(bool *)do_rules)
     NeuroRuleUnapply(c);
   Rectangle *regc = NeuroCoreClientGetRegion(c);
   regc->x += NeuroSystemGetScreenRegion()->w;
@@ -189,7 +190,7 @@ void NeuroClientHide(ClientPtrPtr c, const void *doRules) {  // Move off screen
   CLI_GET(c).is_hidden = true;
 }
 
-void NeuroClientShow(ClientPtrPtr c, const void *doRules) {  // Move back to screen
+void NeuroClientShow(ClientPtrPtr c, const void *do_rules) {  // Move back to screen
   if (!c)
     return;
   if (!CLI_GET(c).is_hidden)
@@ -197,7 +198,7 @@ void NeuroClientShow(ClientPtrPtr c, const void *doRules) {  // Move back to scr
   Rectangle *regc = NeuroCoreClientGetRegion(c);
   regc->x -= NeuroSystemGetScreenRegion()->w;
   regc->y -= NeuroSystemGetScreenRegion()->h;
-  if (*(bool *)doRules)
+  if (*(bool *)do_rules)
     NeuroRuleApply(c);
   XMoveWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, regc->x, regc->y);
   CLI_GET(c).is_hidden = false;
@@ -279,13 +280,13 @@ void NeuroClientFree(ClientPtrPtr c, const void *freeSetterFn) {
   NeuroWorkspaceFocus(CLI_GET(c).ws);
 }
 
-void NeuroClientToggleFree(ClientPtrPtr c, const void *freeSetterFn) {
+void NeuroClientToggleFree(ClientPtrPtr c, const void *free_setter_fn) {
   if (!c)
     return;
   if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
     NeuroClientTile(c, NULL);
   else
-    NeuroClientFree(c, freeSetterFn);
+    NeuroClientFree(c, free_setter_fn);
 }
 
 void NeuroClientNormal(ClientPtrPtr c, const void *data) {
@@ -344,22 +345,22 @@ void NeuroClientFloatResize(ClientPtrPtr c, const void *data) {
   process_xmotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, xmotion_resize);
 }
 
-void NeuroClientFreeMove(ClientPtrPtr c, const void *freeSetterFn) {
-  if (!c || !freeSetterFn)
+void NeuroClientFreeMove(ClientPtrPtr c, const void *free_setter_fn) {
+  if (!c || !free_setter_fn)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
-  NeuroClientFree(c, freeSetterFn);
+  NeuroClientFree(c, free_setter_fn);
   Rectangle *r = NeuroCoreClientGetRegion(c);
   int px = 0, py = 0;
   NeuroClientGetPointed(&px, &py);
   process_xmotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, xmotion_move);
 }
 
-void NeuroClientFreeResize(ClientPtrPtr c, const void *freeSetterFn) {
-  if (!c || !freeSetterFn)
+void NeuroClientFreeResize(ClientPtrPtr c, const void *free_setter_fn) {
+  if (!c || !free_setter_fn)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
-  NeuroClientFree(c, freeSetterFn);
+  NeuroClientFree(c, free_setter_fn);
   Rectangle *r = NeuroCoreClientGetRegion(c);
   int px = 0, py = 0;
   NeuroClientGetPointed(&px, &py);
