@@ -29,9 +29,9 @@
 // CPU Calculation
 typedef struct CpuInfo CpuInfo;
 struct CpuInfo {
-  long idle;
-  long total;
-  int perc;
+  uint64_t idle;
+  uint64_t total;
+  uint32_t perc;
 };
 
 typedef struct CpuCalcRefreshInfo CpuCalcRefreshInfo;
@@ -40,7 +40,7 @@ struct CpuCalcRefreshInfo {
   pthread_mutex_t wait_mutex;  // Interval wait mutex
   pthread_cond_t wait_cond;    // Interval wait condition variable
   CpuInfo *cpu_info;
-  int num_cpus;
+  size_t num_cpus;
 };
 
 // Dzen
@@ -57,8 +57,8 @@ struct DzenRefreshInfo {
   pthread_mutex_t wait_mutex;  // Interval wait mutex
   pthread_cond_t wait_cond;    // Interval wait conditional variable
   PipeInfo *pipe_info;
-  int num_panels;
-  int reset_rate;
+  size_t num_panels;
+  uint32_t reset_rate;
 };
 
 
@@ -80,7 +80,7 @@ static bool dzen_stop_refresh_cond_ = false;
 //----------------------------------------------------------------------------------------------------------------------
 
 // Note: Returns true if it has timed out or false when the condition variable has been notified
-static bool cond_timedwait(int seconds, bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
+static bool cond_timedwait(time_t seconds, bool *cond_stop, pthread_mutex_t *mutex, pthread_cond_t *cond_var) {
   struct timespec deadline;
   clock_gettime(CLOCK_REALTIME, &deadline);
   deadline.tv_sec += seconds;
@@ -96,17 +96,17 @@ static bool cond_timedwait(int seconds, bool *cond_stop, pthread_mutex_t *mutex,
 }
 
 // CPU Calculation (Thread 1)
-static bool cpu_calc_refresh_timedwait(int seconds) {
+static bool cpu_calc_refresh_timedwait(time_t seconds) {
   return cond_timedwait(seconds, &cpu_calc_stop_refresh_cond_, &cpu_calc_refresh_info_.wait_mutex,
       &cpu_calc_refresh_info_.wait_cond);
 }
 
-static int get_num_cpus(const char *file) {
+static size_t get_num_cpus(const char *file) {
   assert(file);
   FILE *fd = fopen(file, "r");
   if (fd == NULL)
     return 0;
-  int i = 0;
+  size_t i = 0U;
   char buf[ 256 ];
   while (fgets(buf, sizeof(buf), fd)) {
     if (strncmp(buf, "cpu", 3) != 0)
@@ -117,23 +117,22 @@ static int get_num_cpus(const char *file) {
   return i;
 }
 
-static void get_perc_info(CpuInfo *cpu_info, long *cpu_vals, long prev_idle, long prev_total) {
+static void get_perc_info(CpuInfo *cpu_info, uint64_t *cpu_vals, uint64_t prev_idle, uint64_t prev_total) {
   assert(cpu_info);
   assert(cpu_vals);
   cpu_info->idle = cpu_vals[ 3 ];
   cpu_info->total = 0L;
-  int i;
-  for (i = 0; i < CPU_MAX_VALS; ++i)
+  for (size_t i = 0U; i < CPU_MAX_VALS; ++i)
     cpu_info->total += cpu_vals[ i ];
-  const long diff_idle = cpu_info->idle - prev_idle;
-  const long diff_total = cpu_info->total - prev_total;
+  const uint64_t diff_idle = cpu_info->idle - prev_idle;
+  const uint64_t diff_total = cpu_info->total - prev_total;
   cpu_info->perc = (100 * (diff_total - diff_idle)) / diff_total;
 }
 
-static void refresh_cpu_calc(const char *file, int ncpus) {
+static void refresh_cpu_calc(const char *file, size_t ncpus) {
   assert(file);
-  long cpus_file_info[ ncpus ][ CPU_MAX_VALS ];
-  long prev_idle[ ncpus ], prev_total[ ncpus ];
+  uint64_t cpus_file_info[ ncpus ][ CPU_MAX_VALS ];
+  uint64_t prev_idle[ ncpus ], prev_total[ ncpus ];
   memset(prev_idle, 0, sizeof(prev_idle));
   memset(prev_total, 0, sizeof(prev_total));
 
@@ -144,11 +143,11 @@ static void refresh_cpu_calc(const char *file, int ncpus) {
       return;
 
     // Do the percent calculation
-    int i;
     char buf[ 256 ];
-    for (i = 0; i < ncpus; ++i) {
+    for (size_t i = 0U; i < ncpus; ++i) {
       fgets(buf, sizeof(buf), fd);
-      if (EOF == sscanf(buf + 5, "%li %li %li %li %li %li %li %li %li %li",
+      if (EOF == sscanf(buf + 5, "%" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64
+          " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64,
           cpus_file_info[ i ] + 0, cpus_file_info[ i ] + 1,
           cpus_file_info[ i ] + 2, cpus_file_info[ i ] + 3,
           cpus_file_info[ i ] + 4, cpus_file_info[ i ] + 5,
@@ -213,7 +212,7 @@ static void stop_cpu_calc_refresh_info() {
 }
 
 // Dzen (Thread 2)
-static bool dzen_refresh_timedwait(int seconds) {
+static bool dzen_refresh_timedwait(time_t seconds) {
   return cond_timedwait(seconds, &dzen_stop_refresh_cond_, &dzen_refresh_info_.wait_mutex,
       &dzen_refresh_info_.wait_cond);
 }
@@ -224,8 +223,8 @@ static char **str_to_cmd(char **cmd, char *str, const char *sep) {
   assert(sep);
   char *token, *save_ptr;
   token = strtok_r(str, sep, &save_ptr);
-  int i;
-  for (i = 0; token; ++i) {
+  size_t i = 0U;
+  for ( ; token; ++i) {
     cmd[ i ] = token;
     token = strtok_r(NULL, sep, &save_ptr);
   }
@@ -250,8 +249,7 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
 
   // Refresh
   char line[ DZEN_LINE_MAX ] = "\0";
-  int i;
-  for (i = 0; dp->loggers[ i ]; ++i) {
+  for (size_t i = 0U; dp->loggers[ i ]; ++i) {
     char str[ DZEN_LOGGER_MAX ] = "\0";
     dp->loggers[ i ](str);
 
@@ -272,14 +270,14 @@ static void refresh_dzen(const DzenPanel *dp, int fd) {
 static void *refresh_dzen_thread(void *args) {
   (void)args;
   const DzenPanel *dp;
-  int i = 0, j;
+  uint32_t i = 0;
   while (true) {
     // Update all panels respecting their refresh rate
-    for (j = 0; j < dzen_refresh_info_.num_panels; ++j) {
+    for (size_t j = 0U; j < dzen_refresh_info_.num_panels; ++j) {
       dp = NeuroConfigGet()->dzen_panel_list[ j ];
-      if (dp->refresh_rate == DZEN_ON_EVENT || dp->refresh_rate <= 0)
+      if (dp->refresh_rate == DZEN_ON_EVENT)
         continue;
-      if (i % dp->refresh_rate == 0)
+      if (i % dp->refresh_rate == 0U)
         refresh_dzen(dp, dzen_refresh_info_.pipe_info[ j ].output);
     }
     ++i;
@@ -332,8 +330,7 @@ static bool init_dzen_refresh_info() {
     return false;
   dzen_refresh_info_.reset_rate = 1;
   const DzenPanel *dp;
-  int i;
-  for (i = 0; i < dzen_refresh_info_.num_panels; ++i) {
+  for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i) {
     dp = panel_list[ i ];
 
     // Get max refresh rate
@@ -360,10 +357,9 @@ static void stop_dzen_refresh_info() {
   pthread_mutex_destroy(&dzen_refresh_info_.sync_mutex);
 
   // Release pipe info
-  int i;
-  for (i = 0; i < dzen_refresh_info_.num_panels; ++i)
+  for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i)
     if (kill(dzen_refresh_info_.pipe_info[ i ].pid, SIGTERM) == -1)
-      perror("stop_dzen_pipe_info_panels - Could not kill panels");
+      perror("stop_dzen_refresh_info - Could not kill panels");
   free(dzen_refresh_info_.pipe_info);
   dzen_refresh_info_.pipe_info = NULL;
 }
@@ -388,10 +384,9 @@ void NeuroDzenStop() {
 
 void NeuroDzenRefresh(bool on_event_only) {
   const DzenPanel *dp;
-  int i;
-  for (i=0; i < dzen_refresh_info_.num_panels; ++i) {
+  for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i) {
     dp = NeuroConfigGet()->dzen_panel_list[ i ];
-    if (on_event_only && (dp->refresh_rate == DZEN_ON_EVENT || dp->refresh_rate <= 0)) {
+    if (on_event_only && (dp->refresh_rate == DZEN_ON_EVENT)) {
       refresh_dzen(dp, dzen_refresh_info_.pipe_info[ i ].output);
       continue;
     }
@@ -483,19 +478,18 @@ void NeuroDzenLoggerUptime(char *str) {
   assert(str);
   struct sysinfo info;
   sysinfo(&info);
-  const int hours = (int)(info.uptime / 3600UL);
-  const int hrest = (int)(info.uptime % 3600UL);
-  const int minutes = hrest / 60;
-  const int seconds = hrest % 60;
-  snprintf(str, DZEN_LOGGER_MAX, "%ih %im %is", hours, minutes, seconds);
+  const uint32_t hours = (uint32_t)(info.uptime / 3600UL);
+  const uint32_t hrest = (uint32_t)(info.uptime % 3600UL);
+  const uint32_t minutes = hrest / 60;
+  const uint32_t seconds = hrest % 60;
+  snprintf(str, DZEN_LOGGER_MAX, "%" PRIu32 "h %" PRIu32 "m %" PRIu32 "s", hours, minutes, seconds);
 }
 
 void NeuroDzenLoggerCpu(char *str) {
   assert(str);
   char buf[ DZEN_LOGGER_MAX ];
-  int i;
-  for (i = 0; i < cpu_calc_refresh_info_.num_cpus; ++i) {
-    snprintf(buf, DZEN_LOGGER_MAX, "%i%% ", cpu_calc_refresh_info_.cpu_info[ i ].perc);
+  for (size_t i = 0U; i < cpu_calc_refresh_info_.num_cpus; ++i) {
+    snprintf(buf, DZEN_LOGGER_MAX, "%" PRIu32 "%% ", cpu_calc_refresh_info_.cpu_info[ i ].perc);
     strncat(str, buf, DZEN_LOGGER_MAX - strlen(str) - 1);
   }
   str[ strlen(str) - 1 ] = '\0';
@@ -508,14 +502,14 @@ void NeuroDzenLoggerRam(char *str) {
   if (!fd)
     return;
   fgets(buf, DZEN_LOGGER_MAX, fd);
-  unsigned long mem_total = 0UL, mem_available = 0UL;
-  sscanf(buf, "%*s %lu\n", &mem_total);
+  uint64_t mem_total = 0UL, mem_available = 0UL;
+  sscanf(buf, "%*s %" PRIu64 "\n", &mem_total);
   fgets(buf, DZEN_LOGGER_MAX, fd);
   fgets(buf, DZEN_LOGGER_MAX, fd);
-  sscanf(buf, "%*s %lu\n", &mem_available);
-  const unsigned long mem_used = mem_total - mem_available;
-  const int perc = (int)((mem_used * 100UL) / mem_total);
-  snprintf(str, DZEN_LOGGER_MAX, "%i%% %luMB", perc, mem_used / 1024UL);
+  sscanf(buf, "%*s %" PRIu64 "\n", &mem_available);
+  const uint64_t mem_used = mem_total - mem_available;
+  const uint32_t perc = (uint32_t)((mem_used * 100UL) / mem_total);
+  snprintf(str, DZEN_LOGGER_MAX, "%" PRIu32 "%% %" PRIu64 "MB", perc, mem_used / 1024UL);
   fclose(fd);
 }
 
@@ -525,12 +519,12 @@ void NeuroDzenLoggerWifiStrength(char *str) {
   FILE *fd = fopen("/proc/net/wireless", "r");
   if (!fd)
     return;
-  int strength = 0, tmp = 0;
+  uint32_t strength = 0U, tmp = 0U;
   fgets(buf, DZEN_LOGGER_MAX, fd);
   fgets(buf, DZEN_LOGGER_MAX, fd);
   fgets(buf, DZEN_LOGGER_MAX, fd);
-  sscanf(buf, "%*s %i   %i\n", &tmp, &strength);
-  snprintf(str, DZEN_LOGGER_MAX, "%i%%", strength);
+  sscanf(buf, "%*s %" PRIu32 "   %" PRIu32 "\n", &tmp, &strength);
+  snprintf(str, DZEN_LOGGER_MAX, "%" PRIu32 "%%", strength);
   fclose(fd);
 }
 

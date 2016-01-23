@@ -27,7 +27,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // XMotionUpdaterFn
-typedef void (*XMotionUpdaterFn)(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py);
+typedef void (*XMotionUpdaterFn)(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py);
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -35,11 +35,11 @@ typedef void (*XMotionUpdaterFn)(Rectangle *r, int ws, int cx, int cy, int cw, i
 //----------------------------------------------------------------------------------------------------------------------
 
 static bool is_protocol_delete(Window w) {
-  int i, n;
   Atom *protocols;
   bool ret = false;
+  int n = 0;
   if (XGetWMProtocols(NeuroSystemGetDisplay(), w, &protocols, &n)) {
-    for (i = 0; !ret && i < n; i++)
+    for (int i = 0; !ret && i < n; i++)
       if (protocols[ i ] == NeuroSystemGetWmAtom(NeuroSystemWmAtomDeleteWindow))
         ret = true;
     XFree(protocols);
@@ -57,7 +57,7 @@ static bool set_title_atom(Client *c, Atom atom) {
     strncpy(c->title, (char *)tp.value, NAME_MAX);
   } else {
     char **list = NULL;
-    int n;
+    int n = 0;
     if (XmbTextPropertyToTextList(NeuroSystemGetDisplay(), &tp, &list, &n) >= Success && n > 0 && list[ 0 ]) {
       strncpy(c->title, list[ 0 ], NAME_MAX);
       XFreeStringList(list);
@@ -67,15 +67,15 @@ static bool set_title_atom(Client *c, Atom atom) {
   return true;
 }
 
-static ClientPtrPtr query_pointer_client(int ws, int x, int y) {
-  ClientPtrPtr c;
-  for (c=NeuroCoreStackGetHeadClient(ws); c; c=NeuroCoreClientGetNext(c))
+static ClientPtrPtr query_pointer_client(size_t ws, int x, int y) {
+  ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws);
+  for ( ; c; c=NeuroCoreClientGetNext(c))
     if (NeuroGeometryIsPointInRectangle(NeuroCoreClientGetRegion(c), x, y))
       break;
   return c;
 }
 
-static void process_xmotion(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int px, int py,
+static void process_xmotion(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int px, int py,
     XMotionUpdaterFn mpf) {
   const bool res = XGrabPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), false,
       ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None,
@@ -91,7 +91,7 @@ static void process_xmotion(Rectangle *r, int ws, int cx, int cy, int cw, int ch
   XUngrabPointer(NeuroSystemGetDisplay(), CurrentTime);
 }
 
-static void xmotion_move(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_move(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
   (void)cw;
   (void)ch;
   r->x = cx + (ex - px);
@@ -100,7 +100,7 @@ static void xmotion_move(Rectangle *r, int ws, int cx, int cy, int cw, int ch, i
   NeuroWorkspaceUpdate(ws);
 }
 
-static void xmotion_resize(Rectangle *r, int ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_resize(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
   (void)cx;
   (void)cy;
   (void)px;
@@ -388,8 +388,8 @@ ClientPtrPtr NeuroClientGetPointed(int *x, int *y) {
   assert(x);
   assert(y);
   Window rootw, childw;
-  int xc, yc;
-  unsigned state;
+  int xc = 0, yc = 0;
+  unsigned int state = 0;
   if (!XQueryPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &rootw, &childw, x, y, &xc, &yc, &state))
     return NULL;
   return NeuroClientFindWindow(childw);

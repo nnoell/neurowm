@@ -289,8 +289,7 @@ void NeuroSystemGrabKeys(Window w, const Key *const *key_list) {
   XUngrabKey(display_, AnyKey, AnyModifier, w);
   KeyCode code;
   const Key *k;
-  int i;
-  for (i = 0; key_list[ i ]; ++i) {
+  for (size_t i = 0U; key_list[ i ]; ++i) {
     k = key_list[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
@@ -303,8 +302,7 @@ void NeuroSystemUngrabKeys(Window w, const Key *const *key_list) {
     return;
   KeyCode code;
   const Key *k;
-  int i;
-  for (i = 0; key_list[ i ]; ++i) {
+  for (size_t i = 0U; key_list[ i ]; ++i) {
     k = key_list[ i ];
     code = XKeysymToKeycode(display_, k->key);
     if (code)
@@ -317,8 +315,7 @@ void NeuroSystemGrabButtons(Window w, const Button *const *button_list) {
     return;
   XUngrabButton(display_, AnyButton, AnyModifier, w);
   const Button *b;
-  int i;
-  for (i=0; button_list[ i ]; ++i) {
+  for (size_t i = 0U; button_list[ i ]; ++i) {
     b = button_list[ i ];
     XGrabButton(display_, b->button, b->mod, w, false, ButtonPressMask|ButtonReleaseMask, GrabModeAsync, GrabModeSync,
         None, None);
@@ -329,8 +326,7 @@ void NeuroSystemUngrabButtons(Window w, const Button *const *button_list) {
   if (!button_list)
     return;
   const Button *b;
-  int i;
-  for (i=0; button_list[ i ]; ++i) {
+  for (size_t i = 0U; button_list[ i ]; ++i) {
     b = button_list[ i ];
     if (b->ungrab_on_focus)
       XUngrabButton(display_, b->button, b->mod, w);

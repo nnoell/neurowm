@@ -38,8 +38,7 @@ static void do_key_press(XEvent *e) {
   int ks;
   KeySym *keysym = XGetKeyboardMapping(NeuroSystemGetDisplay(), ke.keycode, 1, &ks);
   const Key *k;
-  int i;
-  for (i = 0; key_list[ i ]; ++i) {
+  for (size_t i = 0U; key_list[ i ]; ++i) {
     k = key_list[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
       NeuroActionRunActionChain(&k->action_chain);
@@ -56,8 +55,7 @@ static void do_button_press(XEvent *e) {
     return;
   XButtonPressedEvent *ev = &e->xbutton;
   const Button *b;
-  int i;
-  for (i = 0; button_list[ i ]; ++i) {
+  for (size_t i = 0U; button_list[ i ]; ++i) {
     b = button_list[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       NeuroActionRunActionChain(&b->action_chain);
@@ -103,7 +101,7 @@ static void do_enter_notify(XEvent *e) {
   XCrossingEvent *ev = &e->xcrossing;
   if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != NeuroSystemGetRoot())
     return;
-  int ws = NeuroCoreGetCurrStack();  // Mouse is always in the current workspace
+  size_t ws = NeuroCoreGetCurrStack();  // Mouse is always in the current workspace
   if (NeuroCoreStackGetSize(ws) < 2)
     return;
   if (!NeuroCoreStackGetCurrLayout(ws)->follow_mouse)
@@ -256,7 +254,7 @@ void NeuroEventManageWindow(Window w) {
   NeuroClientHide(c, (const void*)&doRules);
   XMapWindow(NeuroSystemGetDisplay(), CLI_GET(c).win);
   NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
-  const int ws = CLI_GET(c).ws;
+  const size_t ws = CLI_GET(c).ws;
   if (!NeuroCoreStackIsCurr(ws))
     return;
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
@@ -269,7 +267,7 @@ void NeuroEventManageWindow(Window w) {
 
 void NeuroEventUnmanageClient(ClientPtrPtr c) {
   assert(c);
-  const int ws = CLI_GET(c).ws;
+  const size_t ws = CLI_GET(c).ws;
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroRuleUnapply(c);
   Client *cli = NeuroCoreRemoveClient(c);
@@ -280,12 +278,12 @@ void NeuroEventUnmanageClient(ClientPtrPtr c) {
 }
 
 void NeuroEventLoadWindows() {
-  unsigned int i, num;
   Window d1, d2, *wins = NULL;
   XWindowAttributes wa;
+  unsigned int num = 0;
   if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
     NeuroSystemError("NeuroEventLoadWindows - Could not get windows");
-  for (i = 0; i < num; ++i) {
+  for (unsigned int i = 0; i < num; ++i) {
     if (!XGetWindowAttributes(NeuroSystemGetDisplay(), wins[ i ], &wa))
       continue;
     if (wa.map_state != IsViewable)

@@ -67,8 +67,7 @@ static const Flag* flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag
 
 static bool help_handler() {
   printf("Usage: neurowm [OPTION]\nOptions:\n");
-  int i;
-  for (i=0; flag_list_[ i ]; ++i)
+  for (size_t i = 0U; flag_list_[ i ]; ++i)
     printf("  %s\t\t%s\n", flag_list_[ i ]->name, flag_list_[ i ]->desc);
   return true;
 }
@@ -79,7 +78,7 @@ static bool version_handler() {
 }
 
 static bool recompile_handler() {
-  int pid;
+  pid_t pid;
   if (!NeuroSystemSpawn(NeuroSystemGetRecompileCommand(NULL, NULL), &pid))
     return false;
   int status;
@@ -96,10 +95,9 @@ static bool run_neurowm(int argc, const char *const *argv, int *status) {
   const char *cmd[ argc + 1 ];
   NeuroSystemGetRecompileCommand(cmd + 0, NULL);
   cmd[ argc ] = NULL;
-  int i;
-  for (i = 1; i < argc; ++i)
+  for (int i = 1; i < argc; ++i)
     cmd[ i ] = argv[ i ];
-  int pid;
+  pid_t pid;
   if (!NeuroSystemSpawn((const char *const *)cmd, &pid))
     return false;
   waitpid(pid, status, WUNTRACED);
@@ -108,8 +106,7 @@ static bool run_neurowm(int argc, const char *const *argv, int *status) {
 
 static bool run_flag(const char *flgname) {
   assert(flgname);
-  int i;
-  for (i=0; flag_list_[ i ]; ++i)
+  for (size_t i = 0U; flag_list_[ i ]; ++i)
     if (!strcmp(flgname, flag_list_[ i ]->name)) {
       if (!flag_list_[ i ]->handler())
         perror(flgname);
@@ -134,12 +131,13 @@ static bool loop_run_neurowm(int argc, const char *const *argv) {
 //----------------------------------------------------------------------------------------------------------------------
 
 int main(int argc, const char *const *argv) {
+  // Run the flags
   bool runwm = true, reswm = true;
-  if (argc > 1) {
-    int i;
-    for (i = 1; i < argc; ++i)
+  if (argc > 1)
+    for (int i = 1; i < argc; ++i)
       runwm = !run_flag(argv[ i ]);
-  }
+
+  // Run the window manager if needed
   if (runwm)
     reswm = loop_run_neurowm(argc, argv);
   return reswm ? EXIT_SUCCESS : EXIT_FAILURE;

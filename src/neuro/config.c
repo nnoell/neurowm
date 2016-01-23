@@ -23,12 +23,12 @@
 static const LayoutConf tile_ = {
   "Tile", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf mirror_ = {
   "Mirr", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModMirror, true, {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModMirror, true, {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf grid_ = {
   "Grid", NeuroLayoutArrangerGrid,
@@ -116,9 +116,9 @@ static const Key key21_ = {
 static const Key key22_ = {
     Mod1Mask,             XK_y,      CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(LayoutModReflectY))           };
 static const Key key23_ = {
-    Mod1Mask,             XK_f,      CHAIN(NeuroActionListToggleLayout, ARG_INT(0))                               };
+    Mod1Mask,             XK_f,      CHAIN(NeuroActionListToggleLayout, ARG_IDX(0U))                            };
 static const Key key24_ = {
-    Mod1Mask,             XK_o,      CHAIN(NeuroActionListToggleLayout, ARG_INT(1))                               };
+    Mod1Mask,             XK_o,      CHAIN(NeuroActionListToggleLayout, ARG_IDX(1U))                            };
 static const Key key25_ = {
     Mod1Mask|ShiftMask,   XK_f,      CHAIN_NULL(NeuroActionListToggleFullscreenCurrClient)                        };
 static const Key key26_ = {

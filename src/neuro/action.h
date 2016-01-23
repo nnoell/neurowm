@@ -123,15 +123,15 @@ void NeuroActionHandlerQuit(GenericArg null_arg);
 void NeuroActionHandlerReload(GenericArg null_arg);
 void NeuroActionHandlerChangeWmName(GenericArg string_arg);
 void NeuroActionHandlerSpawn(GenericArg command_arg);
-void NeuroActionHandlerSleep(GenericArg int_arg);
+void NeuroActionHandlerSleep(GenericArg uint_arg);
 void NeuroActionHandlerInitCpuCalc(GenericArg null_arg);
 void NeuroActionHandlerStopCpuCalc(GenericArg null_arg);
 
 // Layout (Handlers)
 void NeuroActionHandlerChangeLayout(GenericArg int_arg);
 void NeuroActionHandlerResetLayout(GenericArg null_arg);
-void NeuroActionHandlerToggleLayout(GenericArg int_arg);
-void NeuroActionHandlerToggleModLayout(GenericArg uint_arg);
+void NeuroActionHandlerToggleLayout(GenericArg idx_arg);
+void NeuroActionHandlerToggleModLayout(GenericArg lmod_arg);
 void NeuroActionHandlerIncreaseMasterLayout(GenericArg int_arg);
 void NeuroActionHandlerResizeMasterLayout(GenericArg float_arg);
 

@@ -61,7 +61,7 @@ static const LayoutConf tile_ = {
   {0.0f, 0.0f, 1.0f, 1.0f},
   LayoutModNull,
   true,
-  {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf mirror_ = {
   "Mirr",
@@ -72,7 +72,7 @@ static const LayoutConf mirror_ = {
   {0.0f, 0.0f, 1.0f, 1.0f},
   LayoutModMirror,
   true,
-  {ARG_INT(1), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf grid_ = {
   "Grid",
@@ -366,11 +366,11 @@ static const Key key22_ = {  // Toggles reflect Y mod to the current layout
 };
 static const Key key23_ = {  // Toggles the full layout
   mod_mask_, XK_f,
-  CHAIN(NeuroActionListToggleLayout, ARG_INT(0))
+  CHAIN(NeuroActionListToggleLayout, ARG_IDX(0U))
 };
 static const Key key24_ = {  // Toggles the float layout
   mod_mask_, XK_o,
-  CHAIN(NeuroActionListToggleLayout, ARG_INT(1))
+  CHAIN(NeuroActionListToggleLayout, ARG_IDX(1U))
 };
 static const Key key25_ = {  // Toggles the selected client into normal/fullscreen mode
   mod_mask_|ShiftMask, XK_f,

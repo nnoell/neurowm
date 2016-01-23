@@ -112,17 +112,17 @@ static const CA ca_nnoell_calendar_ = {
 // Nnoell theme loggers
 void NeuroThemeNnoellLoggerCurrLayout(char *str) {
   assert(str);
-  int ws = NeuroCoreGetCurrStack();
-  int idx = NeuroCoreStackGetLayoutIdx(ws);
+  size_t ws = NeuroCoreGetCurrStack();
+  size_t idx = NeuroCoreStackGetLayoutIdx(ws);
   const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(ws);
   if (lc) {
     static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
     if (NeuroCoreStackIsCurrToggledLayout(ws))
       snprintf(tmp2, DZEN_LOGGER_MAX,
-          "^fg(" NeuroThemeNnoellColorRed ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1, lc->name);
+          "^fg(" NeuroThemeNnoellColorRed ")%zu^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1, lc->name);
     else
       snprintf(tmp2, DZEN_LOGGER_MAX,
-          "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1, lc->name);
+          "^fg(" NeuroThemeNnoellColorGreen ")%zu^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1, lc->name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(str, "LAYOUT", &boxpp_nnoell_blue2_);
     strncat(str, tmp, DZEN_LOGGER_MAX - strlen(str) - 1);
@@ -131,7 +131,7 @@ void NeuroThemeNnoellLoggerCurrLayout(char *str) {
 
 void NeuroThemeNnoellLoggerLayoutMod(char *str) {
   assert(str);
-  int ws = NeuroCoreGetCurrStack();
+  size_t ws = NeuroCoreGetCurrStack();
   Layout *l = NeuroCoreStackGetCurrLayout(ws);
   if (l) {
     static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
@@ -154,12 +154,12 @@ void NeuroThemeNnoellLoggerLayoutMod(char *str) {
 
 void NeuroThemeNnoellLoggerCurrWorkspace(char *str) {
   assert(str);
-  int ws = NeuroCoreGetCurrStack();
+  size_t ws = NeuroCoreGetCurrStack();
   const char *name = NeuroCoreStackGetName(ws);
   if (name) {
     static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
     snprintf(tmp2, DZEN_LOGGER_MAX,
-        "^fg(" NeuroThemeNnoellColorGreen ")%i^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
+        "^fg(" NeuroThemeNnoellColorGreen ")%zu^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
         (ws + 1) % NeuroCoreGetSize(), name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(str, "WORKSPACE", &boxpp_nnoell_blue2_);
@@ -181,11 +181,10 @@ void NeuroThemeNnoellLoggerCurrTitle(char *str) {
 
 void NeuroThemeNnoellLoggerWorkspaceList(char *str) {
   assert(str);
-  int size = NeuroCoreGetSize();
+  const size_t size = NeuroCoreGetSize();
   static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ], tmp3[ DZEN_LOGGER_MAX ], tmp4[ DZEN_LOGGER_MAX ];
-  int i;
-  for (i = 0; i < size; ++i) {
-    snprintf(tmp, DZEN_LOGGER_MAX, "%i", (i+1) % size);
+  for (size_t i = 0U; i < size; ++i) {
+    snprintf(tmp, DZEN_LOGGER_MAX, "%zu", (i + 1) % size);
     snprintf(tmp3, DZEN_LOGGER_MAX, "/usr/bin/xdotool key super+%s", tmp);
     static const CA wslstCA = { tmp3, tmp3, tmp3, tmp3, tmp3 };
     if (i == NeuroCoreGetCurrStack())
@@ -264,9 +263,9 @@ void NeuroThemeNnoellLoggerUptime(char *str) {
 
 void NeuroThemeNnoellLoggerStackSize(char *str) {
   assert(str);
-  int size = NeuroCoreStackGetSize(NeuroCoreGetCurrStack());
+  size_t size = NeuroCoreStackGetSize(NeuroCoreGetCurrStack());
   static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
-  snprintf(tmp, DZEN_LOGGER_MAX, "%i", size);
+  snprintf(tmp, DZEN_LOGGER_MAX, "%zu", size);
   NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);
   NeuroDzenWrapDzenBox(str, "STACK", &boxpp_nnoell_blue2_);
   strncat(str, tmp2, DZEN_LOGGER_MAX - strlen(str) - 1);
@@ -274,9 +273,9 @@ void NeuroThemeNnoellLoggerStackSize(char *str) {
 
 void NeuroThemeNnoellLoggerMinimizedCount(char *str) {
   assert(str);
-  int count = NeuroCoreStackGetMinimizedNum(NeuroCoreGetCurrStack());
+  size_t count = NeuroCoreStackGetMinimizedNum(NeuroCoreGetCurrStack());
   static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
-  snprintf(tmp, DZEN_LOGGER_MAX, "%i", count);
+  snprintf(tmp, DZEN_LOGGER_MAX, "%zu", count);
   NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);
   NeuroDzenWrapDzenBox(str, "MIN", &boxpp_nnoell_blue2_);
   strncat(str, tmp2, DZEN_LOGGER_MAX - strlen(str) - 1);

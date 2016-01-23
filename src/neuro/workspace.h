@@ -22,22 +22,22 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Workspace
-void NeuroWorkspaceChange(int ws);
-void NeuroWorkspaceUpdate(int ws);
-void NeuroWorkspaceFocus(int ws);
-void NeuroWorkspaceHide(int ws, bool doRules);
-void NeuroWorkspaceShow(int ws, bool doRules);
-void NeuroWorkspaceTile(int ws);
-void NeuroWorkspaceFree(int ws, const void *freeSetterFn);
-void NeuroWorkspaceMinimize(int ws);
-void NeuroWorkspaceRestoreLastMinimized(int ws);
-void NeuroWorkspaceAddEnterNotifyMask(int ws);
-void NeuroWorkspaceRemoveEnterNotifyMask(int ws);
+void NeuroWorkspaceChange(size_t ws);
+void NeuroWorkspaceUpdate(size_t ws);
+void NeuroWorkspaceFocus(size_t ws);
+void NeuroWorkspaceHide(size_t ws, bool doRules);
+void NeuroWorkspaceShow(size_t ws, bool doRules);
+void NeuroWorkspaceTile(size_t ws);
+void NeuroWorkspaceFree(size_t ws, const void *freeSetterFn);
+void NeuroWorkspaceMinimize(size_t ws);
+void NeuroWorkspaceRestoreLastMinimized(size_t ws);
+void NeuroWorkspaceAddEnterNotifyMask(size_t ws);
+void NeuroWorkspaceRemoveEnterNotifyMask(size_t ws);
 
 // Find
-ClientPtrPtr NeuroWorkspaceClientFindWindow(int ws, Window w);
-ClientPtrPtr NeuroWorkspaceClientFindUrgent(int ws);
-ClientPtrPtr NeuroWorkspaceClientFindFixed(int ws);
+ClientPtrPtr NeuroWorkspaceClientFindWindow(size_t ws, Window w);
+ClientPtrPtr NeuroWorkspaceClientFindUrgent(size_t ws);
+ClientPtrPtr NeuroWorkspaceClientFindFixed(size_t ws);
 
 // Client
 void NeuroWorkspaceClientFocus(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
@@ -57,18 +57,18 @@ void NeuroWorkspaceClientFreeMove(ClientPtrPtr ref, const ClientSelectorFn csf, 
 void NeuroWorkspaceClientFreeResize(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
 
 // Workspace Selectors
-int NeuroWorkspaceSelector0();
-int NeuroWorkspaceSelector1();
-int NeuroWorkspaceSelector2();
-int NeuroWorkspaceSelector3();
-int NeuroWorkspaceSelector4();
-int NeuroWorkspaceSelector5();
-int NeuroWorkspaceSelector6();
-int NeuroWorkspaceSelector7();
-int NeuroWorkspaceSelector8();
-int NeuroWorkspaceSelector9();
-int NeuroWorkspaceSelectorCurr();
-int NeuroWorkspaceSelectorPrev();
-int NeuroWorkspaceSelectorNext();
-int NeuroWorkspaceSelectorOld();
+size_t NeuroWorkspaceSelector0();
+size_t NeuroWorkspaceSelector1();
+size_t NeuroWorkspaceSelector2();
+size_t NeuroWorkspaceSelector3();
+size_t NeuroWorkspaceSelector4();
+size_t NeuroWorkspaceSelector5();
+size_t NeuroWorkspaceSelector6();
+size_t NeuroWorkspaceSelector7();
+size_t NeuroWorkspaceSelector8();
+size_t NeuroWorkspaceSelector9();
+size_t NeuroWorkspaceSelectorCurr();
+size_t NeuroWorkspaceSelectorPrev();
+size_t NeuroWorkspaceSelectorNext();
+size_t NeuroWorkspaceSelectorOld();
 

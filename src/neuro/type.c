@@ -53,9 +53,9 @@ void NeuroTypeDeleteClient(Client *c) {
 // Basic Functions
 size_t NeuroTypeArrayLength(const void *const *arrayPtr) {
   assert(arrayPtr);
-  size_t size;
-  for (size = 0; arrayPtr[ size ]; ++size)
+  size_t i = 0U;
+  for ( ; arrayPtr[ i ]; ++i)
     continue;
-  return size;
+  return i;
 }
 

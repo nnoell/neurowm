@@ -31,37 +31,42 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
 #include <assert.h>
 
 // Arg constructors
-#define ARG_NULL     {.pointer_ = NULL}
-#define ARG_PTR(X)   {.pointer_ = (X)}
-#define ARG_CHAR(X)  {.char_ = (X)}
-#define ARG_INT(X)   {.int_ = (X)}
-#define ARG_FLOAT(X) {.float_ = (X)}
-#define ARG_STR(X)   {.string_ = (X)}
-#define ARG_CMD(X)   {.command_ = (X)}
-#define ARG_LMOD(X)  {.LayoutMod_ = (X)}
-#define ARG_GAF(X)   {.GenericArgFn_ = (X)}
-#define ARG_FSF(X)   {.GenericArgFn_.FreeSetterFn_ = (X)}
-#define ARG_CSF(X)   {.GenericArgFn_.ClientSelectorFn_ = (X)}
-#define ARG_WSF(X)   {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
+#define ARG_NULL      {.pointer_ = NULL}
+#define ARG_PTR(X)    {.pointer_ = (X)}
+#define ARG_CHAR(X)   {.char_ = (X)}
+#define ARG_INT(X)    {.int_ = (X)}
+#define ARG_UINT(X)   {.uint_ = (X)}
+#define ARG_IDX(X)    {.idx_ = (X)}
+#define ARG_FLOAT(X)  {.float_ = (X)}
+#define ARG_STR(X)    {.string_ = (X)}
+#define ARG_CMD(X)    {.command_ = (X)}
+#define ARG_LMOD(X)   {.LayoutMod_ = (X)}
+#define ARG_GAF(X)    {.GenericArgFn_ = (X)}
+#define ARG_FSF(X)    {.GenericArgFn_.FreeSetterFn_ = (X)}
+#define ARG_CSF(X)    {.GenericArgFn_.ClientSelectorFn_ = (X)}
+#define ARG_WSF(X)    {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
 
 // Arg functions
-#define ARG_PTR_GET(X)   ((X).pointer_)
-#define ARG_CHAR_GET(X)  ((X).char_)
-#define ARG_INT_GET(X)   ((X).int_)
-#define ARG_FLOAT_GET(X) ((X).float_)
-#define ARG_STR_GET(X)   ((X).string_)
-#define ARG_CMD_GET(X)   ((X).command_)
-#define ARG_LMOD_GET(X)  ((X).LayoutMod_)
-#define ARG_GAF_GET(X)   ((X).GenericArgFn_)
-#define ARG_FLF_GET(X)   ((X).GenericArgFn_.FreeSetterFn_)
-#define ARG_CSF_GET(X)   ((X).GenericArgFn_.ClientSelectorFn_)
-#define ARG_WSF_GET(X)   ((X).GenericArgFn_.WorkspaceSelectorFn_)
+#define ARG_PTR_GET(X)    ((X).pointer_)
+#define ARG_CHAR_GET(X)   ((X).char_)
+#define ARG_INT_GET(X)    ((X).int_)
+#define ARG_UINT_GET(X)   ((X).uint_)
+#define ARG_IDX_GET(X)    ((X).idx_)
+#define ARG_FLOAT_GET(X)  ((X).float_)
+#define ARG_STR_GET(X)    ((X).string_)
+#define ARG_CMD_GET(X)    ((X).command_)
+#define ARG_LMOD_GET(X)   ((X).LayoutMod_)
+#define ARG_GAF_GET(X)    ((X).GenericArgFn_)
+#define ARG_FLF_GET(X)    ((X).GenericArgFn_.FreeSetterFn_)
+#define ARG_CSF_GET(X)    ((X).GenericArgFn_.ClientSelectorFn_)
+#define ARG_WSF_GET(X)    ((X).GenericArgFn_.WorkspaceSelectorFn_)
 
 // Maybe Arg constructors
 #define MAYBE_ARG_NOTHING       {.is_nothing = true, .value = ARG_NULL}
@@ -137,7 +142,7 @@ typedef void (*FreeSetterFn)(Rectangle *a, const Rectangle *r);
 typedef struct Client Client;
 struct Client {
   const Window win;
-  int ws;
+  size_t ws;
   bool is_nsp;
   char class[ NAME_MAX ];
   char name[ NAME_MAX ];
@@ -164,7 +169,7 @@ typedef ClientPtrPtr (*ClientSelectorFn)(ClientPtrPtr c);
 // WORKSPACE TYPES -----------------------------------------------------------------------------------------------------
 
 // WorkspaceSelectorFn
-typedef int (*WorkspaceSelectorFn)();
+typedef size_t (*WorkspaceSelectorFn)();
 
 
 // GENERIC TYPES -------------------------------------------------------------------------------------------------------
@@ -183,6 +188,8 @@ union GenericArg {
   const void *const pointer_;
   const char char_;
   const int int_;
+  const unsigned int uint_;
+  const size_t idx_;
   const LayoutMod LayoutMod_;
   const float float_;
   const char *const string_;
@@ -232,7 +239,7 @@ typedef int (*BorderSetterFn)(ClientPtrPtr c);
 // Arrange
 typedef struct Arrange Arrange;
 struct Arrange {
-  int size;                          // Number of tiled clients
+  size_t size;                     // Number of tiled clients
   Rectangle region;                  // Tiled layout region
   Rectangle **client_regions;        // Region of each client
   Rectangle **client_float_regions;  // Float region of each client
@@ -354,7 +361,7 @@ struct DzenPanel {
   const DzenFlags *const df;
   const LoggerFn *const loggers;
   const char *const sep;
-  const int refresh_rate;
+  const uint32_t refresh_rate;
 };
 
 // Configuration

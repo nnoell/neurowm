@@ -22,15 +22,15 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic functions
-void NeuroLayoutRun(int ws, int i);
-void NeuroLayoutRunCurr(int ws);
-void NeuroLayoutToggleMod(int ws, int i, unsigned int mod);
-void NeuroLayoutToggleModCurr(int ws, unsigned int mod);
-void NeuroLayoutToggle(int ws, int l);
-void NeuroLayoutChange(int ws, int s);
-void NeuroLayoutReset(int ws);
-void NeuroLayoutIncreaseMaster(int ws, int size);
-void NeuroLayoutResizeMaster(int ws, float factor);
+void NeuroLayoutRun(size_t ws, size_t i);
+void NeuroLayoutRunCurr(size_t ws);
+void NeuroLayoutToggleMod(size_t ws, size_t i, LayoutMod mod);
+void NeuroLayoutToggleModCurr(size_t ws, LayoutMod mod);
+void NeuroLayoutToggle(size_t ws, size_t i);
+void NeuroLayoutChange(size_t ws, int step);
+void NeuroLayoutReset(size_t ws);
+void NeuroLayoutIncreaseMaster(size_t ws, int step);
+void NeuroLayoutResizeMaster(size_t ws, float factor);
 
 // Layout Arrangers
 Arrange *NeuroLayoutArrangerTall(Arrange *a);

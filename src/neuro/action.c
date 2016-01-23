@@ -28,14 +28,14 @@
 typedef void (*ActionClientFn)(ClientPtrPtr c, ClientSelectorFn csf, const void *data);
 
 // ActionWorkspaceFn
-typedef void (*ActionWorkspaceFn)(int ws);
+typedef void (*ActionWorkspaceFn)(size_t ws);
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static void process_workspace(const ActionWorkspaceFn awsf, int ws) {
+static void process_workspace(const ActionWorkspaceFn awsf, size_t ws) {
   assert(awsf);
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   awsf(ws);
@@ -70,7 +70,7 @@ const Action NeuroActionInitCpuCalc = {
 const Action NeuroActionSpawn = {
     NeuroActionHandlerSpawn, ARG_CMD(NeuroConfigDefaultTerminalCommand) };
 const Action NeuroActionSleep = {
-    NeuroActionHandlerSleep, ARG_INT(1) };
+    NeuroActionHandlerSleep, ARG_UINT(1) };
 const Action NeuroActionStopCpuCalc = {
     NeuroActionHandlerStopCpuCalc, ARG_NULL };
 const Action NeuroActionChangeLayout = {
@@ -78,7 +78,7 @@ const Action NeuroActionChangeLayout = {
 const Action NeuroActionResetLayout = {
     NeuroActionHandlerResetLayout, ARG_NULL };
 const Action NeuroActionToggleLayout = {
-    NeuroActionHandlerToggleLayout, ARG_INT(0) };
+    NeuroActionHandlerToggleLayout, ARG_IDX(0U) };
 const Action NeuroActionToggleModLayout = {
     NeuroActionHandlerToggleModLayout, ARG_LMOD(LayoutModNull) };
 const Action NeuroActionIncreaseMasterLayout = {
@@ -198,9 +198,9 @@ void NeuroActionHandlerSpawn(GenericArg command_arg) {
   NeuroSystemSpawn(ARG_CMD_GET(command_arg), NULL);
 }
 
-void NeuroActionHandlerSleep(GenericArg int_arg) {
-  assert(ARG_INT_GET(int_arg) >= 0);
-  sleep(ARG_INT_GET(int_arg));
+void NeuroActionHandlerSleep(GenericArg uint_arg) {
+  assert(ARG_UINT_GET(uint_arg) >= 0);
+  sleep(ARG_UINT_GET(uint_arg));
 }
 
 void NeuroActionHandlerInitCpuCalc(GenericArg null_arg) {
@@ -215,7 +215,7 @@ void NeuroActionHandlerStopCpuCalc(GenericArg null_arg) {
 
 // Layout
 void NeuroActionHandlerChangeLayout(GenericArg int_arg) {
-  const int ws = NeuroCoreGetCurrStack();
+  const size_t ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutChange(ws, ARG_INT_GET(int_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
@@ -223,35 +223,35 @@ void NeuroActionHandlerChangeLayout(GenericArg int_arg) {
 
 void NeuroActionHandlerResetLayout(GenericArg null_arg) {
   (void)null_arg;
-  const int ws = NeuroCoreGetCurrStack();
+  const size_t ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutReset(ws);
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
-void NeuroActionHandlerToggleLayout(GenericArg int_arg) {
-  const int ws = NeuroCoreGetCurrStack();
+void NeuroActionHandlerToggleLayout(GenericArg idx_arg) {
+  const size_t ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
-  NeuroLayoutToggle(ws, ARG_INT_GET(int_arg));
+  NeuroLayoutToggle(ws, ARG_IDX_GET(idx_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
-void NeuroActionHandlerToggleModLayout(GenericArg uint_arg) {
-  const int ws = NeuroCoreGetCurrStack();
+void NeuroActionHandlerToggleModLayout(GenericArg lmod_arg) {
+  const size_t ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
-  NeuroLayoutToggleModCurr(ws, ARG_INT_GET(uint_arg));
+  NeuroLayoutToggleModCurr(ws, ARG_LMOD_GET(lmod_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerIncreaseMasterLayout(GenericArg int_arg) {
-  const int ws = NeuroCoreGetCurrStack();
+  const size_t ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutIncreaseMaster(ws, ARG_INT_GET(int_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerResizeMasterLayout(GenericArg float_arg) {
-  const int ws = NeuroCoreGetCurrStack();
+  const size_t ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutResizeMaster(ws, ARG_FLOAT_GET(float_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
@@ -260,7 +260,7 @@ void NeuroActionHandlerResizeMasterLayout(GenericArg float_arg) {
 // Workspace
 void NeuroActionHandlerChangeWorkspace(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
-  const int dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
+  const size_t dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
   process_workspace(NeuroWorkspaceChange, dst);
 }
 
@@ -273,8 +273,8 @@ void NeuroActionHandlerToggleScratchpad(GenericArg command_arg) {
   assert(ARG_CMD_GET(command_arg));
   ClientPtrPtr c = NeuroCoreGetCurrClientNspStack();
   ClientPtrPtr nspc = NeuroCoreFindNspClient();
-  const int ws = NeuroCoreGetCurrStack();
-  const int nspws = NeuroCoreGetNspStack();
+  const size_t ws = NeuroCoreGetCurrStack();
+  const size_t nspws = NeuroCoreGetNspStack();
   if (nspc && CLI_GET(nspc).ws == ws) {
     process_client(NeuroWorkspaceClientSend, nspc, NeuroClientSelectorSelf, (const void *)&nspws);
   } else if (nspc) {
@@ -300,7 +300,7 @@ void NeuroActionHandlerSwapCurrClient(GenericArg clientSelectorFn_arg) {
 
 void NeuroActionHandlerSendCurrClient(GenericArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.ArgFn_.WorkspaceSelectorFn_);
-  const int ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)() % NeuroCoreGetSize();
+  const size_t ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)() % NeuroCoreGetSize();
   process_client(NeuroWorkspaceClientSend, NeuroClientGetFocused(), NeuroClientSelectorSelf, (const void *)&ws);
 }
 
@@ -420,7 +420,6 @@ void NeuroActionRunAction(const Action *a, const GenericMaybeArg *arg) {
 void NeuroActionRunActionChain(const ActionChain *ac) {
   if (!ac || !ac->action_list)
     return;
-  int i;
-  for (i = 0; ac->action_list[ i ]; ++i)
+  for (size_t i = 0U; ac->action_list[ i ]; ++i)
     NeuroActionRunAction(ac->action_list[ i ], &ac->arg);
 }

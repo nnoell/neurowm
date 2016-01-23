@@ -25,11 +25,11 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static int is_free_size_hints(Client *c) {
+static bool is_free_size_hints(Client *c) {
   assert(c);
   int maxw = 0, maxh = 0, minw = 0, minh = 0;
-  long msize;
-  XSizeHints size;
+  long msize = 0L;
+  XSizeHints size = { 0 };
   if (!XGetWMNormalHints(NeuroSystemGetDisplay(), c->win, &size, &msize))
     size.flags = PSize;
   if (size.flags & PMaxSize) {
@@ -85,8 +85,7 @@ static void apply_rules(Client *c) {
   if (!rule_list)
     return;
   const Rule *r;
-  int i;
-  for (i = 0; rule_list[ i ]; ++i) {
+  for (size_t i = 0U; rule_list[ i ]; ++i) {
     r = rule_list[ i ];
     if (has_rule(c, r)) {
       set_rule(c, r);
