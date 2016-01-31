@@ -1,3 +1,5 @@
+![alt text](https://raw.githubusercontent.com/nnoell/neurowm/screenshot/artwork/screenshot.png "Screenshot")
+
 neurowm
 =======
 
