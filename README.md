@@ -17,7 +17,7 @@ Optional Dependencies
 
 If you want to run *neurowm* with all its features, install these packages:
 
- - **libxrandr**: for multi-head support (enabled by default, edit `PKG_BUILD_OPTIONS` and `PKG_LINK_OPTIONS` in the Makefile to disable it)
+ - **libxrandr**: for multi-head support (Disabled by default, edit `PKG_BUILD_OPTIONS` and `PKG_LINK_OPTIONS` in the Makefile to include it)
  - **gmrun**: default application runner
  - **dzen2**: default system info panels
  - **xdotool**: default X11 command line

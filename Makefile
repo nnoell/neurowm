@@ -12,12 +12,16 @@ PKG_MYNAME = my${PKG_NAME}
 #  -DNDEBUG -DXRANDR  -> With multi-head support, needs libxrandr library (release build)
 #  -DDEBUG -DNXRANDR  -> Without multi-head support (debug build)
 #  -DDEBUG -DXRANDR   -> With multi-head support, needs libxrandr library (debug build)
-PKG_BUILD_OPTIONS = -DNDEBUG -DXRANDR
+PKG_BUILD_OPTIONS = -DNDEBUG -DNXRANDR
+#PKG_BUILD_OPTIONS = -DNDEBUG -DXRANDR
+#PKG_BUILD_OPTIONS = -DDEBUG -DNXRANDR
+#PKG_BUILD_OPTIONS = -DDEBUG -DXRANDR
 
 # Link options (<empty> | -lXrandr)
 #  <empty>  -> Only if building with -DNXRANDR
 #  -lXrandr -> Only if building with -DXRANDR
-PKG_LINK_OPTIONS = -lXrandr
+PKG_LINK_OPTIONS =
+#PKG_LINK_OPTIONS = -lXrandr
 
 
 #-----------------------------------------------------------------------------------------------------------------------
