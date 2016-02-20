@@ -202,9 +202,9 @@ static const NeuroRule* rule_list_[] = {
 // TOP LEFT
 static const NeuroDzenFlags top_left_dzen_flags0_ = {
   0, 0, 1200, 16,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellColorBlack,
-  'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  'l', NEURO_THEME_NNOELL_DZEN_FONT, "onstart=lower", "-p"
 };
 static const NeuroDzenLoggerFn top_left_loggers0_[] = {
   NeuroThemeNnoellLoggerMonitorCurrLayout,
@@ -215,9 +215,9 @@ static const NeuroDzenLoggerFn top_left_loggers0_[] = {
 };
 static const NeuroDzenFlags top_left_dzen_flags1_ = {
   0, 0, 1500, 16,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellColorBlack,
-  'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  'l', NEURO_THEME_NNOELL_DZEN_FONT, "onstart=lower", "-p"
 };
 static const NeuroDzenLoggerFn top_left_loggers1_[] = {
   NeuroThemeNnoellLoggerMonitorCurrLayout,
@@ -230,9 +230,9 @@ static const NeuroDzenLoggerFn top_left_loggers1_[] = {
 // TOP RIGHT
 static const NeuroDzenFlags top_right_dzen_flags0_ = {
   1200, 0, 240, 16,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellColorBlack,
-  'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  'r', NEURO_THEME_NNOELL_DZEN_FONT, "onstart=lower", "-p"
 };
 static const NeuroDzenLoggerFn top_right_loggers0_[] = {
   NeuroThemeNnoellLoggerMonitorStackSize,
@@ -241,9 +241,9 @@ static const NeuroDzenLoggerFn top_right_loggers0_[] = {
 };
 static const NeuroDzenFlags top_right_dzen_flags1_ = {
   1500, 0, 420, 16,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellColorBlack,
-  'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  'r', NEURO_THEME_NNOELL_DZEN_FONT, "onstart=lower", "-p"
 };
 static const NeuroDzenLoggerFn top_right_loggers1_[] = {
   NeuroThemeNnoellLoggerUptime,
@@ -254,9 +254,9 @@ static const NeuroDzenLoggerFn top_right_loggers1_[] = {
 // BOTTOM LEFT
 static const NeuroDzenFlags bottom_left_dzen_flags1_ = {
   0, 1064, 920, 16,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellColorBlack,
-  'l', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  'l', NEURO_THEME_NNOELL_DZEN_FONT, "onstart=lower", "-p"
 };
 static const NeuroDzenLoggerFn bottom_left_loggers1_[] = {
   NeuroThemeNnoellLoggerWorkspaceList,
@@ -270,9 +270,9 @@ static const NeuroDzenLoggerFn bottom_left_loggers1_[] = {
 // BOTTOM RIGHT
 static const NeuroDzenFlags bottom_right_dzen_flags1_ = {
   920, 1064, 1000, 16,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellColorBlack,
-  'r', NeuroThemeNnoellFontDzenPanel, "onstart=lower", "-p"
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  'r', NEURO_THEME_NNOELL_DZEN_FONT, "onstart=lower", "-p"
 };
 static const NeuroDzenLoggerFn bottom_right_loggers1_[] = {
   NeuroThemeNnoellLoggerCpu,

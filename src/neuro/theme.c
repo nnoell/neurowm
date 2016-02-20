@@ -28,83 +28,83 @@
 
 // Nnoell theme NeuroDzenBox
 static const NeuroDzenBox boxpp_nnoell_white_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellColorGrayAlt,
-  NeuroThemeNnoellDzenBoxLeftIcon,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_COLOR_GRAY_ALT,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_white2b_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorWhiteAlt,
-  NeuroThemeNnoellDzenBoxLeftIcon2,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_WHITE_ALT,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON2,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_blue_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorBlue,
-  NeuroThemeNnoellColorGrayAlt,
-  NeuroThemeNnoellDzenBoxLeftIcon,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_BLUE,
+  NEURO_THEME_NNOELL_COLOR_GRAY_ALT,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_blue2_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorBlue,
-  NeuroThemeNnoellColorGrayAlt,
-  NeuroThemeNnoellDzenBoxLeftIcon2,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_BLUE,
+  NEURO_THEME_NNOELL_COLOR_GRAY_ALT,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON2,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_blue2b_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorBlue,
-  NeuroThemeNnoellDzenBoxLeftIcon2,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_BLUE,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON2,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_gray2_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorGray,
-  NeuroThemeNnoellColorGrayAlt,
-  NeuroThemeNnoellDzenBoxLeftIcon2,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_GRAY,
+  NEURO_THEME_NNOELL_COLOR_GRAY_ALT,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON2,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_green_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorGreen,
-  NeuroThemeNnoellColorGrayAlt,
-  NeuroThemeNnoellDzenBoxLeftIcon,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_GREEN,
+  NEURO_THEME_NNOELL_COLOR_GRAY_ALT,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_green2_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorGreen,
-  NeuroThemeNnoellDzenBoxLeftIcon2,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_GREEN,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON2,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
 static const NeuroDzenBox boxpp_nnoell_red2_ = {
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorBlack,
-  NeuroThemeNnoellColorRed,
-  NeuroThemeNnoellDzenBoxLeftIcon2,
-  NeuroThemeNnoellDzenBoxRightIcon,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_BLACK,
+  NEURO_THEME_NNOELL_COLOR_RED,
+  NEURO_THEME_NNOELL_DZEN_BOX_LEFT_ICON2,
+  NEURO_THEME_NNOELL_DZEN_BOX_RIGHT_ICON,
   14
 };
 
@@ -141,10 +141,10 @@ void NeuroThemeNnoellLoggerMonitorCurrLayout(const NeuroMonitor *m, char *str) {
     static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
     if (NeuroCoreStackIsCurrToggledLayout(ws))
       snprintf(tmp2, DZEN_LOGGER_MAX,
-          "^fg(" NeuroThemeNnoellColorRed ")%zu^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1, lc->name);
+          "^fg(" NEURO_THEME_NNOELL_COLOR_RED ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()", idx + 1, lc->name);
     else
       snprintf(tmp2, DZEN_LOGGER_MAX,
-          "^fg(" NeuroThemeNnoellColorGreen ")%zu^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()", idx + 1, lc->name);
+          "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()", idx + 1, lc->name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(str, "LAYOUT", &boxpp_nnoell_blue2_);
     strncat(str, tmp, DZEN_LOGGER_MAX - strlen(str) - 1);
@@ -162,11 +162,11 @@ void NeuroThemeNnoellLoggerMonitorCurrLayoutMod(const NeuroMonitor *m, char *str
       strncpy(tmp, "Norm", DZEN_LOGGER_MAX);
     } else {
       if (l->mod & NEURO_LAYOUT_MOD_MIRROR)
-        strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")M^fg()", DZEN_LOGGER_MAX - strlen(tmp) - 1);
+        strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")M^fg()", DZEN_LOGGER_MAX - strlen(tmp) - 1);
       if (l->mod & NEURO_LAYOUT_MOD_REFLECTX)
-        strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")X^fg()", DZEN_LOGGER_MAX - strlen(tmp) - 1);
+        strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")X^fg()", DZEN_LOGGER_MAX - strlen(tmp) - 1);
       if (l->mod & NEURO_LAYOUT_MODE_REFLECTY)
-        strncat(tmp, "^fg(" NeuroThemeNnoellColorGreen ")Y^fg()", DZEN_LOGGER_MAX - strlen(tmp) - 1);
+        strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")Y^fg()", DZEN_LOGGER_MAX - strlen(tmp) - 1);
     }
     NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(str, "MOD", &boxpp_nnoell_blue2_);
@@ -182,7 +182,7 @@ void NeuroThemeNnoellLoggerMonitorWorkspace(const NeuroMonitor *m, char *str) {
   if (name) {
     static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ];
     snprintf(tmp2, DZEN_LOGGER_MAX,
-        "^fg(" NeuroThemeNnoellColorGreen ")%zu^fg(" NeuroThemeNnoellColorGray ")|^fg()%s^fg()",
+        "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
         (ws + 1) % NeuroCoreGetSize(), name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(str, "WORKSPACE", &boxpp_nnoell_blue2_);
@@ -237,9 +237,9 @@ void NeuroThemeNnoellLoggerTime(const NeuroMonitor *m, char *str) {
   struct tm res;
   localtime_r(&t, &res);
   snprintf(tmp, DZEN_LOGGER_MAX,
-      "%02d^fg("NeuroThemeNnoellColorGray
-      "):^fg()%02d^fg("NeuroThemeNnoellColorGray
-      "):^fg("NeuroThemeNnoellColorGreen")%02d^fg()",
+      "%02d^fg("NEURO_THEME_NNOELL_COLOR_GRAY
+      "):^fg()%02d^fg("NEURO_THEME_NNOELL_COLOR_GRAY
+      "):^fg("NEURO_THEME_NNOELL_COLOR_GREEN")%02d^fg()",
       res.tm_hour, res.tm_min, res.tm_sec);
   NeuroDzenWrapDzenBox(str, tmp, &boxpp_nnoell_white_);
 }
@@ -253,9 +253,9 @@ void NeuroThemeNnoellLoggerDate(const NeuroMonitor *m, char *str) {
   struct tm res;
   localtime_r(&t, &res);
   snprintf(tmp, DZEN_LOGGER_MAX,
-      "%d^fg("NeuroThemeNnoellColorGray
-      ").^fg()%02d^fg("NeuroThemeNnoellColorGray
-      ").^fg("NeuroThemeNnoellColorBlue")%02d^fg()",
+      "%d^fg("NEURO_THEME_NNOELL_COLOR_GRAY
+      ").^fg()%02d^fg("NEURO_THEME_NNOELL_COLOR_GRAY
+      ").^fg("NEURO_THEME_NNOELL_COLOR_BLUE")%02d^fg()",
       res.tm_year+1900, res.tm_mon+1, res.tm_mday);
   NeuroDzenWrapDzenBox(str, tmp, &boxpp_nnoell_white_);
 }
