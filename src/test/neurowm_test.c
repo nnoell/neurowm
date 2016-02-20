@@ -284,15 +284,15 @@ static const NeuroDzenLoggerFn bottom_right_loggers1_[] = {
 
 // DZENPANEL (DZENFLAGS, LOGGERS, SEP, REFRESH)
 static const NeuroDzenPanel top_left_panel0_     = {
-    &top_left_dzen_flags0_,     top_left_loggers0_,     " ",  DZEN_ON_EVENT };
+    &top_left_dzen_flags0_,     top_left_loggers0_,     " ",  NEURO_DZEN_REFRESH_ON_EVENT };
 static const NeuroDzenPanel top_left_panel1_     = {
-    &top_left_dzen_flags1_,     top_left_loggers1_,     " ",  DZEN_ON_EVENT };
+    &top_left_dzen_flags1_,     top_left_loggers1_,     " ",  NEURO_DZEN_REFRESH_ON_EVENT };
 static const NeuroDzenPanel top_right_panel0_    = {
-    &top_right_dzen_flags0_,    top_right_loggers0_,    " ",  DZEN_ON_EVENT };
+    &top_right_dzen_flags0_,    top_right_loggers0_,    " ",  NEURO_DZEN_REFRESH_ON_EVENT };
 static const NeuroDzenPanel top_right_panel1_    = {
     &top_right_dzen_flags1_,    top_right_loggers1_,    " ",  1             };
 static const NeuroDzenPanel bottom_left_panel1_  = {
-    &bottom_left_dzen_flags1_,  bottom_left_loggers1_,  " ",  DZEN_ON_EVENT };
+    &bottom_left_dzen_flags1_,  bottom_left_loggers1_,  " ",  NEURO_DZEN_REFRESH_ON_EVENT };
 static const NeuroDzenPanel bottom_right_panel1_ = {
     &bottom_right_dzen_flags1_, bottom_right_loggers1_, " ",  1             };
 
