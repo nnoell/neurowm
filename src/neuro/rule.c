@@ -81,7 +81,7 @@ static void apply_rules(NeuroClient *c) {
   if (!rule_list)
     return;
   const NeuroRule *r;
-  for (size_t i = 0U; rule_list[ i ]; ++i) {
+  for (NeuroIndex i = 0U; rule_list[ i ]; ++i) {
     r = rule_list[ i ];
     if (has_rule(c, r)) {
       set_rule(c, r);

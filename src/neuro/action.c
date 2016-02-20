@@ -28,14 +28,14 @@
 typedef void (*ActionClientFn)(NeuroClientPtrPtr c, NeuroClientSelectorFn csf, const void *data);
 
 // ActionWorkspaceFn
-typedef void (*ActionWorkspaceFn)(size_t ws);
+typedef void (*ActionWorkspaceFn)(NeuroIndex ws);
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static void process_workspace(const ActionWorkspaceFn awsf, size_t ws) {
+static void process_workspace(const ActionWorkspaceFn awsf, NeuroIndex ws) {
   assert(awsf);
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   awsf(ws);
@@ -216,7 +216,7 @@ void NeuroActionHandlerStopCpuCalc(NeuroArg null_arg) {
 
 // NeuroLayout
 void NeuroActionHandlerChangeLayout(NeuroArg int_arg) {
-  const size_t ws = NeuroCoreGetCurrStack();
+  const NeuroIndex ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutChange(ws, ARG_INT_GET(int_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
@@ -224,35 +224,35 @@ void NeuroActionHandlerChangeLayout(NeuroArg int_arg) {
 
 void NeuroActionHandlerResetLayout(NeuroArg null_arg) {
   (void)null_arg;
-  const size_t ws = NeuroCoreGetCurrStack();
+  const NeuroIndex ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutReset(ws);
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerToggleLayout(NeuroArg idx_arg) {
-  const size_t ws = NeuroCoreGetCurrStack();
+  const NeuroIndex ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutToggle(ws, ARG_IDX_GET(idx_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerToggleModLayout(NeuroArg lmod_arg) {
-  const size_t ws = NeuroCoreGetCurrStack();
+  const NeuroIndex ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutToggleModCurr(ws, ARG_LMOD_GET(lmod_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerIncreaseMasterLayout(NeuroArg int_arg) {
-  const size_t ws = NeuroCoreGetCurrStack();
+  const NeuroIndex ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutIncreaseMaster(ws, ARG_INT_GET(int_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
 void NeuroActionHandlerResizeMasterLayout(NeuroArg float_arg) {
-  const size_t ws = NeuroCoreGetCurrStack();
+  const NeuroIndex ws = NeuroCoreGetCurrStack();
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroLayoutResizeMaster(ws, ARG_FLOAT_GET(float_arg));
   NeuroWorkspaceAddEnterNotifyMask(ws);
@@ -261,7 +261,7 @@ void NeuroActionHandlerResizeMasterLayout(NeuroArg float_arg) {
 // NeuroWorkspace
 void NeuroActionHandlerChangeWorkspace(NeuroArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_);
-  const size_t dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
+  const NeuroIndex dst = ARG_WSF_GET(WorkspaceSelectorFn_arg)();
   process_workspace(NeuroWorkspaceChange, dst);
 }
 
@@ -270,7 +270,7 @@ void NeuroActionHandlerSelectMonitor(NeuroArg MonitorSelectorFn_arg) {
   const NeuroMonitor *const dest_m = ARG_MSF_GET(MonitorSelectorFn_arg)(NeuroCoreStackGetMonitor(NeuroCoreGetCurrStack()));
   if (!dest_m)
     return;
-  const size_t ws = NeuroCoreGetMonitorStack(dest_m);
+  const NeuroIndex ws = NeuroCoreGetMonitorStack(dest_m);
   NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
   NeuroCoreSetCurrStack(ws);
   NeuroWorkspaceFocus(ws);
@@ -285,8 +285,8 @@ void NeuroActionHandlerToggleScratchpad(NeuroArg command_arg) {
   assert(ARG_CMD_GET(command_arg));
   NeuroClientPtrPtr c = NeuroCoreGetCurrClientNspStack();
   NeuroClientPtrPtr nspc = NeuroCoreFindNspClient();
-  const size_t ws = NeuroCoreGetCurrStack();
-  const size_t nspws = NeuroCoreGetNspStack();
+  const NeuroIndex ws = NeuroCoreGetCurrStack();
+  const NeuroIndex nspws = NeuroCoreGetNspStack();
   if (nspc && CLI_GET(nspc).ws == ws) {
     NeuroWorkspaceClientSend(nspc, NeuroClientSelectorSelf, (const void *)&nspws);
     // process_client(NeuroWorkspaceClientSend, nspc, NeuroClientSelectorSelf, (const void *)&nspws);
@@ -316,7 +316,7 @@ void NeuroActionHandlerSwapCurrClient(NeuroArg clientSelectorFn_arg) {
 
 void NeuroActionHandlerSendCurrClient(NeuroArg WorkspaceSelectorFn_arg) {
   assert(WorkspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_);
-  const size_t ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)() % NeuroCoreGetSize();
+  const NeuroIndex ws = ARG_WSF_GET(WorkspaceSelectorFn_arg)() % NeuroCoreGetSize();
   NeuroWorkspaceClientSend(NeuroClientGetFocused(), NeuroClientSelectorSelf, (const void *)&ws);
   // process_client(NeuroWorkspaceClientSend, NeuroClientGetFocused(), NeuroClientSelectorSelf, (const void *)&ws);
 }
@@ -370,7 +370,7 @@ void NeuroActionHandlerFocusPtrClient(NeuroArg clientSelectorFn_arg) {
   NeuroClientPtrPtr c = NeuroClientGetPointed(&rx, &ry);
   const NeuroMonitor *const m = NeuroMonitorFindPtr(rx, ry);
   if (m) {
-    for (size_t ws = NeuroCoreGetHeadStack(); ws < NeuroCoreGetSize(); ++ws) {
+    for (NeuroIndex ws = NeuroCoreGetHeadStack(); ws < NeuroCoreGetSize(); ++ws) {
       if (NeuroCoreStackGetMonitor(ws) == m) {
         NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
         NeuroCoreSetCurrStack(ws);
@@ -449,6 +449,6 @@ void NeuroActionRunAction(const NeuroAction *a, const NeuroMaybeArg *arg) {
 void NeuroActionRunActionChain(const NeuroActionChain *ac) {
   if (!ac || !ac->action_list)
     return;
-  for (size_t i = 0U; ac->action_list[ i ]; ++i)
+  for (NeuroIndex i = 0U; ac->action_list[ i ]; ++i)
     NeuroActionRunAction(ac->action_list[ i ], &ac->arg);
 }

@@ -27,7 +27,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // XMotionUpdaterFn
-typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
+typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
     int py);
 
 
@@ -68,7 +68,7 @@ static bool set_title_atom(NeuroClient *c, Atom atom) {
   return true;
 }
 
-static NeuroClientPtrPtr query_pointer_client(size_t ws, int x, int y) {
+static NeuroClientPtrPtr query_pointer_client(NeuroIndex ws, int x, int y) {
   NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws);
   for ( ; c; c=NeuroCoreClientGetNext(c))
     if (NeuroGeometryIsPointInRectangle(NeuroCoreClientGetRegion(c), x, y))
@@ -76,7 +76,7 @@ static NeuroClientPtrPtr query_pointer_client(size_t ws, int x, int y) {
   return c;
 }
 
-static void process_xmotion(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int px, int py,
+static void process_xmotion(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int px, int py,
     XMotionUpdaterFn mpf) {
   const bool res = XGrabPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), false,
       ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None,
@@ -92,7 +92,7 @@ static void process_xmotion(NeuroRectangle *r, size_t ws, int cx, int cy, int cw
   XUngrabPointer(NeuroSystemGetDisplay(), CurrentTime);
 }
 
-static void xmotion_move(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_move(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
   (void)cw;
   (void)ch;
   r->x = cx + (ex - px);
@@ -101,7 +101,7 @@ static void xmotion_move(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, i
   NeuroWorkspaceUpdate(ws);
 }
 
-static void xmotion_resize(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_resize(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
   (void)cx;
   (void)cy;
   (void)px;
@@ -124,7 +124,7 @@ void NeuroClientUpdate(NeuroClientPtrPtr c, const void *data) {
     return;
 
   // Get workspace and regions
-  const size_t ws = CLI_GET(c).ws;
+  const NeuroIndex ws = CLI_GET(c).ws;
   const NeuroRectangle *const stack_region = NeuroCoreStackGetRegion(ws);
   NeuroRectangle *const client_region = NeuroCoreClientGetRegion(c);
 

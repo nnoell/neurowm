@@ -67,7 +67,7 @@ static const Flag* flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag
 
 static bool help_handler() {
   printf("Usage: neurowm [OPTION]\nOptions:\n");
-  for (size_t i = 0U; flag_list_[ i ]; ++i)
+  for (NeuroIndex i = 0U; flag_list_[ i ]; ++i)
     printf("  %s\t\t%s\n", flag_list_[ i ]->name, flag_list_[ i ]->desc);
   return true;
 }
@@ -106,7 +106,7 @@ static bool run_neurowm(int argc, const char *const *argv, int *status) {
 
 static bool run_flag(const char *flag_name) {
   assert(flag_name);
-  for (size_t i = 0U; flag_list_[ i ]; ++i)
+  for (NeuroIndex i = 0U; flag_list_[ i ]; ++i)
     if (!strcmp(flag_name, flag_list_[ i ]->name)) {
       if (!flag_list_[ i ]->handler())
         perror(flag_name);

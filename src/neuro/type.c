@@ -50,10 +50,10 @@ void NeuroTypeDeleteClient(NeuroClient *c) {
 }
 
 // Basic Functions
-size_t NeuroTypeArrayLength(const void *const *array_ptr) {
+NeuroIndex NeuroTypeArrayLength(const void *const *array_ptr) {
   if (!array_ptr)
     return 0U;
-  size_t i = 0U;
+  NeuroIndex i = 0U;
   for ( ; array_ptr[ i ]; ++i)
     continue;
   return i;

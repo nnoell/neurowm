@@ -39,7 +39,7 @@ static void do_key_press(XEvent *e) {
   int ks;
   KeySym *keysym = XGetKeyboardMapping(NeuroSystemGetDisplay(), ke.keycode, 1, &ks);
   const NeuroKey *k;
-  for (size_t i = 0U; key_list[ i ]; ++i) {
+  for (NeuroIndex i = 0U; key_list[ i ]; ++i) {
     k = key_list[ i ];
     if (k->key == *keysym && k->mod == ke.state) {
       NeuroActionRunActionChain(&k->action_chain);
@@ -56,7 +56,7 @@ static void do_button_press(XEvent *e) {
     return;
   XButtonPressedEvent *ev = &e->xbutton;
   const NeuroButton *b;
-  for (size_t i = 0U; button_list[ i ]; ++i) {
+  for (NeuroIndex i = 0U; button_list[ i ]; ++i) {
     b = button_list[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       NeuroActionRunActionChain(&b->action_chain);
@@ -105,7 +105,7 @@ static void do_enter_notify(XEvent *e) {
   NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
   if (!c)
     return;
-  size_t ws = CLI_GET(c).ws;
+  NeuroIndex ws = CLI_GET(c).ws;
   if (!NeuroCoreStackGetCurrLayout(ws)->follow_mouse)
     return;
   NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
@@ -235,7 +235,7 @@ void NeuroEventManageWindow(Window w) {
     NeuroSystemError("NeuroEventManageWindow - Could not add client");
 
   // Transient windows
-  const size_t ws = CLI_GET(c).ws;
+  const NeuroIndex ws = CLI_GET(c).ws;
   Window trans = None;
   if (XGetTransientForHint(NeuroSystemGetDisplay(), CLI_GET(c).win, &trans)) {
     CLI_GET(c).free_setter_fn = NeuroRuleFreeSetterDefault;
@@ -261,7 +261,7 @@ void NeuroEventManageWindow(Window w) {
 
 void NeuroEventUnmanageClient(NeuroClientPtrPtr c) {
   assert(c);
-  const size_t ws = CLI_GET(c).ws;
+  const NeuroIndex ws = CLI_GET(c).ws;
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroClient *cli = NeuroCoreRemoveClient(c);
   NeuroTypeDeleteClient(cli);

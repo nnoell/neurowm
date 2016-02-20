@@ -42,7 +42,7 @@ struct CpuCalcRefreshInfo {
   pthread_mutex_t wait_mutex;  // Interval wait mutex
   pthread_cond_t wait_cond;    // Interval wait condition variable
   CpuInfo *cpu_info;
-  size_t num_cpus;
+  NeuroIndex num_cpus;
 };
 
 // Dzen
@@ -62,7 +62,7 @@ struct DzenRefreshInfo {
   pthread_cond_t wait_cond;    // Interval wait conditional variable
   const NeuroDzenPanel *const *const dzen_panel_list;
   PipeInfo *pipe_info;
-  size_t num_panels;
+  NeuroIndex num_panels;
   uint32_t reset_rate;
 };
 
@@ -106,12 +106,12 @@ static bool cpu_calc_refresh_timedwait(time_t seconds) {
       &cpu_calc_refresh_info_.wait_cond);
 }
 
-static size_t get_num_cpus(const char *file) {
+static NeuroIndex get_num_cpus(const char *file) {
   assert(file);
   FILE *const fd = fopen(file, "r");
   if (!fd)
     return 0;
-  size_t i = 0U;
+  NeuroIndex i = 0U;
   char buf[ 256 ];
   while (fgets(buf, sizeof(buf), fd)) {
     if (strncmp(buf, "cpu", 3) != 0)
@@ -127,14 +127,14 @@ static void get_perc_info(CpuInfo *cpu_info, uint64_t *cpu_vals, uint64_t prev_i
   assert(cpu_vals);
   cpu_info->idle = cpu_vals[ 3 ];
   cpu_info->total = 0L;
-  for (size_t i = 0U; i < CPU_MAX_VALS; ++i)
+  for (NeuroIndex i = 0U; i < CPU_MAX_VALS; ++i)
     cpu_info->total += cpu_vals[ i ];
   const uint64_t diff_idle = cpu_info->idle - prev_idle;
   const uint64_t diff_total = cpu_info->total - prev_total;
   cpu_info->perc = (100 * (diff_total - diff_idle)) / diff_total;
 }
 
-static void refresh_cpu_calc(const char *file, size_t ncpus) {
+static void refresh_cpu_calc(const char *file, NeuroIndex ncpus) {
   assert(file);
   uint64_t cpus_file_info[ ncpus ][ CPU_MAX_VALS ];
   uint64_t prev_idle[ ncpus ], prev_total[ ncpus ];
@@ -149,7 +149,7 @@ static void refresh_cpu_calc(const char *file, size_t ncpus) {
 
     // Do the percent calculation
     char buf[ 256 ];
-    for (size_t i = 0U; i < ncpus; ++i) {
+    for (NeuroIndex i = 0U; i < ncpus; ++i) {
       fgets(buf, sizeof(buf), fd);
       if (EOF == sscanf(buf + 5, "%" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64
           " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64 " %" PRIu64,
@@ -228,7 +228,7 @@ static char **str_to_cmd(char **cmd, char *str, const char *sep) {
   assert(sep);
   char *save_ptr = NULL;
   char *token = strtok_r(str, sep, &save_ptr);
-  size_t i = 0U;
+  NeuroIndex i = 0U;
   for ( ; token; ++i) {
     cmd[ i ] = token;
     token = strtok_r(NULL, sep, &save_ptr);
@@ -256,7 +256,7 @@ static void refresh_dzen(const NeuroMonitor *m, const NeuroDzenPanel *dp, int fd
 
   // Refresh
   char line[ NEURO_DZEN_LINE_MAX ] = "\0";
-  for (size_t i = 0U; dp->loggers[ i ]; ++i) {
+  for (NeuroIndex i = 0U; dp->loggers[ i ]; ++i) {
     char str[ NEURO_DZEN_LOGGER_MAX ] = "\0";
     dp->loggers[ i ](m, str);
 
@@ -278,7 +278,7 @@ static void *refresh_dzen_thread(void *args) {
   (void)args;
   uint32_t i = 0U;
   while (true) {
-    for (size_t j = 0U; j < dzen_refresh_info_.num_panels; ++j) {
+    for (NeuroIndex j = 0U; j < dzen_refresh_info_.num_panels; ++j) {
       const PipeInfo *const pi = dzen_refresh_info_.pipe_info + j;
       if (pi->dzen_panel->refresh_rate == NEURO_DZEN_REFRESH_ON_EVENT)
         continue;
@@ -327,10 +327,10 @@ static void stop_dzen_refresh_thread() {
 
 static bool init_dzen_refresh_info() {
   // Get the number of pannels
-  size_t num_panels = 0U;
+  NeuroIndex num_panels = 0U;
   for (const NeuroMonitor *m = NeuroMonitorSelectorHead(NULL); m; m = NeuroMonitorSelectorNext(m)) {
-    const size_t size = NeuroTypeArrayLength((const void *const *)m->dzen_panel_list);
-    for (size_t i = 0U; i < size; ++i)
+    const NeuroIndex size = NeuroTypeArrayLength((const void *const *)m->dzen_panel_list);
+    for (NeuroIndex i = 0U; i < size; ++i)
       ++num_panels;
   }
 
@@ -341,11 +341,11 @@ static bool init_dzen_refresh_info() {
     return false;
 
   // Initialize
-  size_t panel_iterator = 0U;
+  NeuroIndex panel_iterator = 0U;
   dzen_refresh_info_.reset_rate = 1U;
   for (const NeuroMonitor *m = NeuroMonitorSelectorLast(NULL); m; m = NeuroMonitorSelectorPrev(m)) {
-    const size_t size = NeuroTypeArrayLength((const void *const *)m->dzen_panel_list);
-    for (size_t i = 0U; i < size; ++i) {
+    const NeuroIndex size = NeuroTypeArrayLength((const void *const *)m->dzen_panel_list);
+    for (NeuroIndex i = 0U; i < size; ++i) {
       const NeuroDzenPanel *const dp = m->dzen_panel_list[ i ];
 
       // Get max refresh rate
@@ -377,7 +377,7 @@ static void stop_dzen_refresh_info() {
   pthread_mutex_destroy(&dzen_refresh_info_.sync_mutex);
 
   // Release pipe info
-  for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i)
+  for (NeuroIndex i = 0U; i < dzen_refresh_info_.num_panels; ++i)
     if (kill(dzen_refresh_info_.pipe_info[ i ].pid, SIGTERM) == -1)
       perror("stop_dzen_refresh_info - Could not kill panels");
   free(dzen_refresh_info_.pipe_info);
@@ -403,7 +403,7 @@ void NeuroDzenStop() {
 }
 
 void NeuroDzenRefresh(bool on_event_only) {
-  for (size_t i = 0U; i < dzen_refresh_info_.num_panels; ++i) {
+  for (NeuroIndex i = 0U; i < dzen_refresh_info_.num_panels; ++i) {
     const PipeInfo *const pi = dzen_refresh_info_.pipe_info + i;
     if (on_event_only && (pi->dzen_panel->refresh_rate == NEURO_DZEN_REFRESH_ON_EVENT)) {
       refresh_dzen(pi->monitor, pi->dzen_panel, dzen_refresh_info_.pipe_info[ i ].output);
@@ -516,7 +516,7 @@ void NeuroDzenLoggerCpu(const NeuroMonitor *m, char *str) {
   assert(str);
   (void)m;
   char buf[ NEURO_DZEN_LOGGER_MAX ];
-  for (size_t i = 0U; i < cpu_calc_refresh_info_.num_cpus; ++i) {
+  for (NeuroIndex i = 0U; i < cpu_calc_refresh_info_.num_cpus; ++i) {
     snprintf(buf, NEURO_DZEN_LOGGER_MAX, "%" PRIu32 "%% ", cpu_calc_refresh_info_.cpu_info[ i ].perc);
     strncat(str, buf, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
   }

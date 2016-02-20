@@ -24,11 +24,11 @@
 // Basic Functions
 bool NeuroMonitorInit();
 void NeuroMonitorStop();
-size_t NeuroMonitorGetSize();
+NeuroIndex NeuroMonitorGetSize();
 
 // Getters
-const NeuroMonitor *NeuroMonitorGet(size_t m);
-const NeuroMonitor *NeuroMonitorFindDefault(size_t ws);
+const NeuroMonitor *NeuroMonitorGet(NeuroIndex m);
+const NeuroMonitor *NeuroMonitorFindDefault(NeuroIndex ws);
 const NeuroMonitor *NeuroMonitorFindPtr(int x, int y);
 
 // Selector Functions

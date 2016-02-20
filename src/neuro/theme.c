@@ -134,8 +134,8 @@ static const NeuroDzenClickableArea ca_nnoell_calendar_ = {
 void NeuroThemeNnoellLoggerMonitorCurrLayout(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
-  const size_t ws = NeuroCoreGetMonitorStack(m);
-  const size_t idx = NeuroCoreStackGetLayoutIdx(ws);
+  const NeuroIndex ws = NeuroCoreGetMonitorStack(m);
+  const NeuroIndex idx = NeuroCoreStackGetLayoutIdx(ws);
   const NeuroLayoutConf *const lc = NeuroCoreStackGetCurrLayoutConf(ws);
   if (lc) {
     static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
@@ -177,7 +177,7 @@ void NeuroThemeNnoellLoggerMonitorCurrLayoutMod(const NeuroMonitor *m, char *str
 void NeuroThemeNnoellLoggerMonitorWorkspace(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
-  const size_t ws = NeuroCoreGetMonitorStack(m);
+  const NeuroIndex ws = NeuroCoreGetMonitorStack(m);
   const char *const name = NeuroCoreStackGetName(ws);
   if (name) {
     static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
@@ -207,9 +207,9 @@ void NeuroThemeNnoellLoggerWorkspaceList(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
   (void)m;
-  const size_t size = NeuroCoreGetSize();
+  const NeuroIndex size = NeuroCoreGetSize();
   static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ], tmp4[ NEURO_DZEN_LOGGER_MAX ];
-  for (size_t i = 0U; i < size; ++i) {
+  for (NeuroIndex i = 0U; i < size; ++i) {
     snprintf(tmp, NEURO_DZEN_LOGGER_MAX, "%zu", (i + 1) % size);
     snprintf(tmp3, NEURO_DZEN_LOGGER_MAX, "/usr/bin/xdotool key super+%s", tmp);
     static const NeuroDzenClickableArea wslstCA = { tmp3, tmp3, tmp3, tmp3, tmp3 };
@@ -301,7 +301,7 @@ void NeuroThemeNnoellLoggerUptime(const NeuroMonitor *m, char *str) {
 void NeuroThemeNnoellLoggerMonitorStackSize(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
-  const size_t size = NeuroCoreStackGetSize(NeuroCoreGetMonitorStack(m));
+  const NeuroIndex size = NeuroCoreStackGetSize(NeuroCoreGetMonitorStack(m));
   static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
   snprintf(tmp, NEURO_DZEN_LOGGER_MAX, "%zu", size);
   NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);
@@ -312,7 +312,7 @@ void NeuroThemeNnoellLoggerMonitorStackSize(const NeuroMonitor *m, char *str) {
 void NeuroThemeNnoellLoggerMonitorNumMinimized(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
-  const size_t count = NeuroCoreStackGetMinimizedNum(NeuroCoreGetMonitorStack(m));
+  const NeuroIndex count = NeuroCoreStackGetMinimizedNum(NeuroCoreGetMonitorStack(m));
   static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
   snprintf(tmp, NEURO_DZEN_LOGGER_MAX, "%zu", count);
   NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);

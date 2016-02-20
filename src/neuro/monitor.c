@@ -26,7 +26,7 @@
 typedef struct MonitorSet MonitorSet;
 struct MonitorSet {
   NeuroMonitor *monitor_list;
-  size_t size;
+  NeuroIndex size;
 };
 
 
@@ -55,8 +55,8 @@ bool NeuroMonitorInit() {
     return false;
 
   // Return false if we have more monitors than the ones returned by xrandr
-  const size_t num_monitors = NeuroTypeArrayLength((const void *const *)monitor_list);
-  const size_t num_xrandr_monitors = screen_list->ncrtc;
+  const NeuroIndex num_monitors = NeuroTypeArrayLength((const void *const *)monitor_list);
+  const NeuroIndex num_xrandr_monitors = screen_list->ncrtc;
   if (num_monitors >= num_xrandr_monitors)
     return false;
 
@@ -66,8 +66,8 @@ bool NeuroMonitorInit() {
   if (!monitor_set_.monitor_list)
     return false;
 
-  size_t monitor_iterator = 0U;
-  for (size_t i = 0U; i < num_xrandr_monitors; ++i) {
+  NeuroIndex monitor_iterator = 0U;
+  for (NeuroIndex i = 0U; i < num_xrandr_monitors; ++i) {
     // Add as many monitors as we have in the configuration
     if (monitor_iterator >= num_monitors)
       break;
@@ -84,7 +84,7 @@ bool NeuroMonitorInit() {
     // Initialize NeuroMonitor using NeuroMonitorConf and Screen data
     *(const char **)&m->name = mc->name;
     *(const int **)&m->gaps = mc->gaps;
-    *(size_t *)&m->default_ws = mc->default_ws;
+    *(NeuroIndex *)&m->default_ws = mc->default_ws;
     *(const NeuroDzenPanel *const **)&m->dzen_panel_list = mc->dzen_panel_list;
     const NeuroRectangle screen_region = { screen->x, screen->y, screen->width, screen->height };
     NeuroGeometrySetRectangleGaps((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
@@ -110,7 +110,7 @@ bool NeuroMonitorInit() {
   const NeuroRectangle *const screen = NeuroSystemGetScreenRegion();
   *(const char **)&m->name = mc->name;
   *(const int **)&m->gaps = mc->gaps;
-  *(size_t *)&m->default_ws = mc->default_ws;
+  *(NeuroIndex *)&m->default_ws = mc->default_ws;
   *(const NeuroDzenPanel *const **)&m->dzen_panel_list = mc->dzen_panel_list;
   const NeuroRectangle screen_region = { screen->x, screen->y, screen->w, screen->h };
   NeuroGeometrySetRectangleGaps((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
@@ -125,16 +125,16 @@ void NeuroMonitorStop() {
   monitor_set_.monitor_list = NULL;
 }
 
-size_t NeuroMonitorGetSize() {
+NeuroIndex NeuroMonitorGetSize() {
   return monitor_set_.size;
 }
 
-const NeuroMonitor *NeuroMonitorGet(size_t m) {
+const NeuroMonitor *NeuroMonitorGet(NeuroIndex m) {
   return monitor_set_.monitor_list + (m % monitor_set_.size);
 }
 
-const NeuroMonitor *NeuroMonitorFindDefault(size_t ws) {
-  for (size_t i = 0U; i < monitor_set_.size; ++i) {
+const NeuroMonitor *NeuroMonitorFindDefault(NeuroIndex ws) {
+  for (NeuroIndex i = 0U; i < monitor_set_.size; ++i) {
     const NeuroMonitor *const m = monitor_set_.monitor_list + i;
     if (m->default_ws == ws)
       return m;
@@ -143,7 +143,7 @@ const NeuroMonitor *NeuroMonitorFindDefault(size_t ws) {
 }
 
 const NeuroMonitor *NeuroMonitorFindPtr(int x, int y) {
-  for (size_t i = 0U; i < monitor_set_.size; ++i) {
+  for (NeuroIndex i = 0U; i < monitor_set_.size; ++i) {
     const NeuroMonitor *const m = monitor_set_.monitor_list + i;
     if (NeuroGeometryIsPointInRectangle(&m->region, x, y)) {
       return m;

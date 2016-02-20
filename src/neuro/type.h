@@ -128,6 +128,12 @@ enum NeuroFixedPosition {
 typedef enum NeuroFixedPosition NeuroFixedPosition;
 
 
+// INDEX TYPES ---------------------------------------------------------------------------------------------------------
+
+// NeuroIndex
+typedef size_t NeuroIndex;
+
+
 // GEOMETRY TYPES ------------------------------------------------------------------------------------------------------
 
 // NeuroRectangle
@@ -148,7 +154,7 @@ typedef void (*NeuroFreeSetterFn)(NeuroRectangle *a, const NeuroRectangle *r);
 // NeuroClient
 struct NeuroClient {
   const Window win;
-  size_t ws;
+  NeuroIndex ws;
   bool is_nsp;
   char class[ NAME_MAX ];
   char name[ NAME_MAX ];
@@ -226,7 +232,7 @@ typedef struct NeuroDzenPanel NeuroDzenPanel;
 // NeuroMonitorConf
 struct NeuroMonitorConf {
   const char *const name;
-  const size_t default_ws;
+  const NeuroIndex default_ws;
   const int gaps[ 4 ];
   const NeuroDzenPanel *const *const dzen_panel_list;
 };
@@ -235,7 +241,7 @@ typedef struct NeuroMonitorConf NeuroMonitorConf;
 // NeuroMonitor
 struct NeuroMonitor {
   const char *const name;
-  const size_t default_ws;
+  const NeuroIndex default_ws;
   const int *const gaps;
   const NeuroRectangle region;  // The region does not include the gaps (region + gaps = total_monitor_area)
   const NeuroDzenPanel *const *const dzen_panel_list;
@@ -249,7 +255,7 @@ typedef const NeuroMonitor *(*NeuroMonitorSelectorFn)(const NeuroMonitor *m);
 // WORKSPACE TYPES -----------------------------------------------------------------------------------------------------
 
 // NeuroWorkspaceSelectorFn
-typedef size_t (*NeuroWorkspaceSelectorFn)();
+typedef NeuroIndex (*NeuroWorkspaceSelectorFn)();
 
 
 // FUNCTION TYPES ------------------------------------------------------------------------------------------------------
@@ -269,7 +275,7 @@ union NeuroArg {
   const char char_;
   const int int_;
   const unsigned int uint_;
-  const size_t idx_;
+  const NeuroIndex idx_;
   const NeuroLayoutMod LayoutMod_;
   const float float_;
   const char *const string_;
@@ -319,7 +325,7 @@ typedef int (*NeuroBorderSetterFn)(NeuroClientPtrPtr c);
 
 // NeuroArrange
 struct NeuroArrange {
-  size_t size;                       // Number of tiled clients
+  NeuroIndex size;                       // Number of tiled clients
   NeuroRectangle region;                  // Tiled layout region
   NeuroRectangle **client_regions;        // Region of each client
   NeuroRectangle **client_float_regions;  // Float region of each client
@@ -428,5 +434,5 @@ NeuroClient *NeuroTypeNewClient(Window w, const XWindowAttributes *wa);
 void NeuroTypeDeleteClient(NeuroClient *c);
 
 // Basic Functions
-size_t NeuroTypeArrayLength(const void *const *array_ptr);
+NeuroIndex NeuroTypeArrayLength(const void *const *array_ptr);
 
