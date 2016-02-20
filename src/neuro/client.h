@@ -22,64 +22,64 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-void NeuroClientUpdate(ClientPtrPtr c, const void *data);
-void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data);
-void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data);
-void NeuroClientSetUrgent(ClientPtrPtr c, const void *data);
-void NeuroClientUnsetUrgent(ClientPtrPtr c, const void *data);
-void NeuroClientKill(ClientPtrPtr c, const void *data);
-void NeuroClientMinimize(ClientPtrPtr c, const void *data);
-void NeuroClientTile(ClientPtrPtr c, const void *data);
-void NeuroClientFree(ClientPtrPtr c, const void *freeSetterFn);
-void NeuroClientToggleFree(ClientPtrPtr c, const void *free_setter_fn);
-void NeuroClientNormal(ClientPtrPtr c, const void *data);
-void NeuroClientFullscreen(ClientPtrPtr c, const void *data);
-void NeuroClientToggleFullscreen(ClientPtrPtr c, const void *data);
-void NeuroClientFloatMove(ClientPtrPtr c, const void *data);
-void NeuroClientFloatResize(ClientPtrPtr c, const void *data);
-void NeuroClientFreeMove(ClientPtrPtr c, const void *free_setter_fn);
-void NeuroClientFreeResize(ClientPtrPtr c, const void *free_setter_fn);
+void NeuroClientUpdate(NeuroClientPtrPtr c, const void *data);
+void NeuroClientUpdateClassAndName(NeuroClientPtrPtr c, const void *data);
+void NeuroClientUpdateTitle(NeuroClientPtrPtr c, const void *data);
+void NeuroClientSetUrgent(NeuroClientPtrPtr c, const void *data);
+void NeuroClientUnsetUrgent(NeuroClientPtrPtr c, const void *data);
+void NeuroClientKill(NeuroClientPtrPtr c, const void *data);
+void NeuroClientMinimize(NeuroClientPtrPtr c, const void *data);
+void NeuroClientTile(NeuroClientPtrPtr c, const void *data);
+void NeuroClientFree(NeuroClientPtrPtr c, const void *freeSetterFn);
+void NeuroClientToggleFree(NeuroClientPtrPtr c, const void *free_setter_fn);
+void NeuroClientNormal(NeuroClientPtrPtr c, const void *data);
+void NeuroClientFullscreen(NeuroClientPtrPtr c, const void *data);
+void NeuroClientToggleFullscreen(NeuroClientPtrPtr c, const void *data);
+void NeuroClientFloatMove(NeuroClientPtrPtr c, const void *data);
+void NeuroClientFloatResize(NeuroClientPtrPtr c, const void *data);
+void NeuroClientFreeMove(NeuroClientPtrPtr c, const void *free_setter_fn);
+void NeuroClientFreeResize(NeuroClientPtrPtr c, const void *free_setter_fn);
 
 // Find
-ClientPtrPtr NeuroClientFindWindow(Window w);
-ClientPtrPtr NeuroClientFindUrgent();
-ClientPtrPtr NeuroClientFindFixed();
+NeuroClientPtrPtr NeuroClientFindWindow(Window w);
+NeuroClientPtrPtr NeuroClientFindUrgent();
+NeuroClientPtrPtr NeuroClientFindFixed();
 
-// Client getters
-ClientPtrPtr NeuroClientGetFocused();
-ClientPtrPtr NeuroClientGetPointed(int *x, int *y);
+// NeuroClient getters
+NeuroClientPtrPtr NeuroClientGetFocused();
+NeuroClientPtrPtr NeuroClientGetPointed(int *x, int *y);
 
-// Client Selectors
-ClientPtrPtr NeuroClientSelectorSelf(const ClientPtrPtr c);   // Client c itself
-ClientPtrPtr NeuroClientSelectorNext(const ClientPtrPtr c);   // The next client of c
-ClientPtrPtr NeuroClientSelectorPrev(const ClientPtrPtr c);   // The previous client of c
-ClientPtrPtr NeuroClientSelectorOld(const ClientPtrPtr c);    // The previous selected client
-ClientPtrPtr NeuroClientSelectorHead(const ClientPtrPtr c);   // The first client of the stack
-ClientPtrPtr NeuroClientSelectorLast(const ClientPtrPtr c);   // The last client of the stack
-ClientPtrPtr NeuroClientSelectorUp(const ClientPtrPtr c);     // The upper client (layout position) of c
-ClientPtrPtr NeuroClientSelectorDown(const ClientPtrPtr c);   // The lower client (layout position) of c
-ClientPtrPtr NeuroClientSelectorLeft(const ClientPtrPtr c);   // The left client (layout position) of c
-ClientPtrPtr NeuroClientSelectorRight(const ClientPtrPtr c);  // The right client (layout position) of c
+// NeuroClient Selectors
+NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c);   // NeuroClient c itself
+NeuroClientPtrPtr NeuroClientSelectorNext(const NeuroClientPtrPtr c);   // The next client of c
+NeuroClientPtrPtr NeuroClientSelectorPrev(const NeuroClientPtrPtr c);   // The previous client of c
+NeuroClientPtrPtr NeuroClientSelectorOld(const NeuroClientPtrPtr c);    // The previous selected client
+NeuroClientPtrPtr NeuroClientSelectorHead(const NeuroClientPtrPtr c);   // The first client of the stack
+NeuroClientPtrPtr NeuroClientSelectorLast(const NeuroClientPtrPtr c);   // The last client of the stack
+NeuroClientPtrPtr NeuroClientSelectorUp(const NeuroClientPtrPtr c);     // The upper client (layout position) of c
+NeuroClientPtrPtr NeuroClientSelectorDown(const NeuroClientPtrPtr c);   // The lower client (layout position) of c
+NeuroClientPtrPtr NeuroClientSelectorLeft(const NeuroClientPtrPtr c);   // The left client (layout position) of c
+NeuroClientPtrPtr NeuroClientSelectorRight(const NeuroClientPtrPtr c);  // The right client (layout position) of c
 
-// Client Testers
-bool NeuroClientTesterWindow(const ClientPtrPtr c, const void *w);
-bool NeuroClientTesterUrgent(const ClientPtrPtr c, const void *data);
-bool NeuroClientTesterFixed(const ClientPtrPtr c, const void *data);
+// NeuroClient Testers
+bool NeuroClientTesterWindow(const NeuroClientPtrPtr c, const void *w);
+bool NeuroClientTesterUrgent(const NeuroClientPtrPtr c, const void *data);
+bool NeuroClientTesterFixed(const NeuroClientPtrPtr c, const void *data);
 
-// Color Setters
-Color NeuroClientColorSetterCurr(const ClientPtrPtr c);
-Color NeuroClientColorSetterAll(const ClientPtrPtr c);
-Color NeuroClientColorSetterNone(const ClientPtrPtr c);
+// NeuroColor Setters
+NeuroColor NeuroClientColorSetterCurr(const NeuroClientPtrPtr c);
+NeuroColor NeuroClientColorSetterAll(const NeuroClientPtrPtr c);
+NeuroColor NeuroClientColorSetterNone(const NeuroClientPtrPtr c);
 
 // Border Width Setters
-int NeuroClientBorderWidthSetterAlways(const ClientPtrPtr c);
-int NeuroClientBorderWidthSetterNever(const ClientPtrPtr c);
-int NeuroClientBorderWidthSetterSmart(const ClientPtrPtr c);
-int NeuroClientBorderWidthSetterCurr(const ClientPtrPtr c);
+int NeuroClientBorderWidthSetterAlways(const NeuroClientPtrPtr c);
+int NeuroClientBorderWidthSetterNever(const NeuroClientPtrPtr c);
+int NeuroClientBorderWidthSetterSmart(const NeuroClientPtrPtr c);
+int NeuroClientBorderWidthSetterCurr(const NeuroClientPtrPtr c);
 
 // Border Gap Setters
-int NeuroClientBorderGapSetterAlways(const ClientPtrPtr c);
-int NeuroClientBorderGapSetterNever(const ClientPtrPtr c);
-int NeuroClientBorderGapSetterSmart(const ClientPtrPtr c);
-int NeuroClientBorderGapSetterCurr(const ClientPtrPtr c);
+int NeuroClientBorderGapSetterAlways(const NeuroClientPtrPtr c);
+int NeuroClientBorderGapSetterNever(const NeuroClientPtrPtr c);
+int NeuroClientBorderGapSetterSmart(const NeuroClientPtrPtr c);
+int NeuroClientBorderGapSetterCurr(const NeuroClientPtrPtr c);
 

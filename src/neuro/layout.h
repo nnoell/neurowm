@@ -32,9 +32,9 @@ void NeuroLayoutReset(size_t ws);
 void NeuroLayoutIncreaseMaster(size_t ws, int step);
 void NeuroLayoutResizeMaster(size_t ws, float factor);
 
-// Layout Arrangers
-Arrange *NeuroLayoutArrangerTall(Arrange *a);
-Arrange *NeuroLayoutArrangerGrid(Arrange *a);
-Arrange *NeuroLayoutArrangerFull(Arrange *a);
-Arrange *NeuroLayoutArrangerFloat(Arrange *a);
+// NeuroLayout Arrangers
+NeuroArrange *NeuroLayoutArrangerTall(NeuroArrange *a);
+NeuroArrange *NeuroLayoutArrangerGrid(NeuroArrange *a);
+NeuroArrange *NeuroLayoutArrangerFull(NeuroArrange *a);
+NeuroArrange *NeuroLayoutArrangerFloat(NeuroArrange *a);
 

@@ -78,14 +78,14 @@ void NeuroSystemStop();
 Display *NeuroSystemGetDisplay();
 Window NeuroSystemGetRoot();
 int NeuroSystemGetScreen();
-const Rectangle *NeuroSystemGetScreenRegion();
-const Rectangle *NeuroSystemGetHiddenRegion();
+const NeuroRectangle *NeuroSystemGetScreenRegion();
+const NeuroRectangle *NeuroSystemGetHiddenRegion();
 const int *NeuroSystemGetHiddenGaps();
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c);
 Atom NeuroSystemGetWmAtom(NeuroSystemWmatom a);
 Atom NeuroSystemGetNetAtom(NeuroSystemNetatom a);
-Color NeuroSystemGetColor(NeuroSystemColor c);
-Color NeuroSystemGetColorFromHex(const char *color);
+NeuroColor NeuroSystemGetColor(NeuroSystemColor c);
+NeuroColor NeuroSystemGetColorFromHex(const char *color);
 
 // System functions
 const char *const *NeuroSystemGetRecompileCommand(const char **output, const char **source);
@@ -97,8 +97,8 @@ int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p);
 void NeuroSystemError(const char *msg);
 
 // Binding functions
-void NeuroSystemGrabKeys(Window w, const Key *const *key_list);
-void NeuroSystemUngrabKeys(Window w, const Key *const *key_list);
-void NeuroSystemGrabButtons(Window w, const Button *const *button_list);
-void NeuroSystemUngrabButtons(Window w, const Button *const *button_list);
+void NeuroSystemGrabKeys(Window w, const NeuroKey *const *key_list);
+void NeuroSystemUngrabKeys(Window w, const NeuroKey *const *key_list);
+void NeuroSystemGrabButtons(Window w, const NeuroButton *const *button_list);
+void NeuroSystemUngrabButtons(Window w, const NeuroButton *const *button_list);
 

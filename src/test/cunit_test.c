@@ -43,15 +43,15 @@ void add_remove_client(void) {
   // Create a fake client
   const Window w = 0;
   const XWindowAttributes wa = (XWindowAttributes){.x = 0, .y = 0, .width = 500, .height = 500};
-  Client *cli = NeuroTypeNewClient(w, &wa);
+  NeuroClient *cli = NeuroTypeNewClient(w, &wa);
   CU_ASSERT_PTR_NOT_NULL(cli);
 
   // Add it to the stack list
-  ClientPtrPtr c = NeuroCoreAddClientStart(cli);
+  NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);
   CU_ASSERT_PTR_NOT_NULL(c);
 
   // Remove it from the stack list
-  Client *cli2 = NeuroCoreRemoveClient(c);
+  NeuroClient *cli2 = NeuroCoreRemoveClient(c);
   CU_ASSERT_PTR_NOT_NULL(cli2);
   CU_ASSERT(cli == cli2);
 

@@ -25,7 +25,7 @@
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool is_free_size_hints(Client *c) {
+static bool is_free_size_hints(NeuroClient *c) {
   assert(c);
   int maxw = 0, maxh = 0, minw = 0, minh = 0;
   long msize = 0L;
@@ -46,7 +46,7 @@ static bool is_free_size_hints(Client *c) {
   return maxw && minw && maxh && minh && maxw == minw && maxh == minh;
 }
 
-static bool has_rule(const Client *c, const Rule *r) {
+static bool has_rule(const NeuroClient *c, const NeuroRule *r) {
   assert(c);
   assert(r);
   if (!c)
@@ -63,7 +63,7 @@ static bool has_rule(const Client *c, const Rule *r) {
   return res_class && res_name && res_title;
 }
 
-static void set_rule(Client *c, const Rule *r) {
+static void set_rule(NeuroClient *c, const NeuroRule *r) {
   assert(c);
   assert(r);
   c->ws = r->workspace_selector_fn() % NeuroCoreGetSize();
@@ -75,12 +75,12 @@ static void set_rule(Client *c, const Rule *r) {
     NeuroWorkspaceChange(c->ws);
 }
 
-static void apply_rules(Client *c) {
+static void apply_rules(NeuroClient *c) {
   assert(c);
-  const Rule *const *const rule_list = NeuroConfigGet()->rule_list;
+  const NeuroRule *const *const rule_list = NeuroConfigGet()->rule_list;
   if (!rule_list)
     return;
-  const Rule *r;
+  const NeuroRule *r;
   for (size_t i = 0U; rule_list[ i ]; ++i) {
     r = rule_list[ i ];
     if (has_rule(c, r)) {
@@ -97,9 +97,9 @@ static void apply_rules(Client *c) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
+NeuroClient *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   assert(wa);
-  Client *c = NeuroTypeNewClient(w, wa);
+  NeuroClient *c = NeuroTypeNewClient(w, wa);
   if (!c)
     return NULL;
   if (is_free_size_hints(c))
@@ -111,7 +111,7 @@ Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   return c;
 }
 
-void NeuroRuleSetLayoutRegion(Rectangle *r, const ClientPtrPtr c) {
+void NeuroRuleSetLayoutRegion(NeuroRectangle *r, const NeuroClientPtrPtr c) {
   if (!r || !c || CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_NULL)
     return;
 
@@ -129,12 +129,12 @@ void NeuroRuleSetLayoutRegion(Rectangle *r, const ClientPtrPtr c) {
   }
 }
 
-void NeuroRuleSetClientRegion(Rectangle *r, const ClientPtrPtr c) {
+void NeuroRuleSetClientRegion(NeuroRectangle *r, const NeuroClientPtrPtr c) {
   if (!c || CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_NULL)
     return;
 
   // Get the stack region
-  Rectangle *const stack_reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
+  NeuroRectangle *const stack_reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
 
   // Update the client region
   if (CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_UP) {
@@ -161,18 +161,18 @@ void NeuroRuleSetClientRegion(Rectangle *r, const ClientPtrPtr c) {
 }
 
 // Free Locations
-void NeuroRuleFreeSetterDefault(Rectangle *a, const Rectangle *r) {
+void NeuroRuleFreeSetterDefault(NeuroRectangle *a, const NeuroRectangle *r) {
   (void)a;
   (void)r;
 }
 
-void NeuroRuleFreeSetterCenter(Rectangle *a, const Rectangle *r) {
+void NeuroRuleFreeSetterCenter(NeuroRectangle *a, const NeuroRectangle *r) {
   assert(a);
   assert(r);
   NeuroGeometryCenterRectangleInRegion(a, r);
 }
 
-void NeuroRuleFreeSetterBigCenter(Rectangle *a, const Rectangle *r) {
+void NeuroRuleFreeSetterBigCenter(NeuroRectangle *a, const NeuroRectangle *r) {
   assert(a);
   assert(r);
   float size[ 4 ] = { 0.05f, 0.05f, 0.9f, 0.9f };
@@ -180,7 +180,7 @@ void NeuroRuleFreeSetterBigCenter(Rectangle *a, const Rectangle *r) {
   NeuroGeometryCenterRectangleInRegion(a, r);
 }
 
-void NeuroRuleFreeSetterScratchpad(Rectangle *a, const Rectangle *r) {
+void NeuroRuleFreeSetterScratchpad(NeuroRectangle *a, const NeuroRectangle *r) {
   assert(a);
   assert(r);
   float size[ 4 ] = { 0.00f, 0.00f, 1.00f, 0.75f };

@@ -19,7 +19,7 @@
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *src, const float *rel) {
+NeuroRectangle *NeuroGeometryGetRelativeRectangle(NeuroRectangle *dst, const NeuroRectangle *src, const float *rel) {
   assert(dst);
   assert(src);
   assert(rel);
@@ -30,7 +30,7 @@ Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *sr
   return dst;
 }
 
-Rectangle *NeuroGeometrySetRectangleGaps(Rectangle *dst, const Rectangle *src, const int *gaps) {
+NeuroRectangle *NeuroGeometrySetRectangleGaps(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);
@@ -41,7 +41,7 @@ Rectangle *NeuroGeometrySetRectangleGaps(Rectangle *dst, const Rectangle *src, c
   return dst;
 }
 
-Rectangle *NeuroGeometryUnsetRectangleGaps(Rectangle *dst, const Rectangle *src, const int *gaps) {
+NeuroRectangle *NeuroGeometryUnsetRectangleGaps(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);
@@ -52,20 +52,20 @@ Rectangle *NeuroGeometryUnsetRectangleGaps(Rectangle *dst, const Rectangle *src,
   return dst;
 }
 
-Rectangle *NeuroGeometrySetRectangle(Rectangle *r, int x, int y, int w, int h) {
+NeuroRectangle *NeuroGeometrySetRectangle(NeuroRectangle *r, int x, int y, int w, int h) {
   assert(r);
   r->x = x; r->y = y; r->w = w; r->h = h;
   return r;
 }
 
-Rectangle *NeuroGeometrySetRectangleBorderWidth(Rectangle *r, int width) {
+NeuroRectangle *NeuroGeometrySetRectangleBorderWidth(NeuroRectangle *r, int width) {
   assert(r);
   r->w -= width * 2;
   r->h -= width * 2;
   return r;
 }
 
-Rectangle *NeuroGeometrySetRectangleBorderGap(Rectangle *r, int gap) {
+NeuroRectangle *NeuroGeometrySetRectangleBorderGap(NeuroRectangle *r, int gap) {
   assert(r);
   r->x += gap;
   r->y += gap;
@@ -74,12 +74,12 @@ Rectangle *NeuroGeometrySetRectangleBorderGap(Rectangle *r, int gap) {
   return r;
 }
 
-Rectangle *NeuroGeometrySetRectangleBorderWidthAndGap(Rectangle *r, int width, int gap) {
+NeuroRectangle *NeuroGeometrySetRectangleBorderWidthAndGap(NeuroRectangle *r, int width, int gap) {
   assert(r);
   return NeuroGeometrySetRectangleBorderGap(NeuroGeometrySetRectangleBorderWidth(r, width), gap);
 }
 
-Rectangle *NeuroGeometryMirrorRectangle(Rectangle *rect, const Rectangle *reg) {
+NeuroRectangle *NeuroGeometryMirrorRectangle(NeuroRectangle *rect, const NeuroRectangle *reg) {
   assert(rect);
   assert(reg);
   const int oldx = rect->x, oldy = rect->y, oldw = rect->w, oldh = rect->h;
@@ -90,7 +90,7 @@ Rectangle *NeuroGeometryMirrorRectangle(Rectangle *rect, const Rectangle *reg) {
   return rect;
 }
 
-Rectangle *NeuroGeometryTranspRectangle(Rectangle *rect) {
+NeuroRectangle *NeuroGeometryTranspRectangle(NeuroRectangle *rect) {
   int tmp = rect->x;
   rect->x = rect->y;
   rect->y = tmp;
@@ -100,7 +100,7 @@ Rectangle *NeuroGeometryTranspRectangle(Rectangle *rect) {
   return rect;
 }
 
-Rectangle *NeuroGeometryNeuroGeometryTranspRectangle(Rectangle *rect, const Rectangle *reg) {
+NeuroRectangle *NeuroGeometryNeuroGeometryTranspRectangle(NeuroRectangle *rect, const NeuroRectangle *reg) {
   assert(rect);
   assert(reg);
   if (rect->x < reg->x)
@@ -118,7 +118,7 @@ Rectangle *NeuroGeometryNeuroGeometryTranspRectangle(Rectangle *rect, const Rect
   return rect;
 }
 
-Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle *reg) {
+NeuroRectangle *NeuroGeometryCenterRectangleInRegion(NeuroRectangle *rect, const NeuroRectangle *reg) {
   assert(rect);
   assert(reg);
   rect->x = reg->x + (reg->w - rect->w) / 2;
@@ -126,7 +126,7 @@ Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle
   return rect;
 }
 
-bool NeuroGeometryIsPointInRectangle(const Rectangle *a, int x, int y) {
+bool NeuroGeometryIsPointInRectangle(const NeuroRectangle *a, int x, int y) {
   assert(a);
   if (x < a->x)
     return false;

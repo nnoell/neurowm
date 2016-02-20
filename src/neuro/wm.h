@@ -29,7 +29,7 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-int NeuroWmRun(const Configuration *c);
+int NeuroWmRun(const NeuroConfiguration *c);
 void NeuroWmQuit();
 void NeuroWmReload();
 

@@ -38,20 +38,20 @@ extern const char* NeuroConfigDefaultTerminalCommand[];
 extern const char* NeuroConfigDefaultLauncherCommand[];
 extern const char* NeuroConfigDefaultScratchpadCommand[];
 
-// Configuration fields
-extern const MonitorConf* NeuroConfigDefaultMonitorList[];
-extern const LayoutConf* NeuroConfigDefaultLayoutList[];
-extern const LayoutConf* NeuroConfigDefaultToggledLayoutList[];
-extern const Workspace* NeuroConfigDefaultWorkspaceList[];
-extern const Key* NeuroConfigDefaultKeyList[];
-extern const Button* NeuroConfigDefaultButtonList[];
+// NeuroConfiguration fields
+extern const NeuroMonitorConf* NeuroConfigDefaultMonitorList[];
+extern const NeuroLayoutConf* NeuroConfigDefaultLayoutList[];
+extern const NeuroLayoutConf* NeuroConfigDefaultToggledLayoutList[];
+extern const NeuroWorkspace* NeuroConfigDefaultWorkspaceList[];
+extern const NeuroKey* NeuroConfigDefaultKeyList[];
+extern const NeuroButton* NeuroConfigDefaultButtonList[];
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Configuration functions
-void NeuroConfigSet(const Configuration *c);
-const Configuration *NeuroConfigGet();
+// NeuroConfiguration functions
+void NeuroConfigSet(const NeuroConfiguration *c);
+const NeuroConfiguration *NeuroConfigGet();
 

@@ -33,21 +33,21 @@ void NeuroDzenStop();
 void NeuroDzenRefresh(bool on_event_only);
 void NeuroDzenInitCpuCalc();
 void NeuroDzenStopCpuCalc();
-void NeuroDzenWrapDzenBox(char *dst, const char *src, const BoxPP *b);
-void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca);
+void NeuroDzenWrapDzenBox(char *dst, const char *src, const NeuroDzenBox *b);
+void NeuroDzenWrapClickArea(char *dst, const char *src, const NeuroDzenClickableArea *ca);
 bool NeuroDzenReadFirstLineFile(char *buf, const char *path);
 
 // Loggers
-void NeuroDzenLoggerTime(const Monitor *m, char *str);
-void NeuroDzenLoggerDate(const Monitor *m, char *str);
-void NeuroDzenLoggerDay(const Monitor *m, char *str);
-void NeuroDzenLoggerUptime(const Monitor *m, char *str);
-void NeuroDzenLoggerCpu(const Monitor *m, char *str);
-void NeuroDzenLoggerRam(const Monitor *m, char *str);
-void NeuroDzenLoggerWifiStrength(const Monitor *m, char *str);
-void NeuroDzenLoggerMonitorWorkspace(const Monitor *m, char *str);
-void NeuroDzenLoggerMonitorCurrLayout(const Monitor *m, char *str);
-void NeuroDzenLoggerMonitorCurrTitle(const Monitor *m, char *str);
-void NeuroDzenLoggerScreen(const Monitor *m, char *str);
-void NeuroDzenLoggerMonitorList(const Monitor *m, char *str);
+void NeuroDzenLoggerTime(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerDate(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerDay(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerUptime(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerCpu(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerRam(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerWifiStrength(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerMonitorWorkspace(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerMonitorCurrLayout(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerMonitorCurrTitle(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerScreen(const NeuroMonitor *m, char *str);
+void NeuroDzenLoggerMonitorList(const NeuroMonitor *m, char *str);
 

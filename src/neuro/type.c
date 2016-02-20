@@ -23,8 +23,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Creation and Destruction
-Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
-  Client *c = (Client *)malloc(sizeof(Client));
+NeuroClient *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
+  NeuroClient *c = (NeuroClient *)malloc(sizeof(NeuroClient));
   if (!c)
     return NULL;
   *(Window *)&c->win = w;  // Pointer casted away because of const
@@ -42,7 +42,7 @@ Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
   return c;
 }
 
-void NeuroTypeDeleteClient(Client *c) {
+void NeuroTypeDeleteClient(NeuroClient *c) {
   if (!c)
     return;
   free(c);

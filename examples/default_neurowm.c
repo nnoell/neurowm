@@ -19,7 +19,7 @@
 // CONFIGURATION
 //----------------------------------------------------------------------------------------------------------------------
 
-static const Configuration configuration_ = {
+static const NeuroConfiguration configuration_ = {
   NeuroConfigDefaultInitActionChain,
   NeuroConfigDefaultStopActionChain,
   NeuroConfigDefaultNormalBorderColor,

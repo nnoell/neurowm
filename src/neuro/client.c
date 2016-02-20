@@ -27,7 +27,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // XMotionUpdaterFn
-typedef void (*XMotionUpdaterFn)(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
+typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
     int py);
 
 
@@ -48,7 +48,7 @@ static bool is_protocol_delete(Window w) {
   return ret;
 }
 
-static bool set_title_atom(Client *c, Atom atom) {
+static bool set_title_atom(NeuroClient *c, Atom atom) {
   assert(c);
   XTextProperty tp;
   XGetTextProperty(NeuroSystemGetDisplay(), c->win, &tp, atom);
@@ -68,15 +68,15 @@ static bool set_title_atom(Client *c, Atom atom) {
   return true;
 }
 
-static ClientPtrPtr query_pointer_client(size_t ws, int x, int y) {
-  ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws);
+static NeuroClientPtrPtr query_pointer_client(size_t ws, int x, int y) {
+  NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws);
   for ( ; c; c=NeuroCoreClientGetNext(c))
     if (NeuroGeometryIsPointInRectangle(NeuroCoreClientGetRegion(c), x, y))
       break;
   return c;
 }
 
-static void process_xmotion(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int px, int py,
+static void process_xmotion(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int px, int py,
     XMotionUpdaterFn mpf) {
   const bool res = XGrabPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), false,
       ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None,
@@ -92,7 +92,7 @@ static void process_xmotion(Rectangle *r, size_t ws, int cx, int cy, int cw, int
   XUngrabPointer(NeuroSystemGetDisplay(), CurrentTime);
 }
 
-static void xmotion_move(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_move(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
   (void)cw;
   (void)ch;
   r->x = cx + (ex - px);
@@ -101,7 +101,7 @@ static void xmotion_move(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch
   NeuroWorkspaceUpdate(ws);
 }
 
-static void xmotion_resize(Rectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_resize(NeuroRectangle *r, size_t ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
   (void)cx;
   (void)cy;
   (void)px;
@@ -118,31 +118,31 @@ static void xmotion_resize(Rectangle *r, size_t ws, int cx, int cy, int cw, int 
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-void NeuroClientUpdate(ClientPtrPtr c, const void *data) {
+void NeuroClientUpdate(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
 
   // Get workspace and regions
   const size_t ws = CLI_GET(c).ws;
-  const Rectangle *const stack_region = NeuroCoreStackGetRegion(ws);
-  Rectangle *const client_region = NeuroCoreClientGetRegion(c);
+  const NeuroRectangle *const stack_region = NeuroCoreStackGetRegion(ws);
+  NeuroRectangle *const client_region = NeuroCoreClientGetRegion(c);
 
   // Priority: Fullscreen > Free > Fixed > Tiled
-  Rectangle r = { 0 };
+  NeuroRectangle r = { 0 };
   if (CLI_GET(c).is_fullscreen) {
     NeuroGeometryUnsetRectangleGaps(&r, stack_region, NeuroCoreStackGetGaps(ws));
   } else if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull) {
     CLI_GET(c).free_setter_fn(client_region, stack_region);
-    memmove(&r, client_region, sizeof(Rectangle));
+    memmove(&r, client_region, sizeof(NeuroRectangle));
   } else if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL) {
     NeuroRuleSetClientRegion(&r, c);
   } else {
-    memmove(&r, client_region, sizeof(Rectangle));
+    memmove(&r, client_region, sizeof(NeuroRectangle));
   }
 
   // Set border width and border gap
-  const Layout *const l = NeuroCoreStackGetCurrLayout(ws);
+  const NeuroLayout *const l = NeuroCoreStackGetCurrLayout(ws);
   const int border_width = l->border_width_setter_fn(c);
   const int border_gap = l->border_gap_setter_fn(c);
   NeuroGeometrySetRectangleBorderWidthAndGap(&r, border_width, border_gap);
@@ -157,7 +157,7 @@ void NeuroClientUpdate(ClientPtrPtr c, const void *data) {
   XMoveResizeWindow(NeuroSystemGetDisplay(), CLI_GET(c).win, r.x, r.y, r.w, r.h);
 }
 
-void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data) {
+void NeuroClientUpdateClassAndName(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -174,7 +174,7 @@ void NeuroClientUpdateClassAndName(ClientPtrPtr c, const void *data) {
     XFree(ch.res_name);
 }
 
-void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data) {
+void NeuroClientUpdateTitle(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -183,21 +183,21 @@ void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data) {
     set_title_atom(*c, XA_WM_NAME);
 }
 
-void NeuroClientSetUrgent(ClientPtrPtr c, const void *data) {
+void NeuroClientSetUrgent(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   CLI_GET(c).is_urgent = true;
 }
 
-void NeuroClientUnsetUrgent(ClientPtrPtr c, const void *data) {
+void NeuroClientUnsetUrgent(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   CLI_GET(c).is_urgent = false;
 }
 
-void NeuroClientKill(ClientPtrPtr c, const void *data) {
+void NeuroClientKill(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -216,12 +216,12 @@ void NeuroClientKill(ClientPtrPtr c, const void *data) {
   }
 }
 
-void NeuroClientMinimize(ClientPtrPtr c, const void *data) {
+void NeuroClientMinimize(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   NeuroCoreSetCurrClient(NeuroCoreClientGetNext(c));
-  Client *cli = NeuroCoreRemoveClient(c);
+  NeuroClient *cli = NeuroCoreRemoveClient(c);
   if (!cli)
     return;
   if (!NeuroCorePushMinimizedClient(cli))
@@ -233,7 +233,7 @@ void NeuroClientMinimize(ClientPtrPtr c, const void *data) {
   NeuroWorkspaceFocus(cli->ws);
 }
 
-void NeuroClientTile(ClientPtrPtr c, const void *data) {
+void NeuroClientTile(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -244,10 +244,10 @@ void NeuroClientTile(ClientPtrPtr c, const void *data) {
   NeuroWorkspaceFocus(CLI_GET(c).ws);
 }
 
-void NeuroClientFree(ClientPtrPtr c, const void *freeSetterFn) {
+void NeuroClientFree(NeuroClientPtrPtr c, const void *freeSetterFn) {
   if (!c)
     return;
-  const GenericArgFn *gaf = (const GenericArgFn *)freeSetterFn;
+  const NeuroArgFn *gaf = (const NeuroArgFn *)freeSetterFn;
   if (CLI_GET(c).free_setter_fn == gaf->FreeSetterFn_)
     return;
   CLI_GET(c).free_setter_fn = gaf->FreeSetterFn_;
@@ -255,7 +255,7 @@ void NeuroClientFree(ClientPtrPtr c, const void *freeSetterFn) {
   NeuroWorkspaceFocus(CLI_GET(c).ws);
 }
 
-void NeuroClientToggleFree(ClientPtrPtr c, const void *free_setter_fn) {
+void NeuroClientToggleFree(NeuroClientPtrPtr c, const void *free_setter_fn) {
   if (!c)
     return;
   if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
@@ -264,7 +264,7 @@ void NeuroClientToggleFree(ClientPtrPtr c, const void *free_setter_fn) {
     NeuroClientFree(c, free_setter_fn);
 }
 
-void NeuroClientNormal(ClientPtrPtr c, const void *data) {
+void NeuroClientNormal(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -275,7 +275,7 @@ void NeuroClientNormal(ClientPtrPtr c, const void *data) {
   NeuroWorkspaceFocus(CLI_GET(c).ws);
 }
 
-void NeuroClientFullscreen(ClientPtrPtr c, const void *data) {
+void NeuroClientFullscreen(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -286,7 +286,7 @@ void NeuroClientFullscreen(ClientPtrPtr c, const void *data) {
   NeuroWorkspaceFocus(CLI_GET(c).ws);
 }
 
-void NeuroClientToggleFullscreen(ClientPtrPtr c, const void *data) {
+void NeuroClientToggleFullscreen(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
@@ -296,73 +296,73 @@ void NeuroClientToggleFullscreen(ClientPtrPtr c, const void *data) {
     NeuroClientFullscreen(c, NULL);
 }
 
-void NeuroClientFloatMove(ClientPtrPtr c, const void *data) {
+void NeuroClientFloatMove(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL)
     return;
-  Rectangle *r = &(CLI_GET(c).float_region);
+  NeuroRectangle *r = &(CLI_GET(c).float_region);
   int px = 0, py = 0;
   NeuroClientGetPointed(&px, &py);
   process_xmotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, xmotion_move);
 }
 
-void NeuroClientFloatResize(ClientPtrPtr c, const void *data) {
+void NeuroClientFloatResize(NeuroClientPtrPtr c, const void *data) {
   (void)data;
   if (!c)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL)
     return;
-  Rectangle *r = &(CLI_GET(c).float_region);
+  NeuroRectangle *r = &(CLI_GET(c).float_region);
   int px = 0, py = 0;
   NeuroClientGetPointed(&px, &py);
   process_xmotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, xmotion_resize);
 }
 
-void NeuroClientFreeMove(ClientPtrPtr c, const void *free_setter_fn) {
+void NeuroClientFreeMove(NeuroClientPtrPtr c, const void *free_setter_fn) {
   if (!c || !free_setter_fn)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   NeuroClientFree(c, free_setter_fn);
-  Rectangle *r = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *r = NeuroCoreClientGetRegion(c);
   int px = 0, py = 0;
   NeuroClientGetPointed(&px, &py);
   process_xmotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, xmotion_move);
 }
 
-void NeuroClientFreeResize(ClientPtrPtr c, const void *free_setter_fn) {
+void NeuroClientFreeResize(NeuroClientPtrPtr c, const void *free_setter_fn) {
   if (!c || !free_setter_fn)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   NeuroClientFree(c, free_setter_fn);
-  Rectangle *r = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *r = NeuroCoreClientGetRegion(c);
   int px = 0, py = 0;
   NeuroClientGetPointed(&px, &py);
   process_xmotion(r, CLI_GET(c).ws, r->x, r->y, r->w, r->h, px, py, xmotion_resize);
 }
 
 // Find
-ClientPtrPtr NeuroClientFindWindow(Window w) {
+NeuroClientPtrPtr NeuroClientFindWindow(Window w) {
   return NeuroCoreFindClient(NeuroClientTesterWindow, (const void *)&w);
 }
 
-ClientPtrPtr NeuroClientFindUrgent() {
+NeuroClientPtrPtr NeuroClientFindUrgent() {
   return NeuroCoreFindClient(NeuroClientTesterUrgent, NULL);
 }
 
-ClientPtrPtr NeuroClientFindFixed() {
+NeuroClientPtrPtr NeuroClientFindFixed() {
   return NeuroCoreFindClient(NeuroClientTesterFixed, NULL);
 }
 
-// Client getters
-ClientPtrPtr NeuroClientGetFocused() {
+// NeuroClient getters
+NeuroClientPtrPtr NeuroClientGetFocused() {
   return NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
 }
 
-ClientPtrPtr NeuroClientGetPointed(int *x, int *y) {
+NeuroClientPtrPtr NeuroClientGetPointed(int *x, int *y) {
   assert(x);
   assert(y);
   Window rootw, childw;
@@ -373,95 +373,95 @@ ClientPtrPtr NeuroClientGetPointed(int *x, int *y) {
   return NeuroClientFindWindow(childw);
 }
 
-// Client Selectors
-ClientPtrPtr NeuroClientSelectorSelf(const ClientPtrPtr c) {
+// NeuroClient Selectors
+NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c) {
   assert(c);
   return c;
 }
 
-ClientPtrPtr NeuroClientSelectorNext(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorNext(const NeuroClientPtrPtr c) {
   assert(c);
-  ClientPtrPtr n = NeuroCoreClientGetNext(c);
+  NeuroClientPtrPtr n = NeuroCoreClientGetNext(c);
   if (!n)
     n = NeuroCoreStackGetHeadClient(CLI_GET(c).ws);
   return n;
 }
 
-ClientPtrPtr NeuroClientSelectorPrev(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorPrev(const NeuroClientPtrPtr c) {
   assert(c);
-  ClientPtrPtr p = NeuroCoreClientGetPrev(c);
+  NeuroClientPtrPtr p = NeuroCoreClientGetPrev(c);
   if (!p)
     p = NeuroCoreStackGetLastClient(CLI_GET(c).ws);
   return p;
 }
 
-ClientPtrPtr NeuroClientSelectorOld(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorOld(const NeuroClientPtrPtr c) {
   assert(c);
   return NeuroCoreStackGetPrevClient(CLI_GET(c).ws);
 }
 
-ClientPtrPtr NeuroClientSelectorHead(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorHead(const NeuroClientPtrPtr c) {
   assert(c);
   return NeuroCoreStackGetHeadClient(CLI_GET(c).ws);
 }
 
-ClientPtrPtr NeuroClientSelectorLast(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorLast(const NeuroClientPtrPtr c) {
   assert(c);
   return NeuroCoreStackGetLastClient(CLI_GET(c).ws);
 }
 
-ClientPtrPtr NeuroClientSelectorUp(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorUp(const NeuroClientPtrPtr c) {
   assert(c);
-  Rectangle *r = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *r = NeuroCoreClientGetRegion(c);
   return query_pointer_client(CLI_GET(c).ws, r->x+1, r->y-1);
 }
 
-ClientPtrPtr NeuroClientSelectorDown(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorDown(const NeuroClientPtrPtr c) {
   assert(c);
-  Rectangle *r = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *r = NeuroCoreClientGetRegion(c);
   return query_pointer_client(CLI_GET(c).ws, r->x+1, r->y + r->h + 1);
 }
 
-ClientPtrPtr NeuroClientSelectorLeft(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorLeft(const NeuroClientPtrPtr c) {
   assert(c);
-  Rectangle *r = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *r = NeuroCoreClientGetRegion(c);
   return query_pointer_client(CLI_GET(c).ws, r->x-1, r->y+1);
 }
 
-ClientPtrPtr NeuroClientSelectorRight(const ClientPtrPtr c) {
+NeuroClientPtrPtr NeuroClientSelectorRight(const NeuroClientPtrPtr c) {
   assert(c);
-  Rectangle *r = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *r = NeuroCoreClientGetRegion(c);
   return query_pointer_client(CLI_GET(c).ws, r->x + r->w + 1, r->y+1);
 }
 
-// Client Testers
-bool NeuroClientTesterWindow(const ClientPtrPtr c, const void *w) {
+// NeuroClient Testers
+bool NeuroClientTesterWindow(const NeuroClientPtrPtr c, const void *w) {
   assert(c);
   assert(w);
   return CLI_GET(c).win == *((Window *)w);
 }
 
-bool NeuroClientTesterUrgent(const ClientPtrPtr c, const void *data) {
+bool NeuroClientTesterUrgent(const NeuroClientPtrPtr c, const void *data) {
   assert(c);
   (void)data;
   return CLI_GET(c).is_urgent;
 }
 
-bool NeuroClientTesterFixed(const ClientPtrPtr c, const void *data) {
+bool NeuroClientTesterFixed(const NeuroClientPtrPtr c, const void *data) {
   assert(c);
   (void)data;
   return CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL;
 }
 
-// Color Setters
-Color NeuroClientColorSetterCurr(const ClientPtrPtr c) {
+// NeuroColor Setters
+NeuroColor NeuroClientColorSetterCurr(const NeuroClientPtrPtr c) {
   assert(c);
   if (NeuroCoreClientIsCurr(c))
     return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_CURRENT);
   return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
 }
 
-Color NeuroClientColorSetterAll(const ClientPtrPtr c) {
+NeuroColor NeuroClientColorSetterAll(const NeuroClientPtrPtr c) {
   assert(c);
   if (NeuroCoreClientIsCurr(c))
     return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_CURRENT);
@@ -474,42 +474,42 @@ Color NeuroClientColorSetterAll(const ClientPtrPtr c) {
   return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
 }
 
-Color NeuroClientColorSetterNone(const ClientPtrPtr c) {
+NeuroColor NeuroClientColorSetterNone(const NeuroClientPtrPtr c) {
   (void)c;
   return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
 }
 
 // Border Width Setters
-int NeuroClientBorderWidthSetterAlways(const ClientPtrPtr c) {
+int NeuroClientBorderWidthSetterAlways(const NeuroClientPtrPtr c) {
   (void)c;
   return NeuroConfigGet()->border_width;
 }
 
-int NeuroClientBorderWidthSetterNever(const ClientPtrPtr c) {
+int NeuroClientBorderWidthSetterNever(const NeuroClientPtrPtr c) {
   (void)c;
   return 0;
 }
 
-int NeuroClientBorderWidthSetterSmart(const ClientPtrPtr c) {
+int NeuroClientBorderWidthSetterSmart(const NeuroClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).is_fullscreen)
     return 0;
   if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
     return NeuroConfigGet()->border_width;
-  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
+  NeuroLayout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (l->arranger_fn == NeuroLayoutArrangerFloat)
     return NeuroConfigGet()->border_width;
   if (NeuroWorkspaceClientFindFixed(CLI_GET(c).ws))
     return NeuroConfigGet()->border_width;
-  Rectangle *rc = NeuroCoreClientGetRegion(c);
-  Rectangle *rs = NeuroCoreStackGetRegion(CLI_GET(c).ws);
+  NeuroRectangle *rc = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *rs = NeuroCoreStackGetRegion(CLI_GET(c).ws);
   if ((rc->w == rs->w && rc->h == rs->h) ||
       (rc->w == NeuroSystemGetScreenRegion()->w && rc->h == NeuroSystemGetScreenRegion()->h))
     return 0;
   return NeuroConfigGet()->border_width;
 }
 
-int NeuroClientBorderWidthSetterCurr(const ClientPtrPtr c) {
+int NeuroClientBorderWidthSetterCurr(const NeuroClientPtrPtr c) {
   assert(c);
   if (NeuroCoreClientIsCurr(c))
     return NeuroConfigGet()->border_width;
@@ -517,43 +517,43 @@ int NeuroClientBorderWidthSetterCurr(const ClientPtrPtr c) {
 }
 
 // Border Gap Setters
-int NeuroClientBorderGapSetterAlways(const ClientPtrPtr c) {
+int NeuroClientBorderGapSetterAlways(const NeuroClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
     return 0;
-  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
+  NeuroLayout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (CLI_GET(c).is_fullscreen || CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull ||
       l->arranger_fn == NeuroLayoutArrangerFloat)
     return 0;
   return NeuroConfigGet()->border_gap;
 }
 
-int NeuroClientBorderGapSetterNever(const ClientPtrPtr c) {
+int NeuroClientBorderGapSetterNever(const NeuroClientPtrPtr c) {
   (void)c;
   return 0;
 }
 
-int NeuroClientBorderGapSetterSmart(const ClientPtrPtr c) {
+int NeuroClientBorderGapSetterSmart(const NeuroClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
     return 0;
-  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
+  NeuroLayout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (CLI_GET(c).is_fullscreen || CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull ||
       l->arranger_fn == NeuroLayoutArrangerFloat)
     return 0;
-  Rectangle *a = NeuroCoreClientGetRegion(c);
-  Rectangle *as = NeuroCoreStackGetRegion(CLI_GET(c).ws);
+  NeuroRectangle *a = NeuroCoreClientGetRegion(c);
+  NeuroRectangle *as = NeuroCoreStackGetRegion(CLI_GET(c).ws);
   if ((a->w == as->w && a->h == as->h) ||
       (a->w == NeuroSystemGetScreenRegion()->w && a->h == NeuroSystemGetScreenRegion()->h))
     return 0;
   return NeuroConfigGet()->border_gap;
 }
 
-int NeuroClientBorderGapSetterCurr(const ClientPtrPtr c) {
+int NeuroClientBorderGapSetterCurr(const NeuroClientPtrPtr c) {
   assert(c);
   if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
     return 0;
-  Layout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
+  NeuroLayout *l = NeuroCoreStackGetCurrLayout(CLI_GET(c).ws);
   if (CLI_GET(c).is_fullscreen || CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull ||
       l->arranger_fn == NeuroLayoutArrangerFloat)
     return 0;

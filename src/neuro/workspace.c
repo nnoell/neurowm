@@ -26,19 +26,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // ClientFn
-typedef void (*WorkspaceClientFn)(ClientPtrPtr c, const void *data);
+typedef void (*WorkspaceClientFn)(NeuroClientPtrPtr c, const void *data);
 
 
 //----------------------------------------------------------------------------------------------------------------------
 // PRIVATE FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool is_above_tiled_client(const ClientPtrPtr c) {
+static bool is_above_tiled_client(const NeuroClientPtrPtr c) {
   assert(c);
   return (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull) || CLI_GET(c).is_fullscreen;
 }
 
-static void focus_client(ClientPtrPtr c) {
+static void focus_client(NeuroClientPtrPtr c) {
   assert(c);
   NeuroClientUnsetUrgent(c, NULL);
   NeuroSystemUngrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
@@ -47,22 +47,22 @@ static void focus_client(ClientPtrPtr c) {
       XA_WINDOW, 32, PropModeReplace, (unsigned char *)&(CLI_GET(c).win), 1);
 }
 
-static void unfocus_client(ClientPtrPtr c) {
+static void unfocus_client(NeuroClientPtrPtr c) {
   assert(c);
   NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
 }
 
-static void process_client(const WorkspaceClientFn wcf, const ClientPtrPtr ref, const ClientSelectorFn csf,
+static void process_client(const WorkspaceClientFn wcf, const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf,
     const void *data) {
   if (!ref || !csf)
     return;
-  ClientPtrPtr c = csf(ref);
+  NeuroClientPtrPtr c = csf(ref);
   if (!c)
     return;
   wcf(c, data);
 }
 
-static void send_client(ClientPtrPtr c, const void *data) {
+static void send_client(NeuroClientPtrPtr c, const void *data) {
   if (!c || !data)
     return;
 
@@ -78,11 +78,11 @@ static void send_client(ClientPtrPtr c, const void *data) {
     CLI_GET(c).free_setter_fn = NeuroRuleFreeSetterCenter;
 
   // Remove the client from its stack
-  Client *const cli = NeuroCoreRemoveClient(c);
+  NeuroClient *const cli = NeuroCoreRemoveClient(c);
 
   // Add the client to the new stack
   cli->ws = new_ws;
-  const ClientPtrPtr c2 = NeuroCoreAddClientStart(cli);
+  const NeuroClientPtrPtr c2 = NeuroCoreAddClientStart(cli);
   if (!c2)
     NeuroSystemError("send_client - Could not add client");
 
@@ -106,8 +106,8 @@ void NeuroWorkspaceChange(size_t ws) {
     return;
 
   const size_t curr = NeuroCoreGetCurrStack();
-  const Monitor *const curr_monitor = NeuroCoreStackGetMonitor(curr);
-  const Monitor *const new_monitor = NeuroCoreStackGetMonitor(ws);
+  const NeuroMonitor *const curr_monitor = NeuroCoreStackGetMonitor(curr);
+  const NeuroMonitor *const new_monitor = NeuroCoreStackGetMonitor(ws);
   NeuroCoreStackSetMonitor(curr, new_monitor);
   NeuroCoreStackSetMonitor(ws, curr_monitor);
 
@@ -124,7 +124,7 @@ void NeuroWorkspaceChange(size_t ws) {
 }
 
 void NeuroWorkspaceUpdate(size_t ws) {
-  for (ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
+  for (NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     NeuroClientUpdate(c, NULL);
 }
 
@@ -137,7 +137,7 @@ void NeuroWorkspaceFocus(size_t ws) {
 
   Window windows[ n ], d1, d2, *wins = NULL;
   size_t atc = 0U;
-  ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws);
+  NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws);
   for ( ; c; c = NeuroCoreClientGetNext(c))
     if (is_above_tiled_client(c))
       ++atc;
@@ -154,7 +154,7 @@ void NeuroWorkspaceFocus(size_t ws) {
       NeuroSystemError("NeuroWorkspaceFocus - Could not get windows");
     size_t n2 = n;
     for (unsigned int i = 0U; i < num; ++i) {
-      ClientPtrPtr c = NeuroWorkspaceClientFindWindow(ws, wins[ i ]);
+      NeuroClientPtrPtr c = NeuroWorkspaceClientFindWindow(ws, wins[ i ]);
       if (!c)
         continue;
       if (NeuroCoreClientIsCurr(c))
@@ -171,32 +171,32 @@ void NeuroWorkspaceFocus(size_t ws) {
 }
 
 void NeuroWorkspaceUnfocus(size_t ws) {
-  for (ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
+  for (NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     unfocus_client(c);
 }
 
 void NeuroWorkspaceTile(size_t ws) {
-  for (ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
+  for (NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     NeuroClientTile(c, NULL);
 }
 
 void NeuroWorkspaceFree(size_t ws, const void *free_setter_fn) {
-  for (ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
+  for (NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     NeuroClientFree(c, free_setter_fn);
 }
 
 void NeuroWorkspaceMinimize(size_t ws) {
-  for (ClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
+  for (NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     NeuroClientMinimize(c, NULL);
 }
 
 void NeuroWorkspaceRestoreLastMinimized(size_t ws) {
   if (NeuroCoreStackGetMinimizedNum(ws) <= 0)
     return;
-  Client *cli = NeuroCorePopMinimizedClient(ws);
+  NeuroClient *cli = NeuroCorePopMinimizedClient(ws);
   if (!cli)
     NeuroSystemError("NeuroWorkspaceRestoreLastMinimized - Could not restore last minimized client");
-  ClientPtrPtr c = NeuroCoreAddClientStart(cli);
+  NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
     NeuroSystemError("NeuroWorkspaceRestoreLastMinimized - Could not add client");
   NeuroCoreSetCurrClient(c);
@@ -205,36 +205,36 @@ void NeuroWorkspaceRestoreLastMinimized(size_t ws) {
 }
 
 void NeuroWorkspaceAddEnterNotifyMask(size_t ws) {
-  ClientPtrPtr c;
+  NeuroClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK);
 }
 
 void NeuroWorkspaceRemoveEnterNotifyMask(size_t ws) {
-  ClientPtrPtr c;
+  NeuroClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
     XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK_NO_ENTER);
 }
 
 // Find functions
-ClientPtrPtr NeuroWorkspaceClientFindWindow(size_t ws, Window w) {
+NeuroClientPtrPtr NeuroWorkspaceClientFindWindow(size_t ws, Window w) {
   return NeuroCoreStackFindClient(ws, NeuroClientTesterWindow, (const void *)&w);
 }
 
-ClientPtrPtr NeuroWorkspaceClientFindUrgent(size_t ws) {
+NeuroClientPtrPtr NeuroWorkspaceClientFindUrgent(size_t ws) {
   return NeuroCoreStackFindClient(ws, NeuroClientTesterUrgent, NULL);
 }
 
-ClientPtrPtr NeuroWorkspaceClientFindFixed(size_t ws) {
+NeuroClientPtrPtr NeuroWorkspaceClientFindFixed(size_t ws) {
   return NeuroCoreStackFindClient(ws, NeuroClientTesterFixed, NULL);
 }
 
 // Clients
-void NeuroWorkspaceClientFocus(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientFocus(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   (void)data;
   if (!ref || !csf)
     return;
-  ClientPtrPtr c = csf(ref);
+  NeuroClientPtrPtr c = csf(ref);
   if (!c)
     return;
   const size_t ws = CLI_GET(c).ws;
@@ -243,11 +243,11 @@ void NeuroWorkspaceClientFocus(const ClientPtrPtr ref, const ClientSelectorFn cs
   NeuroWorkspaceFocus(ws);
 }
 
-void NeuroWorkspaceClientSwap(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientSwap(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   (void)data;
   if (!ref || !csf)
     return;
-  ClientPtrPtr c = csf(ref);
+  NeuroClientPtrPtr c = csf(ref);
   if (!c)
     return;
   if (!NeuroCoreClientSwap(ref, c))
@@ -256,59 +256,59 @@ void NeuroWorkspaceClientSwap(const ClientPtrPtr ref, const ClientSelectorFn csf
   NeuroWorkspaceClientFocus(ref, csf, NULL);
 }
 
-void NeuroWorkspaceClientSend(ClientPtrPtr ref, const ClientSelectorFn csf, const void *ws) {
+void NeuroWorkspaceClientSend(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *ws) {
   process_client(send_client, ref, csf, ws);
 }
 
-void NeuroWorkspaceClientKill(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientKill(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientKill, ref, csf, data);
 }
 
-void NeuroWorkspaceClientMinimize(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientMinimize(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientMinimize, ref, csf, data);
 }
 
-void NeuroWorkspaceClientTile(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientTile(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientTile, ref, csf, data);
 }
 
-void NeuroWorkspaceClientFree(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn) {
+void NeuroWorkspaceClientFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *freeSetterFn) {
   process_client(NeuroClientFree, ref, csf, freeSetterFn);
 }
 
-void NeuroWorkspaceClientToggleFree(ClientPtrPtr ref, const ClientSelectorFn csf, const void *free_setter_fn) {
+void NeuroWorkspaceClientToggleFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *free_setter_fn) {
   process_client(NeuroClientToggleFree, ref, csf, free_setter_fn);
 }
 
-void NeuroWorkspaceClientNormal(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientNormal(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientNormal, ref, csf, data);
 }
 
-void NeuroWorkspaceClientFullscreen(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientFullscreen(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientFullscreen, ref, csf, data);
 }
 
-void NeuroWorkspaceClientToggleFullscreen(const ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientToggleFullscreen(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientToggleFullscreen, ref, csf, data);
 }
 
-void NeuroWorkspaceClientFloatMove(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientFloatMove(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientFloatMove, ref, csf, data);
 }
 
-void NeuroWorkspaceClientFloatResize(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientFloatResize(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientFloatResize, ref, csf, data);
 }
 
-void NeuroWorkspaceClientFreeMove(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientFreeMove(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientFreeMove, ref, csf, data);
 }
 
-void NeuroWorkspaceClientFreeResize(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientFreeResize(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   process_client(NeuroClientFreeResize, ref, csf, data);
 }
 
-// Workspace Selectors
+// NeuroWorkspace Selectors
 size_t NeuroWorkspaceSelector0() {
   return 0;
 }

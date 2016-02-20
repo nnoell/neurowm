@@ -21,7 +21,7 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-// Workspace
+// NeuroWorkspace
 void NeuroWorkspaceChange(size_t ws);
 void NeuroWorkspaceUpdate(size_t ws);
 void NeuroWorkspaceFocus(size_t ws);
@@ -34,28 +34,28 @@ void NeuroWorkspaceAddEnterNotifyMask(size_t ws);
 void NeuroWorkspaceRemoveEnterNotifyMask(size_t ws);
 
 // Find
-ClientPtrPtr NeuroWorkspaceClientFindWindow(size_t ws, Window w);
-ClientPtrPtr NeuroWorkspaceClientFindUrgent(size_t ws);
-ClientPtrPtr NeuroWorkspaceClientFindFixed(size_t ws);
+NeuroClientPtrPtr NeuroWorkspaceClientFindWindow(size_t ws, Window w);
+NeuroClientPtrPtr NeuroWorkspaceClientFindUrgent(size_t ws);
+NeuroClientPtrPtr NeuroWorkspaceClientFindFixed(size_t ws);
 
-// Client
-void NeuroWorkspaceClientFocus(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientSwap(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientSend(ClientPtrPtr ref, const ClientSelectorFn csf, const void *ws);
-void NeuroWorkspaceClientKill(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientMinimize(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientTile(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientFree(ClientPtrPtr ref, const ClientSelectorFn csf, const void *freeSetterFn);
-void NeuroWorkspaceClientToggleFree(ClientPtrPtr ref, const ClientSelectorFn csf, const void *free_setter_fn);
-void NeuroWorkspaceClientNormal(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientFullscreen(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientToggleFullscreen(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientFloatMove(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientFloatResize(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientFreeMove(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
-void NeuroWorkspaceClientFreeResize(ClientPtrPtr ref, const ClientSelectorFn csf, const void *data);
+// NeuroClient
+void NeuroWorkspaceClientFocus(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientSwap(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientSend(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *ws);
+void NeuroWorkspaceClientKill(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientMinimize(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientTile(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *freeSetterFn);
+void NeuroWorkspaceClientToggleFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *free_setter_fn);
+void NeuroWorkspaceClientNormal(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientFullscreen(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientToggleFullscreen(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientFloatMove(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientFloatResize(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientFreeMove(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
+void NeuroWorkspaceClientFreeResize(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
 
-// Workspace Selectors
+// NeuroWorkspace Selectors
 size_t NeuroWorkspaceSelector0();
 size_t NeuroWorkspaceSelector1();
 size_t NeuroWorkspaceSelector2();

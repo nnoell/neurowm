@@ -21,16 +21,16 @@
 // FUNCTION DECLARATION
 //----------------------------------------------------------------------------------------------------------------------
 
-Rectangle *NeuroGeometryGetRelativeRectangle(Rectangle *dst, const Rectangle *src, const float *rel);
-Rectangle *NeuroGeometrySetRectangleGaps(Rectangle *dst, const Rectangle *src, const int *gaps);
-Rectangle *NeuroGeometryUnsetRectangleGaps(Rectangle *dst, const Rectangle *src, const int *gaps);
-Rectangle *NeuroGeometrySetRectangle(Rectangle *r, int x, int y, int w, int h);
-Rectangle *NeuroGeometrySetRectangleBorderWidth(Rectangle *r, int width);
-Rectangle *NeuroGeometrySetRectangleBorderGap(Rectangle *r, int gap);
-Rectangle *NeuroGeometrySetRectangleBorderWidthAndGap(Rectangle *r, int width, int gap);
-Rectangle *NeuroGeometryMirrorRectangle(Rectangle *rect, const Rectangle *reg);
-Rectangle *NeuroGeometryTranspRectangle(Rectangle *rect);
-Rectangle *NeuroGeometryNeuroGeometryTranspRectangle(Rectangle *rect, const Rectangle *reg);
-Rectangle *NeuroGeometryCenterRectangleInRegion(Rectangle *rect, const Rectangle *reg);
-bool NeuroGeometryIsPointInRectangle(const Rectangle *a, int x, int y);
+NeuroRectangle *NeuroGeometryGetRelativeRectangle(NeuroRectangle *dst, const NeuroRectangle *src, const float *rel);
+NeuroRectangle *NeuroGeometrySetRectangleGaps(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps);
+NeuroRectangle *NeuroGeometryUnsetRectangleGaps(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps);
+NeuroRectangle *NeuroGeometrySetRectangle(NeuroRectangle *r, int x, int y, int w, int h);
+NeuroRectangle *NeuroGeometrySetRectangleBorderWidth(NeuroRectangle *r, int width);
+NeuroRectangle *NeuroGeometrySetRectangleBorderGap(NeuroRectangle *r, int gap);
+NeuroRectangle *NeuroGeometrySetRectangleBorderWidthAndGap(NeuroRectangle *r, int width, int gap);
+NeuroRectangle *NeuroGeometryMirrorRectangle(NeuroRectangle *rect, const NeuroRectangle *reg);
+NeuroRectangle *NeuroGeometryTranspRectangle(NeuroRectangle *rect);
+NeuroRectangle *NeuroGeometryNeuroGeometryTranspRectangle(NeuroRectangle *rect, const NeuroRectangle *reg);
+NeuroRectangle *NeuroGeometryCenterRectangleInRegion(NeuroRectangle *rect, const NeuroRectangle *reg);
+bool NeuroGeometryIsPointInRectangle(const NeuroRectangle *a, int x, int y);
 

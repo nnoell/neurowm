@@ -54,15 +54,15 @@ static void wm_signal_handler(int signo) {
   }
 }
 
-static void init_wm(const Configuration *c) {
+static void init_wm(const NeuroConfiguration *c) {
   // Set the configuration
   NeuroConfigSet(c);
 
-  // Init System, Monitor, Core and Panels
+  // Init System, NeuroMonitor, Core and Panels
   if (!NeuroSystemInit())
     NeuroSystemError("init_wm - Could not init System module");
   if (!NeuroMonitorInit())
-    NeuroSystemError("init_wm - Could not init Monitor module");
+    NeuroSystemError("init_wm - Could not init NeuroMonitor module");
   if (!NeuroCoreInit())
     NeuroSystemError("init_wm - Could not init Core module");
   if (!NeuroDzenInit())
@@ -87,7 +87,7 @@ static void init_wm(const Configuration *c) {
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-int NeuroWmRun(const Configuration *c) {
+int NeuroWmRun(const NeuroConfiguration *c) {
   // Init window manager
   init_wm(c);
 

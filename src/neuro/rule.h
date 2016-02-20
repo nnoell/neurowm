@@ -26,13 +26,13 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa);
-void NeuroRuleSetLayoutRegion(Rectangle *r, const ClientPtrPtr c);
-void NeuroRuleSetClientRegion(Rectangle *r, const ClientPtrPtr c);
+NeuroClient *NeuroRuleNewClient(Window w, const XWindowAttributes *wa);
+void NeuroRuleSetLayoutRegion(NeuroRectangle *r, const NeuroClientPtrPtr c);
+void NeuroRuleSetClientRegion(NeuroRectangle *r, const NeuroClientPtrPtr c);
 
 // Free Setters
-void NeuroRuleFreeSetterDefault(Rectangle *a, const Rectangle *r);
-void NeuroRuleFreeSetterCenter(Rectangle *a, const Rectangle *r);
-void NeuroRuleFreeSetterBigCenter(Rectangle *a, const Rectangle *r);
-void NeuroRuleFreeSetterScratchpad(Rectangle *a, const Rectangle *r);
+void NeuroRuleFreeSetterDefault(NeuroRectangle *a, const NeuroRectangle *r);
+void NeuroRuleFreeSetterCenter(NeuroRectangle *a, const NeuroRectangle *r);
+void NeuroRuleFreeSetterBigCenter(NeuroRectangle *a, const NeuroRectangle *r);
+void NeuroRuleFreeSetterScratchpad(NeuroRectangle *a, const NeuroRectangle *r);
 

@@ -24,13 +24,13 @@
 static Display *display_;
 static int screen_;
 static Window root_;
-static Rectangle screen_region_;
-static Rectangle hidden_region_;
+static NeuroRectangle screen_region_;
+static NeuroRectangle hidden_region_;
 static const int hidden_gaps_[ 4 ] = { 0 };
 static Cursor cursors_[ NEURO_SYSTEM_CURSOR_END ];
 static Atom wm_atoms_[ NEURO_SYSTEM_WMATOM_END ];
 static Atom net_atoms_[ NEURO_SYSTEM_NETATOM_END ];
-static Color colors_[ NEURO_SYSTEM_COLOR_END ];
+static NeuroColor colors_[ NEURO_SYSTEM_COLOR_END ];
 
 // Recompile command
 static const char recompile_cmd_output_[ NAME_MAX ];
@@ -137,8 +137,8 @@ bool NeuroSystemInit() {
   // Get the regions
   const int width = XDisplayWidth(display_, screen_);
   const int height = XDisplayHeight(display_, screen_);
-  screen_region_ = (Rectangle){ 0, 0, width, height };
-  hidden_region_ = (Rectangle){ width, height, 1920, 1080 };
+  screen_region_ = (NeuroRectangle){ 0, 0, width, height };
+  hidden_region_ = (NeuroRectangle){ width, height, 1920, 1080 };
 
   // Set colors, cursors and atoms
   if (!set_colors_cursors_atoms())
@@ -185,11 +185,11 @@ int NeuroSystemGetScreen() {
   return screen_;
 }
 
-const Rectangle *NeuroSystemGetScreenRegion() {
+const NeuroRectangle *NeuroSystemGetScreenRegion() {
   return &screen_region_;
 }
 
-const Rectangle *NeuroSystemGetHiddenRegion() {
+const NeuroRectangle *NeuroSystemGetHiddenRegion() {
   return &hidden_region_;
 }
 
@@ -209,17 +209,17 @@ Atom NeuroSystemGetNetAtom(NeuroSystemNetatom a) {
   return net_atoms_[ a ];
 }
 
-Color NeuroSystemGetColor(NeuroSystemColor c) {
+NeuroColor NeuroSystemGetColor(NeuroSystemColor c) {
   return colors_[ c ];
 }
 
-Color NeuroSystemGetColorFromHex(const char* color) {
+NeuroColor NeuroSystemGetColorFromHex(const char* color) {
   assert(color);
   XColor c;
   Colormap map = DefaultColormap(display_, screen_);
   if (!XAllocNamedColor(display_, map, color, &c, &c))
     NeuroSystemError("NeuroSystemGetColorFromHex - Could not allocate color");
-  return c.pixel;
+  return (NeuroColor)c.pixel;
 }
 
 // System functions
@@ -299,12 +299,12 @@ void NeuroSystemError(const char *msg) {
 }
 
 // Binding functions
-void NeuroSystemGrabKeys(Window w, const Key *const *key_list) {
+void NeuroSystemGrabKeys(Window w, const NeuroKey *const *key_list) {
   if (!key_list)
     return;
   XUngrabKey(display_, AnyKey, AnyModifier, w);
   KeyCode code;
-  const Key *k;
+  const NeuroKey *k;
   for (size_t i = 0U; key_list[ i ]; ++i) {
     k = key_list[ i ];
     code = XKeysymToKeycode(display_, k->key);
@@ -313,11 +313,11 @@ void NeuroSystemGrabKeys(Window w, const Key *const *key_list) {
   }
 }
 
-void NeuroSystemUngrabKeys(Window w, const Key *const *key_list) {
+void NeuroSystemUngrabKeys(Window w, const NeuroKey *const *key_list) {
   if (!key_list)
     return;
   KeyCode code;
-  const Key *k;
+  const NeuroKey *k;
   for (size_t i = 0U; key_list[ i ]; ++i) {
     k = key_list[ i ];
     code = XKeysymToKeycode(display_, k->key);
@@ -326,11 +326,11 @@ void NeuroSystemUngrabKeys(Window w, const Key *const *key_list) {
   }
 }
 
-void NeuroSystemGrabButtons(Window w, const Button *const *button_list) {
+void NeuroSystemGrabButtons(Window w, const NeuroButton *const *button_list) {
   if (!button_list)
     return;
   XUngrabButton(display_, AnyButton, AnyModifier, w);
-  const Button *b;
+  const NeuroButton *b;
   for (size_t i = 0U; button_list[ i ]; ++i) {
     b = button_list[ i ];
     XGrabButton(display_, b->button, b->mod, w, false, ButtonPressMask|ButtonReleaseMask, GrabModeAsync, GrabModeSync,
@@ -338,10 +338,10 @@ void NeuroSystemGrabButtons(Window w, const Button *const *button_list) {
   }
 }
 
-void NeuroSystemUngrabButtons(Window w, const Button *const *button_list) {
+void NeuroSystemUngrabButtons(Window w, const NeuroButton *const *button_list) {
   if (!button_list)
     return;
-  const Button *b;
+  const NeuroButton *b;
   for (size_t i = 0U; button_list[ i ]; ++i) {
     b = button_list[ i ];
     if (b->ungrab_on_focus)

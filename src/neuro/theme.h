@@ -44,24 +44,24 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Nnoell theme loggers
-void NeuroThemeNnoellLoggerMonitorCurrLayout(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerMonitorCurrLayoutMod(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerMonitorWorkspace(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerMonitorCurrTitle(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerWorkspaceList(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerTime(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerDate(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerDay(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerCalendar(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerDateTime(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerUptime(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerMonitorStackSize(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerMonitorNumMinimized(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerCpu(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerRam(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerBattery(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerWifiStrength(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerTemperature(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerScreen(const Monitor *m, char *str);
-void NeuroThemeNnoellLoggerMonitorList(const Monitor *m, char *str);
+void NeuroThemeNnoellLoggerMonitorCurrLayout(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerMonitorCurrLayoutMod(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerMonitorWorkspace(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerMonitorCurrTitle(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerWorkspaceList(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerTime(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerDate(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerDay(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerCalendar(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerDateTime(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerUptime(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerMonitorStackSize(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerMonitorNumMinimized(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerCpu(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerRam(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerBattery(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerWifiStrength(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerTemperature(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerScreen(const NeuroMonitor *m, char *str);
+void NeuroThemeNnoellLoggerMonitorList(const NeuroMonitor *m, char *str);
 
