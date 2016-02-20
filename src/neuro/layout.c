@@ -48,7 +48,7 @@ static Arrange *new_arrange(size_t ws, Layout *l) {
       continue;
 
     // Update region if there are fixed clients
-    if (CLI_GET(c).fixed_pos != RuleFixedPositionNull) {
+    if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL) {
       NeuroRuleSetLayoutRegion(&a->region, c);
       continue;
     }
@@ -146,13 +146,13 @@ void NeuroLayoutRun(size_t ws, size_t i) {
   if (!a)
     NeuroSystemError("NeuroLayoutRun - Could not run layout");
   if (a->size) {  // Then run layout
-    if (l->mod & LayoutModMirror)
+    if (l->mod & NEURO_LAYOUT_MOD_MIRROR)
       mirror_arrange(a, l->arranger_fn);
     else
       normal_arrange(a, l->arranger_fn);
-    if (l->mod & LayoutModReflectX)
+    if (l->mod & NEURO_LAYOUT_MOD_REFLECTX)
       reflect_x_mod(a);
-    if (l->mod & LayoutModReflectY)
+    if (l->mod & NEURO_LAYOUT_MODE_REFLECTY)
       reflect_y_mod(a);
   }
   delete_arrange(a);
@@ -162,14 +162,14 @@ void NeuroLayoutRunCurr(size_t ws) {
   NeuroLayoutRun(ws, NeuroCoreStackGetLayoutIdx(ws));
 }
 
-void NeuroLayoutToggleMod(size_t ws, size_t i, LayoutMod mod) {
+void NeuroLayoutToggleMod(size_t ws, size_t i, NeuroLayoutMod mod) {
   Layout *const l = NeuroCoreStackGetLayout(ws, i);
   l->mod ^= mod;
   NeuroLayoutRun(ws, i);
   NeuroWorkspaceUpdate(ws);
 }
 
-void NeuroLayoutToggleModCurr(size_t ws, LayoutMod mod) {
+void NeuroLayoutToggleModCurr(size_t ws, NeuroLayoutMod mod) {
   NeuroLayoutToggleMod(ws, NeuroCoreStackGetLayoutIdx(ws), mod);
 }
 

@@ -59,7 +59,7 @@ static const LayoutConf tile_ = {
   NeuroClientBorderWidthSetterSmart,
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
-  LayoutModNull,
+  NEURO_LAYOUT_MOD_NULL,
   true,
   {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
@@ -70,7 +70,7 @@ static const LayoutConf mirror_ = {
   NeuroClientBorderWidthSetterSmart,
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
-  LayoutModMirror,
+  NEURO_LAYOUT_MOD_MIRROR,
   true,
   {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
@@ -81,7 +81,7 @@ static const LayoutConf grid_ = {
   NeuroClientBorderWidthSetterSmart,
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
-  LayoutModMirror|LayoutModReflectX|LayoutModReflectY,
+  NEURO_LAYOUT_MOD_MIRROR|NEURO_LAYOUT_MOD_REFLECTX|NEURO_LAYOUT_MODE_REFLECTY,
   true,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
@@ -92,7 +92,7 @@ static const LayoutConf full_ = {
   NeuroClientBorderWidthSetterSmart,
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
-  LayoutModNull,
+  NEURO_LAYOUT_MOD_NULL,
   true,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
@@ -103,7 +103,7 @@ static const LayoutConf float_ = {
   NeuroClientBorderWidthSetterAlways,
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
-  LayoutModNull,
+  NEURO_LAYOUT_MOD_NULL,
   false,
   {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
@@ -141,51 +141,51 @@ static const Workspace* workspace_list_[] = {
 // RULE (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
 static const Rule rule00_ = {
   "URxvt", RULE_SCRATCHPAD_NAME, "urxvt",
-  false, NeuroRuleFreeSetterScratchpad, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
+  false, NeuroRuleFreeSetterScratchpad, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule01_ = {
   NULL, NULL, "Firefox Preferences",
-  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
+  false, NeuroRuleFreeSetterCenter, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule02_ = {
   NULL, NULL, "Buddy List",
-  false, NeuroRuleFreeSetterNull, RuleFixedPositionLeft, 0.2f, NeuroWorkspaceSelector4, false
+  false, NeuroRuleFreeSetterNull, NEURO_FIXED_POSITION_LEFT, 0.2f, NeuroWorkspaceSelector4, false
 };
 static const Rule rule03_ = {
   "Pidgin", NULL, NULL,
-  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector4, false
+  false, NeuroRuleFreeSetterNull, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelector4, false
 };
 static const Rule rule04_ = {
   "Firefox", NULL, NULL,
-  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, false
+  false, NeuroRuleFreeSetterNull, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelector1, false
 };
 static const Rule rule05_ = {
   "chromium", NULL, NULL,
-  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector1, false
+  false, NeuroRuleFreeSetterNull, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelector1, false
 };
 static const Rule rule06_ = {
   "MPlayer", NULL, NULL,
-  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
+  false, NeuroRuleFreeSetterCenter, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule07_ = {
   "Gmrun", NULL, NULL,
-  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
+  false, NeuroRuleFreeSetterCenter, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule08_ = {
   "Xephyr", NULL, NULL,
-  true, NeuroRuleFreeSetterBigCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
+  true, NeuroRuleFreeSetterBigCenter, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule09_ = {
   "Transmission-gtk", NULL, NULL,
-  false, NeuroRuleFreeSetterNull, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelector8, false
+  false, NeuroRuleFreeSetterNull, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelector8, false
 };
 static const Rule rule10_ = {
   "PPSSPPSDL", "PPSSPPSDL", NULL,
-  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
+  false, NeuroRuleFreeSetterCenter, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const Rule rule11_ = {
   "XCalc", NULL, NULL,
-  false, NeuroRuleFreeSetterCenter, RuleFixedPositionNull, 0.0f, NeuroWorkspaceSelectorCurr, false
+  false, NeuroRuleFreeSetterCenter, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 
 // RULE LIST
@@ -402,15 +402,15 @@ static const Key key19_ = {  // Toggles the selected client into tile/free mode
 };
 static const Key key20_ = {  // Toggles mirror mod to the current layout
   mod_mask_, XK_z,
-  CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(LayoutModMirror))
+  CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(NEURO_LAYOUT_MOD_MIRROR))
 };
 static const Key key21_ = {  // Toggles reflect X mod to the current layout
   mod_mask_, XK_x,
-  CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(LayoutModReflectX))
+  CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(NEURO_LAYOUT_MOD_REFLECTX))
 };
 static const Key key22_ = {  // Toggles reflect Y mod to the current layout
   mod_mask_, XK_y,
-  CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(LayoutModReflectY))
+  CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(NEURO_LAYOUT_MODE_REFLECTY))
 };
 static const Key key23_ = {  // Toggles the full layout
   mod_mask_, XK_f,

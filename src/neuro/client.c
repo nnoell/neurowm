@@ -41,7 +41,7 @@ static bool is_protocol_delete(Window w) {
   int n = 0;
   if (XGetWMProtocols(NeuroSystemGetDisplay(), w, &protocols, &n)) {
     for (int i = 0; !ret && i < n; i++)
-      if (protocols[ i ] == NeuroSystemGetWmAtom(NeuroSystemWmAtomDeleteWindow))
+      if (protocols[ i ] == NeuroSystemGetWmAtom(NEURO_SYSTEM_WMATOM_DELETEWINDOW))
         ret = true;
     XFree(protocols);
   }
@@ -80,7 +80,7 @@ static void process_xmotion(Rectangle *r, size_t ws, int cx, int cy, int cw, int
     XMotionUpdaterFn mpf) {
   const bool res = XGrabPointer(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), false,
       ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None,
-      NeuroSystemGetCursor(NeuroSystemCursorMove), CurrentTime);
+      NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_MOVE), CurrentTime);
   if (res != GrabSuccess)
     return;
   XEvent ev;
@@ -135,7 +135,7 @@ void NeuroClientUpdate(ClientPtrPtr c, const void *data) {
   } else if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull) {
     CLI_GET(c).free_setter_fn(client_region, stack_region);
     memmove(&r, client_region, sizeof(Rectangle));
-  } else if (CLI_GET(c).fixed_pos != RuleFixedPositionNull) {
+  } else if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL) {
     NeuroRuleSetClientRegion(&r, c);
   } else {
     memmove(&r, client_region, sizeof(Rectangle));
@@ -179,7 +179,7 @@ void NeuroClientUpdateTitle(ClientPtrPtr c, const void *data) {
   if (!c)
     return;
   CLI_GET(c).title[ 0 ] = '\0';
-  if (!set_title_atom(*c, NeuroSystemGetNetAtom(NeuroSystemNetAtomName)))
+  if (!set_title_atom(*c, NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_NAME)))
     set_title_atom(*c, XA_WM_NAME);
 }
 
@@ -205,9 +205,9 @@ void NeuroClientKill(ClientPtrPtr c, const void *data) {
     XEvent ke;
     ke.type = ClientMessage;
     ke.xclient.window = CLI_GET(c).win;
-    ke.xclient.message_type = NeuroSystemGetWmAtom(NeuroSystemWmAtomProtocols);
+    ke.xclient.message_type = NeuroSystemGetWmAtom(NEURO_SYSTEM_WMATOM_PROTOCOLS);
     ke.xclient.format = 32;
-    ke.xclient.data.l[ 0 ] = NeuroSystemGetWmAtom(NeuroSystemWmAtomDeleteWindow);
+    ke.xclient.data.l[ 0 ] = NeuroSystemGetWmAtom(NEURO_SYSTEM_WMATOM_DELETEWINDOW);
     ke.xclient.data.l[ 1 ] = CurrentTime;
     XSendEvent(NeuroSystemGetDisplay(), CLI_GET(c).win, false, NoEventMask, &ke);
   } else {
@@ -301,7 +301,7 @@ void NeuroClientFloatMove(ClientPtrPtr c, const void *data) {
   if (!c)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
-  if (CLI_GET(c).fixed_pos != RuleFixedPositionNull)
+  if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL)
     return;
   Rectangle *r = &(CLI_GET(c).float_region);
   int px = 0, py = 0;
@@ -314,7 +314,7 @@ void NeuroClientFloatResize(ClientPtrPtr c, const void *data) {
   if (!c)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
-  if (CLI_GET(c).fixed_pos != RuleFixedPositionNull)
+  if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL)
     return;
   Rectangle *r = &(CLI_GET(c).float_region);
   int px = 0, py = 0;
@@ -450,33 +450,33 @@ bool NeuroClientTesterUrgent(const ClientPtrPtr c, const void *data) {
 bool NeuroClientTesterFixed(const ClientPtrPtr c, const void *data) {
   assert(c);
   (void)data;
-  return CLI_GET(c).fixed_pos != RuleFixedPositionNull;
+  return CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL;
 }
 
 // Color Setters
 Color NeuroClientColorSetterCurr(const ClientPtrPtr c) {
   assert(c);
   if (NeuroCoreClientIsCurr(c))
-    return NeuroSystemGetColor(NeuroSystemColorCurrent);
-  return NeuroSystemGetColor(NeuroSystemColorNormal);
+    return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_CURRENT);
+  return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
 }
 
 Color NeuroClientColorSetterAll(const ClientPtrPtr c) {
   assert(c);
   if (NeuroCoreClientIsCurr(c))
-    return NeuroSystemGetColor(NeuroSystemColorCurrent);
+    return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_CURRENT);
   else if (CLI_GET(c).is_urgent)
-    return NeuroSystemGetColor(NeuroSystemColorUrgent);
+    return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_URGENT);
   else if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull)
-    return NeuroSystemGetColor(NeuroSystemColorFree);
+    return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_FREE);
   else if (NeuroCoreClientIsPrev(c))
-    return NeuroSystemGetColor(NeuroSystemColorOld);
-  return NeuroSystemGetColor(NeuroSystemColorNormal);
+    return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_OLD);
+  return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
 }
 
 Color NeuroClientColorSetterNone(const ClientPtrPtr c) {
   (void)c;
-  return NeuroSystemGetColor(NeuroSystemColorNormal);
+  return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
 }
 
 // Border Width Setters

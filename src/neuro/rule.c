@@ -112,47 +112,47 @@ Client *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
 }
 
 void NeuroRuleSetLayoutRegion(Rectangle *r, const ClientPtrPtr c) {
-  if (!r || !c || CLI_GET(c).fixed_pos == RuleFixedPositionNull)
+  if (!r || !c || CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_NULL)
     return;
 
   // Update the layout region
-  if (CLI_GET(c).fixed_pos == RuleFixedPositionUp) {
+  if (CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_UP) {
     r->y += CLI_GET(c).fixed_size * r->h;
     r->h -= CLI_GET(c).fixed_size * r->h;
-  } else if (CLI_GET(c).fixed_pos == RuleFixedPositionDown) {
+  } else if (CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_DOWN) {
     r->h -= CLI_GET(c).fixed_size * r->h;
-  } else if (CLI_GET(c).fixed_pos == RuleFixedPositionLeft) {
+  } else if (CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_LEFT) {
     r->x += CLI_GET(c).fixed_size * r->w;
     r->w -= CLI_GET(c).fixed_size * r->w;
-  } else if (CLI_GET(c).fixed_pos ==  RuleFixedPositionRigth) {
+  } else if (CLI_GET(c).fixed_pos ==  NEURO_FIXED_POSITION_RIGHT) {
     r->w -= CLI_GET(c).fixed_size * r->w;
   }
 }
 
 void NeuroRuleSetClientRegion(Rectangle *r, const ClientPtrPtr c) {
-  if (!c || CLI_GET(c).fixed_pos == RuleFixedPositionNull)
+  if (!c || CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_NULL)
     return;
 
   // Get the stack region
   Rectangle *const stack_reg = NeuroCoreStackGetRegion(CLI_GET(c).ws);
 
   // Update the client region
-  if (CLI_GET(c).fixed_pos == RuleFixedPositionUp) {
+  if (CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_UP) {
     r->x = stack_reg->x;
     r->y = stack_reg->y;
     r->w = stack_reg->w;
     r->h = CLI_GET(c).fixed_size * stack_reg->h;
-  } else if (CLI_GET(c).fixed_pos == RuleFixedPositionDown) {
+  } else if (CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_DOWN) {
     r->x = stack_reg->x;
     r->y = stack_reg->h - CLI_GET(c).fixed_size;
     r->w = stack_reg->w;
     r->h = CLI_GET(c).fixed_size * stack_reg->h;
-  } else if (CLI_GET(c).fixed_pos == RuleFixedPositionLeft) {
+  } else if (CLI_GET(c).fixed_pos == NEURO_FIXED_POSITION_LEFT) {
     r->x = stack_reg->x;
     r->y = stack_reg->y;
     r->w = CLI_GET(c).fixed_size * stack_reg->w;
     r->h = stack_reg->h;
-  } else if (CLI_GET(c).fixed_pos ==  RuleFixedPositionRigth) {
+  } else if (CLI_GET(c).fixed_pos ==  NEURO_FIXED_POSITION_RIGHT) {
     r->x = stack_reg->w - CLI_GET(c).fixed_size;
     r->y = stack_reg->y;
     r->w = CLI_GET(c).fixed_size * stack_reg->w;

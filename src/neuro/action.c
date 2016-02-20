@@ -79,7 +79,7 @@ const Action NeuroActionResetLayout = {
 const Action NeuroActionToggleLayout = {
     NeuroActionHandlerToggleLayout, ARG_IDX(0U) };
 const Action NeuroActionToggleModLayout = {
-    NeuroActionHandlerToggleModLayout, ARG_LMOD(LayoutModNull) };
+    NeuroActionHandlerToggleModLayout, ARG_LMOD(NEURO_LAYOUT_MOD_NULL) };
 const Action NeuroActionIncreaseMasterLayout = {
     NeuroActionHandlerIncreaseMasterLayout, ARG_INT(1) };
 const Action NeuroActionResizeMasterLayout = {

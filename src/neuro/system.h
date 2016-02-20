@@ -28,42 +28,42 @@
 
 // NeuroSystemCursor
 enum NeuroSystemCursor {
-  NeuroSystemCursorNormal = 0,
-  NeuroSystemCursorResize,
-  NeuroSystemCursorMove,
-  NeuroSystemCursorCount
+  NEURO_SYSTEM_CURSOR_NORMAL = 0,
+  NEURO_SYSTEM_CURSOR_RESIZE,
+  NEURO_SYSTEM_CURSOR_MOVE,
+  NEURO_SYSTEM_CURSOR_END
 };
 typedef enum NeuroSystemCursor NeuroSystemCursor;
 
-// NeuroSystemWmAtom
-enum NeuroSystemWmAtom {
-  NeuroSystemWmAtomProtocols = 0,
-  NeuroSystemWmAtomDeleteWindow,
-  NeuroSystemWmAtomCount
+// NeuroSystemWmatom
+enum NeuroSystemWmatom {
+  NEURO_SYSTEM_WMATOM_PROTOCOLS = 0,
+  NEURO_SYSTEM_WMATOM_DELETEWINDOW,
+  NEURO_SYSTEM_WMATOM_END
 };
-typedef enum NeuroSystemWmAtom NeuroSystemWmAtom;
+typedef enum NeuroSystemWmatom NeuroSystemWmatom;
 
-// NeuroSystemNetAtom
-enum NeuroSystemNetAtom {
-  NeuroSystemNetAtomSupported = 0,
-  NeuroSystemNetAtomFullscreen,
-  NeuroSystemNetAtomState,
-  NeuroSystemNetAtomName,
-  NeuroSystemNetAtomActive,
-  NeuroSystemNetAtomCloseWindow,
-  NeuroSystemNetAtomStrut,
-  NeuroSystemNetAtomCount
+// NeuroSystemNetatom
+enum NeuroSystemNetatom {
+  NEURO_SYSTEM_NETATOM_SUPPORTED = 0,
+  NEURO_SYSTEM_NETATOM_FULLSCREEN,
+  NEURO_SYSTEM_NETATOM_STATE,
+  NEURO_SYSTEM_NETATOM_NAME,
+  NEURO_SYSTEM_NETATOM_ACTIVE,
+  NEURO_SYSTEM_NETATOM_CLOSEWINDOW,
+  NEURO_SYSTEM_NETATOM_STRUT,
+  NEURO_SYSTEM_NETATOM_END
 };
-typedef enum NeuroSystemNetAtom NeuroSystemNetAtom;
+typedef enum NeuroSystemNetatom NeuroSystemNetatom;
 
 // NeuroSystemColor
 enum NeuroSystemColor {
-  NeuroSystemColorNormal = 0,
-  NeuroSystemColorCurrent,
-  NeuroSystemColorOld,
-  NeuroSystemColorFree,
-  NeuroSystemColorUrgent,
-  NeuroSystemColorCount
+  NEURO_SYSTEM_COLOR_NORMAL = 0,
+  NEURO_SYSTEM_COLOR_CURRENT,
+  NEURO_SYSTEM_COLOR_OLD,
+  NEURO_SYSTEM_COLOR_FREE,
+  NEURO_SYSTEM_COLOR_URGENT,
+  NEURO_SYSTEM_COLOR_END
 };
 typedef enum NeuroSystemColor NeuroSystemColor;
 
@@ -82,8 +82,8 @@ const Rectangle *NeuroSystemGetScreenRegion();
 const Rectangle *NeuroSystemGetHiddenRegion();
 const int *NeuroSystemGetHiddenGaps();
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c);
-Atom NeuroSystemGetWmAtom(NeuroSystemWmAtom a);
-Atom NeuroSystemGetNetAtom(NeuroSystemNetAtom a);
+Atom NeuroSystemGetWmAtom(NeuroSystemWmatom a);
+Atom NeuroSystemGetNetAtom(NeuroSystemNetatom a);
 Color NeuroSystemGetColor(NeuroSystemColor c);
 Color NeuroSystemGetColorFromHex(const char *color);
 

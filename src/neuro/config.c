@@ -23,27 +23,27 @@
 static const LayoutConf tile_ = {
   "Tile", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, NEURO_LAYOUT_MOD_NULL, true, {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf mirror_ = {
   "Mirr", NeuroLayoutArrangerTall,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModMirror, true, {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, NEURO_LAYOUT_MOD_MIRROR, true, {ARG_IDX(1U), ARG_FLOAT(0.5f), ARG_FLOAT(0.03f), ARG_NULL}
 };
 static const LayoutConf grid_ = {
   "Grid", NeuroLayoutArrangerGrid,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, NEURO_LAYOUT_MOD_NULL, true, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 static const LayoutConf full_ = {
   "Full", NeuroLayoutArrangerFull,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterSmart, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, true, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, NEURO_LAYOUT_MOD_NULL, true, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 static const LayoutConf float_ = {
   "Float", NeuroLayoutArrangerFloat,
   NeuroClientColorSetterAll, NeuroClientBorderWidthSetterAlways, NeuroClientBorderGapSetterAlways,
-  {0.0f, 0.0f, 1.0f, 1.0f}, LayoutModNull, false, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
+  {0.0f, 0.0f, 1.0f, 1.0f}, NEURO_LAYOUT_MOD_NULL, false, {ARG_NULL, ARG_NULL, ARG_NULL, ARG_NULL}
 };
 
 // Monitors
@@ -103,15 +103,15 @@ static const Key key18_ = {
 static const Key key19_ = {
     Mod1Mask,             XK_t,      CHAIN_NULL(NeuroActionListToggleFreeCurrClient)                              };
 static const Key key20_ = {
-    Mod1Mask,             XK_z,      CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(LayoutModMirror))             };
+    Mod1Mask,             XK_z,      CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(NEURO_LAYOUT_MOD_MIRROR))        };
 static const Key key21_ = {
-    Mod1Mask,             XK_x,      CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(LayoutModReflectX))           };
+    Mod1Mask,             XK_x,      CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(NEURO_LAYOUT_MOD_REFLECTX))      };
 static const Key key22_ = {
-    Mod1Mask,             XK_y,      CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(LayoutModReflectY))           };
+    Mod1Mask,             XK_y,      CHAIN(NeuroActionListToggleModLayout, ARG_LMOD(NEURO_LAYOUT_MODE_REFLECTY))      };
 static const Key key23_ = {
-    Mod1Mask,             XK_f,      CHAIN(NeuroActionListToggleLayout, ARG_IDX(0U))                            };
+    Mod1Mask,             XK_f,      CHAIN(NeuroActionListToggleLayout, ARG_IDX(0U))                              };
 static const Key key24_ = {
-    Mod1Mask,             XK_o,      CHAIN(NeuroActionListToggleLayout, ARG_IDX(1U))                            };
+    Mod1Mask,             XK_o,      CHAIN(NeuroActionListToggleLayout, ARG_IDX(1U))                              };
 static const Key key25_ = {
     Mod1Mask|ShiftMask,   XK_f,      CHAIN_NULL(NeuroActionListToggleFullscreenCurrClient)                        };
 static const Key key26_ = {

@@ -109,35 +109,35 @@
 // ENUM TYPES ----------------------------------------------------------------------------------------------------------
 
 // LayoutMod
-enum LayoutMod {
-  LayoutModNull = 0,
-  LayoutModMirror = 1 << 0,
-  LayoutModReflectX = 1 << 1,
-  LayoutModReflectY = 1 << 2
+enum NeuroLayoutMod {
+  NEURO_LAYOUT_MOD_NULL = 0,
+  NEURO_LAYOUT_MOD_MIRROR = 1 << 0,
+  NEURO_LAYOUT_MOD_REFLECTX = 1 << 1,
+  NEURO_LAYOUT_MODE_REFLECTY = 1 << 2
 };
-typedef enum LayoutMod LayoutMod;
+typedef enum NeuroLayoutMod NeuroLayoutMod;
 
 // RuleFixedPosition
-enum RuleFixedPosition {
-  RuleFixedPositionNull = 0,
-  RuleFixedPositionUp = 1,
-  RuleFixedPositionDown = 2,
-  RuleFixedPositionLeft = 3,
-  RuleFixedPositionRigth = 4
+enum NeuroFixedPosition {
+  NEURO_FIXED_POSITION_NULL = 0,
+  NEURO_FIXED_POSITION_UP = 1,
+  NEURO_FIXED_POSITION_DOWN = 2,
+  NEURO_FIXED_POSITION_LEFT = 3,
+  NEURO_FIXED_POSITION_RIGHT = 4
 };
-typedef enum RuleFixedPosition RuleFixedPosition;
+typedef enum NeuroFixedPosition NeuroFixedPosition;
 
 
 // GEOMETRY TYPES ------------------------------------------------------------------------------------------------------
 
 // Rectangle
-typedef struct Rectangle Rectangle;
 struct Rectangle {
   int x;  // X position
   int y;  // Y position
   int w;  // Width
   int h;  // Height
 };
+typedef struct Rectangle Rectangle;
 
 // FreeSetterFn
 typedef void (*FreeSetterFn)(Rectangle *a, const Rectangle *r);
@@ -146,7 +146,6 @@ typedef void (*FreeSetterFn)(Rectangle *a, const Rectangle *r);
 // CLIENT TYPES --------------------------------------------------------------------------------------------------------
 
 // Client
-typedef struct Client Client;
 struct Client {
   const Window win;
   size_t ws;
@@ -157,10 +156,11 @@ struct Client {
   Rectangle float_region;
   bool is_fullscreen;
   FreeSetterFn free_setter_fn;
-  RuleFixedPosition fixed_pos;
+  NeuroFixedPosition fixed_pos;
   float fixed_size;
   bool is_urgent;
 };
+typedef struct Client Client;
 
 // ClientPtrPtr
 typedef Client *const *ClientPtrPtr;
@@ -175,7 +175,6 @@ typedef ClientPtrPtr (*ClientSelectorFn)(ClientPtrPtr c);
 // DZEN TYPES ----------------------------------------------------------------------------------------------------------
 
 // BoxPP
-typedef struct BoxPP BoxPP;
 struct BoxPP {
   const char *const bg_color;
   const char *const fg_color;
@@ -184,6 +183,7 @@ struct BoxPP {
   const char *const right_icon;
   const int box_height;
 };
+typedef struct BoxPP BoxPP;
 
 // CA
 typedef struct CA CA;
@@ -196,7 +196,6 @@ struct CA {
 };
 
 // DzenFlags
-typedef struct DzenFlags DzenFlags;
 struct DzenFlags {
   const int x, y, w, h;
   const char *const fg_color;
@@ -206,34 +205,34 @@ struct DzenFlags {
   const char *const event;
   const char *const extras;
 };
+typedef struct DzenFlags DzenFlags;
 
 // LoggerFn
 typedef struct Monitor Monitor;  // Forward declaration
 typedef void (*const LoggerFn)(const Monitor *m, char *);
 
 // DzenPanel
-typedef struct DzenPanel DzenPanel;
 struct DzenPanel {
   const DzenFlags *const df;
   const LoggerFn *const loggers;
   const char *const sep;
   const uint32_t refresh_rate;
 };
+typedef struct DzenPanel DzenPanel;
 
 
 // MONITOR TYPES -----------------------------------------------------------------------------------------------------
 
 // MonitorConf
-typedef struct MonitorConf MonitorConf;
 struct MonitorConf {
   const char *const name;
   const size_t default_ws;
   const int gaps[ 4 ];
   const DzenPanel *const *const dzen_panel_list;
 };
+typedef struct MonitorConf MonitorConf;
 
 // Monitor
-typedef struct Monitor Monitor;
 struct Monitor {
   const char *const name;
   const size_t default_ws;
@@ -241,6 +240,7 @@ struct Monitor {
   const Rectangle region;  // The region does not include the gaps (region + gaps = total_monitor_area)
   const DzenPanel *const *const dzen_panel_list;
 };
+typedef struct Monitor Monitor;
 
 // MonitorSelectorFn
 typedef const Monitor *(*MonitorSelectorFn)(const Monitor *m);
@@ -255,35 +255,35 @@ typedef size_t (*WorkspaceSelectorFn)();
 // GENERIC TYPES -------------------------------------------------------------------------------------------------------
 
 // GenericArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
-typedef union GenericArgFn GenericArgFn;
 union GenericArgFn {
   const FreeSetterFn FreeSetterFn_;
   const ClientSelectorFn ClientSelectorFn_;
   const WorkspaceSelectorFn WorkspaceSelectorFn_;
   const MonitorSelectorFn MonitorSelectorFn_;
 };
+typedef union GenericArgFn GenericArgFn;
 
 // GenericArg
-typedef union GenericArg GenericArg;
 union GenericArg {
   const void *const pointer_;
   const char char_;
   const int int_;
   const unsigned int uint_;
   const size_t idx_;
-  const LayoutMod LayoutMod_;
+  const NeuroLayoutMod LayoutMod_;
   const float float_;
   const char *const string_;
   const char *const *const command_;
   const GenericArgFn GenericArgFn_;
 };
+typedef union GenericArg GenericArg;
 
 // GenericMaybeArg
-typedef struct GenericMaybeArg GenericMaybeArg;
 struct GenericMaybeArg {
   const bool is_nothing;
   const GenericArg value;
 };
+typedef struct GenericMaybeArg GenericMaybeArg;
 
 // GenericFn
 typedef void (*GenericFn)(GenericArg arg);
@@ -292,18 +292,18 @@ typedef void (*GenericFn)(GenericArg arg);
 // ACTION TYPES --------------------------------------------------------------------------------------------------------
 
 // Action
-typedef struct Action Action;
 struct Action {
   const GenericFn handler;
   const GenericArg arg;
 };
+typedef struct Action Action;
 
 // ActionChain
-typedef struct ActionChain ActionChain;
 struct ActionChain {
   const Action *const *const action_list;
   const GenericMaybeArg arg;
 };
+typedef struct ActionChain ActionChain;
 
 
 // LAYOUT TYPES --------------------------------------------------------------------------------------------------------
@@ -318,7 +318,6 @@ typedef Color (*ColorSetterFn)(ClientPtrPtr c);
 typedef int (*BorderSetterFn)(ClientPtrPtr c);
 
 // Arrange
-typedef struct Arrange Arrange;
 struct Arrange {
   size_t size;                       // Number of tiled clients
   Rectangle region;                  // Tiled layout region
@@ -326,28 +325,28 @@ struct Arrange {
   Rectangle **client_float_regions;  // Float region of each client
   GenericArg *parameters;            // Parameters of the arrange
 };
+typedef struct Arrange Arrange;
 
 // ArrangerFn
 typedef Arrange *(*ArrangerFn)(Arrange *);
 
 // Layout
-typedef struct Layout Layout;
 struct Layout {
   const ArrangerFn arranger_fn;
   const ColorSetterFn border_color_setter_fn;
   const BorderSetterFn border_width_setter_fn;
   const BorderSetterFn border_gap_setter_fn;
   const float *const region;
-  LayoutMod mod;
+  NeuroLayoutMod mod;
   bool follow_mouse;
   GenericArg parameters[ ARRSET_MAX ];
 };
+typedef struct Layout Layout;
 
 
 // CONFIG TYPES --------------------------------------------------------------------------------------------------------
 
 // LayoutConf
-typedef struct LayoutConf LayoutConf;
 struct LayoutConf {
   const char *const name;
   const ArrangerFn arranger_fn;
@@ -355,52 +354,52 @@ struct LayoutConf {
   const BorderSetterFn border_width_setter_fn;
   const BorderSetterFn border_gap_setter_fn;
   const float region[ 4 ];
-  const LayoutMod mod;
+  const NeuroLayoutMod mod;
   const bool follow_mouse;
   const GenericArg parameters[ ARRSET_MAX ];
 };
+typedef struct LayoutConf LayoutConf;
 
 // Workspace
-typedef struct Workspace Workspace;
 struct Workspace {
   const char *const name;
   const LayoutConf *const *const layouts;
   const LayoutConf *const *const toggled_layouts;
 };
+typedef struct Workspace Workspace;
 
 // Key
-typedef struct Key Key;
 struct Key {
   const unsigned int mod;
   const KeySym key;
   const ActionChain action_chain;
 };
+typedef struct Key Key;
 
 // Button
-typedef struct Button Button;
 struct Button {
   const unsigned int mod;
   const unsigned int button;
   const ActionChain action_chain;
   const bool ungrab_on_focus;
 };
+typedef struct Button Button;
 
 // Rule
-typedef struct Rule Rule;
 struct Rule {
   const char *const class;
   const char *const name;
   const char *const title;
   const bool is_fullscreen;
   const FreeSetterFn free_setter_fn;
-  const RuleFixedPosition fixed_pos;
+  const NeuroFixedPosition fixed_pos;
   const float fixed_size;
   const WorkspaceSelectorFn workspace_selector_fn;
   const bool follow;
 };
+typedef struct Rule Rule;
 
 // Configuration
-typedef struct Configuration Configuration;
 struct Configuration {
   const ActionChain init_action_chain;
   const ActionChain stop_action_chain;
@@ -417,6 +416,7 @@ struct Configuration {
   const Key *const *const key_list;
   const Button *const *const button_list;
 };
+typedef struct Configuration Configuration;
 
 
 //----------------------------------------------------------------------------------------------------------------------

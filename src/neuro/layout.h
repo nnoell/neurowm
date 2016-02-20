@@ -24,8 +24,8 @@
 // Basic functions
 void NeuroLayoutRun(size_t ws, size_t i);
 void NeuroLayoutRunCurr(size_t ws);
-void NeuroLayoutToggleMod(size_t ws, size_t i, LayoutMod mod);
-void NeuroLayoutToggleModCurr(size_t ws, LayoutMod mod);
+void NeuroLayoutToggleMod(size_t ws, size_t i, NeuroLayoutMod mod);
+void NeuroLayoutToggleModCurr(size_t ws, NeuroLayoutMod mod);
 void NeuroLayoutToggle(size_t ws, size_t i);
 void NeuroLayoutChange(size_t ws, int step);
 void NeuroLayoutReset(size_t ws);

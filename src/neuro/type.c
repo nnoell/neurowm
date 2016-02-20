@@ -34,7 +34,7 @@ Client *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
   c->name[ 0 ] = '\0';
   c->title[ 0 ] = '\0';
   c->free_setter_fn = NeuroRuleFreeSetterNull;
-  c->fixed_pos = RuleFixedPositionNull;
+  c->fixed_pos = NEURO_FIXED_POSITION_NULL;
   c->fixed_size = 0;
   c->is_urgent = false;
   c->is_fullscreen = false;
