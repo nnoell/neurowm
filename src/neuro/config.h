@@ -17,16 +17,16 @@
 #include "type.h"
 
 // Defines
-#define NeuroConfigDefaultInitActionChain CHAIN_NULL(NeuroActionListNothing)
-#define NeuroConfigDefaultStopActionChain CHAIN_NULL(NeuroActionListNothing)
-#define NeuroConfigDefaultNormalBorderColor "#1c1c1c"
-#define NeuroConfigDefaultCurrentBorderColor "#b5b3b3"
-#define NeuroConfigDefaultOldBorderColor "#444444"
-#define NeuroConfigDefaultFreeBorderColor "#f7a16e"
-#define NeuroConfigDefaultUrgentBorderColor "#66ff66"
-#define NeuroConfigDefaultBorderWidth 1
-#define NeuroConfigDefaultBorderGap 0
-#define NeuroConfigDefaultRuleList NULL
+#define NEURO_CONFIG_DEFAULT_INIT_ACTION_CHAIN CHAIN_NULL(NeuroActionListNothing)
+#define NEURO_CONFIG_DEFAULT_STOP_ACTION_CHAIN CHAIN_NULL(NeuroActionListNothing)
+#define NEURO_CONFIG_DEFAULT_NORMAL_BORDER_COLOR "#1c1c1c"
+#define NEURO_CONFIG_DEFAULT_CURRENT_BORDER_COLOR "#b5b3b3"
+#define NEURO_CONFIG_DEFAULT_OLD_BORDER_COLOR "#444444"
+#define NEURO_CONFIG_DEFAULT_FREE_BORDER_COLOR "#f7a16e"
+#define NEURO_CONFIG_DEFAULT_URGENT_BORDER_COLOR "#66ff66"
+#define NEURO_CONFIG_DEFAULT_BORDER_WIDTH 1
+#define NEURO_CONFIG_DEFAULT_BORDER_GAP 0
+#define NEURO_CONFIG_DEFAULT_RULE_LIST NULL
 
 
 //----------------------------------------------------------------------------------------------------------------------

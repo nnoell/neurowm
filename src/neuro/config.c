@@ -219,18 +219,18 @@ static const NeuroButton button6_ = {
 
 // Default configuration
 static const NeuroConfiguration default_ = {
-  NeuroConfigDefaultInitActionChain,
-  NeuroConfigDefaultStopActionChain,
-  NeuroConfigDefaultNormalBorderColor,
-  NeuroConfigDefaultCurrentBorderColor,
-  NeuroConfigDefaultOldBorderColor,
-  NeuroConfigDefaultFreeBorderColor,
-  NeuroConfigDefaultUrgentBorderColor,
-  NeuroConfigDefaultBorderWidth,
-  NeuroConfigDefaultBorderGap,
+  NEURO_CONFIG_DEFAULT_INIT_ACTION_CHAIN,
+  NEURO_CONFIG_DEFAULT_STOP_ACTION_CHAIN,
+  NEURO_CONFIG_DEFAULT_NORMAL_BORDER_COLOR,
+  NEURO_CONFIG_DEFAULT_CURRENT_BORDER_COLOR,
+  NEURO_CONFIG_DEFAULT_OLD_BORDER_COLOR,
+  NEURO_CONFIG_DEFAULT_FREE_BORDER_COLOR,
+  NEURO_CONFIG_DEFAULT_URGENT_BORDER_COLOR,
+  NEURO_CONFIG_DEFAULT_BORDER_WIDTH,
+  NEURO_CONFIG_DEFAULT_BORDER_GAP,
   NeuroConfigDefaultMonitorList,
   NeuroConfigDefaultWorkspaceList,
-  NeuroConfigDefaultRuleList,
+  NEURO_CONFIG_DEFAULT_RULE_LIST,
   NeuroConfigDefaultKeyList,
   NeuroConfigDefaultButtonList
 };
