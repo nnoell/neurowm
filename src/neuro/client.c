@@ -27,8 +27,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // XMotionUpdaterFn
-typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
-    int py);
+typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey,
+    int px, int py);
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -92,7 +92,8 @@ static void process_xmotion(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, in
   XUngrabPointer(NeuroSystemGetDisplay(), CurrentTime);
 }
 
-static void xmotion_move(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_move(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
+    int py) {
   (void)cw;
   (void)ch;
   r->x = cx + (ex - px);
@@ -101,7 +102,8 @@ static void xmotion_move(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int c
   NeuroWorkspaceUpdate(ws);
 }
 
-static void xmotion_resize(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px, int py) {
+static void xmotion_resize(NeuroRectangle *r, NeuroIndex ws, int cx, int cy, int cw, int ch, int ex, int ey, int px,
+    int py) {
   (void)cx;
   (void)cy;
   (void)px;

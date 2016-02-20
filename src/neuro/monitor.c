@@ -42,7 +42,6 @@ static MonitorSet monitor_set_;
 //----------------------------------------------------------------------------------------------------------------------
 
 bool NeuroMonitorInit() {
-
   // There must have at least 1 monitor in the configuration
   const NeuroMonitorConf *const *const monitor_list = NeuroConfigGet()->monitor_list;
   if (!monitor_list || !*monitor_list)

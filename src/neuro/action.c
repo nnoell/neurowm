@@ -42,7 +42,8 @@ static void process_workspace(const ActionWorkspaceFn awsf, NeuroIndex ws) {
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
-static void process_client(const ActionClientFn acf, NeuroClientPtrPtr c, const NeuroClientSelectorFn csf, const void *data) {
+static void process_client(const ActionClientFn acf, NeuroClientPtrPtr c, const NeuroClientSelectorFn csf,
+  const void *data) {
   assert(acf);
   assert(csf);
   if (!c)
@@ -152,7 +153,8 @@ const NeuroAction* NeuroActionListToggleScratchpad[] = { &NeuroActionToggleScatc
 const NeuroAction* NeuroActionListFocusCurrClient[] = { &NeuroActionFocusCurrClient, NULL };
 const NeuroAction* NeuroActionListSwapCurrClient[] = { &NeuroActionSwapCurrClient, NULL };
 const NeuroAction* NeuroActionListSendCurrClient[] = { &NeuroActionSendCurrClient, NULL };
-const NeuroAction* NeuroActionListSendFollowCurrClient[] = { &NeuroActionSendCurrClient, &NeuroActionChangeWorkspace, NULL };
+const NeuroAction* NeuroActionListSendFollowCurrClient[] = { &NeuroActionSendCurrClient,
+    &NeuroActionChangeWorkspace, NULL };
 const NeuroAction* NeuroActionListKillClient[] = { &NeuroActionKillCurrClient, NULL };
 const NeuroAction* NeuroActionListTileCurrClient[] = { &NeuroActionTileCurrClient, NULL };
 const NeuroAction* NeuroActionListNormalCurrClient[] = { &NeuroActionNormalCurrClient, NULL };
@@ -267,7 +269,8 @@ void NeuroActionHandlerChangeWorkspace(NeuroArg WorkspaceSelectorFn_arg) {
 
 void NeuroActionHandlerSelectMonitor(NeuroArg MonitorSelectorFn_arg) {
   assert(MonitorSelectorFn_arg.GenericArgFn_.MonitorSelectorFn_);
-  const NeuroMonitor *const dest_m = ARG_MSF_GET(MonitorSelectorFn_arg)(NeuroCoreStackGetMonitor(NeuroCoreGetCurrStack()));
+  const NeuroMonitor *const dest_m =
+      ARG_MSF_GET(MonitorSelectorFn_arg)(NeuroCoreStackGetMonitor(NeuroCoreGetCurrStack()));
   if (!dest_m)
     return;
   const NeuroIndex ws = NeuroCoreGetMonitorStack(dest_m);

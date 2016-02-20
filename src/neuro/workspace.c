@@ -276,7 +276,8 @@ void NeuroWorkspaceClientFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn
   process_client(NeuroClientFree, ref, csf, freeSetterFn);
 }
 
-void NeuroWorkspaceClientToggleFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *free_setter_fn) {
+void NeuroWorkspaceClientToggleFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf,
+    const void *free_setter_fn) {
   process_client(NeuroClientToggleFree, ref, csf, free_setter_fn);
 }
 
@@ -288,7 +289,8 @@ void NeuroWorkspaceClientFullscreen(NeuroClientPtrPtr ref, const NeuroClientSele
   process_client(NeuroClientFullscreen, ref, csf, data);
 }
 
-void NeuroWorkspaceClientToggleFullscreen(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
+void NeuroWorkspaceClientToggleFullscreen(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf,
+    const void *data) {
   process_client(NeuroClientToggleFullscreen, ref, csf, data);
 }
 

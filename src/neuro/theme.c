@@ -141,10 +141,12 @@ void NeuroThemeNnoellLoggerMonitorCurrLayout(const NeuroMonitor *m, char *str) {
     static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
     if (NeuroCoreStackIsCurrToggledLayout(ws))
       snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
-          "^fg(" NEURO_THEME_NNOELL_COLOR_RED ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()", idx + 1, lc->name);
+          "^fg(" NEURO_THEME_NNOELL_COLOR_RED ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
+          idx + 1, lc->name);
     else
       snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
-          "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()", idx + 1, lc->name);
+          "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
+          idx + 1, lc->name);
     NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(str, "LAYOUT", &boxpp_nnoell_blue2_);
     strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
@@ -208,7 +210,8 @@ void NeuroThemeNnoellLoggerWorkspaceList(const NeuroMonitor *m, char *str) {
   assert(str);
   (void)m;
   const NeuroIndex size = NeuroCoreGetSize();
-  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ], tmp4[ NEURO_DZEN_LOGGER_MAX ];
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ],
+      tmp4[ NEURO_DZEN_LOGGER_MAX ];
   for (NeuroIndex i = 0U; i < size; ++i) {
     snprintf(tmp, NEURO_DZEN_LOGGER_MAX, "%zu", (i + 1) % size);
     snprintf(tmp3, NEURO_DZEN_LOGGER_MAX, "/usr/bin/xdotool key super+%s", tmp);
@@ -280,7 +283,8 @@ void NeuroThemeNnoellLoggerCalendar(const NeuroMonitor *m, char *str) {
 void NeuroThemeNnoellLoggerDateTime(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
-  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ], tmp4[ NEURO_DZEN_LOGGER_MAX ];
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ],
+      tmp4[ NEURO_DZEN_LOGGER_MAX ];
   NeuroThemeNnoellLoggerCalendar(m, tmp);
   NeuroThemeNnoellLoggerTime(m, tmp2);
   NeuroThemeNnoellLoggerDate(m, tmp3);
@@ -348,7 +352,8 @@ void NeuroThemeNnoellLoggerBattery(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
   (void)m;
-  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ], tmp4[ NEURO_DZEN_LOGGER_MAX ];
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ],
+      tmp4[ NEURO_DZEN_LOGGER_MAX ];
   if (!NeuroDzenReadFirstLineFile(tmp, "/sys/class/power_supply/BAT0/capacity"))
     strncpy(tmp, "N/A", NEURO_DZEN_LOGGER_MAX);
   else
@@ -376,7 +381,8 @@ void NeuroThemeNnoellLoggerTemperature(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
   (void)m;
-  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ], tmp4[ NEURO_DZEN_LOGGER_MAX ];
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ],
+      tmp4[ NEURO_DZEN_LOGGER_MAX ];
   if (!NeuroDzenReadFirstLineFile(tmp, "/sys/bus/acpi/devices/LNXTHERM:00/thermal_zone/temp"))
     strncpy(tmp, "N/A", NEURO_DZEN_LOGGER_MAX);
   else
