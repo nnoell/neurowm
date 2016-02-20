@@ -150,7 +150,7 @@ bool NeuroSystemInit() {
   // Setup root window mask
   XSetWindowAttributes wa;
   wa.cursor = NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_NORMAL);
-  wa.event_mask = ROOT_MASK;
+  wa.event_mask = NEURO_SYSTEM_ROOT_MASK;
   XChangeWindowAttributes(display_, root_, CWEventMask|CWCursor, &wa);
   XSelectInput(display_, root_, wa.event_mask);
   XSync(display_, false);

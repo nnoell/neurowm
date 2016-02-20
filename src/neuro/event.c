@@ -250,7 +250,7 @@ void NeuroEventManageWindow(Window w) {
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
 
   NeuroLayoutRunCurr(ws);
-  XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK);
+  XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, NEURO_SYSTEM_CLIENT_MASK);
   NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
   XMapWindow(NeuroSystemGetDisplay(), CLI_GET(c).win);
   NeuroWorkspaceUpdate(ws);

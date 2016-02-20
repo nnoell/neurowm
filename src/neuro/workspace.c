@@ -207,13 +207,13 @@ void NeuroWorkspaceRestoreLastMinimized(size_t ws) {
 void NeuroWorkspaceAddEnterNotifyMask(size_t ws) {
   NeuroClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK);
+    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, NEURO_SYSTEM_CLIENT_MASK);
 }
 
 void NeuroWorkspaceRemoveEnterNotifyMask(size_t ws) {
   NeuroClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, CLIENT_MASK_NO_ENTER);
+    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, NEURO_SYSTEM_CLIENT_MASK_NO_ENTER);
 }
 
 // Find functions

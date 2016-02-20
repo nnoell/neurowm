@@ -17,9 +17,10 @@
 #include "type.h"
 
 // Defines
-#define CLIENT_MASK (FocusChangeMask|PropertyChangeMask|StructureNotifyMask|EnterWindowMask)
-#define CLIENT_MASK_NO_ENTER (FocusChangeMask|PropertyChangeMask|StructureNotifyMask)
-#define ROOT_MASK (SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|StructureNotifyMask|CLIENT_MASK)
+#define NEURO_SYSTEM_CLIENT_MASK (FocusChangeMask|PropertyChangeMask|StructureNotifyMask|EnterWindowMask)
+#define NEURO_SYSTEM_CLIENT_MASK_NO_ENTER (FocusChangeMask|PropertyChangeMask|StructureNotifyMask)
+#define NEURO_SYSTEM_ROOT_MASK (SubstructureRedirectMask|SubstructureNotifyMask|ButtonPressMask|StructureNotifyMask|\
+                                NEURO_SYSTEM_CLIENT_MASK)
 
 
 //----------------------------------------------------------------------------------------------------------------------
