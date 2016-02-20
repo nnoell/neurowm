@@ -108,8 +108,8 @@ static bool cpu_calc_refresh_timedwait(time_t seconds) {
 
 static size_t get_num_cpus(const char *file) {
   assert(file);
-  FILE *fd = fopen(file, "r");
-  if (fd == NULL)
+  FILE *const fd = fopen(file, "r");
+  if (!fd)
     return 0;
   size_t i = 0U;
   char buf[ 256 ];
@@ -144,7 +144,7 @@ static void refresh_cpu_calc(const char *file, size_t ncpus) {
   while (true) {
     // Open the file
     FILE *const fd = fopen(file, "r");
-    if (fd == NULL)
+    if (!fd)
       return;
 
     // Do the percent calculation
@@ -226,8 +226,8 @@ static char **str_to_cmd(char **cmd, char *str, const char *sep) {
   assert(cmd);
   assert(str);
   assert(sep);
-  char *token, *save_ptr;
-  token = strtok_r(str, sep, &save_ptr);
+  char *save_ptr = NULL;
+  char *token = strtok_r(str, sep, &save_ptr);
   size_t i = 0U;
   for ( ; token; ++i) {
     cmd[ i ] = token;
@@ -446,12 +446,11 @@ void NeuroDzenWrapClickArea(char *dst, const char *src, const CA *ca) {
 bool NeuroDzenReadFirstLineFile(char *buf, const char *path) {
   assert(buf);
   assert(path);
-  FILE *fd;
-  fd = fopen(path, "r");
+  FILE *const fd = fopen(path, "r");
   if (!fd)
     return false;
   fgets(buf, DZEN_LOGGER_MAX, fd);
-  char *last = buf + strlen(buf) - 1;
+  char *const last = buf + strlen(buf) - 1;
   if (*last == '\n')
     *last = '\0';
   fclose(fd);
@@ -529,7 +528,7 @@ void NeuroDzenLoggerRam(const Monitor *m, char *str) {
   assert(str);
   (void)m;
   char buf[ DZEN_LOGGER_MAX ];
-  FILE *fd = fopen("/proc/meminfo", "r");
+  FILE *const fd = fopen("/proc/meminfo", "r");
   if (!fd)
     return;
   fgets(buf, DZEN_LOGGER_MAX, fd);
@@ -549,7 +548,7 @@ void NeuroDzenLoggerWifiStrength(const Monitor *m, char *str) {
   assert(str);
   (void)m;
   char buf[ DZEN_LOGGER_MAX ];
-  FILE *fd = fopen("/proc/net/wireless", "r");
+  FILE *const fd = fopen("/proc/net/wireless", "r");
   if (!fd)
     return;
   uint32_t strength = 0U, tmp = 0U;
@@ -564,7 +563,7 @@ void NeuroDzenLoggerWifiStrength(const Monitor *m, char *str) {
 void NeuroDzenLoggerMonitorWorkspace(const Monitor *m, char *str) {
   assert(m);
   assert(str);
-  const char *name = NeuroCoreStackGetName(NeuroCoreGetMonitorStack(m));
+  const char *const name = NeuroCoreStackGetName(NeuroCoreGetMonitorStack(m));
   if (name)
     strncpy(str, name, DZEN_LOGGER_MAX);
 }
@@ -572,7 +571,7 @@ void NeuroDzenLoggerMonitorWorkspace(const Monitor *m, char *str) {
 void NeuroDzenLoggerMonitorCurrLayout(const Monitor *m, char *str) {
   assert(m);
   assert(str);
-  const LayoutConf *lc = NeuroCoreStackGetCurrLayoutConf(NeuroCoreGetMonitorStack(m));
+  const LayoutConf *const lc = NeuroCoreStackGetCurrLayoutConf(NeuroCoreGetMonitorStack(m));
   if (lc)
     strncpy(str, lc->name, DZEN_LOGGER_MAX);
 }

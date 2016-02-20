@@ -408,7 +408,7 @@ void NeuroThemeNnoellLoggerMonitorList(const Monitor *m, char *str) {
   assert(str);
   (void)m;
   const Monitor *const curr_m = NeuroCoreStackGetMonitor(NeuroCoreGetCurrStack());
-  for (const Monitor *m = NeuroMonitorSelectorLast(NULL); m; m = NeuroMonitorSelectorPrev(m)) {
+  for (const Monitor * m = NeuroMonitorSelectorLast(NULL); m; m = NeuroMonitorSelectorPrev(m)) {
     static char tmp[ DZEN_LOGGER_MAX ], tmp2[ DZEN_LOGGER_MAX ], tmp3[ DZEN_LOGGER_MAX ];
     static Rectangle r = { 0 };
     NeuroGeometryUnsetRectangleGaps(&r, &m->region, m->gaps);
