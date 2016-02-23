@@ -50,7 +50,7 @@ static void wm_signal_handler(int signo) {
     if (!recompile_wm(&pid))
       perror("wm_signal_handler - Could not recompile neurowm");
     waitpid(pid, NULL, WUNTRACED);
-    exit(EXIT_RELOAD);
+    exit(NEURO_EXIT_RELOAD);
   }
 }
 

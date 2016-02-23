@@ -44,11 +44,11 @@ static NeuroArrange *new_arrange(NeuroIndex ws, NeuroLayout *l) {
   NeuroIndex i = 0U, size = 0U;
   for (NeuroClientPtrPtr c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c)) {
     // Skip free and fullscreen clients
-    if (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull || CLI_GET(c).is_fullscreen)
+    if (NEURO_CLIENT_PTR(c)->free_setter_fn != NeuroRuleFreeSetterNull || NEURO_CLIENT_PTR(c)->is_fullscreen)
       continue;
 
     // Update region if there are fixed clients
-    if (CLI_GET(c).fixed_pos != NEURO_FIXED_POSITION_NULL) {
+    if (NEURO_CLIENT_PTR(c)->fixed_pos != NEURO_FIXED_POSITION_NULL) {
       NeuroRuleSetLayoutRegion(&a->region, c);
       continue;
     }
@@ -64,7 +64,7 @@ static NeuroArrange *new_arrange(NeuroIndex ws, NeuroLayout *l) {
 
     // Set rs and frs arrays
     rs[ i ] = NeuroCoreClientGetRegion(c);
-    frs[ i ] = &(CLI_GET(c).float_region);
+    frs[ i ] = &(NEURO_CLIENT_PTR(c)->float_region);
     ++i;
   }
 
@@ -195,7 +195,7 @@ void NeuroLayoutReset(NeuroIndex ws) {
     const NeuroLayoutConf *const lc = NeuroCoreStackGetLayoutConf(ws, i);
     l->mod = lc->mod;
     l->follow_mouse = lc->follow_mouse;
-    memmove(l->parameters, lc->parameters, sizeof(NeuroArg)*ARRSET_MAX);
+    memmove(l->parameters, lc->parameters, sizeof(NeuroArg)*NEURO_ARRANGE_ARGS_MAX);
   }
   NeuroWorkspaceTile(ws);
   NeuroCoreStackSetLayoutIdx(ws, 0U);

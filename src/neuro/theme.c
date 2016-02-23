@@ -198,7 +198,7 @@ void NeuroThemeNnoellLoggerMonitorCurrTitle(const NeuroMonitor *m, char *str) {
   const NeuroClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetMonitorStack(m));
   if (c) {
     static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
-    NeuroDzenWrapDzenBox(tmp, CLI_GET(c).title, &boxpp_nnoell_white_);
+    NeuroDzenWrapDzenBox(tmp, NEURO_CLIENT_PTR(c)->title, &boxpp_nnoell_white_);
     NeuroDzenWrapDzenBox(tmp2, "FOCUS", &boxpp_nnoell_white2b_);
     NeuroDzenWrapClickArea(str, tmp2, &ca_nnoell_title_);
     strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);

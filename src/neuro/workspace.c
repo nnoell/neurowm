@@ -35,21 +35,22 @@ typedef void (*WorkspaceClientFn)(NeuroClientPtrPtr c, const void *data);
 
 static bool is_above_tiled_client(const NeuroClientPtrPtr c) {
   assert(c);
-  return (CLI_GET(c).free_setter_fn != NeuroRuleFreeSetterNull) || CLI_GET(c).is_fullscreen;
+  return (NEURO_CLIENT_PTR(c)->free_setter_fn != NeuroRuleFreeSetterNull) || NEURO_CLIENT_PTR(c)->is_fullscreen;
 }
 
 static void focus_client(NeuroClientPtrPtr c) {
   assert(c);
   NeuroClientUnsetUrgent(c, NULL);
-  NeuroSystemUngrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
-  XSetInputFocus(NeuroSystemGetDisplay(), CLI_GET(c).win, RevertToPointerRoot, CurrentTime);
+  const Window win = NEURO_CLIENT_PTR(c)->win;
+  NeuroSystemUngrabButtons(win, NeuroConfigGet()->button_list);
+  XSetInputFocus(NeuroSystemGetDisplay(), win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_ACTIVE),
-      XA_WINDOW, 32, PropModeReplace, (unsigned char *)&(CLI_GET(c).win), 1);
+      XA_WINDOW, 32, PropModeReplace, (unsigned char *)&(win), 1);
 }
 
 static void unfocus_client(NeuroClientPtrPtr c) {
   assert(c);
-  NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
+  NeuroSystemGrabButtons(NEURO_CLIENT_PTR(c)->win, NeuroConfigGet()->button_list);
 }
 
 static void process_client(const WorkspaceClientFn wcf, const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf,
@@ -68,14 +69,14 @@ static void send_client(NeuroClientPtrPtr c, const void *data) {
 
   // Get the workspaces
   const NeuroIndex new_ws = *(const NeuroIndex *)data;
-  const NeuroIndex old_ws = CLI_GET(c).ws;
+  const NeuroIndex old_ws = NEURO_CLIENT_PTR(c)->ws;
   const NeuroIndex curr_ws = NeuroCoreGetCurrStack();
   if (old_ws == new_ws)
     return;
 
   // 'Default free' windows are set to 'Center free' because of different screen resolutions
-  if (CLI_GET(c).free_setter_fn == NeuroRuleFreeSetterDefault)
-    CLI_GET(c).free_setter_fn = NeuroRuleFreeSetterCenter;
+  if (NEURO_CLIENT_PTR(c)->free_setter_fn == NeuroRuleFreeSetterDefault)
+    NEURO_CLIENT_PTR(c)->free_setter_fn = NeuroRuleFreeSetterCenter;
 
   // Remove the client from its stack
   NeuroClient *const cli = NeuroCoreRemoveClient(c);
@@ -143,7 +144,7 @@ void NeuroWorkspaceFocus(NeuroIndex ws) {
       ++atc;
 
   c = NeuroCoreStackGetCurrClient(ws);
-  windows[ is_above_tiled_client(c) ? 0U : atc ] = CLI_GET(c).win;
+  windows[ is_above_tiled_client(c) ? 0U : atc ] = NEURO_CLIENT_PTR(c)->win;
   focus_client(c);
   NeuroClientUpdate(c, NULL);
 
@@ -159,7 +160,7 @@ void NeuroWorkspaceFocus(NeuroIndex ws) {
         continue;
       if (NeuroCoreClientIsCurr(c))
         continue;
-      windows[ is_above_tiled_client(c) ? --atc : --n2 ] = CLI_GET(c).win;
+      windows[ is_above_tiled_client(c) ? --atc : --n2 ] = NEURO_CLIENT_PTR(c)->win;
       unfocus_client(c);
       NeuroClientUpdate(c, NULL);
     }
@@ -200,20 +201,21 @@ void NeuroWorkspaceRestoreLastMinimized(NeuroIndex ws) {
   if (!c)
     NeuroSystemError("NeuroWorkspaceRestoreLastMinimized - Could not add client");
   NeuroCoreSetCurrClient(c);
-  NeuroLayoutRunCurr(CLI_GET(c).ws);
-  NeuroWorkspaceFocus(CLI_GET(c).ws);
+  const Window win = NEURO_CLIENT_PTR(c)->ws;
+  NeuroLayoutRunCurr(win);
+  NeuroWorkspaceFocus(win);
 }
 
 void NeuroWorkspaceAddEnterNotifyMask(NeuroIndex ws) {
   NeuroClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, NEURO_SYSTEM_CLIENT_MASK);
+    XSelectInput(NeuroSystemGetDisplay(), NEURO_CLIENT_PTR(c)->win, NEURO_SYSTEM_CLIENT_MASK);
 }
 
 void NeuroWorkspaceRemoveEnterNotifyMask(NeuroIndex ws) {
   NeuroClientPtrPtr c;
   for (c = NeuroCoreStackGetHeadClient(ws); c; c = NeuroCoreClientGetNext(c))
-    XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, NEURO_SYSTEM_CLIENT_MASK_NO_ENTER);
+    XSelectInput(NeuroSystemGetDisplay(), NEURO_CLIENT_PTR(c)->win, NEURO_SYSTEM_CLIENT_MASK_NO_ENTER);
 }
 
 // Find functions
@@ -237,7 +239,7 @@ void NeuroWorkspaceClientFocus(const NeuroClientPtrPtr ref, const NeuroClientSel
   NeuroClientPtrPtr c = csf(ref);
   if (!c)
     return;
-  const NeuroIndex ws = CLI_GET(c).ws;
+  const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
   // NeuroCoreSetCurrStack(ws);  // This focuses new windows in another workspaces
   NeuroCoreSetCurrClient(c);
   NeuroWorkspaceFocus(ws);
@@ -252,7 +254,7 @@ void NeuroWorkspaceClientSwap(const NeuroClientPtrPtr ref, const NeuroClientSele
     return;
   if (!NeuroCoreClientSwap(ref, c))
     return;
-  NeuroWorkspaceUpdate(CLI_GET(c).ws);
+  NeuroWorkspaceUpdate(NEURO_CLIENT_PTR(c)->ws);
   NeuroWorkspaceClientFocus(ref, csf, NULL);
 }
 

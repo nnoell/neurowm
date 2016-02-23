@@ -230,7 +230,7 @@ static void set_layouts(NeuroLayout *layout, const NeuroLayoutConf *const *layou
     *(const float **)&l->region = lc->region;
     l->mod = lc->mod;
     l->follow_mouse = lc->follow_mouse;
-    memmove(l->parameters, lc->parameters, sizeof(NeuroArg)*ARRSET_MAX);
+    memmove(l->parameters, lc->parameters, sizeof(NeuroArg)*NEURO_ARRANGE_ARGS_MAX);
   }
 }
 
@@ -507,7 +507,7 @@ NeuroClientPtrPtr NeuroCoreAddClientStart(const NeuroClient *c) {
 NeuroClient *NeuroCoreRemoveClient(NeuroClientPtrPtr c) {
   if (!c)
     return NULL;
-  return NeuroCoreClientIsLast(c) ? remove_last_node(stack_set_.stack_list + CLI_GET(c).ws) :
+  return NeuroCoreClientIsLast(c) ? remove_last_node(stack_set_.stack_list + NEURO_CLIENT_PTR(c)->ws) :
       remove_no_last_node((Node *)c);
 }
 
@@ -668,19 +668,19 @@ NeuroClientPtrPtr NeuroCoreStackFindClient(NeuroIndex ws, const NeuroClientTeste
 
 // NeuroClient
 bool NeuroCoreClientIsCurr(const NeuroClientPtrPtr c) {
-  return c && (Node *)c == stack_set_.stack_list[ CLI_GET(c).ws ].curr;
+  return c && (Node *)c == stack_set_.stack_list[ NEURO_CLIENT_PTR(c)->ws ].curr;
 }
 
 bool NeuroCoreClientIsPrev(const NeuroClientPtrPtr c) {
-  return c && (Node *)c == stack_set_.stack_list[ CLI_GET(c).ws ].prev;
+  return c && (Node *)c == stack_set_.stack_list[ NEURO_CLIENT_PTR(c)->ws ].prev;
 }
 
 bool NeuroCoreClientIsHead(const NeuroClientPtrPtr c) {
-  return c && (Node *)c == stack_set_.stack_list[ CLI_GET(c).ws ].head;
+  return c && (Node *)c == stack_set_.stack_list[ NEURO_CLIENT_PTR(c)->ws ].head;
 }
 
 bool NeuroCoreClientIsLast(const NeuroClientPtrPtr c) {
-  return c && (Node *)c == stack_set_.stack_list[ CLI_GET(c).ws ].last;
+  return c && (Node *)c == stack_set_.stack_list[ NEURO_CLIENT_PTR(c)->ws ].last;
 }
 
 NeuroRectangle *NeuroCoreClientGetRegion(const NeuroClientPtrPtr c) {

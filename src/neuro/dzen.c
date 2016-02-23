@@ -581,7 +581,7 @@ void NeuroDzenLoggerMonitorCurrTitle(const NeuroMonitor *m, char *str) {
   assert(str);
   const NeuroClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetMonitorStack(m));
   if (c)
-    strncpy(str, CLI_GET(c).title, NEURO_DZEN_LOGGER_MAX);
+    strncpy(str, NEURO_CLIENT_PTR(c)->title, NEURO_DZEN_LOGGER_MAX);
 }
 
 void NeuroDzenLoggerScreen(const NeuroMonitor *m, char *str) {

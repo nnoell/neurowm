@@ -105,7 +105,7 @@ static void do_enter_notify(XEvent *e) {
   NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
   if (!c)
     return;
-  NeuroIndex ws = CLI_GET(c).ws;
+  NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
   if (!NeuroCoreStackGetCurrLayout(ws)->follow_mouse)
     return;
   NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
@@ -127,8 +127,9 @@ static void do_configure_request(XEvent *e) {
   XConfigureWindow(NeuroSystemGetDisplay(), ev->window, ev->value_mask, &wc);
   NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
   if (c) {
-    NeuroLayoutRunCurr(CLI_GET(c).ws);
-    NeuroWorkspaceUpdate(CLI_GET(c).ws);
+    const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
+    NeuroLayoutRunCurr(ws);
+    NeuroWorkspaceUpdate(ws);
   }
   NeuroDzenRefresh(true);
 }
@@ -138,7 +139,7 @@ static void do_focus_in(XEvent *e) {
   NeuroClientPtrPtr c = NeuroClientGetFocused();
   if (!c)
     return;
-  if (CLI_GET(c).win == e->xfocus.window)
+  if (NEURO_CLIENT_PTR(c)->win == e->xfocus.window)
     return;
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   NeuroDzenRefresh(true);
@@ -177,9 +178,9 @@ static void do_property_notify(XEvent *e) {
     NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
     if (!c)
       return;
-    if (NeuroCoreClientIsCurr(c) && NeuroCoreStackIsCurr(CLI_GET(c).ws))
+    if (NeuroCoreClientIsCurr(c) && NeuroCoreStackIsCurr(NEURO_CLIENT_PTR(c)->ws))
       return;
-    XWMHints *wmh = XGetWMHints(NeuroSystemGetDisplay(), CLI_GET(c).win);
+    XWMHints *wmh = XGetWMHints(NeuroSystemGetDisplay(), NEURO_CLIENT_PTR(c)->win);
     if (wmh && (wmh->flags & XUrgencyHint))
       NeuroClientSetUrgent(c, NULL);
     if (wmh)
@@ -235,10 +236,11 @@ void NeuroEventManageWindow(Window w) {
     NeuroSystemError("NeuroEventManageWindow - Could not add client");
 
   // Transient windows
-  const NeuroIndex ws = CLI_GET(c).ws;
+  const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
+  const Window win = NEURO_CLIENT_PTR(c)->win;
   Window trans = None;
-  if (XGetTransientForHint(NeuroSystemGetDisplay(), CLI_GET(c).win, &trans)) {
-    CLI_GET(c).free_setter_fn = NeuroRuleFreeSetterDefault;
+  if (XGetTransientForHint(NeuroSystemGetDisplay(), win, &trans)) {
+    NEURO_CLIENT_PTR(c)->free_setter_fn = NeuroRuleFreeSetterDefault;
     NeuroClientPtrPtr t = NeuroClientFindWindow(trans);
     if (t)
       NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
@@ -250,9 +252,9 @@ void NeuroEventManageWindow(Window w) {
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
 
   NeuroLayoutRunCurr(ws);
-  XSelectInput(NeuroSystemGetDisplay(), CLI_GET(c).win, NEURO_SYSTEM_CLIENT_MASK);
-  NeuroSystemGrabButtons(CLI_GET(c).win, NeuroConfigGet()->button_list);
-  XMapWindow(NeuroSystemGetDisplay(), CLI_GET(c).win);
+  XSelectInput(NeuroSystemGetDisplay(), win, NEURO_SYSTEM_CLIENT_MASK);
+  NeuroSystemGrabButtons(win, NeuroConfigGet()->button_list);
+  XMapWindow(NeuroSystemGetDisplay(), win);
   NeuroWorkspaceUpdate(ws);
   NeuroWorkspaceFocus(ws);
 
@@ -261,7 +263,7 @@ void NeuroEventManageWindow(Window w) {
 
 void NeuroEventUnmanageClient(NeuroClientPtrPtr c) {
   assert(c);
-  const NeuroIndex ws = CLI_GET(c).ws;
+  const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
   NeuroWorkspaceRemoveEnterNotifyMask(ws);
   NeuroClient *cli = NeuroCoreRemoveClient(c);
   NeuroTypeDeleteClient(cli);

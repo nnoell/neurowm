@@ -43,63 +43,62 @@
 #include <assert.h>
 
 // Arg constructors
-#define ARG_NULL      {.pointer_ = NULL}
-#define ARG_PTR(X)    {.pointer_ = (X)}
-#define ARG_CHAR(X)   {.char_ = (X)}
-#define ARG_INT(X)    {.int_ = (X)}
-#define ARG_UINT(X)   {.uint_ = (X)}
-#define ARG_IDX(X)    {.idx_ = (X)}
-#define ARG_FLOAT(X)  {.float_ = (X)}
-#define ARG_STR(X)    {.string_ = (X)}
-#define ARG_CMD(X)    {.command_ = (X)}
-#define ARG_LMOD(X)   {.LayoutMod_ = (X)}
-#define ARG_GAF(X)    {.GenericArgFn_ = (X)}
-#define ARG_FSF(X)    {.GenericArgFn_.FreeSetterFn_ = (X)}
-#define ARG_CSF(X)    {.GenericArgFn_.ClientSelectorFn_ = (X)}
-#define ARG_WSF(X)    {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
-#define ARG_MSF(X)    {.GenericArgFn_.MonitorSelectorFn_ = (X)}
+#define NEURO_ARG_NULL     {.pointer_ = NULL}
+#define NEURO_ARG_PTR(X)   {.pointer_ = (X)}
+#define NEURO_ARG_CHAR(X)  {.char_ = (X)}
+#define NEURO_ARG_INT(X)   {.int_ = (X)}
+#define NEURO_ARG_UINT(X)  {.uint_ = (X)}
+#define NEURO_ARG_IDX(X)   {.idx_ = (X)}
+#define NEURO_ARG_FLOAT(X) {.float_ = (X)}
+#define NEURO_ARG_STR(X)   {.string_ = (X)}
+#define NEURO_ARG_CMD(X)   {.command_ = (X)}
+#define NEURO_ARG_LMOD(X)  {.LayoutMod_ = (X)}
+#define NEURO_ARG_GAF(X)   {.GenericArgFn_ = (X)}
+#define NEURO_ARG_FSF(X)   {.GenericArgFn_.FreeSetterFn_ = (X)}
+#define NEURO_ARG_CSF(X)   {.GenericArgFn_.ClientSelectorFn_ = (X)}
+#define NEURO_ARG_WSF(X)   {.GenericArgFn_.WorkspaceSelectorFn_ = (X)}
+#define NEURO_ARG_MSF(X)   {.GenericArgFn_.MonitorSelectorFn_ = (X)}
 
 // Arg functions
-#define ARG_PTR_GET(X)    ((X).pointer_)
-#define ARG_CHAR_GET(X)   ((X).char_)
-#define ARG_INT_GET(X)    ((X).int_)
-#define ARG_UINT_GET(X)   ((X).uint_)
-#define ARG_IDX_GET(X)    ((X).idx_)
-#define ARG_FLOAT_GET(X)  ((X).float_)
-#define ARG_STR_GET(X)    ((X).string_)
-#define ARG_CMD_GET(X)    ((X).command_)
-#define ARG_LMOD_GET(X)   ((X).LayoutMod_)
-#define ARG_GAF_GET(X)    ((X).GenericArgFn_)
-#define ARG_FLF_GET(X)    ((X).GenericArgFn_.FreeSetterFn_)
-#define ARG_CSF_GET(X)    ((X).GenericArgFn_.ClientSelectorFn_)
-#define ARG_WSF_GET(X)    ((X).GenericArgFn_.WorkspaceSelectorFn_)
-#define ARG_MSF_GET(X)    ((X).GenericArgFn_.MonitorSelectorFn_)
+#define NEURO_ARG_PTR_GET(X)   ((X).pointer_)
+#define NEURO_ARG_CHAR_GET(X)  ((X).char_)
+#define NEURO_ARG_INT_GET(X)   ((X).int_)
+#define NEURO_ARG_UINT_GET(X)  ((X).uint_)
+#define NEURO_ARG_IDX_GET(X)   ((X).idx_)
+#define NEURO_ARG_FLOAT_GET(X) ((X).float_)
+#define NEURO_ARG_STR_GET(X)   ((X).string_)
+#define NEURO_ARG_CMD_GET(X)   ((X).command_)
+#define NEURO_ARG_LMOD_GET(X)  ((X).LayoutMod_)
+#define NEURO_ARG_GAF_GET(X)   ((X).GenericArgFn_)
+#define NEURO_ARG_FLF_GET(X)   ((X).GenericArgFn_.FreeSetterFn_)
+#define NEURO_ARG_CSF_GET(X)   ((X).GenericArgFn_.ClientSelectorFn_)
+#define NEURO_ARG_WSF_GET(X)   ((X).GenericArgFn_.WorkspaceSelectorFn_)
+#define NEURO_ARG_MSF_GET(X)   ((X).GenericArgFn_.MonitorSelectorFn_)
 
 // Maybe Arg constructors
-#define MAYBE_ARG_NOTHING       {.is_nothing = true, .value = ARG_NULL}
-#define MAYBE_ARG_JUST(X)       {.is_nothing = false, .value = X}
+#define NEURO_MAYBE_ARG_NOTHING {.is_nothing = true, .value = NEURO_ARG_NULL}
+#define NEURO_MAYBE_ARG_JUST(X) {.is_nothing = false, .value = X}
 
 // Maybe Arg functions
-#define MAYBE_ARG_IS_NOTHING(X) ((X).is_nothing)
-#define MAYBE_ARG_GET_JUST(X)   ((X).value)
+#define NEURO_MAYBE_ARG_IS_NOTHING(X) ((X).is_nothing)
+#define NEURO_MAYBE_ARG_GET_JUST(X)   ((X).value)
 
 // Chainned Actions
-#define CHAIN_NULL(X)     {.action_list = (X), .arg = MAYBE_ARG_NOTHING}
-#define CHAIN(X, Y)       {.action_list = (X), .arg = MAYBE_ARG_JUST(Y)}
+#define NEURO_CHAIN_NULL(X) {.action_list = (X), .arg = NEURO_MAYBE_ARG_NOTHING}
+#define NEURO_CHAIN(X, Y)   {.action_list = (X), .arg = NEURO_MAYBE_ARG_JUST(Y)}
 
 // Default sizes
-#define NAME_MAX    256
-#define COLOR_MAX   8
-#define ARRSET_MAX  4
+#define NEURO_NAME_SIZE_MAX    256
+#define NEURO_ARRANGE_ARGS_MAX 4
 
 // Reload
-#define EXIT_RELOAD ((int)'R')
+#define NEURO_EXIT_RELOAD ((int)'R')
 
 // NeuroClientPtrPtr
-#define CLI_GET(X)  (**(X))
+#define NEURO_CLIENT_PTR(X) (*(X))
 
 // Config
-#define NULL_MASK 0
+#define NEURO_NULL_MASK 0
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -156,9 +155,9 @@ struct NeuroClient {
   const Window win;
   NeuroIndex ws;
   bool is_nsp;
-  char class[ NAME_MAX ];
-  char name[ NAME_MAX ];
-  char title[ NAME_MAX ];
+  char class[ NEURO_NAME_SIZE_MAX ];
+  char name[ NEURO_NAME_SIZE_MAX ];
+  char title[ NEURO_NAME_SIZE_MAX ];
   NeuroRectangle float_region;
   bool is_fullscreen;
   NeuroFreeSetterFn free_setter_fn;
@@ -345,7 +344,7 @@ struct NeuroLayout {
   const float *const region;
   NeuroLayoutMod mod;
   bool follow_mouse;
-  NeuroArg parameters[ ARRSET_MAX ];
+  NeuroArg parameters[ NEURO_ARRANGE_ARGS_MAX ];
 };
 typedef struct NeuroLayout NeuroLayout;
 
@@ -362,7 +361,7 @@ struct NeuroLayoutConf {
   const float region[ 4 ];
   const NeuroLayoutMod mod;
   const bool follow_mouse;
-  const NeuroArg parameters[ ARRSET_MAX ];
+  const NeuroArg parameters[ NEURO_ARRANGE_ARGS_MAX ];
 };
 typedef struct NeuroLayoutConf NeuroLayoutConf;
 

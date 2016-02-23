@@ -33,8 +33,8 @@ static Atom net_atoms_[ NEURO_SYSTEM_NETATOM_END ];
 static NeuroColor colors_[ NEURO_SYSTEM_COLOR_END ];
 
 // Recompile command
-static const char recompile_cmd_output_[ NAME_MAX ];
-static const char recompile_cmd_source_[ NAME_MAX ];
+static const char recompile_cmd_output_[ NEURO_NAME_SIZE_MAX ];
+static const char recompile_cmd_source_[ NEURO_NAME_SIZE_MAX ];
 static const char *const recompile_cmd_[] = {
   "/usr/bin/cc",
   "-fpic",
@@ -224,8 +224,8 @@ NeuroColor NeuroSystemGetColorFromHex(const char* color) {
 
 // System functions
 const char * const *NeuroSystemGetRecompileCommand(const char **output, const char **source) {
-  snprintf((char *)recompile_cmd_output_, NAME_MAX, "%s/." PKG_NAME "/" PKG_MYNAME, getenv("HOME"));
-  snprintf((char *)recompile_cmd_source_, NAME_MAX, "%s/." PKG_NAME "/" PKG_NAME ".c", getenv("HOME"));
+  snprintf((char *)recompile_cmd_output_, NEURO_NAME_SIZE_MAX, "%s/." PKG_NAME "/" PKG_MYNAME, getenv("HOME"));
+  snprintf((char *)recompile_cmd_source_, NEURO_NAME_SIZE_MAX, "%s/." PKG_NAME "/" PKG_NAME ".c", getenv("HOME"));
   if (output)
     *output = recompile_cmd_output_;
   if (source)
@@ -248,9 +248,9 @@ void NeuroSystemChangeProcName(const char *name) {
 }
 
 pid_t NeuroSystemGetWmPid() {
-  char pidstr[ NAME_MAX ];
+  char pidstr[ NEURO_NAME_SIZE_MAX ];
   FILE *cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
-  fgets(pidstr, NAME_MAX, cmd);
+  fgets(pidstr, NEURO_NAME_SIZE_MAX, cmd);
   return (pid_t)strtoul(pidstr, NULL, 10);
 }
 

@@ -121,7 +121,7 @@ static bool loop_run_neurowm(int argc, const char *const *argv) {
   do {
     if (!run_neurowm(argc, argv, &status))
       return false;
-  } while (WEXITSTATUS(status) == EXIT_RELOAD);
+  } while (WEXITSTATUS(status) == NEURO_EXIT_RELOAD);
   return true;
 }
 
