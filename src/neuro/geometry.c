@@ -100,7 +100,7 @@ NeuroRectangle *NeuroGeometryTranspRectangle(NeuroRectangle *rect) {
   return rect;
 }
 
-NeuroRectangle *NeuroGeometryNeuroGeometryTranspRectangle(NeuroRectangle *rect, const NeuroRectangle *reg) {
+NeuroRectangle *NeuroGeometryFitRectangleInRegion(NeuroRectangle *rect, const NeuroRectangle *reg) {
   assert(rect);
   assert(reg);
   if (rect->x < reg->x)

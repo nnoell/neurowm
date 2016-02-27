@@ -30,7 +30,7 @@ NeuroRectangle *NeuroGeometrySetRectangleBorderGap(NeuroRectangle *r, int gap);
 NeuroRectangle *NeuroGeometrySetRectangleBorderWidthAndGap(NeuroRectangle *r, int width, int gap);
 NeuroRectangle *NeuroGeometryMirrorRectangle(NeuroRectangle *rect, const NeuroRectangle *reg);
 NeuroRectangle *NeuroGeometryTranspRectangle(NeuroRectangle *rect);
-NeuroRectangle *NeuroGeometryNeuroGeometryTranspRectangle(NeuroRectangle *rect, const NeuroRectangle *reg);
+NeuroRectangle *NeuroGeometryFitRectangleInRegion(NeuroRectangle *rect, const NeuroRectangle *reg);
 NeuroRectangle *NeuroGeometryCenterRectangleInRegion(NeuroRectangle *rect, const NeuroRectangle *reg);
 bool NeuroGeometryIsPointInRectangle(const NeuroRectangle *a, int x, int y);
 

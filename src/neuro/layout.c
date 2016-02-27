@@ -287,7 +287,7 @@ NeuroArrange *NeuroLayoutArrangerFloat(NeuroArrange *a) {
   for (NeuroIndex i = 0U; i < a->size; ++i) {
     const NeuroRectangle *const fr = a->client_float_regions[ i ];
     NeuroGeometrySetRectangle(a->client_regions[ i ], fr->x, fr->y, fr->w, fr->h);
-    NeuroGeometryNeuroGeometryTranspRectangle(a->client_regions[ i ], &a->region);
+    NeuroGeometryFitRectangleInRegion(a->client_regions[ i ], &a->region);
   }
   return a;
 }
