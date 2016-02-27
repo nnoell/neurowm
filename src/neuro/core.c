@@ -666,7 +666,7 @@ NeuroClientPtrPtr NeuroCoreStackFindClient(NeuroIndex ws, const NeuroClientTeste
   return NULL;
 }
 
-// NeuroClient
+// Client
 bool NeuroCoreClientIsCurr(const NeuroClientPtrPtr c) {
   return c && (Node *)c == stack_set_.stack_list[ NEURO_CLIENT_PTR(c)->ws ].curr;
 }

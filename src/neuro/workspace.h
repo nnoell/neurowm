@@ -38,7 +38,7 @@ NeuroClientPtrPtr NeuroWorkspaceClientFindWindow(NeuroIndex ws, Window w);
 NeuroClientPtrPtr NeuroWorkspaceClientFindUrgent(NeuroIndex ws);
 NeuroClientPtrPtr NeuroWorkspaceClientFindFixed(NeuroIndex ws);
 
-// NeuroClient
+// Client
 void NeuroWorkspaceClientFocus(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
 void NeuroWorkspaceClientSwap(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
 void NeuroWorkspaceClientSend(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *ws);

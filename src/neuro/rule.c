@@ -80,14 +80,15 @@ static void apply_rules(NeuroClient *c) {
   const NeuroRule *const *const rule_list = NeuroConfigGet()->rule_list;
   if (!rule_list)
     return;
-  const NeuroRule *r;
+
   for (NeuroIndex i = 0U; rule_list[ i ]; ++i) {
-    r = rule_list[ i ];
+    const NeuroRule *r = rule_list[ i ];
     if (has_rule(c, r)) {
       set_rule(c, r);
       break;
     }
   }
+
   if (!strcmp(c->name, RULE_SCRATCHPAD_NAME))
     c->is_nsp = true;
 }
@@ -98,10 +99,13 @@ static void apply_rules(NeuroClient *c) {
 //----------------------------------------------------------------------------------------------------------------------
 
 NeuroClient *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
-  assert(wa);
-  NeuroClient *c = NeuroTypeNewClient(w, wa);
+  if (!wa)
+    return NULL;
+
+  NeuroClient *const c = NeuroTypeNewClient(w, wa);
   if (!c)
     return NULL;
+
   if (is_free_size_hints(c))
     c->free_setter_fn = NeuroRuleFreeSetterCenter;
   c->ws = NeuroCoreGetCurrStack();

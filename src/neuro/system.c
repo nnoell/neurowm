@@ -216,8 +216,7 @@ NeuroColor NeuroSystemGetColor(NeuroSystemColor c) {
 NeuroColor NeuroSystemGetColorFromHex(const char* color) {
   assert(color);
   XColor c;
-  Colormap map = DefaultColormap(display_, screen_);
-  if (!XAllocNamedColor(display_, map, color, &c, &c))
+  if (!XAllocNamedColor(display_, DefaultColormap(display_, screen_), color, &c, &c))
     NeuroSystemError("NeuroSystemGetColorFromHex - Could not allocate color");
   return (NeuroColor)c.pixel;
 }
@@ -249,17 +248,17 @@ void NeuroSystemChangeProcName(const char *name) {
 
 pid_t NeuroSystemGetWmPid() {
   char pidstr[ NEURO_NAME_SIZE_MAX ];
-  FILE *cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
+  FILE *const cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
   fgets(pidstr, NEURO_NAME_SIZE_MAX, cmd);
   return (pid_t)strtoul(pidstr, NULL, 10);
 }
 
 bool NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
   assert(cmd);
-  pid_t pid = fork();
+  const pid_t pid = fork();
   if (pid == -1)
     return false;
-  if (!pid) {  // Child
+  if (pid == 0) {  // Child
     if (display_)
       close(ConnectionNumber(display_));
     setsid();
@@ -276,7 +275,7 @@ int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p) {
   int filedes[ 2 ];
   if (pipe(filedes))
     return -1;
-  pid_t pid = fork();
+  const pid_t pid = fork();
   if (pid < 0)
     return -1;
   if (pid == 0) {  // Child
@@ -303,11 +302,9 @@ void NeuroSystemGrabKeys(Window w, const NeuroKey *const *key_list) {
   if (!key_list)
     return;
   XUngrabKey(display_, AnyKey, AnyModifier, w);
-  KeyCode code;
-  const NeuroKey *k;
   for (NeuroIndex i = 0U; key_list[ i ]; ++i) {
-    k = key_list[ i ];
-    code = XKeysymToKeycode(display_, k->key);
+    const NeuroKey *const k = key_list[ i ];
+    const KeyCode code = XKeysymToKeycode(display_, k->key);
     if (code)
       XGrabKey(display_, code, k->mod, w, true, GrabModeAsync, GrabModeAsync);
   }
@@ -316,11 +313,9 @@ void NeuroSystemGrabKeys(Window w, const NeuroKey *const *key_list) {
 void NeuroSystemUngrabKeys(Window w, const NeuroKey *const *key_list) {
   if (!key_list)
     return;
-  KeyCode code;
-  const NeuroKey *k;
   for (NeuroIndex i = 0U; key_list[ i ]; ++i) {
-    k = key_list[ i ];
-    code = XKeysymToKeycode(display_, k->key);
+    const NeuroKey *const k = key_list[ i ];
+    const KeyCode code = XKeysymToKeycode(display_, k->key);
     if (code)
       XUngrabKey(display_, code, k->mod, w);
   }
@@ -330,9 +325,8 @@ void NeuroSystemGrabButtons(Window w, const NeuroButton *const *button_list) {
   if (!button_list)
     return;
   XUngrabButton(display_, AnyButton, AnyModifier, w);
-  const NeuroButton *b;
   for (NeuroIndex i = 0U; button_list[ i ]; ++i) {
-    b = button_list[ i ];
+    const NeuroButton *const b = button_list[ i ];
     XGrabButton(display_, b->button, b->mod, w, false, ButtonPressMask|ButtonReleaseMask, GrabModeAsync, GrabModeSync,
         None, None);
   }
@@ -341,9 +335,8 @@ void NeuroSystemGrabButtons(Window w, const NeuroButton *const *button_list) {
 void NeuroSystemUngrabButtons(Window w, const NeuroButton *const *button_list) {
   if (!button_list)
     return;
-  const NeuroButton *b;
   for (NeuroIndex i = 0U; button_list[ i ]; ++i) {
-    b = button_list[ i ];
+    const NeuroButton *b = button_list[ i ];
     if (b->ungrab_on_focus)
       XUngrabButton(display_, b->button, b->mod, w);
   }

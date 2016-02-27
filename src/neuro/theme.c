@@ -135,45 +135,47 @@ void NeuroThemeNnoellLoggerMonitorCurrLayout(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
   const NeuroIndex ws = NeuroCoreGetMonitorStack(m);
-  const NeuroIndex idx = NeuroCoreStackGetLayoutIdx(ws);
   const NeuroLayoutConf *const lc = NeuroCoreStackGetCurrLayoutConf(ws);
-  if (lc) {
-    static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
-    if (NeuroCoreStackIsCurrToggledLayout(ws))
-      snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
-          "^fg(" NEURO_THEME_NNOELL_COLOR_RED ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
-          idx + 1, lc->name);
-    else
-      snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
-          "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
-          idx + 1, lc->name);
-    NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
-    NeuroDzenWrapDzenBox(str, "LAYOUT", &boxpp_nnoell_blue2_);
-    strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
-  }
+  if (!lc)
+    return;
+
+  const NeuroIndex idx = NeuroCoreStackGetLayoutIdx(ws);
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
+  if (NeuroCoreStackIsCurrToggledLayout(ws))
+    snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
+        "^fg(" NEURO_THEME_NNOELL_COLOR_RED ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
+        idx + 1, lc->name);
+  else
+    snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
+        "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
+        idx + 1, lc->name);
+  NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
+  NeuroDzenWrapDzenBox(str, "LAYOUT", &boxpp_nnoell_blue2_);
+  strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
 }
 
 void NeuroThemeNnoellLoggerMonitorCurrLayoutMod(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
   const NeuroLayout *const l = NeuroCoreStackGetCurrLayout(NeuroCoreGetMonitorStack(m));
-  if (l) {
-    static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
-    tmp[ 0 ] = '\0';
-    if (l->mod == NEURO_LAYOUT_MOD_NULL) {
-      strncpy(tmp, "Norm", NEURO_DZEN_LOGGER_MAX);
-    } else {
-      if (l->mod & NEURO_LAYOUT_MOD_MIRROR)
-        strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")M^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
-      if (l->mod & NEURO_LAYOUT_MOD_REFLECTX)
-        strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")X^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
-      if (l->mod & NEURO_LAYOUT_MODE_REFLECTY)
-        strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")Y^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
-    }
-    NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);
-    NeuroDzenWrapDzenBox(str, "MOD", &boxpp_nnoell_blue2_);
-    strncat(str, tmp2, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
+  if (!l)
+    return;
+
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
+  tmp[ 0 ] = '\0';
+  if (l->mod == NEURO_LAYOUT_MOD_NULL) {
+    strncpy(tmp, "Norm", NEURO_DZEN_LOGGER_MAX);
+  } else {
+    if (l->mod & NEURO_LAYOUT_MOD_MIRROR)
+      strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")M^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
+    if (l->mod & NEURO_LAYOUT_MOD_REFLECTX)
+      strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")X^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
+    if (l->mod & NEURO_LAYOUT_MODE_REFLECTY)
+      strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")Y^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
   }
+  NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);
+  NeuroDzenWrapDzenBox(str, "MOD", &boxpp_nnoell_blue2_);
+  strncat(str, tmp2, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
 }
 
 void NeuroThemeNnoellLoggerMonitorWorkspace(const NeuroMonitor *m, char *str) {
@@ -181,28 +183,30 @@ void NeuroThemeNnoellLoggerMonitorWorkspace(const NeuroMonitor *m, char *str) {
   assert(str);
   const NeuroIndex ws = NeuroCoreGetMonitorStack(m);
   const char *const name = NeuroCoreStackGetName(ws);
-  if (name) {
-    static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
-    snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
-        "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
-        (ws + 1) % NeuroCoreGetSize(), name);
-    NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
-    NeuroDzenWrapDzenBox(str, "WORKSPACE", &boxpp_nnoell_blue2_);
-    strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
-  }
+  if (!name)
+    return;
+
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
+  snprintf(tmp2, NEURO_DZEN_LOGGER_MAX,
+      "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")%zu^fg(" NEURO_THEME_NNOELL_COLOR_GRAY ")|^fg()%s^fg()",
+      (ws + 1) % NeuroCoreGetSize(), name);
+  NeuroDzenWrapDzenBox(tmp, tmp2, &boxpp_nnoell_white_);
+  NeuroDzenWrapDzenBox(str, "WORKSPACE", &boxpp_nnoell_blue2_);
+  strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
 }
 
 void NeuroThemeNnoellLoggerMonitorCurrTitle(const NeuroMonitor *m, char *str) {
   assert(m);
   assert(str);
   const NeuroClientPtrPtr c = NeuroCoreStackGetCurrClient(NeuroCoreGetMonitorStack(m));
-  if (c) {
-    static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
-    NeuroDzenWrapDzenBox(tmp, NEURO_CLIENT_PTR(c)->title, &boxpp_nnoell_white_);
-    NeuroDzenWrapDzenBox(tmp2, "FOCUS", &boxpp_nnoell_white2b_);
-    NeuroDzenWrapClickArea(str, tmp2, &ca_nnoell_title_);
-    strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
-  }
+  if (!c)
+    return;
+
+  static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ];
+  NeuroDzenWrapDzenBox(tmp, NEURO_CLIENT_PTR(c)->title, &boxpp_nnoell_white_);
+  NeuroDzenWrapDzenBox(tmp2, "FOCUS", &boxpp_nnoell_white2b_);
+  NeuroDzenWrapClickArea(str, tmp2, &ca_nnoell_title_);
+  strncat(str, tmp, NEURO_DZEN_LOGGER_MAX - strlen(str) - 1);
 }
 
 void NeuroThemeNnoellLoggerWorkspaceList(const NeuroMonitor *m, char *str) {

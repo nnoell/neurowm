@@ -72,7 +72,7 @@ NeuroClientPtrPtr NeuroCoreStackGetHeadClient(NeuroIndex ws);
 NeuroClientPtrPtr NeuroCoreStackGetLastClient(NeuroIndex ws);
 NeuroClientPtrPtr NeuroCoreStackFindClient(NeuroIndex ws, const NeuroClientTesterFn ctf, const void *p);
 
-// NeuroClient
+// Client
 bool NeuroCoreClientIsCurr(const NeuroClientPtrPtr c);
 bool NeuroCoreClientIsPrev(const NeuroClientPtrPtr c);
 bool NeuroCoreClientIsHead(const NeuroClientPtrPtr c);

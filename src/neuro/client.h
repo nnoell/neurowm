@@ -45,12 +45,12 @@ NeuroClientPtrPtr NeuroClientFindWindow(Window w);
 NeuroClientPtrPtr NeuroClientFindUrgent();
 NeuroClientPtrPtr NeuroClientFindFixed();
 
-// NeuroClient getters
+// Client getters
 NeuroClientPtrPtr NeuroClientGetFocused();
 NeuroClientPtrPtr NeuroClientGetPointed(int *x, int *y);
 
-// NeuroClient Selectors
-NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c);   // NeuroClient c itself
+// Client Selectors
+NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c);   // Client c itself
 NeuroClientPtrPtr NeuroClientSelectorNext(const NeuroClientPtrPtr c);   // The next client of c
 NeuroClientPtrPtr NeuroClientSelectorPrev(const NeuroClientPtrPtr c);   // The previous client of c
 NeuroClientPtrPtr NeuroClientSelectorOld(const NeuroClientPtrPtr c);    // The previous selected client
@@ -61,12 +61,12 @@ NeuroClientPtrPtr NeuroClientSelectorDown(const NeuroClientPtrPtr c);   // The l
 NeuroClientPtrPtr NeuroClientSelectorLeft(const NeuroClientPtrPtr c);   // The left client (layout position) of c
 NeuroClientPtrPtr NeuroClientSelectorRight(const NeuroClientPtrPtr c);  // The right client (layout position) of c
 
-// NeuroClient Testers
+// Client Testers
 bool NeuroClientTesterWindow(const NeuroClientPtrPtr c, const void *w);
 bool NeuroClientTesterUrgent(const NeuroClientPtrPtr c, const void *data);
 bool NeuroClientTesterFixed(const NeuroClientPtrPtr c, const void *data);
 
-// NeuroColor Setters
+// Color Setters
 NeuroColor NeuroClientColorSetterCurr(const NeuroClientPtrPtr c);
 NeuroColor NeuroClientColorSetterAll(const NeuroClientPtrPtr c);
 NeuroColor NeuroClientColorSetterNone(const NeuroClientPtrPtr c);

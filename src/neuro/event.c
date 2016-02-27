@@ -35,18 +35,18 @@ static void do_key_press(XEvent *e) {
   const NeuroKey *const *const key_list = NeuroConfigGet()->key_list;
   if (!key_list)
     return;
-  XKeyEvent ke = e->xkey;
-  int ks;
-  KeySym *keysym = XGetKeyboardMapping(NeuroSystemGetDisplay(), ke.keycode, 1, &ks);
-  const NeuroKey *k;
+
+  const XKeyEvent ke = e->xkey;
+  int ks = 0;
+  KeySym *const key_sym = XGetKeyboardMapping(NeuroSystemGetDisplay(), ke.keycode, 1, &ks);
   for (NeuroIndex i = 0U; key_list[ i ]; ++i) {
-    k = key_list[ i ];
-    if (k->key == *keysym && k->mod == ke.state) {
+    const NeuroKey *k = key_list[ i ];
+    if (k->key == *key_sym && k->mod == ke.state) {
       NeuroActionRunActionChain(&k->action_chain);
       NeuroDzenRefresh(true);
     }
   }
-  XFree(keysym);
+  XFree(key_sym);
 }
 
 static void do_button_press(XEvent *e) {
@@ -54,10 +54,10 @@ static void do_button_press(XEvent *e) {
   const NeuroButton *const *const button_list = NeuroConfigGet()->button_list;
   if (!button_list)
     return;
-  XButtonPressedEvent *ev = &e->xbutton;
-  const NeuroButton *b;
+
+  const XButtonPressedEvent *const ev = &e->xbutton;
   for (NeuroIndex i = 0U; button_list[ i ]; ++i) {
-    b = button_list[ i ];
+    const NeuroButton *b = button_list[ i ];
     if (b->button == ev->button && b->mod == ev->state) {
       NeuroActionRunActionChain(&b->action_chain);
       NeuroDzenRefresh(true);
@@ -73,7 +73,7 @@ static void do_map_request(XEvent *e) {
 
 static void do_destroy_notify(XEvent *e) {
   assert(e);
-  Window w = e->xdestroywindow.window;
+  const Window w = e->xdestroywindow.window;
   NeuroClientPtrPtr c = NeuroClientFindWindow(w);
   if (c) {
     NeuroEventUnmanageClient(c);
@@ -86,7 +86,7 @@ static void do_destroy_notify(XEvent *e) {
 
 static void do_unmap_notify(XEvent *e) {
   assert(e);
-  Window w = e->xdestroywindow.window;
+  const Window w = e->xdestroywindow.window;
   NeuroClientPtrPtr c = NeuroClientFindWindow(w);
   if (c) {
     NeuroEventUnmanageClient(c);
@@ -99,13 +99,14 @@ static void do_unmap_notify(XEvent *e) {
 
 static void do_enter_notify(XEvent *e) {
   assert(e);
-  XCrossingEvent *ev = &e->xcrossing;
+  const XCrossingEvent *const ev = &e->xcrossing;
   if ((ev->mode != NotifyNormal || ev->detail == NotifyInferior) && ev->window != NeuroSystemGetRoot())
     return;
   NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
   if (!c)
     return;
-  NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
+
+  const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
   if (!NeuroCoreStackGetCurrLayout(ws)->follow_mouse)
     return;
   NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
@@ -116,7 +117,8 @@ static void do_enter_notify(XEvent *e) {
 
 static void do_configure_request(XEvent *e) {
   assert(e);
-  XConfigureRequestEvent *ev = &e->xconfigurerequest;
+  const XConfigureRequestEvent *const ev = &e->xconfigurerequest;
+
   XWindowChanges wc;
   wc.x = ev->x;
   wc.y = ev->y;
@@ -124,6 +126,7 @@ static void do_configure_request(XEvent *e) {
   wc.height = ev->height;
   wc.sibling = ev->above;
   wc.stack_mode = ev->detail;
+  wc.border_width = ev->border_width;
   XConfigureWindow(NeuroSystemGetDisplay(), ev->window, ev->value_mask, &wc);
   NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
   if (c) {
@@ -141,6 +144,7 @@ static void do_focus_in(XEvent *e) {
     return;
   if (NEURO_CLIENT_PTR(c)->win == e->xfocus.window)
     return;
+
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   NeuroDzenRefresh(true);
 }
@@ -150,6 +154,7 @@ static void do_client_message(XEvent *e) {
   NeuroClientPtrPtr c = NeuroClientFindWindow(e->xclient.window);
   if (!c)
     return;
+
   if (e->xclient.message_type == NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_STATE) &&
       ((unsigned)e->xclient.data.l[1] == NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_FULLSCREEN)
       || (unsigned)e->xclient.data.l[2] == NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_FULLSCREEN))) {
@@ -167,7 +172,8 @@ static void do_client_message(XEvent *e) {
 
 static void do_property_notify(XEvent *e) {
   assert(e);
-  XPropertyEvent *ev = &e->xproperty;
+  const XPropertyEvent *const ev = &e->xproperty;
+
   if (ev->atom == XA_WM_NAME || ev->atom == NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_NAME)) {  // Window title
     NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
     if (!c)
@@ -219,7 +225,7 @@ NeuroEventHandlerFn NeuroEventGetHandler(NeuroEventType t) {
 
 void NeuroEventManageWindow(Window w) {
   // Check if window is valid
-  XWindowAttributes wa;
+  XWindowAttributes wa = { 0 };
   if (!XGetWindowAttributes(NeuroSystemGetDisplay(), w, &wa))
     return;
   if (wa.override_redirect)
@@ -228,7 +234,7 @@ void NeuroEventManageWindow(Window w) {
     return;
 
   // Add client to the stack list
-  NeuroClient *cli = NeuroRuleNewClient(w, &wa);
+  const NeuroClient *const cli = NeuroRuleNewClient(w, &wa);
   if (!cli)
     NeuroSystemError("NeuroEventManageWindow - Could not alloc NeuroClient and set rules");
   NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);
@@ -274,12 +280,12 @@ void NeuroEventUnmanageClient(NeuroClientPtrPtr c) {
 }
 
 void NeuroEventLoadWindows() {
-  Window d1, d2, *wins = NULL;
-  XWindowAttributes wa;
+  Window d1 = 0UL, d2 = 0UL, *wins = NULL;
   unsigned int num = 0;
   if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
     NeuroSystemError("NeuroEventLoadWindows - Could not get windows");
   for (unsigned int i = 0; i < num; ++i) {
+    XWindowAttributes wa = { 0 };
     if (!XGetWindowAttributes(NeuroSystemGetDisplay(), wins[ i ], &wa))
       continue;
     if (wa.map_state != IsViewable)

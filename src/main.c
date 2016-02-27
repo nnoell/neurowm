@@ -58,7 +58,7 @@ static const Flag recompile_flag_ = { "--recompile", recompile_handler, "Recompi
 static const Flag reload_flag_    = { "--reload",    reload_handler,    "Reload the window manager"    };
 
 // Flags array
-static const Flag* flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag_, /*&reload_flag_,*/ NULL };
+static const Flag *const flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag_, /*&reload_flag_,*/ NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -106,12 +106,14 @@ static bool run_neurowm(int argc, const char *const *argv, int *status) {
 
 static bool run_flag(const char *flag_name) {
   assert(flag_name);
-  for (NeuroIndex i = 0U; flag_list_[ i ]; ++i)
-    if (!strcmp(flag_name, flag_list_[ i ]->name)) {
-      if (!flag_list_[ i ]->handler())
+  for (NeuroIndex i = 0U; flag_list_[ i ]; ++i) {
+    const Flag *const f = flag_list_[ i ];
+    if (!strcmp(flag_name, f->name)) {
+      if (!f->handler())
         perror(flag_name);
       return true;
     }
+  }
   return false;
 }
 

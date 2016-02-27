@@ -27,8 +27,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // XMotionUpdaterFn
-typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, NeuroIndex ws, const NeuroRectangle *c, int ex, int ey, int px,
-    int py);
+typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, const NeuroRectangle *c, int ex, int ey, int px, int py);
 
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -36,7 +35,7 @@ typedef void (*XMotionUpdaterFn)(NeuroRectangle *r, NeuroIndex ws, const NeuroRe
 //----------------------------------------------------------------------------------------------------------------------
 
 static bool is_protocol_delete(Window w) {
-  Atom *protocols;
+  Atom *protocols = NULL;
   bool ret = false;
   int n = 0;
   if (XGetWMProtocols(NeuroSystemGetDisplay(), w, &protocols, &n)) {
@@ -50,7 +49,7 @@ static bool is_protocol_delete(Window w) {
 
 static bool set_title_atom(NeuroClient *c, Atom atom) {
   assert(c);
-  XTextProperty tp;
+  XTextProperty tp = { 0 };
   XGetTextProperty(NeuroSystemGetDisplay(), c->win, &tp, atom);
   if (!tp.nitems)
     return false;
@@ -86,26 +85,25 @@ static void process_xmotion(NeuroRectangle *r, NeuroIndex ws, const NeuroRectang
   XEvent ev;
   do {
     XMaskEvent(NeuroSystemGetDisplay(), ButtonPressMask|ButtonReleaseMask|PointerMotionMask, &ev);
-    if (ev.type == MotionNotify)
-      xmuf(r, ws, c, ev.xmotion.x, ev.xmotion.y, px, py);
+    if (ev.type == MotionNotify) {
+      xmuf(r, c, ev.xmotion.x, ev.xmotion.y, px, py);
+      NeuroLayoutRunCurr(ws);
+      NeuroWorkspaceUpdate(ws);
+    }
   } while (ev.type != ButtonRelease);
   XUngrabPointer(NeuroSystemGetDisplay(), CurrentTime);
 }
 
-static void xmotion_move(NeuroRectangle *r, NeuroIndex ws, const NeuroRectangle *c, int ex, int ey, int px, int py) {
+static void xmotion_move(NeuroRectangle *r, const NeuroRectangle *c, int ex, int ey, int px, int py) {
   r->x = c->x + (ex - px);
   r->y = c->y + (ey - py);
-  NeuroLayoutRunCurr(ws);
-  NeuroWorkspaceUpdate(ws);
 }
 
-static void xmotion_resize(NeuroRectangle *r, NeuroIndex ws, const NeuroRectangle *c, int ex, int ey, int px, int py) {
+static void xmotion_resize(NeuroRectangle *r, const NeuroRectangle *c, int ex, int ey, int px, int py) {
   (void)px;
   (void)py;
   r->w = c->w + (ex - (c->w + r->x));
   r->h = c->h + (ey - (c->h + r->y));
-  NeuroLayoutRunCurr(ws);
-  NeuroWorkspaceUpdate(ws);
 }
 
 
@@ -403,7 +401,7 @@ NeuroClientPtrPtr NeuroClientFindFixed() {
   return NeuroCoreFindClient(NeuroClientTesterFixed, NULL);
 }
 
-// NeuroClient getters
+// Client getters
 NeuroClientPtrPtr NeuroClientGetFocused() {
   return NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
 }
@@ -419,7 +417,7 @@ NeuroClientPtrPtr NeuroClientGetPointed(int *x, int *y) {
   return NeuroClientFindWindow(childw);
 }
 
-// NeuroClient Selectors
+// Client Selectors
 NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c) {
   assert(c);
   return c;
@@ -480,7 +478,7 @@ NeuroClientPtrPtr NeuroClientSelectorRight(const NeuroClientPtrPtr c) {
   return query_pointer_client(NEURO_CLIENT_PTR(c)->ws, r->x + r->w + 1, r->y+1);
 }
 
-// NeuroClient Testers
+// Client Testers
 bool NeuroClientTesterWindow(const NeuroClientPtrPtr c, const void *w) {
   assert(c);
   assert(w);
@@ -499,7 +497,7 @@ bool NeuroClientTesterFixed(const NeuroClientPtrPtr c, const void *data) {
   return NEURO_CLIENT_PTR(c)->fixed_pos != NEURO_FIXED_POSITION_NULL;
 }
 
-// NeuroColor Setters
+// Color Setters
 NeuroColor NeuroClientColorSetterCurr(const NeuroClientPtrPtr c) {
   assert(c);
   return NeuroCoreClientIsCurr(c) ? NeuroSystemGetColor(NEURO_SYSTEM_COLOR_CURRENT) :
