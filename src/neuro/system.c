@@ -137,8 +137,8 @@ bool NeuroSystemInit() {
   // Get the regions
   const int width = XDisplayWidth(display_, screen_);
   const int height = XDisplayHeight(display_, screen_);
-  screen_region_ = (NeuroRectangle){ 0, 0, width, height };
-  hidden_region_ = (NeuroRectangle){ width, height, 1920, 1080 };
+  screen_region_ = (NeuroRectangle){ (NeuroPoint){ 0, 0 }, width, height };
+  hidden_region_ = (NeuroRectangle){ (NeuroPoint){ width, height }, 1920, 1080 };
 
   // Set colors, cursors and atoms
   if (!set_colors_cursors_atoms())
@@ -195,6 +195,15 @@ const NeuroRectangle *NeuroSystemGetHiddenRegion() {
 
 const int *NeuroSystemGetHiddenGaps() {
   return hidden_gaps_;
+}
+
+NeuroPoint *NeuroSystemGetPointerLocation(NeuroPoint *p) {
+  if (!p)
+    return NULL;
+  Window root_win = 0UL, child_win = 0UL;
+  int xc = 0, yc = 0;
+  unsigned int state = 0;
+  return XQueryPointer(display_, root_, &root_win, &child_win, &p->x, &p->y, &xc, &yc, &state) ? p : NULL;
 }
 
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c) {

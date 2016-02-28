@@ -243,7 +243,7 @@ static char **get_dzen_cmd(char **cmd, char *line, const NeuroDzenFlags *df, con
   assert(df);
   assert(m);
   snprintf(line, NEURO_DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
-      m->region.x - m->gaps[ 2 ] + df->x, m->region.y - m->gaps[ 0 ] + df->y, df->w, df->h, df->fg_color, df->bg_color,
+      m->region.p.x - m->gaps[ 2 ] + df->x, m->region.p.y - m->gaps[ 0 ] + df->y, df->w, df->h, df->fg_color, df->bg_color,
       df->align, df->font, df->event, df->extras);
   return str_to_cmd(cmd, line, " \t\n");
 }
@@ -589,7 +589,7 @@ void NeuroDzenLoggerScreen(const NeuroMonitor *m, char *str) {
   assert(str);
   (void)m;
   const NeuroRectangle *const r = NeuroSystemGetScreenRegion();
-  snprintf(str, NEURO_DZEN_LOGGER_MAX, "[screen: %i,%i %ix%i]", r->x, r->y, r->w, r->h);
+  snprintf(str, NEURO_DZEN_LOGGER_MAX, "[screen: %i,%i %ix%i]", r->p.x, r->p.y, r->w, r->h);
 }
 
 void NeuroDzenLoggerMonitorList(const NeuroMonitor *m, char *str) {
@@ -599,7 +599,7 @@ void NeuroDzenLoggerMonitorList(const NeuroMonitor *m, char *str) {
   for (const NeuroMonitor *m = NeuroMonitorSelectorHead(NULL); m; m = NeuroMonitorSelectorNext(m)) {
     static char buf[ NEURO_DZEN_LINE_MAX ];
     static NeuroRectangle r = { 0 };
-    NeuroGeometryUnsetRectangleGaps(&r, &m->region, m->gaps);
+    NeuroGeometryGetIncreasedRectangle(&r, &m->region, m->gaps);
     snprintf(buf, NEURO_DZEN_LOGGER_MAX, "[%s: %ix%i]", m->name ? m->name : "Unknown", r.w, r.h);
     strncat(str, buf, NEURO_DZEN_LINE_MAX - strlen(str) - 1);
   }

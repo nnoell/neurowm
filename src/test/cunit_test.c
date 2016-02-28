@@ -41,9 +41,8 @@ int clean_core_suite(void) {
 
 void add_remove_client(void) {
   // Create a fake client
-  const Window w = 0;
-  const XWindowAttributes wa = (XWindowAttributes){.x = 0, .y = 0, .width = 500, .height = 500};
-  NeuroClient *cli = NeuroTypeNewClient(w, &wa);
+  const Window win = 0UL;
+  NeuroClient *const cli = NeuroTypeNewClient(win, NULL);
   CU_ASSERT_PTR_NOT_NULL(cli);
 
   // Add it to the stack list
@@ -51,7 +50,7 @@ void add_remove_client(void) {
   CU_ASSERT_PTR_NOT_NULL(c);
 
   // Remove it from the stack list
-  NeuroClient *cli2 = NeuroCoreRemoveClient(c);
+  NeuroClient *const cli2 = NeuroCoreRemoveClient(c);
   CU_ASSERT_PTR_NOT_NULL(cli2);
   CU_ASSERT(cli == cli2);
 

@@ -121,12 +121,12 @@ void NeuroRuleSetLayoutRegion(NeuroRectangle *r, const NeuroClientPtrPtr c) {
 
   // Update the layout region
   if (NEURO_CLIENT_PTR(c)->fixed_pos == NEURO_FIXED_POSITION_UP) {
-    r->y += NEURO_CLIENT_PTR(c)->fixed_size * r->h;
+    r->p.y += NEURO_CLIENT_PTR(c)->fixed_size * r->h;
     r->h -= NEURO_CLIENT_PTR(c)->fixed_size * r->h;
   } else if (NEURO_CLIENT_PTR(c)->fixed_pos == NEURO_FIXED_POSITION_DOWN) {
     r->h -= NEURO_CLIENT_PTR(c)->fixed_size * r->h;
   } else if (NEURO_CLIENT_PTR(c)->fixed_pos == NEURO_FIXED_POSITION_LEFT) {
-    r->x += NEURO_CLIENT_PTR(c)->fixed_size * r->w;
+    r->p.x += NEURO_CLIENT_PTR(c)->fixed_size * r->w;
     r->w -= NEURO_CLIENT_PTR(c)->fixed_size * r->w;
   } else if (NEURO_CLIENT_PTR(c)->fixed_pos ==  NEURO_FIXED_POSITION_RIGHT) {
     r->w -= NEURO_CLIENT_PTR(c)->fixed_size * r->w;
@@ -142,23 +142,23 @@ void NeuroRuleSetClientRegion(NeuroRectangle *r, const NeuroClientPtrPtr c) {
 
   // Update the client region
   if (NEURO_CLIENT_PTR(c)->fixed_pos == NEURO_FIXED_POSITION_UP) {
-    r->x = stack_reg->x;
-    r->y = stack_reg->y;
+    r->p.x = stack_reg->p.x;
+    r->p.y = stack_reg->p.y;
     r->w = stack_reg->w;
     r->h = NEURO_CLIENT_PTR(c)->fixed_size * stack_reg->h;
   } else if (NEURO_CLIENT_PTR(c)->fixed_pos == NEURO_FIXED_POSITION_DOWN) {
-    r->x = stack_reg->x;
-    r->y = stack_reg->h - NEURO_CLIENT_PTR(c)->fixed_size;
+    r->p.x = stack_reg->p.x;
+    r->p.y = stack_reg->h - NEURO_CLIENT_PTR(c)->fixed_size;
     r->w = stack_reg->w;
     r->h = NEURO_CLIENT_PTR(c)->fixed_size * stack_reg->h;
   } else if (NEURO_CLIENT_PTR(c)->fixed_pos == NEURO_FIXED_POSITION_LEFT) {
-    r->x = stack_reg->x;
-    r->y = stack_reg->y;
+    r->p.x = stack_reg->p.x;
+    r->p.y = stack_reg->p.y;
     r->w = NEURO_CLIENT_PTR(c)->fixed_size * stack_reg->w;
     r->h = stack_reg->h;
   } else if (NEURO_CLIENT_PTR(c)->fixed_pos ==  NEURO_FIXED_POSITION_RIGHT) {
-    r->x = stack_reg->w - NEURO_CLIENT_PTR(c)->fixed_size;
-    r->y = stack_reg->y;
+    r->p.x = stack_reg->w - NEURO_CLIENT_PTR(c)->fixed_size;
+    r->p.y = stack_reg->p.y;
     r->w = NEURO_CLIENT_PTR(c)->fixed_size * stack_reg->w;
     r->h = stack_reg->h;
   }

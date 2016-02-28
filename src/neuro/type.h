@@ -135,12 +135,18 @@ typedef size_t NeuroIndex;
 
 // GEOMETRY TYPES ------------------------------------------------------------------------------------------------------
 
+// NeuroPoint
+struct NeuroPoint {
+  int x;
+  int y;
+};
+typedef struct NeuroPoint NeuroPoint;
+
 // NeuroRectangle
 struct NeuroRectangle {
-  int x;  // X position
-  int y;  // Y position
-  int w;  // Width
-  int h;  // Height
+  NeuroPoint p;  // top left point position
+  int w;         // Width
+  int h;         // Height
 };
 typedef struct NeuroRectangle NeuroRectangle;
 
@@ -152,13 +158,13 @@ typedef void (*NeuroFreeSetterFn)(NeuroRectangle *a, const NeuroRectangle *r);
 
 // NeuroClient
 struct NeuroClient {
+  NeuroRectangle float_region;
   const Window win;
   NeuroIndex ws;
   bool is_nsp;
   char class[ NEURO_NAME_SIZE_MAX ];
   char name[ NEURO_NAME_SIZE_MAX ];
   char title[ NEURO_NAME_SIZE_MAX ];
-  NeuroRectangle float_region;
   bool is_fullscreen;
   NeuroFreeSetterFn free_setter_fn;
   NeuroFixedPosition fixed_pos;

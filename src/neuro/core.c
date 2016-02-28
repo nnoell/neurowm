@@ -557,12 +557,12 @@ const NeuroMonitor *NeuroCoreStackGetMonitor(NeuroIndex ws) {
 void NeuroCoreStackSetMonitor(NeuroIndex ws, const NeuroMonitor *m) {
   Stack *const s = stack_set_.stack_list + (ws % stack_set_.size);
   if (m) {
-    NeuroGeometrySetRectangle(&s->region, m->region.x, m->region.y, m->region.w, m->region.h);
+    memmove(&s->region, &m->region, sizeof(NeuroRectangle));
     s->gaps = m->gaps;
     // NeuroCoreStackSetMonitor(m->ws, NULL);
   } else {
     const NeuroRectangle *const hidden_region = NeuroSystemGetHiddenRegion();
-    NeuroGeometrySetRectangle(&s->region, hidden_region->x, hidden_region->y, hidden_region->w, hidden_region->h);
+    memmove(&s->region, hidden_region, sizeof(NeuroRectangle));
     s->gaps = NeuroSystemGetHiddenGaps();
   }
   s->monitor = m;

@@ -30,7 +30,7 @@ extern const NeuroAction NeuroActionSleep;
 extern const NeuroAction NeuroActionInitCpuCalc;
 extern const NeuroAction NeuroActionStopCpuCalc;
 
-// NeuroLayout (Actions)
+// Layout (Actions)
 extern const NeuroAction NeuroActionChangeLayout;
 extern const NeuroAction NeuroActionResetLayout;
 extern const NeuroAction NeuroActionToggleLayout;
@@ -38,7 +38,7 @@ extern const NeuroAction NeuroActionToggleModLayout;
 extern const NeuroAction NeuroActionIncreaseMasterLayout;
 extern const NeuroAction NeuroActionResizeMasterLayout;
 
-// NeuroWorkspace (Actions)
+// Workspace (Actions)
 extern const NeuroAction NeuroActionChangeWorkspace;
 extern const NeuroAction NeuroActionSelectMonitor;
 extern const NeuroAction NeuroActionRestoreLastMinimized;
@@ -76,7 +76,7 @@ extern const NeuroAction* NeuroActionListSleep[];
 extern const NeuroAction* NeuroActionListInitCpuCalc[];
 extern const NeuroAction* NeuroActionListStopCpuCalc[];
 
-// NeuroLayout (NeuroAction Lists)
+// Layout (NeuroAction Lists)
 extern const NeuroAction* NeuroActionListChangeLayout[];
 extern const NeuroAction* NeuroActionListResetLayout[];
 extern const NeuroAction* NeuroActionListToggleLayout[];
@@ -84,7 +84,7 @@ extern const NeuroAction* NeuroActionListToggleModLayout[];
 extern const NeuroAction* NeuroActionListIncreaseMasterLayout[];
 extern const NeuroAction* NeuroActionListResizeMasterLayout[];
 
-// NeuroWorkspace (NeuroAction Lists)
+// Workspace (NeuroAction Lists)
 extern const NeuroAction* NeuroActionListChangeWorkspace[];
 extern const NeuroAction* NeuroActionListSelectMonitor[];
 extern const NeuroAction* NeuroActionListRestoreLastMinimized[];
@@ -129,7 +129,7 @@ void NeuroActionHandlerSleep(NeuroArg uint_arg);
 void NeuroActionHandlerInitCpuCalc(NeuroArg null_arg);
 void NeuroActionHandlerStopCpuCalc(NeuroArg null_arg);
 
-// NeuroLayout (Handlers)
+// Layout (Handlers)
 void NeuroActionHandlerChangeLayout(NeuroArg int_arg);
 void NeuroActionHandlerResetLayout(NeuroArg null_arg);
 void NeuroActionHandlerToggleLayout(NeuroArg idx_arg);
@@ -137,7 +137,7 @@ void NeuroActionHandlerToggleModLayout(NeuroArg lmod_arg);
 void NeuroActionHandlerIncreaseMasterLayout(NeuroArg int_arg);
 void NeuroActionHandlerResizeMasterLayout(NeuroArg float_arg);
 
-// NeuroWorkspace (Handlers)
+// Workspace (Handlers)
 void NeuroActionHandlerChangeWorkspace(NeuroArg WorkspaceSelectorFn_arg);
 void NeuroActionHandlerSelectMonitor(NeuroArg MonitorSelectorFn_arg);
 void NeuroActionHandlerRestoreLastMinimized(NeuroArg null_arg);

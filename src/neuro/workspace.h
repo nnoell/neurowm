@@ -37,6 +37,7 @@ void NeuroWorkspaceRemoveEnterNotifyMask(NeuroIndex ws);
 NeuroClientPtrPtr NeuroWorkspaceClientFindWindow(NeuroIndex ws, Window w);
 NeuroClientPtrPtr NeuroWorkspaceClientFindUrgent(NeuroIndex ws);
 NeuroClientPtrPtr NeuroWorkspaceClientFindFixed(NeuroIndex ws);
+NeuroClientPtrPtr NeuroWorkspaceClientFindPointed(NeuroIndex ws, const NeuroPoint *p);
 
 // Client
 void NeuroWorkspaceClientFocus(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);

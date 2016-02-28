@@ -362,11 +362,11 @@ static const NeuroKey key09_ = {  // Swaps the current client with the master on
 };
 static const NeuroKey key10_ = {  // Selects the upper client by position
   mod_mask_, XK_Up,
-  NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUp))
+  NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUpper))
 };
 static const NeuroKey key11_ = {  // Selects the lower client by position
   mod_mask_, XK_Down,
-  NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorDown))
+  NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorLower))
 };
 static const NeuroKey key12_ = {  // Selects the left client by position
   mod_mask_, XK_Left,
@@ -378,11 +378,11 @@ static const NeuroKey key13_ = {  // Selects the right client by position
 };
 static const NeuroKey key14_ = {  // Swaps the current client with the upper one by position
   mod_mask_|ShiftMask, XK_Up,
-  NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUp))
+  NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUpper))
 };
 static const NeuroKey key15_ = {  // Swaps the current client with the lower one by position
   mod_mask_|ShiftMask, XK_Down,
-  NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorDown))
+  NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorLower))
 };
 static const NeuroKey key16_ = {  // Swaps the current client with the left one by position
   mod_mask_|ShiftMask, XK_Left,

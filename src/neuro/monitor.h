@@ -29,7 +29,7 @@ NeuroIndex NeuroMonitorGetSize();
 // Getters
 const NeuroMonitor *NeuroMonitorGet(NeuroIndex m);
 const NeuroMonitor *NeuroMonitorFindDefault(NeuroIndex ws);
-const NeuroMonitor *NeuroMonitorFindPtr(int x, int y);
+const NeuroMonitor *NeuroMonitorFindPointed(const NeuroPoint *p);
 
 // Selector Functions
 const NeuroMonitor *NeuroMonitorSelectorHead(const NeuroMonitor *m);  // The first monitor

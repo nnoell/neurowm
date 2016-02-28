@@ -99,10 +99,10 @@ static const NeuroKey key09_ = {
     NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorHead))       };
 static const NeuroKey key10_ = {
     Mod1Mask, XK_Up,
-    NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUp))        };
+    NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUpper))     };
 static const NeuroKey key11_ = {
     Mod1Mask, XK_Down,
-    NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorDown))      };
+    NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorLower))     };
 static const NeuroKey key12_ = {
     Mod1Mask, XK_Left,
     NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorLeft))      };
@@ -111,10 +111,10 @@ static const NeuroKey key13_ = {
     NEURO_CHAIN(NeuroActionListFocusCurrClient, NEURO_ARG_CSF(NeuroClientSelectorRight))     };
 static const NeuroKey key14_ = {
     Mod1Mask|ShiftMask, XK_Up,
-    NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUp))         };
+    NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorUpper))      };
 static const NeuroKey key15_ = {
     Mod1Mask|ShiftMask, XK_Down,
-    NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorDown))       };
+    NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorLower))      };
 static const NeuroKey key16_ = {
     Mod1Mask|ShiftMask, XK_Left,
     NEURO_CHAIN(NeuroActionListSwapCurrClient, NEURO_ARG_CSF(NeuroClientSelectorLeft))       };

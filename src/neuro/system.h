@@ -82,6 +82,7 @@ int NeuroSystemGetScreen();
 const NeuroRectangle *NeuroSystemGetScreenRegion();
 const NeuroRectangle *NeuroSystemGetHiddenRegion();
 const int *NeuroSystemGetHiddenGaps();
+NeuroPoint *NeuroSystemGetPointerLocation(NeuroPoint *p);
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c);
 Atom NeuroSystemGetWmAtom(NeuroSystemWmatom a);
 Atom NeuroSystemGetNetAtom(NeuroSystemNetatom a);

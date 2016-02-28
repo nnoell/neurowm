@@ -231,6 +231,10 @@ NeuroClientPtrPtr NeuroWorkspaceClientFindFixed(NeuroIndex ws) {
   return NeuroCoreStackFindClient(ws, NeuroClientTesterFixed, NULL);
 }
 
+NeuroClientPtrPtr NeuroWorkspaceClientFindPointed(NeuroIndex ws, const NeuroPoint *p) {
+  return NeuroCoreStackFindClient(ws, NeuroClientTesterPointed, (const void *)p);
+}
+
 // Clients
 void NeuroWorkspaceClientFocus(const NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data) {
   (void)data;

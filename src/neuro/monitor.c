@@ -85,8 +85,8 @@ bool NeuroMonitorInit() {
     *(const int **)&m->gaps = mc->gaps;
     *(NeuroIndex *)&m->default_ws = mc->default_ws;
     *(const NeuroDzenPanel *const **)&m->dzen_panel_list = mc->dzen_panel_list;
-    const NeuroRectangle screen_region = { screen->x, screen->y, screen->width, screen->height };
-    NeuroGeometrySetRectangleGaps((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
+    const NeuroRectangle screen_region = { (NeuroPoint){ screen->x, screen->y }, screen->width, screen->height };
+    NeuroGeometryGetReducedRectangle((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
 
     // Increment monitor iterator
     ++monitor_iterator;
@@ -111,8 +111,8 @@ bool NeuroMonitorInit() {
   *(const int **)&m->gaps = mc->gaps;
   *(NeuroIndex *)&m->default_ws = mc->default_ws;
   *(const NeuroDzenPanel *const **)&m->dzen_panel_list = mc->dzen_panel_list;
-  const NeuroRectangle screen_region = { screen->x, screen->y, screen->w, screen->h };
-  NeuroGeometrySetRectangleGaps((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
+  const NeuroRectangle screen_region = { (NeuroPoint){ screen->p.x, screen->p.y }, screen->w, screen->h };
+  NeuroGeometryGetReducedRectangle((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
 
 #endif
 
@@ -141,12 +141,11 @@ const NeuroMonitor *NeuroMonitorFindDefault(NeuroIndex ws) {
   return NULL;
 }
 
-const NeuroMonitor *NeuroMonitorFindPtr(int x, int y) {
+const NeuroMonitor *NeuroMonitorFindPointed(const NeuroPoint *p) {
   for (NeuroIndex i = 0U; i < monitor_set_.size; ++i) {
     const NeuroMonitor *const m = monitor_set_.monitor_list + i;
-    if (NeuroGeometryIsPointInRectangle(&m->region, x, y)) {
+    if (NeuroGeometryIsPointInRectangle(&m->region, p))
       return m;
-    }
   }
   return NULL;
 }
