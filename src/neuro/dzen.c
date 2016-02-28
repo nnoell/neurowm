@@ -243,8 +243,8 @@ static char **get_dzen_cmd(char **cmd, char *line, const NeuroDzenFlags *df, con
   assert(df);
   assert(m);
   snprintf(line, NEURO_DZEN_LINE_MAX, "/usr/bin/dzen2 -x %i -y %i -w %i -h %i -fg %s -bg %s -ta %c -fn %s -e %s %s",
-      m->region.p.x - m->gaps[ 2 ] + df->x, m->region.p.y - m->gaps[ 0 ] + df->y, df->w, df->h, df->fg_color, df->bg_color,
-      df->align, df->font, df->event, df->extras);
+      m->region.p.x - m->gaps[ 2 ] + df->x, m->region.p.y - m->gaps[ 0 ] + df->y, df->w, df->h, df->fg_color,
+      df->bg_color, df->align, df->font, df->event, df->extras);
   return str_to_cmd(cmd, line, " \t\n");
 }
 

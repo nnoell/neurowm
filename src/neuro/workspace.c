@@ -194,7 +194,7 @@ void NeuroWorkspaceMinimize(NeuroIndex ws) {
 void NeuroWorkspaceRestoreLastMinimized(NeuroIndex ws) {
   if (NeuroCoreStackGetMinimizedNum(ws) <= 0)
     return;
-  NeuroClient *cli = NeuroCorePopMinimizedClient(ws);
+  const NeuroClient *cli = NeuroCorePopMinimizedClient(ws);
   if (!cli)
     NeuroSystemError("NeuroWorkspaceRestoreLastMinimized - Could not restore last minimized client");
   NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);

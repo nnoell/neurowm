@@ -144,7 +144,7 @@ bool NeuroSystemInit() {
   if (!set_colors_cursors_atoms())
     return false;
 
-  // Check if other window manager is already running
+  // Check if another window manager is already running
   XSetErrorHandler(xerror_handler_start);
 
   // Setup root window mask
