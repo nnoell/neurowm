@@ -278,8 +278,8 @@ void NeuroWorkspaceClientTile(NeuroClientPtrPtr ref, const NeuroClientSelectorFn
   process_client(NeuroClientTile, ref, csf, data);
 }
 
-void NeuroWorkspaceClientFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *freeSetterFn) {
-  process_client(NeuroClientFree, ref, csf, freeSetterFn);
+void NeuroWorkspaceClientFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *free_setter_fn) {
+  process_client(NeuroClientFree, ref, csf, free_setter_fn);
 }
 
 void NeuroWorkspaceClientToggleFree(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf,

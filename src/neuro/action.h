@@ -138,7 +138,7 @@ void NeuroActionHandlerIncreaseMasterLayout(NeuroArg int_arg);
 void NeuroActionHandlerResizeMasterLayout(NeuroArg float_arg);
 
 // Workspace (Handlers)
-void NeuroActionHandlerChangeWorkspace(NeuroArg WorkspaceSelectorFn_arg);
+void NeuroActionHandlerChangeWorkspace(NeuroArg workspaceSelectorFn_arg);
 void NeuroActionHandlerSelectMonitor(NeuroArg MonitorSelectorFn_arg);
 void NeuroActionHandlerRestoreLastMinimized(NeuroArg null_arg);
 void NeuroActionHandlerToggleScratchpad(NeuroArg command_arg);
@@ -146,7 +146,7 @@ void NeuroActionHandlerToggleScratchpad(NeuroArg command_arg);
 // CurrClient (Handlers)
 void NeuroActionHandlerFocusCurrClient(NeuroArg clientSelectorFn_arg);
 void NeuroActionHandlerSwapCurrClient(NeuroArg clientSelectorFn_arg);
-void NeuroActionHandlerSendCurrClient(NeuroArg WorkspaceSelectorFn_arg);
+void NeuroActionHandlerSendCurrClient(NeuroArg workspaceSelectorFn_arg);
 void NeuroActionHandlerKillCurrClient(NeuroArg clientSelectorFn_arg);
 void NeuroActionHandlerTileCurrClient(NeuroArg clientSelectorFn_arg);
 void NeuroActionHandlerNormalCurrClient(NeuroArg clientSelectorFn_arg);

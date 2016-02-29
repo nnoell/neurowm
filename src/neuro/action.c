@@ -12,7 +12,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Includes
-#include "config.h"
 #include "action.h"
 #include "system.h"
 #include "core.h"
@@ -298,9 +297,9 @@ void NeuroActionHandlerResizeMasterLayout(NeuroArg float_arg) {
 }
 
 // NeuroWorkspace
-void NeuroActionHandlerChangeWorkspace(NeuroArg WorkspaceSelectorFn_arg) {
-  assert(WorkspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_);
-  const NeuroIndex dst = NEURO_ARG_WSF_GET(WorkspaceSelectorFn_arg)();
+void NeuroActionHandlerChangeWorkspace(NeuroArg workspaceSelectorFn_arg) {
+  assert(workspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_);
+  const NeuroIndex dst = NEURO_ARG_WSF_GET(workspaceSelectorFn_arg)();
   process_workspace(NeuroWorkspaceChange, dst);
 }
 
@@ -354,9 +353,9 @@ void NeuroActionHandlerSwapCurrClient(NeuroArg clientSelectorFn_arg) {
   process_client(NeuroWorkspaceClientSwap, NeuroClientGetFocused(), NEURO_ARG_CSF_GET(clientSelectorFn_arg), NULL);
 }
 
-void NeuroActionHandlerSendCurrClient(NeuroArg WorkspaceSelectorFn_arg) {
-  assert(WorkspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_);
-  const NeuroIndex ws = NEURO_ARG_WSF_GET(WorkspaceSelectorFn_arg)() % NeuroCoreGetSize();
+void NeuroActionHandlerSendCurrClient(NeuroArg workspaceSelectorFn_arg) {
+  assert(workspaceSelectorFn_arg.GenericArgFn_.WorkspaceSelectorFn_);
+  const NeuroIndex ws = NEURO_ARG_WSF_GET(workspaceSelectorFn_arg)() % NeuroCoreGetSize();
   NeuroWorkspaceClientSend(NeuroClientGetFocused(), NeuroClientSelectorSelf, (const void *)&ws);
   // process_client(NeuroWorkspaceClientSend, NeuroClientGetFocused(), NeuroClientSelectorSelf, (const void *)&ws);
 }
