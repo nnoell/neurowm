@@ -23,13 +23,13 @@
 // CORE SUITE
 //----------------------------------------------------------------------------------------------------------------------
 
-int init_core_suite(void) {
+static int init_core_suite(void) {
   if (!NeuroCoreInit())
     return -1;
   return 0;
 }
 
-int clean_core_suite(void) {
+static int clean_core_suite(void) {
   NeuroCoreStop();
   return 0;
 }
@@ -39,7 +39,7 @@ int clean_core_suite(void) {
 // CORE TESTS
 //----------------------------------------------------------------------------------------------------------------------
 
-void add_remove_client(void) {
+static void add_remove_client(void) {
   // Create a fake client
   const Window win = 0UL;
   NeuroClient *const cli = NeuroTypeNewClient(win, NULL);
@@ -58,7 +58,7 @@ void add_remove_client(void) {
   NeuroTypeDeleteClient(cli2);
 }
 
-void set_curr_stack(void) {
+static void set_curr_stack(void) {
   NeuroCoreSetCurrStack(1);
   CU_ASSERT(NeuroCoreGetCurrStack() == 1);
 }

@@ -29,7 +29,7 @@ static bool is_free_size_hints(NeuroClient *c) {
   assert(c);
   int maxw = 0, maxh = 0, minw = 0, minh = 0;
   long msize = 0L;
-  XSizeHints size = { 0 };
+  XSizeHints size;
   if (!XGetWMNormalHints(NeuroSystemGetDisplay(), c->win, &size, &msize))
     size.flags = PSize;
   if (size.flags & PMaxSize) {

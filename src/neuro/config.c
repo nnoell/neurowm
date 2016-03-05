@@ -346,7 +346,7 @@ const NeuroKey* NeuroConfigDefaultKeyList[] = {
 
 // NeuroButton List
 const NeuroButton* NeuroConfigDefaultButtonList[] = {
-    &button0_, &button1_, &button2_, &button3_, &button4_, &button5_, &button5_, NULL };
+    &button0_, &button1_, &button2_, &button3_, &button4_, &button5_, &button6_, NULL };
 
 
 //----------------------------------------------------------------------------------------------------------------------

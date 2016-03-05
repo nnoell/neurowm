@@ -408,7 +408,7 @@ void NeuroActionHandlerFocusPtrClient(NeuroArg clientSelectorFn_arg) {
   assert(clientSelectorFn_arg.GenericArgFn_.ClientSelectorFn_);
 
   // Select the monitor where the pointer is
-  NeuroPoint p = { 0 };
+  NeuroPoint p;
   const NeuroMonitor *const m = NeuroMonitorFindPointed(NeuroSystemGetPointerLocation(&p));
   for (NeuroIndex ws = NeuroCoreGetHeadStack(); ws < NeuroCoreGetSize(); ++ws) {
     if (NeuroCoreStackGetMonitor(ws) == m) {

@@ -420,7 +420,7 @@ void NeuroThemeNnoellLoggerMonitorList(const NeuroMonitor *m, char *str) {
   const NeuroMonitor *const curr_m = NeuroCoreStackGetMonitor(NeuroCoreGetCurrStack());
   for (const NeuroMonitor * m = NeuroMonitorSelectorLast(NULL); m; m = NeuroMonitorSelectorPrev(m)) {
     static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ];
-    static NeuroRectangle r = { 0 };
+    static NeuroRectangle r;
     NeuroGeometryGetIncreasedRectangle(&r, &m->region, m->gaps);
     snprintf(tmp, NEURO_DZEN_LOGGER_MAX, "%ix%i", r.w, r.h);
     if (m == NeuroMonitorSelectorLast(NULL))

@@ -39,7 +39,7 @@ struct Flag {
 static bool help_handler();
 static bool version_handler();
 static bool recompile_handler();
-static bool reload_handler();
+// static bool reload_handler();
 
 // Main
 static bool run_neurowm(int argc, const char *const *argv, int *status);
@@ -55,7 +55,7 @@ static bool loop_run_neurowm(int argc, const char *const *argv);
 static const Flag help_flag_      = { "--help",      help_handler,      "Print this message"           };
 static const Flag version_flag_   = { "--version",   version_handler,   "Print the version number"     };
 static const Flag recompile_flag_ = { "--recompile", recompile_handler, "Recompile your configuration" };
-static const Flag reload_flag_    = { "--reload",    reload_handler,    "Reload the window manager"    };
+// static const Flag reload_flag_    = { "--reload",    reload_handler,    "Reload the window manager"    };
 
 // Flags array
 static const Flag *const flag_list_[] = { &help_flag_, &version_flag_, &recompile_flag_, /*&reload_flag_,*/ NULL };
@@ -86,9 +86,9 @@ static bool recompile_handler() {
   return true;
 }
 
-static bool reload_handler() {
-  return kill(NeuroSystemGetWmPid(), SIGUSR1) != -1;
-}
+// static bool reload_handler() {
+//   return kill(NeuroSystemGetWmPid(), SIGUSR1) != -1;
+// }
 
 static bool run_neurowm(int argc, const char *const *argv, int *status) {
   assert(argv);

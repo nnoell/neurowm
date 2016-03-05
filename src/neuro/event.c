@@ -201,7 +201,7 @@ static void do_property_notify(XEvent *e) {
 // PRIVATE VARIABLE DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static const NeuroEventHandlerFn const event_handlers_[ LASTEvent ] = {
+static const NeuroEventHandlerFn event_handlers_[ LASTEvent ] = {
   [ KeyPress ] = do_key_press,
   [ ButtonPress ] = do_button_press,
   [ MapRequest ] = do_map_request,
@@ -225,7 +225,7 @@ NeuroEventHandlerFn NeuroEventGetHandler(NeuroEventType t) {
 
 void NeuroEventManageWindow(Window w) {
   // Check if window is valid
-  XWindowAttributes wa = { 0 };
+  XWindowAttributes wa;
   if (!XGetWindowAttributes(NeuroSystemGetDisplay(), w, &wa))
     return;
   if (wa.override_redirect)
@@ -285,7 +285,7 @@ void NeuroEventLoadWindows() {
   if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
     NeuroSystemError("NeuroEventLoadWindows - Could not get windows");
   for (unsigned int i = 0; i < num; ++i) {
-    XWindowAttributes wa = { 0 };
+    XWindowAttributes wa;
     if (!XGetWindowAttributes(NeuroSystemGetDisplay(), wins[ i ], &wa))
       continue;
     if (wa.map_state != IsViewable)

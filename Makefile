@@ -28,10 +28,16 @@ PKG_LINK_OPTIONS =
 # DEFAULT VALUES
 #-----------------------------------------------------------------------------------------------------------------------
 
+# Compiler
+CC = cc
+# CC = clang
+
 # Compiler flags
-CC = gcc
 DFLAGS = ${PKG_BUILD_OPTIONS} -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
-CFLAGS = -g -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -fpic -O3 ${DFLAGS}
+CFLAGS = -g -Wall -fpic -O3 ${DFLAGS} \
+         -Wextra -Wformat=2 -Werror -Wfatal-errors -Wpedantic -pedantic-errors -Wwrite-strings -Winit-self \
+         -Wcast-align -Wpointer-arith -Wstrict-aliasing -Wmissing-declarations -Wmissing-include-dirs \
+         -Wno-unused-parameter -Wuninitialized
 LDADD = -lX11 ${PKG_LINK_OPTIONS} -pthread
 LDADDTEST = -lX11 ${PKG_LINK_OPTIONS} -pthread -lcunit
 
