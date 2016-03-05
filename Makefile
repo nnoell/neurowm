@@ -23,14 +23,16 @@ PKG_BUILD_OPTIONS = -DNDEBUG -DNXRANDR
 PKG_LINK_OPTIONS =
 #PKG_LINK_OPTIONS = -lXrandr
 
+# Compiler (cc | clang)
+#  cc    -> GNU C Compiler
+#  clang -> clang front-end c compiler
+CC = cc
+#CC = clang
+
 
 #-----------------------------------------------------------------------------------------------------------------------
 # DEFAULT VALUES
 #-----------------------------------------------------------------------------------------------------------------------
-
-# Compiler
-CC = cc
-#CC = clang
 
 # Compiler flags
 DFLAGS = ${PKG_BUILD_OPTIONS} -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
