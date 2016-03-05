@@ -45,7 +45,7 @@ static void focus_client(NeuroClientPtrPtr c) {
   NeuroSystemUngrabButtons(win, NeuroConfigGet()->button_list);
   XSetInputFocus(NeuroSystemGetDisplay(), win, RevertToPointerRoot, CurrentTime);
   XChangeProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_ACTIVE),
-      XA_WINDOW, 32, PropModeReplace, (unsigned char *)&(win), 1);
+      XA_WINDOW, 32, PropModeReplace, (const unsigned char *)&(win), 1);
 }
 
 static void unfocus_client(NeuroClientPtrPtr c) {
@@ -194,7 +194,7 @@ void NeuroWorkspaceMinimize(NeuroIndex ws) {
 void NeuroWorkspaceRestoreLastMinimized(NeuroIndex ws) {
   if (NeuroCoreStackGetMinimizedNum(ws) <= 0)
     return;
-  const NeuroClient *cli = NeuroCorePopMinimizedClient(ws);
+  NeuroClient *cli = NeuroCorePopMinimizedClient(ws);
   if (!cli)
     NeuroSystemError("NeuroWorkspaceRestoreLastMinimized - Could not restore last minimized client");
   NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);

@@ -33,8 +33,8 @@ static Atom net_atoms_[ NEURO_SYSTEM_NETATOM_END ];
 static NeuroColor colors_[ NEURO_SYSTEM_COLOR_END ];
 
 // Recompile command
-static const char recompile_cmd_output_[ NEURO_NAME_SIZE_MAX ];
-static const char recompile_cmd_source_[ NEURO_NAME_SIZE_MAX ];
+static char recompile_cmd_output_[ NEURO_NAME_SIZE_MAX ];
+static char recompile_cmd_source_[ NEURO_NAME_SIZE_MAX ];
 static const char *const recompile_cmd_[] = {
   "/usr/bin/cc",
   "-fpic",
@@ -118,6 +118,43 @@ static bool set_colors_cursors_atoms() {
       (unsigned char *)net_atoms_, NEURO_SYSTEM_NETATOM_END);
 
   return true;
+}
+
+// Note: This helper function will always exit
+static void run_command(const char *const *cmd) {
+  assert(cmd);
+  assert(*cmd);
+
+  // Create a new command in order to avoid const correctness issues in execvp 2nd parameter
+  const NeuroIndex size = NeuroTypeArrayLength((const void *const *)cmd) + 1;  // We need an extra slot for NULL
+  char **command = (char **)calloc(size, sizeof(void *));
+  if (!command)
+    NeuroSystemError("NeuroSystemSpawn - Could not calloc");
+
+  // Copy the data from cmd
+  command[ size - 1 ] = NULL;
+  NeuroIndex i = 0U;
+  for ( ; cmd[ i ]; ++i) {
+    const char *const src = cmd[ i ];
+    const NeuroIndex n = strlen(src);
+    command[ i ] = (char *)calloc(n, sizeof(char));
+    if (!command[ i ])
+      NeuroSystemError("NeuroSystemSpawn - Could not calloc");
+    strncpy(command[ i ], src, n);
+  }
+
+  // execute the command
+  execvp(command[ 0 ], command);
+
+  // If execvp failed, release command and terminate child process
+  for ( i = 0U; command[ i ]; ++i) {
+    free(command[ i ]);
+    command[ i ] = NULL;
+  }
+  free(command);
+  command = NULL;
+
+  NeuroSystemError("NeuroSystemSpawn - Could not execvp");
 }
 
 
@@ -247,7 +284,7 @@ void NeuroSystemChangeWmName(const char *name) {
   const Atom netwmname = XInternAtom(display_, "_NET_WM_NAME", false);
   const Atom utf8_str = XInternAtom(display_, "UTF8_STRING", false);
   XChangeProperty(display_, root_, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root_, 1);
-  XChangeProperty(display_, root_, netwmname, utf8_str, 8, PropModeReplace, (unsigned char *)name, strlen(name));
+  XChangeProperty(display_, root_, netwmname, utf8_str, 8, PropModeReplace, (const unsigned char *)name, strlen(name));
 }
 
 void NeuroSystemChangeProcName(const char *name) {
@@ -263,41 +300,61 @@ pid_t NeuroSystemGetWmPid() {
 }
 
 bool NeuroSystemSpawn(const char *const *cmd, pid_t *p) {
-  assert(cmd);
+  if (!cmd && !*cmd)
+    return false;
+
+  // Create a new process for the new command
   const pid_t pid = fork();
   if (pid == -1)
     return false;
-  if (pid == 0) {  // Child
+
+  // Run the command within the child process
+  if (pid == 0) {
     if (display_)
       close(ConnectionNumber(display_));
     setsid();
-    execvp(cmd[ 0 ], (char *const *)cmd);
-    NeuroSystemError("NeuroSystemSpawn - Could not execvp");
+
+    run_command(cmd);
   }
+
+  // Store the pid if needed
   if (p)
     *p = pid;
+
   return true;
 }
 
 int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p) {
-  assert(cmd);
+  if (!cmd && !*cmd)
+    return -1;
+
+  // Create a fd array for the pipe
   int filedes[ 2 ];
   if (pipe(filedes))
     return -1;
+
+  // Run command within the child process
   const pid_t pid = fork();
   if (pid < 0)
     return -1;
-  if (pid == 0) {  // Child
+
+  // Run the command within the child process
+  if (pid == 0) {
     if (display_)
       close(ConnectionNumber(display_));
     setsid();
+
+    // redirect the output of the command
     dup2(filedes[ 0 ], STDIN_FILENO);
     close(filedes[ 0 ]);
-    execvp(cmd[ 0 ], (char *const *)cmd);
-    exit(EXIT_FAILURE);
+
+    run_command(cmd);
   }
+
+  // Store the pid if needed
   if (p)
     *p = pid;
+
   return filedes[ 1 ];
 }
 

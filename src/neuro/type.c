@@ -35,7 +35,7 @@ NeuroClient *NeuroTypeNewClient(Window w, const XWindowAttributes *wa) {
   c->float_region.h = wa ? wa->height : 500;
 
   // Set the window
-  *(Window *)&c->win = w;
+  c->win = w;
 
   // Set the properties
   c->ws = 0;

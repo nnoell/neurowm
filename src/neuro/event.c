@@ -234,7 +234,7 @@ void NeuroEventManageWindow(Window w) {
     return;
 
   // Add client to the stack list
-  const NeuroClient *const cli = NeuroRuleNewClient(w, &wa);
+  NeuroClient *const cli = NeuroRuleNewClient(w, &wa);
   if (!cli)
     NeuroSystemError("NeuroEventManageWindow - Could not alloc NeuroClient and set rules");
   NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);

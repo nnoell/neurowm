@@ -210,17 +210,17 @@ void NeuroLayoutIncreaseMaster(NeuroIndex ws, int step) {
   const int res = as[ 0 ].int_ + step;
   if (res < 1)
     return;
-  *(int *)&(as[ 0 ].int_) = res;
+  as[ 0 ].int_ = res;
   NeuroLayoutRunCurr(ws);
   NeuroWorkspaceFocus(ws);
 }
 
 void NeuroLayoutResizeMaster(NeuroIndex ws, float factor) {
-  const NeuroArg *const as = NeuroCoreStackGetCurrLayout(ws)->parameters;
+  NeuroArg *const as = NeuroCoreStackGetCurrLayout(ws)->parameters;
   const float new_master_size = factor * as[ 2 ].float_ + as[ 1 ].float_;
   if (new_master_size <= 0.0f || new_master_size >= 1.0f)
     return;
-  *(float *)&(as[ 1 ].float_) = new_master_size;
+  as[ 1 ].float_ = new_master_size;
   NeuroLayoutRunCurr(ws);
   NeuroWorkspaceFocus(ws);
 }

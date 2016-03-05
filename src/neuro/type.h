@@ -159,7 +159,7 @@ typedef void (*NeuroFreeSetterFn)(NeuroRectangle *a, const NeuroRectangle *r);
 // NeuroClient
 struct NeuroClient {
   NeuroRectangle float_region;
-  const Window win;
+  Window win;
   NeuroIndex ws;
   bool is_nsp;
   char class[ NEURO_NAME_SIZE_MAX ];
@@ -174,7 +174,7 @@ struct NeuroClient {
 typedef struct NeuroClient NeuroClient;
 
 // NeuroClientPtrPtr
-typedef NeuroClient *const *NeuroClientPtrPtr;
+typedef NeuroClient **NeuroClientPtrPtr;
 
 // NeuroClientTesterFn
 typedef bool (*NeuroClientTesterFn)(NeuroClientPtrPtr c, const void *p);
@@ -187,34 +187,34 @@ typedef NeuroClientPtrPtr (*NeuroClientSelectorFn)(NeuroClientPtrPtr c);
 
 // NeuroDzenBox
 struct NeuroDzenBox {
-  const char *const bg_color;
-  const char *const fg_color;
-  const char *const box_color;
-  const char *const left_icon;
-  const char *const right_icon;
-  const int box_height;
+  const char *bg_color;
+  const char *fg_color;
+  const char *box_color;
+  const char *left_icon;
+  const char *right_icon;
+  int box_height;
 };
 typedef struct NeuroDzenBox NeuroDzenBox;
 
 // NeuroDzenClickableArea
 typedef struct NeuroDzenClickableArea NeuroDzenClickableArea;
 struct NeuroDzenClickableArea {
-  const char *const left_click;
-  const char *const middle_click;
-  const char *const right_click;
-  const char *const wheel_up;
-  const char *const wheel_down;
+  const char *left_click;
+  const char *middle_click;
+  const char *right_click;
+  const char *wheel_up;
+  const char *wheel_down;
 };
 
 // NeuroDzenFlags
 struct NeuroDzenFlags {
-  const int x, y, w, h;
-  const char *const fg_color;
-  const char *const bg_color;
-  const char align;
-  const char *const font;
-  const char *const event;
-  const char *const extras;
+  int x, y, w, h;
+  const char *fg_color;
+  const char *bg_color;
+  char align;
+  const char *font;
+  const char *event;
+  const char *extras;
 };
 typedef struct NeuroDzenFlags NeuroDzenFlags;
 
@@ -245,11 +245,11 @@ typedef struct NeuroMonitorConf NeuroMonitorConf;
 
 // NeuroMonitor
 struct NeuroMonitor {
-  const char *const name;
-  const NeuroIndex default_ws;
-  const int *const gaps;
-  const NeuroRectangle region;  // The region does not include the gaps (region + gaps = total_monitor_area)
-  const NeuroDzenPanel *const *const dzen_panel_list;
+  const char *name;
+  NeuroIndex default_ws;
+  const int *gaps;
+  NeuroRectangle region;  // The region does not include the gaps (region + gaps = total_monitor_area)
+  const NeuroDzenPanel *const *dzen_panel_list;
 };
 typedef struct NeuroMonitor NeuroMonitor;
 
@@ -267,32 +267,32 @@ typedef NeuroIndex (*NeuroWorkspaceSelectorFn)();
 
 // NeuroArgFn (Needed to wrap the function pointers into a union/struct so that they can be treated as data)
 union NeuroArgFn {
-  const NeuroFreeSetterFn FreeSetterFn_;
-  const NeuroClientSelectorFn ClientSelectorFn_;
-  const NeuroWorkspaceSelectorFn WorkspaceSelectorFn_;
-  const NeuroMonitorSelectorFn MonitorSelectorFn_;
+  NeuroFreeSetterFn FreeSetterFn_;
+  NeuroClientSelectorFn ClientSelectorFn_;
+  NeuroWorkspaceSelectorFn WorkspaceSelectorFn_;
+  NeuroMonitorSelectorFn MonitorSelectorFn_;
 };
 typedef union NeuroArgFn NeuroArgFn;
 
 // NeuroArg
 union NeuroArg {
-  const void *const pointer_;
-  const char char_;
-  const int int_;
-  const unsigned int uint_;
-  const NeuroIndex idx_;
-  const NeuroLayoutMod LayoutMod_;
-  const float float_;
-  const char *const string_;
-  const char *const *const command_;
-  const NeuroArgFn GenericArgFn_;
+  const void *pointer_;
+  char char_;
+  int int_;
+  unsigned int uint_;
+  NeuroIndex idx_;
+  NeuroLayoutMod LayoutMod_;
+  float float_;
+  const char *string_;
+  const char *const *command_;
+  NeuroArgFn GenericArgFn_;
 };
 typedef union NeuroArg NeuroArg;
 
 // NeuroMaybeArg
 struct NeuroMaybeArg {
-  const bool is_nothing;
-  const NeuroArg value;
+  bool is_nothing;
+  NeuroArg value;
 };
 typedef struct NeuroMaybeArg NeuroMaybeArg;
 
@@ -304,15 +304,15 @@ typedef void (*NeuroFn)(NeuroArg arg);
 
 // NeuroAction
 struct NeuroAction {
-  const NeuroFn handler;
-  const NeuroArg arg;
+  NeuroFn handler;
+  NeuroArg arg;
 };
 typedef struct NeuroAction NeuroAction;
 
 // NeuroActionChain
 struct NeuroActionChain {
-  const NeuroAction *const *const action_list;
-  const NeuroMaybeArg arg;
+  const NeuroAction *const *action_list;
+  NeuroMaybeArg arg;
 };
 typedef struct NeuroActionChain NeuroActionChain;
 
@@ -343,11 +343,11 @@ typedef NeuroArrange *(*NeuroArrangerFn)(NeuroArrange *);
 
 // NeuroLayout
 struct NeuroLayout {
-  const NeuroArrangerFn arranger_fn;
-  const NeuroColorSetterFn border_color_setter_fn;
-  const NeuroBorderSetterFn border_width_setter_fn;
-  const NeuroBorderSetterFn border_gap_setter_fn;
-  const float *const region;
+  NeuroArrangerFn arranger_fn;
+  NeuroColorSetterFn border_color_setter_fn;
+  NeuroBorderSetterFn border_width_setter_fn;
+  NeuroBorderSetterFn border_gap_setter_fn;
+  const float *region;
   NeuroLayoutMod mod;
   bool follow_mouse;
   NeuroArg parameters[ NEURO_ARRANGE_ARGS_MAX ];

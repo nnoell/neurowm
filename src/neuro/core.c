@@ -51,8 +51,8 @@ struct Stack {
   NeuroIndex curr_layout_index;
   NeuroIndex curr_toggled_layout_index;
   bool is_toggled_layout;
-  const NeuroIndex num_layouts;
-  const NeuroIndex num_toggled_layouts;
+  NeuroIndex num_layouts;
+  NeuroIndex num_toggled_layouts;
   NeuroLayout *layouts;
   NeuroLayout *toggled_layouts;
   NeuroIndex num_minimized;  // Number of minimized clients
@@ -92,7 +92,7 @@ static void update_nsp_stack(Stack *s) {
   s->nsp = NULL;
 }
 
-static Node *new_node(const NeuroClient *c) {
+static Node *new_node(NeuroClient *c) {
   assert(c);
   Node *const n = (Node *)malloc(sizeof(Node));
   if (!n)
@@ -237,11 +237,11 @@ static void set_layouts(NeuroLayout *layout, const NeuroLayoutConf *const *layou
   for (NeuroIndex i = 0U; i < size; ++i) {
     NeuroLayout *const l = layout + i;
     const NeuroLayoutConf *const lc = layout_conf[ i ];
-    *(NeuroArrangerFn *)&l->arranger_fn = lc->arranger_fn;
-    *(NeuroColorSetterFn *)&l->border_color_setter_fn = lc->border_color_setter_fn;
-    *(NeuroBorderSetterFn *)&l->border_width_setter_fn = lc->border_width_setter_fn;
-    *(NeuroBorderSetterFn *)&l->border_gap_setter_fn = lc->border_gap_setter_fn;
-    *(const float **)&l->region = lc->region;
+    l->arranger_fn = lc->arranger_fn;
+    l->border_color_setter_fn = lc->border_color_setter_fn;
+    l->border_width_setter_fn = lc->border_width_setter_fn;
+    l->border_gap_setter_fn = lc->border_gap_setter_fn;
+    l->region = lc->region;
     l->mod = lc->mod;
     l->follow_mouse = lc->follow_mouse;
     memmove(l->parameters, lc->parameters, sizeof(NeuroArg)*NEURO_ARRANGE_ARGS_MAX);
@@ -285,8 +285,8 @@ static bool init_stack(Stack *s, const char *name, const NeuroLayoutConf *const 
   s->curr_layout_index = 0U;
   s->curr_toggled_layout_index = 0U;
   s->is_toggled_layout = false;
-  *(NeuroIndex *)&(s->num_layouts) = size_l;
-  *(NeuroIndex *)&(s->num_toggled_layouts) = size_tl;
+  s->num_layouts = size_l;
+  s->num_toggled_layouts = size_tl;
 
   // Set configuration
   s->name = name;
@@ -436,7 +436,7 @@ void NeuroCoreSetCurrStack(NeuroIndex ws) {
   stack_set_.curr = ws % stack_set_.size;
 }
 
-void NeuroCoreSetCurrClient(const NeuroClientPtrPtr c) {
+void NeuroCoreSetCurrClient(NeuroClientPtrPtr c) {
   if (!c)
     return;
   set_curr_node((Node *)c);
@@ -472,7 +472,7 @@ NeuroClientPtrPtr NeuroCoreFindNspClient() {
   return NULL;
 }
 
-NeuroClientPtrPtr NeuroCoreAddClientEnd(const NeuroClient *c) {
+NeuroClientPtrPtr NeuroCoreAddClientEnd(NeuroClient *c) {
   if (!c)
     return NULL;
   Stack *const s = stack_set_.stack_list + c->ws;
@@ -499,7 +499,7 @@ NeuroClientPtrPtr NeuroCoreAddClientEnd(const NeuroClient *c) {
   return (NeuroClientPtrPtr)n;
 }
 
-NeuroClientPtrPtr NeuroCoreAddClientStart(const NeuroClient *c) {
+NeuroClientPtrPtr NeuroCoreAddClientStart(NeuroClient *c) {
   if (!c)
     return NULL;
   Stack *const s = stack_set_.stack_list + c->ws;

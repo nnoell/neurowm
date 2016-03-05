@@ -102,7 +102,7 @@ NeuroClient *NeuroRuleNewClient(Window w, const XWindowAttributes *wa) {
   if (!wa)
     return NULL;
 
-  NeuroClient *const c = NeuroTypeNewClient(w, wa);
+  NeuroClient *c = NeuroTypeNewClient(w, wa);
   if (!c)
     return NULL;
 

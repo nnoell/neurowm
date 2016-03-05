@@ -78,13 +78,13 @@ bool NeuroMonitorInit() {
 
     // Get NeuroMonitor and NeuroMonitorConf pointers
     const NeuroMonitorConf *const mc = monitor_list[ monitor_iterator ];
-    const NeuroMonitor *const m = monitor_set_.monitor_list + monitor_iterator;
+    NeuroMonitor *const m = monitor_set_.monitor_list + monitor_iterator;
 
     // Initialize NeuroMonitor using NeuroMonitorConf and Screen data
-    *(const char **)&m->name = mc->name;
-    *(const int **)&m->gaps = mc->gaps;
-    *(NeuroIndex *)&m->default_ws = mc->default_ws;
-    *(const NeuroDzenPanel *const **)&m->dzen_panel_list = mc->dzen_panel_list;
+    m->name = mc->name;
+    m->gaps = mc->gaps;
+    m->default_ws = mc->default_ws;
+    m->dzen_panel_list = mc->dzen_panel_list;
     const NeuroRectangle screen_region = { (NeuroPoint){ screen->x, screen->y }, screen->width, screen->height };
     NeuroGeometryGetReducedRectangle((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
 
