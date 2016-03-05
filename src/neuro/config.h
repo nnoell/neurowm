@@ -53,5 +53,5 @@ extern const NeuroButton* NeuroConfigDefaultButtonList[];
 
 // NeuroConfiguration functions
 void NeuroConfigSet(const NeuroConfiguration *c);
-const NeuroConfiguration *NeuroConfigGet();
+const NeuroConfiguration *NeuroConfigGet(void);
 

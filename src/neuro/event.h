@@ -35,5 +35,5 @@ typedef unsigned int NeuroEventType;
 NeuroEventHandlerFn NeuroEventGetHandler(NeuroEventType t);
 void NeuroEventManageWindow(Window w);
 void NeuroEventUnmanageClient(NeuroClientPtrPtr c);
-void NeuroEventLoadWindows();
+void NeuroEventLoadWindows(void);
 

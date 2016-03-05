@@ -30,14 +30,14 @@ PKG_LINK_OPTIONS =
 
 # Compiler
 CC = cc
-# CC = clang
+#CC = clang
 
 # Compiler flags
 DFLAGS = ${PKG_BUILD_OPTIONS} -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
-CFLAGS = -g -Wall -fpic -O3 ${DFLAGS} \
-         -Wextra -Wformat=2 -Werror -Wfatal-errors -Wpedantic -pedantic-errors -Wwrite-strings -Winit-self \
-         -Wcast-align -Wpointer-arith -Wstrict-aliasing -Wmissing-declarations -Wmissing-include-dirs \
-         -Wno-unused-parameter -Wuninitialized -Wcast-qual
+CFLAGS = -g -Wall -fpic -O3 ${DFLAGS}\
+         -Wextra -Wformat=2 -Werror -Wfatal-errors -Wpedantic -pedantic-errors -Wwrite-strings -Winit-self\
+         -Wcast-align -Wpointer-arith -Wstrict-aliasing -Wmissing-declarations -Wmissing-include-dirs -Wcast-qual\
+         -Wno-unused-parameter -Wuninitialized -Wold-style-definition -Wstrict-prototypes -Wmissing-prototypes
 LDADD = -lX11 ${PKG_LINK_OPTIONS} -pthread
 LDADDTEST = -lX11 ${PKG_LINK_OPTIONS} -pthread -lcunit
 

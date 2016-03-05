@@ -395,11 +395,11 @@ NeuroClientPtrPtr NeuroClientFindWindow(Window w) {
   return NeuroCoreFindClient(NeuroClientTesterWindow, (const void *)&w);
 }
 
-NeuroClientPtrPtr NeuroClientFindUrgent() {
+NeuroClientPtrPtr NeuroClientFindUrgent(void) {
   return NeuroCoreFindClient(NeuroClientTesterUrgent, NULL);
 }
 
-NeuroClientPtrPtr NeuroClientFindFixed() {
+NeuroClientPtrPtr NeuroClientFindFixed(void) {
   return NeuroCoreFindClient(NeuroClientTesterFixed, NULL);
 }
 
@@ -408,11 +408,11 @@ NeuroClientPtrPtr NeuroClientFindPointed(const NeuroPoint *p) {
 }
 
 // Client getters
-NeuroClientPtrPtr NeuroClientGetFocused() {
+NeuroClientPtrPtr NeuroClientGetFocused(void) {
   return NeuroCoreStackGetCurrClient(NeuroCoreGetCurrStack());
 }
 
-NeuroClientPtrPtr NeuroClientGetPointedByPointer() {
+NeuroClientPtrPtr NeuroClientGetPointedByPointer(void) {
   NeuroPoint p;
   return NeuroClientFindPointed(NeuroSystemGetPointerLocation(&p));
 }

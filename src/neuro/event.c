@@ -279,7 +279,7 @@ void NeuroEventUnmanageClient(NeuroClientPtrPtr c) {
   NeuroWorkspaceAddEnterNotifyMask(ws);
 }
 
-void NeuroEventLoadWindows() {
+void NeuroEventLoadWindows(void) {
   Window d1 = 0UL, d2 = 0UL, *wins = NULL;
   unsigned int num = 0;
   if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))

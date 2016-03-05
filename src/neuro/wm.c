@@ -35,7 +35,7 @@ static bool recompile_wm(pid_t *pid) {
   return NeuroSystemSpawn(NeuroSystemGetRecompileCommand(NULL, NULL), pid);
 }
 
-static void stop_wm() {
+static void stop_wm(void) {
   NeuroActionRunActionChain(&NeuroConfigGet()->stop_action_chain);
   NeuroDzenStop();
   NeuroCoreStop();
@@ -105,11 +105,11 @@ int NeuroWmRun(const NeuroConfiguration *c) {
   return EXIT_SUCCESS;
 }
 
-void NeuroWmQuit() {
+void NeuroWmQuit(void) {
   stop_main_while_ = true;
 }
 
-void NeuroWmReload() {
+void NeuroWmReload(void) {
   wm_signal_handler(SIGUSR1);
 }
 

@@ -42,13 +42,13 @@ void NeuroClientFreeResize(NeuroClientPtrPtr c, const void *free_setter_fn);
 
 // Find Client
 NeuroClientPtrPtr NeuroClientFindWindow(Window w);
-NeuroClientPtrPtr NeuroClientFindUrgent();
-NeuroClientPtrPtr NeuroClientFindFixed();
+NeuroClientPtrPtr NeuroClientFindUrgent(void);
+NeuroClientPtrPtr NeuroClientFindFixed(void);
 NeuroClientPtrPtr NeuroClientFindPointed(const NeuroPoint *p);
 
 // Client Getters
-NeuroClientPtrPtr NeuroClientGetFocused();
-NeuroClientPtrPtr NeuroClientGetPointedByPointer();
+NeuroClientPtrPtr NeuroClientGetFocused(void);
+NeuroClientPtrPtr NeuroClientGetPointedByPointer(void);
 
 // Client Testers
 bool NeuroClientTesterWindow(const NeuroClientPtrPtr c, const void *w);

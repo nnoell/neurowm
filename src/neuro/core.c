@@ -335,7 +335,7 @@ static void delete_stack_list(Stack *s) {
 //----------------------------------------------------------------------------------------------------------------------
 
 // StackSet
-bool NeuroCoreInit() {
+bool NeuroCoreInit(void) {
   // Allocate as many stacks as we need
   const NeuroWorkspace *const *const workspace_list = NeuroConfigGet()->workspace_list;
   if (!workspace_list)
@@ -371,7 +371,7 @@ bool NeuroCoreInit() {
   return true;
 }
 
-void NeuroCoreStop() {
+void NeuroCoreStop(void) {
   // Remove the stacks
   for (NeuroIndex i = 0U; i < stack_set_.size + 1; ++i)
     stop_stack(stack_set_.stack_list + i);
@@ -381,30 +381,30 @@ void NeuroCoreStop() {
   stack_set_.stack_list = NULL;
 }
 
-NeuroIndex NeuroCoreGetHeadStack() {
+NeuroIndex NeuroCoreGetHeadStack(void) {
   return 0U;
 }
-NeuroIndex NeuroCoreGetLastStack() {
+NeuroIndex NeuroCoreGetLastStack(void) {
   return stack_set_.size - 1U;
 }
 
-NeuroIndex NeuroCoreGetCurrStack() {
+NeuroIndex NeuroCoreGetCurrStack(void) {
   return stack_set_.curr;
 }
 
-NeuroIndex NeuroCoreGetPrevStack() {
+NeuroIndex NeuroCoreGetPrevStack(void) {
   return (stack_set_.size + stack_set_.curr - 1U) % stack_set_.size;
 }
 
-NeuroIndex NeuroCoreGetNextStack() {
+NeuroIndex NeuroCoreGetNextStack(void) {
   return (stack_set_.curr + 1U) % stack_set_.size;
 }
 
-NeuroIndex NeuroCoreGetOldStack() {
+NeuroIndex NeuroCoreGetOldStack(void) {
   return stack_set_.old;
 }
 
-NeuroIndex NeuroCoreGetNspStack() {
+NeuroIndex NeuroCoreGetNspStack(void) {
   return stack_set_.size - 1U;  // NSP stack is always the last one
 }
 
@@ -417,15 +417,15 @@ NeuroIndex NeuroCoreGetMonitorStack(const NeuroMonitor *m) {
   return stack_set_.curr;  // It should never happen
 }
 
-NeuroIndex NeuroCoreGetSize() {
+NeuroIndex NeuroCoreGetSize(void) {
   return stack_set_.size;
 }
 
-NeuroIndex NeuroCoreGetNspStackSize() {
+NeuroIndex NeuroCoreGetNspStackSize(void) {
   return stack_set_.stack_list[ stack_set_.size - 1U ].size;
 }
 
-NeuroClientPtrPtr NeuroCoreGetCurrClientNspStack() {
+NeuroClientPtrPtr NeuroCoreGetCurrClientNspStack(void) {
   return (NeuroClientPtrPtr)stack_set_.stack_list[ stack_set_.size - 1U ].curr;
 }
 
@@ -458,7 +458,7 @@ NeuroClientPtrPtr NeuroCoreFindClient(const NeuroClientTesterFn ctf, const void 
 }
 
 // First, search in the current stack, if is not there, search in the other stacks
-NeuroClientPtrPtr NeuroCoreFindNspClient() {
+NeuroClientPtrPtr NeuroCoreFindNspClient(void) {
   Node *n = stack_set_.stack_list[ stack_set_.curr ].nsp;
   if (n)
     return (NeuroClientPtrPtr)n;

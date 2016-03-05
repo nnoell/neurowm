@@ -22,23 +22,23 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // StackSet
-bool NeuroCoreInit();
-void NeuroCoreStop();
-NeuroIndex NeuroCoreGetHeadStack();
-NeuroIndex NeuroCoreGetLastStack();
-NeuroIndex NeuroCoreGetCurrStack();
-NeuroIndex NeuroCoreGetPrevStack();
-NeuroIndex NeuroCoreGetNextStack();
-NeuroIndex NeuroCoreGetOldStack();
-NeuroIndex NeuroCoreGetNspStack();
+bool NeuroCoreInit(void);
+void NeuroCoreStop(void);
+NeuroIndex NeuroCoreGetHeadStack(void);
+NeuroIndex NeuroCoreGetLastStack(void);
+NeuroIndex NeuroCoreGetCurrStack(void);
+NeuroIndex NeuroCoreGetPrevStack(void);
+NeuroIndex NeuroCoreGetNextStack(void);
+NeuroIndex NeuroCoreGetOldStack(void);
+NeuroIndex NeuroCoreGetNspStack(void);
 NeuroIndex NeuroCoreGetMonitorStack(const NeuroMonitor *m);
-NeuroIndex NeuroCoreGetSize();
-NeuroIndex NeuroCoreGetNspStackSize();
-NeuroClientPtrPtr NeuroCoreGetCurrClientNspStack();
+NeuroIndex NeuroCoreGetSize(void);
+NeuroIndex NeuroCoreGetNspStackSize(void);
+NeuroClientPtrPtr NeuroCoreGetCurrClientNspStack(void);
 void NeuroCoreSetCurrStack(NeuroIndex ws);
 void NeuroCoreSetCurrClient(NeuroClientPtrPtr c);
 NeuroClientPtrPtr NeuroCoreFindClient(const NeuroClientTesterFn ctf, const void *data);
-NeuroClientPtrPtr NeuroCoreFindNspClient();
+NeuroClientPtrPtr NeuroCoreFindNspClient(void);
 NeuroClientPtrPtr NeuroCoreAddClientEnd(NeuroClient *c);
 NeuroClientPtrPtr NeuroCoreAddClientStart(NeuroClient *c);
 NeuroClient *NeuroCoreRemoveClient(NeuroClientPtrPtr c);

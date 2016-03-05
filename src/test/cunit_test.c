@@ -68,7 +68,10 @@ static void set_curr_stack(void) {
 // MAIN
 //----------------------------------------------------------------------------------------------------------------------
 
-int main() {
+int main(int argc, const char *const *argv) {
+  (void)argc;
+  (void)argv;
+
   // Initialize the CUnit test registry
   if (CUE_SUCCESS != CU_initialize_registry())
     return CU_get_error();

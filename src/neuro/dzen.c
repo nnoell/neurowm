@@ -179,7 +179,7 @@ static void *refresh_cpu_calc_thread(void *args) {
   pthread_exit(NULL);
 }
 
-static bool init_cpu_calc_thread() {
+static bool init_cpu_calc_thread(void) {
   // Init mutex and cond
   pthread_mutex_init(&cpu_calc_refresh_info_.wait_mutex, NULL);
   pthread_cond_init(&cpu_calc_refresh_info_.wait_cond, NULL);
@@ -188,7 +188,7 @@ static bool init_cpu_calc_thread() {
   return pthread_create(&cpu_calc_refresh_info_.thread, NULL, refresh_cpu_calc_thread, NULL);
 }
 
-static void stop_cpu_calc_thread() {
+static void stop_cpu_calc_thread(void) {
   // Stop calc thread
   cpu_calc_stop_refresh_cond_ = true;
   pthread_cond_broadcast(&cpu_calc_refresh_info_.wait_cond);
@@ -203,7 +203,7 @@ static void stop_cpu_calc_thread() {
   pthread_mutex_destroy(&cpu_calc_refresh_info_.wait_mutex);
 }
 
-static bool init_cpu_calc_refresh_info() {
+static bool init_cpu_calc_refresh_info(void) {
   cpu_calc_refresh_info_.num_cpus = get_num_cpus(CPU_FILE_PATH);
   if (cpu_calc_refresh_info_.num_cpus <= 0)
     return false;
@@ -211,7 +211,7 @@ static bool init_cpu_calc_refresh_info() {
   return cpu_calc_refresh_info_.cpu_info != NULL;
 }
 
-static void stop_cpu_calc_refresh_info() {
+static void stop_cpu_calc_refresh_info(void) {
   free(cpu_calc_refresh_info_.cpu_info);
   cpu_calc_refresh_info_.cpu_info = NULL;
 }
@@ -295,7 +295,7 @@ static void *refresh_dzen_thread(void *args) {
   pthread_exit(NULL);
 }
 
-static bool init_dzen_refresh_thread() {
+static bool init_dzen_refresh_thread(void) {
   if (dzen_refresh_info_.reset_rate == 0U)
     return true;
 
@@ -307,7 +307,7 @@ static bool init_dzen_refresh_thread() {
   return pthread_create(&dzen_refresh_info_.thread, NULL, refresh_dzen_thread, NULL) == 0;
 }
 
-static void stop_dzen_refresh_thread() {
+static void stop_dzen_refresh_thread(void) {
   if (dzen_refresh_info_.reset_rate == 0U)
     return;
 
@@ -325,7 +325,7 @@ static void stop_dzen_refresh_thread() {
   pthread_mutex_destroy(&dzen_refresh_info_.wait_mutex);
 }
 
-static bool init_dzen_refresh_info() {
+static bool init_dzen_refresh_info(void) {
   // Get the number of pannels
   NeuroIndex num_panels = 0U;
   for (const NeuroMonitor *m = NeuroMonitorSelectorHead(NULL); m; m = NeuroMonitorSelectorNext(m)) {
@@ -372,7 +372,7 @@ static bool init_dzen_refresh_info() {
   return true;
 }
 
-static void stop_dzen_refresh_info() {
+static void stop_dzen_refresh_info(void) {
   // Destroy sync mutex
   pthread_mutex_destroy(&dzen_refresh_info_.sync_mutex);
 
@@ -390,14 +390,14 @@ static void stop_dzen_refresh_info() {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Dzen
-bool NeuroDzenInit() {
+bool NeuroDzenInit(void) {
   if (!init_dzen_refresh_info() || !init_dzen_refresh_thread())
     return false;
   NeuroDzenRefresh(false);
   return true;
 }
 
-void NeuroDzenStop() {
+void NeuroDzenStop(void) {
   stop_dzen_refresh_thread();
   stop_dzen_refresh_info();
 }
@@ -413,14 +413,14 @@ void NeuroDzenRefresh(bool on_event_only) {
   }
 }
 
-void NeuroDzenInitCpuCalc() {
+void NeuroDzenInitCpuCalc(void) {
   if (!init_cpu_calc_refresh_info())
     NeuroSystemError("NeuroDzenInitCpuCalc - Could not init CPU Set");
   if (init_cpu_calc_thread())
     NeuroSystemError("NeuroDzenInitCpuCalc - Could not init CPU percent thread");
 }
 
-void NeuroDzenStopCpuCalc() {
+void NeuroDzenStopCpuCalc(void) {
   stop_cpu_calc_thread();
   stop_cpu_calc_refresh_info();
 }

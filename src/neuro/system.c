@@ -82,7 +82,7 @@ static int xerror_handler(Display *d, XErrorEvent *ee) {
   return -1;
 }
 
-static bool set_colors_cursors_atoms() {
+static bool set_colors_cursors_atoms(void) {
   if (!NeuroConfigGet()->normal_border_color || !NeuroConfigGet()->current_border_color ||
       !NeuroConfigGet()->old_border_color || !NeuroConfigGet()->free_border_color ||
       !NeuroConfigGet()->urgent_border_color)
@@ -163,7 +163,7 @@ static void run_command(const char *const *cmd) {
 //----------------------------------------------------------------------------------------------------------------------
 
 // X functions
-bool NeuroSystemInit() {
+bool NeuroSystemInit(void) {
   // WM global variables
   display_ = XOpenDisplay(NULL);
   if (!display_)
@@ -202,7 +202,7 @@ bool NeuroSystemInit() {
   return true;
 }
 
-void NeuroSystemStop() {
+void NeuroSystemStop(void) {
   XFreeCursor(display_, NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_NORMAL));
   XFreeCursor(display_, NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_RESIZE));
   XFreeCursor(display_, NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_MOVE));
@@ -210,27 +210,27 @@ void NeuroSystemStop() {
 }
 
 // Basic functions
-Display *NeuroSystemGetDisplay() {
+Display *NeuroSystemGetDisplay(void) {
   return display_;
 }
 
-Window NeuroSystemGetRoot() {
+Window NeuroSystemGetRoot(void) {
   return root_;
 }
 
-int NeuroSystemGetScreen() {
+int NeuroSystemGetScreen(void) {
   return screen_;
 }
 
-const NeuroRectangle *NeuroSystemGetScreenRegion() {
+const NeuroRectangle *NeuroSystemGetScreenRegion(void) {
   return &screen_region_;
 }
 
-const NeuroRectangle *NeuroSystemGetHiddenRegion() {
+const NeuroRectangle *NeuroSystemGetHiddenRegion(void) {
   return &hidden_region_;
 }
 
-const int *NeuroSystemGetHiddenGaps() {
+const int *NeuroSystemGetHiddenGaps(void) {
   return hidden_gaps_;
 }
 
@@ -292,7 +292,7 @@ void NeuroSystemChangeProcName(const char *name) {
   prctl(PR_SET_NAME, (unsigned long)name, 0, 0, 0);
 }
 
-pid_t NeuroSystemGetWmPid() {
+pid_t NeuroSystemGetWmPid(void) {
   char pidstr[ NEURO_NAME_SIZE_MAX ];
   FILE *const cmd = popen("/usr/bin/pidof -s " PKG_MYNAME, "r");
   fgets(pidstr, NEURO_NAME_SIZE_MAX, cmd);

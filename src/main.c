@@ -20,7 +20,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // FlagHandlerFn
-typedef bool (*const FlagHandlerFn)();
+typedef bool (*const FlagHandlerFn)(void);
 
 // Flag
 typedef struct Flag Flag;
@@ -36,10 +36,10 @@ struct Flag {
 //----------------------------------------------------------------------------------------------------------------------
 
 // Flag Handlers
-static bool help_handler();
-static bool version_handler();
-static bool recompile_handler();
-// static bool reload_handler();
+static bool help_handler(void);
+static bool version_handler(void);
+static bool recompile_handler(void);
+// static bool reload_handler(void);
 
 // Main
 static bool run_neurowm(int argc, const char *const *argv, int *status);
@@ -65,19 +65,19 @@ static const Flag *const flag_list_[] = { &help_flag_, &version_flag_, &recompil
 // FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-static bool help_handler() {
+static bool help_handler(void) {
   printf("Usage: neurowm [OPTION]\nOptions:\n");
   for (NeuroIndex i = 0U; flag_list_[ i ]; ++i)
     printf("  %s\t\t%s\n", flag_list_[ i ]->name, flag_list_[ i ]->desc);
   return true;
 }
 
-static bool version_handler() {
+static bool version_handler(void) {
   printf(PKG_NAME " " PKG_VERSION "\n");
   return true;
 }
 
-static bool recompile_handler() {
+static bool recompile_handler(void) {
   pid_t pid;
   if (!NeuroSystemSpawn(NeuroSystemGetRecompileCommand(NULL, NULL), &pid))
     return false;
@@ -86,7 +86,7 @@ static bool recompile_handler() {
   return true;
 }
 
-// static bool reload_handler() {
+// static bool reload_handler(void) {
 //   return kill(NeuroSystemGetWmPid(), SIGUSR1) != -1;
 // }
 

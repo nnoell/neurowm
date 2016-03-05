@@ -358,7 +358,7 @@ void NeuroConfigSet(const NeuroConfiguration *c) {
     configuration_ = c;
 }
 
-const NeuroConfiguration *NeuroConfigGet() {
+const NeuroConfiguration *NeuroConfigGet(void) {
   return configuration_;
 }
 

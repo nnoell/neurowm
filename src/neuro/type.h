@@ -260,7 +260,7 @@ typedef const NeuroMonitor *(*NeuroMonitorSelectorFn)(const NeuroMonitor *m);
 // WORKSPACE TYPES -----------------------------------------------------------------------------------------------------
 
 // NeuroWorkspaceSelectorFn
-typedef NeuroIndex (*NeuroWorkspaceSelectorFn)();
+typedef NeuroIndex (*NeuroWorkspaceSelectorFn)(void);
 
 
 // FUNCTION TYPES ------------------------------------------------------------------------------------------------------

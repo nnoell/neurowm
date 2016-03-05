@@ -317,59 +317,59 @@ void NeuroWorkspaceClientFreeResize(NeuroClientPtrPtr ref, const NeuroClientSele
 }
 
 // NeuroWorkspace Selectors
-NeuroIndex NeuroWorkspaceSelector0() {
+NeuroIndex NeuroWorkspaceSelector0(void) {
   return 0;
 }
 
-NeuroIndex NeuroWorkspaceSelector1() {
+NeuroIndex NeuroWorkspaceSelector1(void) {
   return 1;
 }
 
-NeuroIndex NeuroWorkspaceSelector2() {
+NeuroIndex NeuroWorkspaceSelector2(void) {
   return 2;
 }
 
-NeuroIndex NeuroWorkspaceSelector3() {
+NeuroIndex NeuroWorkspaceSelector3(void) {
   return 3;
 }
 
-NeuroIndex NeuroWorkspaceSelector4() {
+NeuroIndex NeuroWorkspaceSelector4(void) {
   return 4;
 }
 
-NeuroIndex NeuroWorkspaceSelector5() {
+NeuroIndex NeuroWorkspaceSelector5(void) {
   return 5;
 }
 
-NeuroIndex NeuroWorkspaceSelector6() {
+NeuroIndex NeuroWorkspaceSelector6(void) {
   return 6;
 }
 
-NeuroIndex NeuroWorkspaceSelector7() {
+NeuroIndex NeuroWorkspaceSelector7(void) {
   return 7;
 }
 
-NeuroIndex NeuroWorkspaceSelector8() {
+NeuroIndex NeuroWorkspaceSelector8(void) {
   return 8;
 }
 
-NeuroIndex NeuroWorkspaceSelector9() {
+NeuroIndex NeuroWorkspaceSelector9(void) {
   return 9;
 }
 
-NeuroIndex NeuroWorkspaceSelectorCurr() {
+NeuroIndex NeuroWorkspaceSelectorCurr(void) {
   return NeuroCoreGetCurrStack();
 }
 
-NeuroIndex NeuroWorkspaceSelectorPrev() {
+NeuroIndex NeuroWorkspaceSelectorPrev(void) {
   return NeuroCoreGetPrevStack();
 }
 
-NeuroIndex NeuroWorkspaceSelectorNext() {
+NeuroIndex NeuroWorkspaceSelectorNext(void) {
   return NeuroCoreGetNextStack();
 }
 
-NeuroIndex NeuroWorkspaceSelectorOld() {
+NeuroIndex NeuroWorkspaceSelectorOld(void) {
   return NeuroCoreGetOldStack();
 }
 

@@ -30,6 +30,6 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 int NeuroWmRun(const NeuroConfiguration *c);
-void NeuroWmQuit();
-void NeuroWmReload();
+void NeuroWmQuit(void);
+void NeuroWmReload(void);
 

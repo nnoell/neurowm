@@ -22,9 +22,9 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-bool NeuroMonitorInit();
-void NeuroMonitorStop();
-NeuroIndex NeuroMonitorGetSize();
+bool NeuroMonitorInit(void);
+void NeuroMonitorStop(void);
+NeuroIndex NeuroMonitorGetSize(void);
 
 // Getters
 const NeuroMonitor *NeuroMonitorGet(NeuroIndex m);

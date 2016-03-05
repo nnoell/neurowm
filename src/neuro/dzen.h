@@ -28,11 +28,11 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Basic Functions
-bool NeuroDzenInit();
-void NeuroDzenStop();
+bool NeuroDzenInit(void);
+void NeuroDzenStop(void);
 void NeuroDzenRefresh(bool on_event_only);
-void NeuroDzenInitCpuCalc();
-void NeuroDzenStopCpuCalc();
+void NeuroDzenInitCpuCalc(void);
+void NeuroDzenStopCpuCalc(void);
 void NeuroDzenWrapDzenBox(char *dst, const char *src, const NeuroDzenBox *b);
 void NeuroDzenWrapClickArea(char *dst, const char *src, const NeuroDzenClickableArea *ca);
 bool NeuroDzenReadFirstLineFile(char *buf, const char *path);

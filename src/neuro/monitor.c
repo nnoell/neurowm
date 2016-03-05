@@ -41,7 +41,7 @@ static MonitorSet monitor_set_;
 // PUBLIC FUNCTION DEFINITION
 //----------------------------------------------------------------------------------------------------------------------
 
-bool NeuroMonitorInit() {
+bool NeuroMonitorInit(void) {
   // There must be at least 1 monitor in the configuration
   const NeuroMonitorConf *const *const monitor_list = NeuroConfigGet()->monitor_list;
   if (!monitor_list || !*monitor_list)
@@ -105,12 +105,12 @@ bool NeuroMonitorInit() {
 
   // Initialize the monitor
   const NeuroMonitorConf *const mc = monitor_list[ 0U ];
-  const NeuroMonitor *const m = monitor_set_.monitor_list + 0U;
+  NeuroMonitor *const m = monitor_set_.monitor_list + 0U;
   const NeuroRectangle *const screen = NeuroSystemGetScreenRegion();
-  *(const char **)&m->name = mc->name;
-  *(const int **)&m->gaps = mc->gaps;
-  *(NeuroIndex *)&m->default_ws = mc->default_ws;
-  *(const NeuroDzenPanel *const **)&m->dzen_panel_list = mc->dzen_panel_list;
+  m->name = mc->name;
+  m->gaps = mc->gaps;
+  m->default_ws = mc->default_ws;
+  m->dzen_panel_list = mc->dzen_panel_list;
   const NeuroRectangle screen_region = { (NeuroPoint){ screen->p.x, screen->p.y }, screen->w, screen->h };
   NeuroGeometryGetReducedRectangle((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
 
@@ -119,12 +119,12 @@ bool NeuroMonitorInit() {
   return true;
 }
 
-void NeuroMonitorStop() {
+void NeuroMonitorStop(void) {
   free(monitor_set_.monitor_list);
   monitor_set_.monitor_list = NULL;
 }
 
-NeuroIndex NeuroMonitorGetSize() {
+NeuroIndex NeuroMonitorGetSize(void) {
   return monitor_set_.size;
 }
 

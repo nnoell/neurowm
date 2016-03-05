@@ -57,18 +57,18 @@ void NeuroWorkspaceClientFreeMove(NeuroClientPtrPtr ref, const NeuroClientSelect
 void NeuroWorkspaceClientFreeResize(NeuroClientPtrPtr ref, const NeuroClientSelectorFn csf, const void *data);
 
 // NeuroWorkspace Selectors
-NeuroIndex NeuroWorkspaceSelector0();
-NeuroIndex NeuroWorkspaceSelector1();
-NeuroIndex NeuroWorkspaceSelector2();
-NeuroIndex NeuroWorkspaceSelector3();
-NeuroIndex NeuroWorkspaceSelector4();
-NeuroIndex NeuroWorkspaceSelector5();
-NeuroIndex NeuroWorkspaceSelector6();
-NeuroIndex NeuroWorkspaceSelector7();
-NeuroIndex NeuroWorkspaceSelector8();
-NeuroIndex NeuroWorkspaceSelector9();
-NeuroIndex NeuroWorkspaceSelectorCurr();
-NeuroIndex NeuroWorkspaceSelectorPrev();
-NeuroIndex NeuroWorkspaceSelectorNext();
-NeuroIndex NeuroWorkspaceSelectorOld();
+NeuroIndex NeuroWorkspaceSelector0(void);
+NeuroIndex NeuroWorkspaceSelector1(void);
+NeuroIndex NeuroWorkspaceSelector2(void);
+NeuroIndex NeuroWorkspaceSelector3(void);
+NeuroIndex NeuroWorkspaceSelector4(void);
+NeuroIndex NeuroWorkspaceSelector5(void);
+NeuroIndex NeuroWorkspaceSelector6(void);
+NeuroIndex NeuroWorkspaceSelector7(void);
+NeuroIndex NeuroWorkspaceSelector8(void);
+NeuroIndex NeuroWorkspaceSelector9(void);
+NeuroIndex NeuroWorkspaceSelectorCurr(void);
+NeuroIndex NeuroWorkspaceSelectorPrev(void);
+NeuroIndex NeuroWorkspaceSelectorNext(void);
+NeuroIndex NeuroWorkspaceSelectorOld(void);
 
