@@ -31,7 +31,7 @@ PKG_LINK_OPTIONS =
 # Compiler flags
 CC = gcc
 DFLAGS = ${PKG_BUILD_OPTIONS} -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
-CFLAGS = -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -fpic -O3 ${DFLAGS}
+CFLAGS = -g -Wall -Wextra -Wformat -Werror -Wfatal-errors -Wpedantic -pedantic-errors -fpic -O3 ${DFLAGS}
 LDADD = -lX11 ${PKG_LINK_OPTIONS} -pthread
 LDADDTEST = -lX11 ${PKG_LINK_OPTIONS} -pthread -lcunit
 
@@ -160,12 +160,12 @@ clean:
 install_no_bin:
 	@echo -n ":: Installing headers...   "
 	@mkdir -p ${INSTALL_HDR_DIR}
-	@cp ${HDRS} ${INSTALL_HDR_DIR}
+	@install ${HDRS} ${INSTALL_HDR_DIR}
 	@echo "OK"
 	@echo -n ":: Installing libraries...   "
 	@mkdir -p ${INSTALL_LIB_DIR}
-	@cp ${TARGET_LIB_DIR}/${TARGET_STATIC_LIB_NAME} ${INSTALL_LIB_DIR}
-	@cp ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}
+	@install -s ${TARGET_LIB_DIR}/${TARGET_STATIC_LIB_NAME} ${INSTALL_LIB_DIR}
+	@install -s ${TARGET_LIB_DIR}/${TARGET_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}
 	@ln -s -r -f ${INSTALL_LIB_DIR}/${TARGET_SHARED_LIB_NAME} ${INSTALL_LIB_DIR}/${TARGET_SHARED_LNK_NAME}
 	@mkdir -p ${INSTALL_LDCONF_DIR}
 	@echo ${INSTALL_LIB_DIR} > ${INSTALL_LDCONF_DIR}/${INSTALL_LDCONF_NAME}
@@ -173,7 +173,7 @@ install_no_bin:
 	@echo "OK"
 	@echo -n ":: Installing man page...   "
 	@mkdir -p ${INSTALL_MAN_DIR}
-	@cp man/${INSTALL_MAN_NAME} ${INSTALL_MAN_DIR}
+	@install man/${INSTALL_MAN_NAME} ${INSTALL_MAN_DIR}
 	@chmod 644 ${INSTALL_MAN_DIR}/${INSTALL_MAN_NAME}
 	@echo "OK"
 	@echo -n ":: Installin themes...   "
@@ -184,7 +184,7 @@ install_no_bin:
 # Install
 install: install_no_bin
 	@echo -n ":: Installing binary...   "
-	@cp ${TARGET_BIN_DIR}/${TARGET_BIN_NAME} ${INSTALL_BIN_DIR}
+	@install -s ${TARGET_BIN_DIR}/${TARGET_BIN_NAME} ${INSTALL_BIN_DIR}
 	@echo "OK"
 
 # Uninstall no bin
