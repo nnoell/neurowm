@@ -418,17 +418,17 @@ void NeuroThemeNnoellLoggerMonitorList(const NeuroMonitor *m, char *str) {
   assert(str);
   (void)m;
   const NeuroMonitor *const curr_m = NeuroCoreStackGetMonitor(NeuroCoreGetCurrStack());
-  for (const NeuroMonitor * m = NeuroMonitorSelectorLast(NULL); m; m = NeuroMonitorSelectorPrev(m)) {
+  for (const NeuroMonitor *mon = NeuroMonitorSelectorLast(NULL); mon; mon = NeuroMonitorSelectorPrev(mon)) {
     static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ];
     static NeuroRectangle r;
-    NeuroGeometryGetIncreasedRectangle(&r, &m->region, m->gaps);
+    NeuroGeometryGetIncreasedRectangle(&r, &mon->region, mon->gaps);
     snprintf(tmp, NEURO_DZEN_LOGGER_MAX, "%ix%i", r.w, r.h);
-    if (m == NeuroMonitorSelectorLast(NULL))
-      NeuroDzenWrapDzenBox(tmp2, m->name ? m->name : "Unknown", &boxpp_nnoell_blue2_);
+    if (mon == NeuroMonitorSelectorLast(NULL))
+      NeuroDzenWrapDzenBox(tmp2, mon->name ? mon->name : "Unknown", &boxpp_nnoell_blue2_);
     else
-      NeuroDzenWrapDzenBox(tmp2, m->name ? m->name : "Unknown", &boxpp_nnoell_blue_);
+      NeuroDzenWrapDzenBox(tmp2, mon->name ? mon->name : "Unknown", &boxpp_nnoell_blue_);
     strncat(str, tmp2, NEURO_DZEN_LINE_MAX - strlen(str) - 1);
-    if (m == curr_m)
+    if (mon == curr_m)
       NeuroDzenWrapDzenBox(tmp3, tmp, &boxpp_nnoell_green_);
     else
       NeuroDzenWrapDzenBox(tmp3, tmp, &boxpp_nnoell_white_);

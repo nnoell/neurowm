@@ -155,7 +155,7 @@ void NeuroWorkspaceFocus(NeuroIndex ws) {
       NeuroSystemError("NeuroWorkspaceFocus - Could not get windows");
     NeuroIndex n2 = n;
     for (unsigned int i = 0U; i < num; ++i) {
-      NeuroClientPtrPtr c = NeuroWorkspaceClientFindWindow(ws, wins[ i ]);
+      c = NeuroWorkspaceClientFindWindow(ws, wins[ i ]);
       if (!c)
         continue;
       if (NeuroCoreClientIsCurr(c))

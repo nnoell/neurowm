@@ -36,10 +36,13 @@ CC = cc
 
 # Compiler flags
 DFLAGS = ${PKG_BUILD_OPTIONS} -DPKG_VERSION=\"${PKG_VERSION}\" -DPKG_NAME=\"${PKG_NAME}\" -DPKG_MYNAME=\"${PKG_MYNAME}\"
-CFLAGS = -g -Wall -fpic -O3 ${DFLAGS}\
+CFLAGS = -ggdb3 -Wall -fpic -O3 ${DFLAGS}\
          -Wextra -Wformat=2 -Werror -Wfatal-errors -Wpedantic -pedantic-errors -Wwrite-strings -Winit-self\
-         -Wcast-align -Wpointer-arith -Wstrict-aliasing -Wmissing-declarations -Wmissing-include-dirs -Wcast-qual\
-         -Wno-unused-parameter -Wuninitialized -Wold-style-definition -Wstrict-prototypes -Wmissing-prototypes
+         -Wcast-align -Wpointer-arith -Wstrict-aliasing=2 -Wmissing-declarations -Wmissing-include-dirs -Wcast-qual\
+         -Wno-unused-parameter -Wuninitialized -Wold-style-definition -Wstrict-prototypes -Wmissing-prototypes\
+         -Wno-missing-braces -Wno-missing-field-initializers -Wswitch-default -Wswitch-enum -Wbad-function-cast\
+         -Wstrict-overflow=5 -Winline -Wundef -Wnested-externs -Wshadow -Wunreachable-code -Wfloat-equal\
+         -Wredundant-decls
 LDADD = -lX11 ${PKG_LINK_OPTIONS} -pthread
 LDADDTEST = -lX11 ${PKG_LINK_OPTIONS} -pthread -lcunit
 
