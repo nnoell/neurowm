@@ -89,7 +89,7 @@ static void apply_rules(NeuroClient *c) {
     }
   }
 
-  if (!strcmp(c->name, RULE_SCRATCHPAD_NAME))
+  if (!strcmp(c->name, NEURO_RULE_SCRATCHPAD_NAME))
     c->is_nsp = true;
 }
 

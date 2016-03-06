@@ -17,7 +17,7 @@
 #include "type.h"
 
 // Defines
-#define RULE_SCRATCHPAD_NAME "neurowm_scratchpad"
+#define NEURO_RULE_SCRATCHPAD_NAME "neurowm_scratchpad"
 #define NeuroRuleFreeSetterNull NULL
 
 

@@ -320,7 +320,7 @@ static const NeuroConfiguration *configuration_ = &default_;
 // Command
 const char* NeuroConfigDefaultTerminalCommand[] = { "/usr/bin/xterm", NULL };
 const char* NeuroConfigDefaultLauncherCommand[] = { "/usr/bin/gmrun", NULL };
-const char* NeuroConfigDefaultScratchpadCommand[] = { "/usr/bin/xterm", "-name", RULE_SCRATCHPAD_NAME, NULL };
+const char* NeuroConfigDefaultScratchpadCommand[] = { "/usr/bin/xterm", "-name", NEURO_RULE_SCRATCHPAD_NAME, NULL };
 
 // NeuroMonitor List
 const NeuroMonitorConf* NeuroConfigDefaultMonitorList[] = { &m0_, NULL };

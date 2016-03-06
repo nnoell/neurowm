@@ -25,7 +25,7 @@
 
 // COMMAND
 static const char* termcmd_[] = { "/usr/bin/urxvt", NULL };
-static const char* nspcmd_[] = { "/usr/bin/urxvt", "-name", RULE_SCRATCHPAD_NAME, NULL };
+static const char* nspcmd_[] = { "/usr/bin/urxvt", "-name", NEURO_RULE_SCRATCHPAD_NAME, NULL };
 static const char* xdefload_[] = { "/usr/bin/xrdb", "-load", "/home/julian/.config/xorg/Xdefaults", NULL };
 static const char* wallcmd_[] = { "/usr/bin/feh", "--bg-scale", "/home/julian/Pictures/wallpapers/neurowm.png", NULL };
 static const char* volupcmd_[] = { "/home/julian/bin/voldzen.sh", "+", "-d", NULL };
@@ -140,7 +140,7 @@ static const NeuroWorkspace* workspace_list_[] = {
 
 // RULE (ClASS, NAME, TITLE, FULLSCREEN, FREE, FIXED, FIXSIZE, WS, FOLLOW)
 static const NeuroRule rule00_ = {
-  "URxvt", RULE_SCRATCHPAD_NAME, "urxvt",
+  "URxvt", NEURO_RULE_SCRATCHPAD_NAME, "urxvt",
   false, NeuroRuleFreeSetterScratchpad, NEURO_FIXED_POSITION_NULL, 0.0f, NeuroWorkspaceSelectorCurr, false
 };
 static const NeuroRule rule01_ = {
