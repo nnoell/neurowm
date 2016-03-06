@@ -147,7 +147,7 @@ static void run_command(const char *const *cmd) {
   execvp(command[ 0 ], command);
 
   // If execvp failed, release command and terminate child process
-  for ( i = 0U; command[ i ]; ++i) {
+  for (i = 0U; command[ i ]; ++i) {
     free(command[ i ]);
     command[ i ] = NULL;
   }

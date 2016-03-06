@@ -187,7 +187,7 @@ install_no_bin:
 	@install man/${INSTALL_MAN_NAME} ${INSTALL_MAN_DIR}
 	@chmod 644 ${INSTALL_MAN_DIR}/${INSTALL_MAN_NAME}
 	@echo "OK"
-	@echo -n ":: Installin themes...   "
+	@echo -n ":: Installing themes...   "
 	@mkdir -p ${INSTALL_THEME_DIR}
 	@cp -r themes/${INSTALL_THEME_NAME} ${INSTALL_THEME_DIR}
 	@echo "OK"
