@@ -123,7 +123,7 @@ void NeuroClientUpdate(NeuroClientPtrPtr c, const void *data) {
   // Priority: Fullscreen > Free > Fixed > Tiled
   NeuroRectangle r;
   if (NEURO_CLIENT_PTR(c)->is_fullscreen) {
-    NeuroGeometryGetIncreasedRectangle(&r, stack_region, NeuroCoreStackGetGaps(ws));
+    NeuroGeometryRectangleGetIncreased(&r, stack_region, NeuroCoreStackGetGaps(ws));
   } else if (NEURO_CLIENT_PTR(c)->free_setter_fn != NeuroRuleFreeSetterNull) {
     NEURO_CLIENT_PTR(c)->free_setter_fn(client_region, stack_region);
     memmove(&r, client_region, sizeof(NeuroRectangle));
@@ -137,7 +137,7 @@ void NeuroClientUpdate(NeuroClientPtrPtr c, const void *data) {
   const NeuroLayout *const l = NeuroCoreStackGetCurrLayout(ws);
   const int border_width = l->border_width_setter_fn(c);
   const int border_gap = l->border_gap_setter_fn(c);
-  NeuroGeometrySetRectangleBorderWidthAndGap(&r, border_width, border_gap);
+  NeuroGeometryRectangleSetBorderWidthAndGap(&r, border_width, border_gap);
   if (r.w < 1)
     r.w = 1;
   if (r.h < 1)
@@ -485,7 +485,7 @@ NeuroClientPtrPtr NeuroClientSelectorUpper(const NeuroClientPtrPtr c) {
   assert(c);
   const NeuroRectangle *const r = NeuroCoreClientGetRegion(c);
   NeuroPoint p;
-  NeuroGeometryGetUpperPoint(&p, &r->p, 1);
+  NeuroGeometryPointGetUpper(&p, &r->p, 1);
   ++p.x;  // Needed to avoid border issues
   return NeuroWorkspaceClientFindPointed(NEURO_CLIENT_PTR(c)->ws, &p);
 }
@@ -494,7 +494,7 @@ NeuroClientPtrPtr NeuroClientSelectorLower(const NeuroClientPtrPtr c) {
   assert(c);
   const NeuroRectangle *const r = NeuroCoreClientGetRegion(c);
   NeuroPoint p;
-  NeuroGeometryGetLowerPoint(&p, &r->p, r->h + 1);
+  NeuroGeometryPointGetLower(&p, &r->p, r->h + 1);
   ++p.x;  // Needed to avoid border issues
   return NeuroWorkspaceClientFindPointed(NEURO_CLIENT_PTR(c)->ws, &p);
 }
@@ -503,7 +503,7 @@ NeuroClientPtrPtr NeuroClientSelectorLeft(const NeuroClientPtrPtr c) {
   assert(c);
   const NeuroRectangle *const r = NeuroCoreClientGetRegion(c);
   NeuroPoint p;
-  NeuroGeometryGetLeftPoint(&p, &r->p, 1);
+  NeuroGeometryPointGetLeft(&p, &r->p, 1);
   ++p.y;  // Needed to avoid border issues
   return NeuroWorkspaceClientFindPointed(NEURO_CLIENT_PTR(c)->ws, &p);
 }
@@ -512,7 +512,7 @@ NeuroClientPtrPtr NeuroClientSelectorRight(const NeuroClientPtrPtr c) {
   assert(c);
   const NeuroRectangle *const r = NeuroCoreClientGetRegion(c);
   NeuroPoint p;
-  NeuroGeometryGetRightPoint(&p, &r->p, r->w + 1);
+  NeuroGeometryPointGetRight(&p, &r->p, r->w + 1);
   ++p.y;  // Needed to avoid border issues
   return NeuroWorkspaceClientFindPointed(NEURO_CLIENT_PTR(c)->ws, &p);
 }

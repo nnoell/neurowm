@@ -86,7 +86,7 @@ bool NeuroMonitorInit(void) {
     m->default_ws = mc->default_ws;
     m->dzen_panel_list = mc->dzen_panel_list;
     const NeuroRectangle screen_region = { (NeuroPoint){ screen->x, screen->y }, screen->width, screen->height };
-    NeuroGeometryGetReducedRectangle((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
+    NeuroGeometryRectangleGetReduced((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
 
     // Increment monitor iterator
     ++monitor_iterator;
@@ -112,7 +112,7 @@ bool NeuroMonitorInit(void) {
   m->default_ws = mc->default_ws;
   m->dzen_panel_list = mc->dzen_panel_list;
   const NeuroRectangle screen_region = { (NeuroPoint){ screen->p.x, screen->p.y }, screen->w, screen->h };
-  NeuroGeometryGetReducedRectangle((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
+  NeuroGeometryRectangleGetReduced((NeuroRectangle *)&m->region, &screen_region, mc->gaps);
 
 #endif
 

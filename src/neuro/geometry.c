@@ -20,7 +20,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 // Point Generators
-NeuroPoint *NeuroGeometryGetUpperPoint(NeuroPoint *dst, const NeuroPoint *src, int distance) {
+NeuroPoint *NeuroGeometryPointGetUpper(NeuroPoint *dst, const NeuroPoint *src, int distance) {
   assert(dst);
   assert(src);
   memmove(dst, src, sizeof(NeuroPoint));
@@ -28,7 +28,7 @@ NeuroPoint *NeuroGeometryGetUpperPoint(NeuroPoint *dst, const NeuroPoint *src, i
   return dst;
 }
 
-NeuroPoint *NeuroGeometryGetLowerPoint(NeuroPoint *dst, const NeuroPoint *src, int distance) {
+NeuroPoint *NeuroGeometryPointGetLower(NeuroPoint *dst, const NeuroPoint *src, int distance) {
   assert(dst);
   assert(src);
   memmove(dst, src, sizeof(NeuroPoint));
@@ -36,7 +36,7 @@ NeuroPoint *NeuroGeometryGetLowerPoint(NeuroPoint *dst, const NeuroPoint *src, i
   return dst;
 }
 
-NeuroPoint *NeuroGeometryGetLeftPoint(NeuroPoint *dst, const NeuroPoint *src, int distance) {
+NeuroPoint *NeuroGeometryPointGetLeft(NeuroPoint *dst, const NeuroPoint *src, int distance) {
   assert(dst);
   assert(src);
   memmove(dst, src, sizeof(NeuroPoint));
@@ -44,7 +44,7 @@ NeuroPoint *NeuroGeometryGetLeftPoint(NeuroPoint *dst, const NeuroPoint *src, in
   return dst;
 }
 
-NeuroPoint *NeuroGeometryGetRightPoint(NeuroPoint *dst, const NeuroPoint *src, int distance) {
+NeuroPoint *NeuroGeometryPointGetRight(NeuroPoint *dst, const NeuroPoint *src, int distance) {
   assert(dst);
   assert(src);
   memmove(dst, src, sizeof(NeuroPoint));
@@ -53,7 +53,7 @@ NeuroPoint *NeuroGeometryGetRightPoint(NeuroPoint *dst, const NeuroPoint *src, i
 }
 
 // Rectangle Generators
-NeuroRectangle *NeuroGeometryGetRelativeRectangle(NeuroRectangle *dst, const NeuroRectangle *src, const float *rel) {
+NeuroRectangle *NeuroGeometryRectangleGetRelative(NeuroRectangle *dst, const NeuroRectangle *src, const float *rel) {
   assert(dst);
   assert(src);
   assert(rel);
@@ -64,7 +64,7 @@ NeuroRectangle *NeuroGeometryGetRelativeRectangle(NeuroRectangle *dst, const Neu
   return dst;
 }
 
-NeuroRectangle *NeuroGeometryGetReducedRectangle(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps) {
+NeuroRectangle *NeuroGeometryRectangleGetReduced(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);
@@ -75,7 +75,7 @@ NeuroRectangle *NeuroGeometryGetReducedRectangle(NeuroRectangle *dst, const Neur
   return dst;
 }
 
-NeuroRectangle *NeuroGeometryGetIncreasedRectangle(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps) {
+NeuroRectangle *NeuroGeometryRectangleGetIncreased(NeuroRectangle *dst, const NeuroRectangle *src, const int *gaps) {
   assert(dst);
   assert(src);
   assert(gaps);
@@ -87,14 +87,14 @@ NeuroRectangle *NeuroGeometryGetIncreasedRectangle(NeuroRectangle *dst, const Ne
 }
 
 // Rectangle Updaters
-NeuroRectangle *NeuroGeometrySetRectangleBorderWidth(NeuroRectangle *r, int width) {
+NeuroRectangle *NeuroGeometryRectangleSetBorderWidth(NeuroRectangle *r, int width) {
   assert(r);
   r->w -= width * 2;
   r->h -= width * 2;
   return r;
 }
 
-NeuroRectangle *NeuroGeometrySetRectangleBorderGap(NeuroRectangle *r, int gap) {
+NeuroRectangle *NeuroGeometryRectangleSetBorderGap(NeuroRectangle *r, int gap) {
   assert(r);
   r->p.x += gap;
   r->p.y += gap;
@@ -103,12 +103,12 @@ NeuroRectangle *NeuroGeometrySetRectangleBorderGap(NeuroRectangle *r, int gap) {
   return r;
 }
 
-NeuroRectangle *NeuroGeometrySetRectangleBorderWidthAndGap(NeuroRectangle *r, int width, int gap) {
+NeuroRectangle *NeuroGeometryRectangleSetBorderWidthAndGap(NeuroRectangle *r, int width, int gap) {
   assert(r);
-  return NeuroGeometrySetRectangleBorderGap(NeuroGeometrySetRectangleBorderWidth(r, width), gap);
+  return NeuroGeometryRectangleSetBorderGap(NeuroGeometryRectangleSetBorderWidth(r, width), gap);
 }
 
-NeuroRectangle *NeuroGeometryMirrorRectangle(NeuroRectangle *r, const NeuroRectangle *reg) {
+NeuroRectangle *NeuroGeometryRectangleMirror(NeuroRectangle *r, const NeuroRectangle *reg) {
   assert(r);
   assert(reg);
   const int oldx = r->p.x, oldy = r->p.y, oldw = r->w, oldh = r->h;
@@ -119,21 +119,21 @@ NeuroRectangle *NeuroGeometryMirrorRectangle(NeuroRectangle *r, const NeuroRecta
   return r;
 }
 
-NeuroRectangle *NeuroGeometryReflectXRectangle(NeuroRectangle *r, const NeuroRectangle *reg) {
+NeuroRectangle *NeuroGeometryRectangleReflectX(NeuroRectangle *r, const NeuroRectangle *reg) {
   assert(r);
   assert(reg);
   r->p.x = 2 * (reg->p.x) + reg->w - (r->p.x + r->w);
   return r;
 }
 
-NeuroRectangle *NeuroGeometryReflectYRectangle(NeuroRectangle *r, const NeuroRectangle *reg) {
+NeuroRectangle *NeuroGeometryRectangleReflectY(NeuroRectangle *r, const NeuroRectangle *reg) {
   assert(r);
   assert(reg);
   r->p.y = 2 * (reg->p.y) + reg->h - (r->p.y + r->h);
   return r;
 }
 
-NeuroRectangle *NeuroGeometryTranspRectangle(NeuroRectangle *r) {
+NeuroRectangle *NeuroGeometryRectangleTranspose(NeuroRectangle *r) {
   assert(r);
   int tmp = r->p.x;
   r->p.x = r->p.y;
@@ -144,7 +144,7 @@ NeuroRectangle *NeuroGeometryTranspRectangle(NeuroRectangle *r) {
   return r;
 }
 
-NeuroRectangle *NeuroGeometryFitRectangleInRegion(NeuroRectangle *r, const NeuroRectangle *reg) {
+NeuroRectangle *NeuroGeometryRectangleFit(NeuroRectangle *r, const NeuroRectangle *reg) {
   assert(r);
   assert(reg);
   if (r->p.x < reg->p.x)
@@ -162,7 +162,7 @@ NeuroRectangle *NeuroGeometryFitRectangleInRegion(NeuroRectangle *r, const Neuro
   return r;
 }
 
-NeuroRectangle *NeuroGeometryCenterRectangleInRegion(NeuroRectangle *r, const NeuroRectangle *reg) {
+NeuroRectangle *NeuroGeometryRectangleCenter(NeuroRectangle *r, const NeuroRectangle *reg) {
   assert(r);
   assert(reg);
   r->p.x = reg->p.x + (reg->w - r->w) / 2;

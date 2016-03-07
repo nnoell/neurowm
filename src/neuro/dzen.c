@@ -599,7 +599,7 @@ void NeuroDzenLoggerMonitorList(const NeuroMonitor *m, char *str) {
   for (const NeuroMonitor *mon = NeuroMonitorSelectorHead(NULL); mon; mon = NeuroMonitorSelectorNext(mon)) {
     static char buf[ NEURO_DZEN_LINE_MAX ];
     static NeuroRectangle r;
-    NeuroGeometryGetIncreasedRectangle(&r, &mon->region, mon->gaps);
+    NeuroGeometryRectangleGetIncreased(&r, &mon->region, mon->gaps);
     snprintf(buf, NEURO_DZEN_LOGGER_MAX, "[%s: %ix%i]", mon->name ? mon->name : "Unknown", r.w, r.h);
     strncat(str, buf, NEURO_DZEN_LINE_MAX - strlen(str) - 1);
   }

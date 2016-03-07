@@ -37,7 +37,7 @@ static NeuroArrange *new_arrange(NeuroIndex ws, NeuroLayout *l) {
     return NULL;
 
   // Set the region
-  NeuroGeometryGetRelativeRectangle(&a->region, NeuroCoreStackGetRegion(ws), l->region);
+  NeuroGeometryRectangleGetRelative(&a->region, NeuroCoreStackGetRegion(ws), l->region);
 
   // Set the clients
   NeuroRectangle **rs = NULL, **frs = NULL;
@@ -112,11 +112,11 @@ static NeuroArrange *normal_arrange(NeuroArrange *a, NeuroArrangerFn af) {
 static NeuroArrange *mirror_arrange(NeuroArrange *a, NeuroArrangerFn af) {
   assert(a);
   assert(af);
-  NeuroGeometryTranspRectangle(&a->region);
+  NeuroGeometryRectangleTranspose(&a->region);
   af(a);
   for (NeuroIndex i = 0U; i < a->size; ++i)
-    NeuroGeometryTranspRectangle(a->client_regions[ i ]);
-  NeuroGeometryTranspRectangle(&a->region);
+    NeuroGeometryRectangleTranspose(a->client_regions[ i ]);
+  NeuroGeometryRectangleTranspose(&a->region);
   return a;
 }
 
@@ -124,14 +124,14 @@ static NeuroArrange *mirror_arrange(NeuroArrange *a, NeuroArrangerFn af) {
 static NeuroArrange *reflect_x_mod(NeuroArrange *a) {
   assert(a);
   for (NeuroIndex i = 0U; i < a->size; ++i)
-    NeuroGeometryReflectXRectangle(a->client_regions[ i ], &a->region);
+    NeuroGeometryRectangleReflectX(a->client_regions[ i ], &a->region);
   return a;
 }
 
 static NeuroArrange *reflect_y_mod(NeuroArrange *a) {
   assert(a);
   for (NeuroIndex i = 0U; i < a->size; ++i)
-    NeuroGeometryReflectYRectangle(a->client_regions[ i ], &a->region);
+    NeuroGeometryRectangleReflectY(a->client_regions[ i ], &a->region);
   return a;
 }
 
@@ -314,7 +314,7 @@ NeuroArrange *NeuroLayoutArrangerFloat(NeuroArrange *a) {
     const NeuroRectangle *const fr = a->client_float_regions[ i ];
     NeuroRectangle *const r = a->client_regions[ i ];
     memmove(r, fr, sizeof(NeuroRectangle));
-    NeuroGeometryFitRectangleInRegion(a->client_regions[ i ], &a->region);
+    NeuroGeometryRectangleFit(a->client_regions[ i ], &a->region);
   }
   return a;
 }

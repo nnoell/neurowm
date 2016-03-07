@@ -421,7 +421,7 @@ void NeuroThemeNnoellLoggerMonitorList(const NeuroMonitor *m, char *str) {
   for (const NeuroMonitor *mon = NeuroMonitorSelectorLast(NULL); mon; mon = NeuroMonitorSelectorPrev(mon)) {
     static char tmp[ NEURO_DZEN_LOGGER_MAX ], tmp2[ NEURO_DZEN_LOGGER_MAX ], tmp3[ NEURO_DZEN_LOGGER_MAX ];
     static NeuroRectangle r;
-    NeuroGeometryGetIncreasedRectangle(&r, &mon->region, mon->gaps);
+    NeuroGeometryRectangleGetIncreased(&r, &mon->region, mon->gaps);
     snprintf(tmp, NEURO_DZEN_LOGGER_MAX, "%ix%i", r.w, r.h);
     if (mon == NeuroMonitorSelectorLast(NULL))
       NeuroDzenWrapDzenBox(tmp2, mon->name ? mon->name : "Unknown", &boxpp_nnoell_blue2_);

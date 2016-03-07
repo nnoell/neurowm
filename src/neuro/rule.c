@@ -173,21 +173,21 @@ void NeuroRuleFreeSetterDefault(NeuroRectangle *a, const NeuroRectangle *r) {
 void NeuroRuleFreeSetterCenter(NeuroRectangle *a, const NeuroRectangle *r) {
   assert(a);
   assert(r);
-  NeuroGeometryCenterRectangleInRegion(a, r);
+  NeuroGeometryRectangleCenter(a, r);
 }
 
 void NeuroRuleFreeSetterBigCenter(NeuroRectangle *a, const NeuroRectangle *r) {
   assert(a);
   assert(r);
   float size[ 4 ] = { 0.05f, 0.05f, 0.9f, 0.9f };
-  NeuroGeometryGetRelativeRectangle(a, r, size);
-  NeuroGeometryCenterRectangleInRegion(a, r);
+  NeuroGeometryRectangleGetRelative(a, r, size);
+  NeuroGeometryRectangleCenter(a, r);
 }
 
 void NeuroRuleFreeSetterScratchpad(NeuroRectangle *a, const NeuroRectangle *r) {
   assert(a);
   assert(r);
   float size[ 4 ] = { 0.00f, 0.00f, 1.00f, 0.75f };
-  NeuroGeometryGetRelativeRectangle(a, r, size);
+  NeuroGeometryRectangleGetRelative(a, r, size);
 }
 

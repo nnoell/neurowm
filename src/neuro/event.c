@@ -249,9 +249,9 @@ void NeuroEventManageWindow(Window w) {
     NEURO_CLIENT_PTR(c)->free_setter_fn = NeuroRuleFreeSetterDefault;
     NeuroClientPtrPtr t = NeuroClientFindWindow(trans);
     if (t)
-      NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
+      NeuroGeometryRectangleCenter(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
     else
-      NeuroGeometryCenterRectangleInRegion(NeuroCoreClientGetRegion(c), NeuroCoreStackGetRegion(ws));
+      NeuroGeometryRectangleCenter(NeuroCoreClientGetRegion(c), NeuroCoreStackGetRegion(ws));
   }
 
   // Run layout and update ws focus
