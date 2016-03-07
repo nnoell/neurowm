@@ -124,16 +124,14 @@ static NeuroArrange *mirror_arrange(NeuroArrange *a, NeuroArrangerFn af) {
 static NeuroArrange *reflect_x_mod(NeuroArrange *a) {
   assert(a);
   for (NeuroIndex i = 0U; i < a->size; ++i)
-    a->client_regions[ i ]->p.x =
-        2 * (a->region.p.x) + a->region.w - (a->client_regions[ i ]->p.x + a->client_regions[ i ]->w);
+    NeuroGeometryReflectXRectangle(a->client_regions[ i ], &a->region);
   return a;
 }
 
 static NeuroArrange *reflect_y_mod(NeuroArrange *a) {
   assert(a);
   for (NeuroIndex i = 0U; i < a->size; ++i)
-    a->client_regions[ i ]->p.y =
-        2 * (a->region.p.y) + a->region.h - (a->client_regions[ i ]->p.y + a->client_regions[ i ]->h);
+    NeuroGeometryReflectYRectangle(a->client_regions[ i ], &a->region);
   return a;
 }
 

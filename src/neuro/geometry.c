@@ -119,6 +119,20 @@ NeuroRectangle *NeuroGeometryMirrorRectangle(NeuroRectangle *r, const NeuroRecta
   return r;
 }
 
+NeuroRectangle *NeuroGeometryReflectXRectangle(NeuroRectangle *r, const NeuroRectangle *reg) {
+  assert(r);
+  assert(reg);
+  r->p.x = 2 * (reg->p.x) + reg->w - (r->p.x + r->w);
+  return r;
+}
+
+NeuroRectangle *NeuroGeometryReflectYRectangle(NeuroRectangle *r, const NeuroRectangle *reg) {
+  assert(r);
+  assert(reg);
+  r->p.y = 2 * (reg->p.y) + reg->h - (r->p.y + r->h);
+  return r;
+}
+
 NeuroRectangle *NeuroGeometryTranspRectangle(NeuroRectangle *r) {
   assert(r);
   int tmp = r->p.x;
