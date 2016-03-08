@@ -446,12 +446,13 @@ bool NeuroClientTesterPointed(const NeuroClientPtrPtr c, const void *p) {
 
 // Client Selectors
 NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c) {
-  assert(c);
   return c;
 }
 
 NeuroClientPtrPtr NeuroClientSelectorNext(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   NeuroClientPtrPtr n = NeuroCoreClientGetNext(c);
   if (!n)
     n = NeuroCoreStackGetHeadClient(NEURO_CLIENT_PTR(c)->ws);
@@ -459,7 +460,9 @@ NeuroClientPtrPtr NeuroClientSelectorNext(const NeuroClientPtrPtr c) {
 }
 
 NeuroClientPtrPtr NeuroClientSelectorPrev(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   NeuroClientPtrPtr p = NeuroCoreClientGetPrev(c);
   if (!p)
     p = NeuroCoreStackGetLastClient(NEURO_CLIENT_PTR(c)->ws);
@@ -467,22 +470,30 @@ NeuroClientPtrPtr NeuroClientSelectorPrev(const NeuroClientPtrPtr c) {
 }
 
 NeuroClientPtrPtr NeuroClientSelectorOld(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   return NeuroCoreStackGetPrevClient(NEURO_CLIENT_PTR(c)->ws);
 }
 
 NeuroClientPtrPtr NeuroClientSelectorHead(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   return NeuroCoreStackGetHeadClient(NEURO_CLIENT_PTR(c)->ws);
 }
 
 NeuroClientPtrPtr NeuroClientSelectorLast(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   return NeuroCoreStackGetLastClient(NEURO_CLIENT_PTR(c)->ws);
 }
 
 NeuroClientPtrPtr NeuroClientSelectorUpper(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   const NeuroRectangle *const r = NeuroCoreClientGetRegion(c);
   NeuroPoint p;
   NeuroGeometryPointGetUpper(&p, &r->p, 1);
@@ -491,7 +502,9 @@ NeuroClientPtrPtr NeuroClientSelectorUpper(const NeuroClientPtrPtr c) {
 }
 
 NeuroClientPtrPtr NeuroClientSelectorLower(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   const NeuroRectangle *const r = NeuroCoreClientGetRegion(c);
   NeuroPoint p;
   NeuroGeometryPointGetLower(&p, &r->p, r->h + 1);
@@ -500,7 +513,9 @@ NeuroClientPtrPtr NeuroClientSelectorLower(const NeuroClientPtrPtr c) {
 }
 
 NeuroClientPtrPtr NeuroClientSelectorLeft(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return NULL;
+
   const NeuroRectangle *const r = NeuroCoreClientGetRegion(c);
   NeuroPoint p;
   NeuroGeometryPointGetLeft(&p, &r->p, 1);
@@ -519,13 +534,17 @@ NeuroClientPtrPtr NeuroClientSelectorRight(const NeuroClientPtrPtr c) {
 
 // Color Setters
 NeuroColor NeuroClientColorSetterCurr(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
+
   return NeuroCoreClientIsCurr(c) ? NeuroSystemGetColor(NEURO_SYSTEM_COLOR_CURRENT) :
       NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
 }
 
 NeuroColor NeuroClientColorSetterAll(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    NeuroSystemGetColor(NEURO_SYSTEM_COLOR_NORMAL);
+
   if (NeuroCoreClientIsCurr(c))
     return NeuroSystemGetColor(NEURO_SYSTEM_COLOR_CURRENT);
   else if (NEURO_CLIENT_PTR(c)->is_urgent)
@@ -554,7 +573,8 @@ int NeuroClientBorderWidthSetterNever(const NeuroClientPtrPtr c) {
 }
 
 int NeuroClientBorderWidthSetterSmart(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return 0;
 
   // No border if fullscreen
   if (NEURO_CLIENT_PTR(c)->is_fullscreen)
@@ -586,13 +606,15 @@ int NeuroClientBorderWidthSetterSmart(const NeuroClientPtrPtr c) {
 }
 
 int NeuroClientBorderWidthSetterCurr(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return 0;
   return NeuroCoreClientIsCurr(c) ? NeuroConfigGet()->border_width : 0;
 }
 
 // Border Gap Setters
 int NeuroClientBorderGapSetterAlways(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return 0;
 
   // No gap if client is free
   if (NEURO_CLIENT_PTR(c)->free_setter_fn != NeuroRuleFreeSetterNull)
@@ -614,7 +636,8 @@ int NeuroClientBorderGapSetterNever(const NeuroClientPtrPtr c) {
 }
 
 int NeuroClientBorderGapSetterSmart(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return 0;
 
   // No gap if client is free
   if (NEURO_CLIENT_PTR(c)->free_setter_fn != NeuroRuleFreeSetterNull)
@@ -639,7 +662,8 @@ int NeuroClientBorderGapSetterSmart(const NeuroClientPtrPtr c) {
 }
 
 int NeuroClientBorderGapSetterCurr(const NeuroClientPtrPtr c) {
-  assert(c);
+  if (!c)
+    return 0;
 
   // No gap if client is free
   if (NEURO_CLIENT_PTR(c)->free_setter_fn != NeuroRuleFreeSetterNull)

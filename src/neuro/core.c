@@ -373,7 +373,7 @@ bool NeuroCoreInit(void) {
 
 void NeuroCoreStop(void) {
   // Remove the stacks
-  for (NeuroIndex i = 0U; i < stack_set_.size + 1; ++i)
+  for (NeuroIndex i = 0U; i < stack_set_.size; ++i)
     stop_stack(stack_set_.stack_list + i);
 
   // Remove the stack list
