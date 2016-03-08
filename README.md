@@ -9,7 +9,7 @@ neurowm
 Requirements
 ============
 
-In order to build *neurowm*, you need the Xlib header files.
+In order to build *neurowm*, you need the `libX11.so` library. You also need `libXrandr.so` if you want multi-head support.
 
 
 Optional Dependencies
@@ -17,7 +17,7 @@ Optional Dependencies
 
 If you want to run *neurowm* with all its features, install these packages:
 
- - **libxrandr**: for multi-head support (Disabled by default, edit `PKG_BUILD_OPTIONS` and `PKG_LINK_OPTIONS` in the Makefile to include it)
+ - **libxrandr**: for multi-head support (Enabled by default, edit `PKG_BUILD_OPTIONS` and `PKG_LINK_OPTIONS` in the Makefile to disable it)
  - **gmrun**: default application runner
  - **dzen2**: default system info panels
  - **xdotool**: default X11 command line
