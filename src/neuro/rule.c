@@ -165,9 +165,10 @@ void NeuroRuleSetClientRegion(NeuroRectangle *r, const NeuroClientPtrPtr c) {
 }
 
 // Free Locations
-void NeuroRuleFreeSetterDefault(NeuroRectangle *a, const NeuroRectangle *r) {
-  (void)a;
-  (void)r;
+void NeuroRuleFreeSetterFit(NeuroRectangle *a, const NeuroRectangle *r) {
+  assert(a);
+  assert(r);
+  NeuroGeometryRectangleFit(a, r);
 }
 
 void NeuroRuleFreeSetterCenter(NeuroRectangle *a, const NeuroRectangle *r) {

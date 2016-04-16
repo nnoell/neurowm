@@ -31,7 +31,7 @@ void NeuroRuleSetLayoutRegion(NeuroRectangle *r, const NeuroClientPtrPtr c);
 void NeuroRuleSetClientRegion(NeuroRectangle *r, const NeuroClientPtrPtr c);
 
 // Free Setters
-void NeuroRuleFreeSetterDefault(NeuroRectangle *a, const NeuroRectangle *r);
+void NeuroRuleFreeSetterFit(NeuroRectangle *a, const NeuroRectangle *r);
 void NeuroRuleFreeSetterCenter(NeuroRectangle *a, const NeuroRectangle *r);
 void NeuroRuleFreeSetterBigCenter(NeuroRectangle *a, const NeuroRectangle *r);
 void NeuroRuleFreeSetterScratchpad(NeuroRectangle *a, const NeuroRectangle *r);

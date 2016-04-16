@@ -246,7 +246,7 @@ void NeuroEventManageWindow(Window w) {
   const Window win = NEURO_CLIENT_PTR(c)->win;
   Window trans = None;
   if (XGetTransientForHint(NeuroSystemGetDisplay(), win, &trans)) {
-    NEURO_CLIENT_PTR(c)->free_setter_fn = NeuroRuleFreeSetterDefault;
+    NEURO_CLIENT_PTR(c)->free_setter_fn = NeuroRuleFreeSetterFit;
     NeuroClientPtrPtr t = NeuroClientFindWindow(trans);
     if (t)
       NeuroGeometryRectangleCenter(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));

@@ -74,10 +74,6 @@ static void send_client(NeuroClientPtrPtr c, const void *data) {
   if (old_ws == new_ws)
     return;
 
-  // 'Default free' windows are set to 'Center free' because of different screen resolutions
-  if (NEURO_CLIENT_PTR(c)->free_setter_fn == NeuroRuleFreeSetterDefault)
-    NEURO_CLIENT_PTR(c)->free_setter_fn = NeuroRuleFreeSetterCenter;
-
   // Remove the client from its stack
   NeuroClient *const cli = NeuroCoreRemoveClient(c);
 
@@ -131,7 +127,7 @@ void NeuroWorkspaceUpdate(NeuroIndex ws) {
 
 void NeuroWorkspaceFocus(NeuroIndex ws) {
   NeuroIndex n = NeuroCoreStackGetSize(ws);
-  if (n <= 0) {
+  if (n == 0) {
     XDeleteProperty(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_ACTIVE));
     return;
   }
