@@ -444,6 +444,13 @@ bool NeuroClientTesterPointed(const NeuroClientPtrPtr c, const void *p) {
   return NeuroGeometryIsPointInRectangle(NeuroCoreClientGetRegion(c), (const NeuroPoint *)p);
 }
 
+bool NeuroClientTesterHidden(const NeuroClientPtrPtr c, const void *data) {
+  (void)data;
+  if (!c)
+    return false;
+  return NeuroGeometryIsPointInRectangle(NeuroSystemGetHiddenRegion(), &NeuroCoreClientGetRegion(c)->p);
+}
+
 // Client Selectors
 NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c) {
   return c;

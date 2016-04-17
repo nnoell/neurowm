@@ -106,9 +106,16 @@ static void do_enter_notify(XEvent *e) {
   if (!c)
     return;
 
+  // Do not focus if the client is hidden
+  if (NeuroClientTesterHidden(c, NULL))
+    return;
+
+  // Do not focus if 'follow_mouse' is true in the current layout
   const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
   if (!NeuroCoreStackGetCurrLayout(ws)->follow_mouse)
     return;
+
+  // Focus the client
   NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
   NeuroCoreSetCurrStack(ws);
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
