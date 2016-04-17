@@ -45,6 +45,7 @@ NeuroClientPtrPtr NeuroClientFindWindow(Window w);
 NeuroClientPtrPtr NeuroClientFindUrgent(void);
 NeuroClientPtrPtr NeuroClientFindFixed(void);
 NeuroClientPtrPtr NeuroClientFindPointed(const NeuroPoint *p);
+NeuroClientPtrPtr NeuroClientFindHidden(void);
 
 // Client Getters
 NeuroClientPtrPtr NeuroClientGetFocused(void);

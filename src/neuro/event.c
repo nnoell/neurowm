@@ -111,13 +111,13 @@ static void do_enter_notify(XEvent *e) {
     return;
 
   // Do not focus if 'follow_mouse' is true in the current layout
-  const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
-  if (!NeuroCoreStackGetCurrLayout(ws)->follow_mouse)
+  NeuroClient *const client = NEURO_CLIENT_PTR(c);
+  if (!NeuroCoreStackGetCurrLayout(client->ws)->follow_mouse)
     return;
 
   // Focus the client
   NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
-  NeuroCoreSetCurrStack(ws);
+  NeuroCoreSetCurrStack(client->ws);
   NeuroWorkspaceClientFocus(c, NeuroClientSelectorSelf, NULL);
   NeuroDzenRefresh(true);
 }
@@ -181,26 +181,36 @@ static void do_property_notify(XEvent *e) {
   assert(e);
   const XPropertyEvent *const ev = &e->xproperty;
 
-  if (ev->atom == XA_WM_NAME || ev->atom == NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_NAME)) {  // Window title
+  // Update client's title
+  if (ev->atom == XA_WM_NAME || ev->atom == NeuroSystemGetNetAtom(NEURO_SYSTEM_NETATOM_NAME)) {
     NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
     if (!c)
       return;
+
     NeuroClientUpdateTitle(c, NULL);
-    NeuroDzenRefresh(true);
-  } else if (ev->atom == XA_WM_HINTS) {  // Urgency hint
+  }
+
+  // Update urgency hint
+  if (ev->atom == XA_WM_HINTS) {
     NeuroClientPtrPtr c = NeuroClientFindWindow(ev->window);
     if (!c)
       return;
-    if (NeuroCoreClientIsCurr(c) && NeuroCoreStackIsCurr(NEURO_CLIENT_PTR(c)->ws))
+
+    NeuroClient *const client = NEURO_CLIENT_PTR(c);
+    if (NeuroCoreClientIsCurr(c) && NeuroCoreStackIsCurr(client->ws))
       return;
-    XWMHints *wmh = XGetWMHints(NeuroSystemGetDisplay(), NEURO_CLIENT_PTR(c)->win);
+
+    XWMHints *wmh = XGetWMHints(NeuroSystemGetDisplay(), client->win);
     if (wmh && (wmh->flags & XUrgencyHint))
       NeuroClientSetUrgent(c, NULL);
+
     if (wmh)
       XFree(wmh);
+
     NeuroClientUpdate(c, NULL);
-    NeuroDzenRefresh(true);
   }
+
+  NeuroDzenRefresh(true);
 }
 
 
@@ -249,29 +259,28 @@ void NeuroEventManageWindow(Window w) {
     NeuroSystemError("NeuroEventManageWindow - Could not add client");
 
   // Transient windows
-  const NeuroIndex ws = NEURO_CLIENT_PTR(c)->ws;
-  const Window win = NEURO_CLIENT_PTR(c)->win;
+  NeuroClient *const client = NEURO_CLIENT_PTR(c);
   Window trans = None;
-  if (XGetTransientForHint(NeuroSystemGetDisplay(), win, &trans)) {
-    NEURO_CLIENT_PTR(c)->free_setter_fn = NeuroRuleFreeSetterFit;
+  if (XGetTransientForHint(NeuroSystemGetDisplay(), client->win, &trans)) {
+    client->free_setter_fn = NeuroRuleFreeSetterFit;
     NeuroClientPtrPtr t = NeuroClientFindWindow(trans);
     if (t)
       NeuroGeometryRectangleCenter(NeuroCoreClientGetRegion(c), NeuroCoreClientGetRegion(t));
     else
-      NeuroGeometryRectangleCenter(NeuroCoreClientGetRegion(c), NeuroCoreStackGetRegion(ws));
+      NeuroGeometryRectangleCenter(NeuroCoreClientGetRegion(c), NeuroCoreStackGetRegion(client->ws));
   }
 
   // Run layout and update ws focus
-  NeuroWorkspaceRemoveEnterNotifyMask(ws);
+  NeuroWorkspaceRemoveEnterNotifyMask(client->ws);
 
-  NeuroLayoutRunCurr(ws);
-  XSelectInput(NeuroSystemGetDisplay(), win, NEURO_SYSTEM_CLIENT_MASK);
-  NeuroSystemGrabButtons(win, NeuroConfigGet()->button_list);
-  XMapWindow(NeuroSystemGetDisplay(), win);
-  NeuroWorkspaceUpdate(ws);
-  NeuroWorkspaceFocus(ws);
+  NeuroLayoutRunCurr(client->ws);
+  XSelectInput(NeuroSystemGetDisplay(), client->win, NEURO_SYSTEM_CLIENT_MASK);
+  NeuroSystemGrabButtons(client->win, NeuroConfigGet()->button_list);
+  XMapWindow(NeuroSystemGetDisplay(), client->win);
+  NeuroWorkspaceUpdate(client->ws);
+  NeuroWorkspaceFocus(client->ws);
 
-  NeuroWorkspaceAddEnterNotifyMask(ws);
+  NeuroWorkspaceAddEnterNotifyMask(client->ws);
 }
 
 void NeuroEventUnmanageClient(NeuroClientPtrPtr c) {
@@ -287,18 +296,24 @@ void NeuroEventUnmanageClient(NeuroClientPtrPtr c) {
 }
 
 void NeuroEventLoadWindows(void) {
+  // Get all windows
   Window d1 = 0UL, d2 = 0UL, *wins = NULL;
   unsigned int num = 0;
   if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
     NeuroSystemError("NeuroEventLoadWindows - Could not get windows");
+
+  // Manage the windows
   for (unsigned int i = 0; i < num; ++i) {
     XWindowAttributes wa;
     if (!XGetWindowAttributes(NeuroSystemGetDisplay(), wins[ i ], &wa))
       continue;
+
     if (wa.map_state != IsViewable)
       continue;
+
     NeuroEventManageWindow(wins[ i ]);
   }
+
   if (wins)
     XFree(wins);
 }
