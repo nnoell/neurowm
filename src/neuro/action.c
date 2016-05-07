@@ -409,7 +409,8 @@ void NeuroActionHandlerFocusPtrClient(NeuroArg clientSelectorFn_arg) {
 
   // Select the monitor where the pointer is
   NeuroPoint p;
-  const NeuroMonitor *const m = NeuroMonitorFindPointed(NeuroSystemGetPointerLocation(&p));
+  NeuroSystemGetPointerWindowLocation(&p, NULL);
+  const NeuroMonitor *const m = NeuroMonitorFindPointed(&p);
   for (NeuroIndex ws = NeuroCoreGetHeadStack(); ws < NeuroCoreGetSize(); ++ws) {
     if (NeuroCoreStackGetMonitor(ws) == m) {
       NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
@@ -420,7 +421,8 @@ void NeuroActionHandlerFocusPtrClient(NeuroArg clientSelectorFn_arg) {
   }
 
   // Focus the client under the pointer
-  process_client(NeuroWorkspaceClientFocus, NeuroClientFindPointed(&p), NEURO_ARG_CSF_GET(clientSelectorFn_arg), NULL);
+  process_client(NeuroWorkspaceClientFocus, NeuroClientGetPointedByPointer(), NEURO_ARG_CSF_GET(clientSelectorFn_arg),
+      NULL);
 }
 
 void NeuroActionHandlerFreeMovePtrClient(NeuroArg clientSelectorFn_arg) {

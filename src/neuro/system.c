@@ -234,13 +234,13 @@ const int *NeuroSystemGetHiddenGaps(void) {
   return hidden_gaps_;
 }
 
-NeuroPoint *NeuroSystemGetPointerLocation(NeuroPoint *p) {
-  if (!p)
-    return NULL;
+void NeuroSystemGetPointerWindowLocation(NeuroPoint *p, Window *w) {
   Window root_win = 0UL, child_win = 0UL;
-  int xc = 0, yc = 0;
+  int px = 0, py = 0, xc = 0, yc = 0;
   unsigned int state = 0;
-  return XQueryPointer(display_, root_, &root_win, &child_win, &p->x, &p->y, &xc, &yc, &state) ? p : NULL;
+  if (!XQueryPointer(display_, root_, &root_win, w ? w : &child_win, p ? &p->x : &px, p ? &p->y : &py, &xc, &yc,
+      &state) ? p : NULL)
+    NeuroSystemError("NeuroSystemGetPointerWindowLocation - Could not query pointer");
 }
 
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c) {

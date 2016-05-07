@@ -227,6 +227,7 @@ NeuroClientPtrPtr NeuroWorkspaceClientFindFixed(NeuroIndex ws) {
   return NeuroCoreStackFindClient(ws, NeuroClientTesterFixed, NULL);
 }
 
+// Note: This might return a lower window in the stacking order
 NeuroClientPtrPtr NeuroWorkspaceClientFindPointed(NeuroIndex ws, const NeuroPoint *p) {
   return NeuroCoreStackFindClient(ws, NeuroClientTesterPointed, (const void *)p);
 }

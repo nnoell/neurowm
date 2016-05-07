@@ -342,8 +342,8 @@ void NeuroClientFloatMove(NeuroClientPtrPtr c, const void *data) {
   NeuroRectangle *const r = &client->float_region, cr;
   memmove(&cr, r, sizeof(NeuroRectangle));
   NeuroPoint p;
-  process_xmotion(r, client->ws, &cr, NeuroSystemGetPointerLocation(&p), xmotion_move,
-      NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_MOVE));
+  NeuroSystemGetPointerWindowLocation(&p, NULL);
+  process_xmotion(r, client->ws, &cr, &p, xmotion_move, NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_MOVE));
 }
 
 void NeuroClientFloatResize(NeuroClientPtrPtr c, const void *data) {
@@ -363,8 +363,8 @@ void NeuroClientFloatResize(NeuroClientPtrPtr c, const void *data) {
   NeuroRectangle *const r = &client->float_region, cr;
   memmove(&cr, r, sizeof(NeuroRectangle));
   NeuroPoint p;
-  process_xmotion(r, client->ws, &cr, NeuroSystemGetPointerLocation(&p), xmotion_resize,
-      NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_RESIZE));
+  NeuroSystemGetPointerWindowLocation(&p, NULL);
+  process_xmotion(r, client->ws, &cr, &p, xmotion_resize, NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_RESIZE));
 }
 
 void NeuroClientFreeMove(NeuroClientPtrPtr c, const void *free_setter_fn) {
@@ -378,9 +378,10 @@ void NeuroClientFreeMove(NeuroClientPtrPtr c, const void *free_setter_fn) {
   // Free move the client
   NeuroRectangle *const r = NeuroCoreClientGetRegion(c), cr;
   memmove(&cr, r, sizeof(NeuroRectangle));
+  NeuroClient *const client = NEURO_CLIENT_PTR(c);
   NeuroPoint p;
-  process_xmotion(r, NEURO_CLIENT_PTR(c)->ws, &cr, NeuroSystemGetPointerLocation(&p), xmotion_move,
-      NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_MOVE));
+  NeuroSystemGetPointerWindowLocation(&p, NULL);
+  process_xmotion(r, client->ws, &cr, &p, xmotion_move, NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_MOVE));
 }
 
 void NeuroClientFreeResize(NeuroClientPtrPtr c, const void *free_setter_fn) {
@@ -394,9 +395,10 @@ void NeuroClientFreeResize(NeuroClientPtrPtr c, const void *free_setter_fn) {
   // Free resize the client
   NeuroRectangle *const r = NeuroCoreClientGetRegion(c), cr;
   memmove(&cr, r, sizeof(NeuroRectangle));
+  NeuroClient *const client = NEURO_CLIENT_PTR(c);
   NeuroPoint p;
-  process_xmotion(r, NEURO_CLIENT_PTR(c)->ws, &cr, NeuroSystemGetPointerLocation(&p), xmotion_resize,
-      NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_RESIZE));
+  NeuroSystemGetPointerWindowLocation(&p, NULL);
+  process_xmotion(r, client->ws, &cr, &p, xmotion_resize, NeuroSystemGetCursor(NEURO_SYSTEM_CURSOR_RESIZE));
 }
 
 // Find
@@ -412,6 +414,8 @@ NeuroClientPtrPtr NeuroClientFindFixed(void) {
   return NeuroCoreFindClient(NeuroClientTesterFixed, NULL);
 }
 
+// Note: This might return a lower window in the stacking order, use NeuroClientGetPointedByPointer() to always get
+// the upper window in the stacking order
 NeuroClientPtrPtr NeuroClientFindPointed(const NeuroPoint *p) {
   return NeuroCoreFindClient(NeuroClientTesterPointed, (const void *)p);
 }
@@ -426,8 +430,9 @@ NeuroClientPtrPtr NeuroClientGetFocused(void) {
 }
 
 NeuroClientPtrPtr NeuroClientGetPointedByPointer(void) {
-  NeuroPoint p;
-  return NeuroClientFindPointed(NeuroSystemGetPointerLocation(&p));
+  Window w;
+  NeuroSystemGetPointerWindowLocation(NULL, &w);
+  return NeuroClientFindWindow(w);
 }
 
 // Client Testers
