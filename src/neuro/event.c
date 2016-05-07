@@ -115,6 +115,10 @@ static void do_enter_notify(XEvent *e) {
   if (!NeuroCoreStackGetCurrLayout(client->ws)->follow_mouse)
     return;
 
+  // Do not focus if there is a fullscreen client in the stack
+  if (NeuroCoreStackFindClient(client->ws, NeuroClientTesterFullscreen, NULL))
+    return;
+
   // Focus the client
   NeuroWorkspaceUnfocus(NeuroCoreGetCurrStack());
   NeuroCoreSetCurrStack(client->ws);

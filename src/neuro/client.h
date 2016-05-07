@@ -57,6 +57,7 @@ bool NeuroClientTesterUrgent(const NeuroClientPtrPtr c, const void *data);
 bool NeuroClientTesterFixed(const NeuroClientPtrPtr c, const void *data);
 bool NeuroClientTesterPointed(const NeuroClientPtrPtr c, const void *p);
 bool NeuroClientTesterHidden(const NeuroClientPtrPtr c, const void *data);
+bool NeuroClientTesterFullscreen(const NeuroClientPtrPtr c, const void *data);
 
 // Client Selectors
 NeuroClientPtrPtr NeuroClientSelectorSelf(const NeuroClientPtrPtr c);   // Client c itself

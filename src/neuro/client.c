@@ -432,36 +432,31 @@ NeuroClientPtrPtr NeuroClientGetPointedByPointer(void) {
 
 // Client Testers
 bool NeuroClientTesterWindow(const NeuroClientPtrPtr c, const void *w) {
-  if (!c || !w)
-    return false;
-  return NEURO_CLIENT_PTR(c)->win == *((const Window *)w);
+  return c && w && NEURO_CLIENT_PTR(c)->win == *((const Window *)w);
 }
 
 bool NeuroClientTesterUrgent(const NeuroClientPtrPtr c, const void *data) {
   (void)data;
-  if (!c)
-    return false;
-  return NEURO_CLIENT_PTR(c)->is_urgent;
+  return c && NEURO_CLIENT_PTR(c)->is_urgent;
 }
 
 bool NeuroClientTesterFixed(const NeuroClientPtrPtr c, const void *data) {
   (void)data;
-  if (!c)
-    return false;
-  return NEURO_CLIENT_PTR(c)->fixed_pos != NEURO_FIXED_POSITION_NULL;
+  return c && NEURO_CLIENT_PTR(c)->fixed_pos != NEURO_FIXED_POSITION_NULL;
 }
 
 bool NeuroClientTesterPointed(const NeuroClientPtrPtr c, const void *p) {
-  if (!c || !p)
-    return false;
-  return NeuroGeometryIsPointInRectangle(NeuroCoreClientGetRegion(c), (const NeuroPoint *)p);
+  return c && p && NeuroGeometryIsPointInRectangle(NeuroCoreClientGetRegion(c), (const NeuroPoint *)p);
 }
 
 bool NeuroClientTesterHidden(const NeuroClientPtrPtr c, const void *data) {
   (void)data;
-  if (!c)
-    return false;
-  return NeuroGeometryIsPointInRectangle(NeuroSystemGetHiddenRegion(), &NeuroCoreClientGetRegion(c)->p);
+  return c && NeuroGeometryIsPointInRectangle(NeuroSystemGetHiddenRegion(), &NeuroCoreClientGetRegion(c)->p);
+}
+
+bool NeuroClientTesterFullscreen(const NeuroClientPtrPtr c, const void *data) {
+  (void)data;
+  return c && NEURO_CLIENT_PTR(c)->is_fullscreen;
 }
 
 // Client Selectors

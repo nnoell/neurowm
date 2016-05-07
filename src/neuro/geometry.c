@@ -173,6 +173,7 @@ NeuroRectangle *NeuroGeometryRectangleCenter(NeuroRectangle *r, const NeuroRecta
 // Point-Rectangle Testers
 bool NeuroGeometryIsPointInRectangle(const NeuroRectangle *r, const NeuroPoint *p) {
   assert(r);
+  assert(p);
   if (p->x < r->p.x)
     return false;
   if (p->y < r->p.y)
