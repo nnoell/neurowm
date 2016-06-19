@@ -57,7 +57,7 @@ static void process_client(const WorkspaceClientFn wcf, const NeuroClientPtrPtr 
     const void *data) {
   if (!ref || !csf)
     return;
-  NeuroClientPtrPtr c = csf(ref);
+  const NeuroClientPtrPtr c = csf(ref);
   if (!c)
     return;
   wcf(c, data);

@@ -330,11 +330,11 @@ typedef int (*NeuroBorderSetterFn)(NeuroClientPtrPtr c);
 
 // NeuroArrange
 struct NeuroArrange {
-  NeuroIndex size;                       // Number of tiled clients
+  NeuroIndex size;                        // Number of tiled clients
   NeuroRectangle region;                  // Tiled layout region
   NeuroRectangle **client_regions;        // Region of each client
   NeuroRectangle **client_float_regions;  // Float region of each client
-  NeuroArg *parameters;            // Parameters of the arrange
+  NeuroArg *parameters;                   // Parameters of the arrange
 };
 typedef struct NeuroArrange NeuroArrange;
 
