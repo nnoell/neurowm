@@ -415,9 +415,9 @@ void NeuroDzenRefresh(bool on_event_only) {
 
 void NeuroDzenInitCpuCalc(void) {
   if (!init_cpu_calc_refresh_info())
-    NeuroSystemError("NeuroDzenInitCpuCalc - Could not init CPU Set");
+    NeuroSystemError(__func__, "Could not init CPU Set");
   if (init_cpu_calc_thread())
-    NeuroSystemError("NeuroDzenInitCpuCalc - Could not init CPU percent thread");
+    NeuroSystemError(__func__, "Could not init CPU percent thread");
 }
 
 void NeuroDzenStopCpuCalc(void) {

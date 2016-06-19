@@ -81,7 +81,7 @@ static void send_client(NeuroClientPtrPtr c, const void *data) {
   cli->ws = new_ws;
   const NeuroClientPtrPtr c2 = NeuroCoreAddClientStart(cli);
   if (!c2)
-    NeuroSystemError("send_client - Could not add client");
+    NeuroSystemError(__func__, "Could not add client");
 
   // Update old and new workspaces
   NeuroLayoutRunCurr(curr_ws);
@@ -148,7 +148,7 @@ void NeuroWorkspaceFocus(NeuroIndex ws) {
     // XQueryTree gets windows by stacking order
     unsigned int num = 0U;
     if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
-      NeuroSystemError("NeuroWorkspaceFocus - Could not get windows");
+      NeuroSystemError(__func__, "Could not get windows");
     NeuroIndex n2 = n;
     for (unsigned int i = 0U; i < num; ++i) {
       c = NeuroWorkspaceClientFindWindow(ws, wins[ i ]);
@@ -192,10 +192,10 @@ void NeuroWorkspaceRestoreLastMinimized(NeuroIndex ws) {
     return;
   NeuroClient *cli = NeuroCorePopMinimizedClient(ws);
   if (!cli)
-    NeuroSystemError("NeuroWorkspaceRestoreLastMinimized - Could not restore last minimized client");
+    NeuroSystemError(__func__, "Could not restore last minimized client");
   NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
-    NeuroSystemError("NeuroWorkspaceRestoreLastMinimized - Could not add client");
+    NeuroSystemError(__func__, "Could not add client");
   NeuroCoreSetCurrClient(c);
   const Window win = NEURO_CLIENT_PTR(c)->ws;
   NeuroLayoutRunCurr(win);

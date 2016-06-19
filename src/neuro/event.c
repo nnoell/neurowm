@@ -257,10 +257,10 @@ void NeuroEventManageWindow(Window w) {
   // Add client to the stack list
   NeuroClient *const cli = NeuroRuleNewClient(w, &wa);
   if (!cli)
-    NeuroSystemError("NeuroEventManageWindow - Could not alloc NeuroClient and set rules");
+    NeuroSystemError(__func__, "Could not alloc NeuroClient and set rules");
   NeuroClientPtrPtr c = NeuroCoreAddClientStart(cli);
   if (!c)
-    NeuroSystemError("NeuroEventManageWindow - Could not add client");
+    NeuroSystemError(__func__, "Could not add client");
 
   // Transient windows
   NeuroClient *const client = NEURO_CLIENT_PTR(c);
@@ -304,7 +304,7 @@ void NeuroEventLoadWindows(void) {
   Window d1 = 0UL, d2 = 0UL, *wins = NULL;
   unsigned int num = 0;
   if (!XQueryTree(NeuroSystemGetDisplay(), NeuroSystemGetRoot(), &d1, &d2, &wins, &num))
-    NeuroSystemError("NeuroEventLoadWindows - Could not get windows");
+    NeuroSystemError(__func__, "Could not get windows");
 
   // Manage the windows
   for (unsigned int i = 0; i < num; ++i) {

@@ -97,7 +97,7 @@ void NeuroSystemChangeProcName(const char *name);
 pid_t NeuroSystemGetWmPid(void);
 bool NeuroSystemSpawn(const char *const *cmd, pid_t *p);
 int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p);
-void NeuroSystemError(const char *msg);
+void NeuroSystemError(const char *function_name, const char *msg);
 
 // Binding functions
 void NeuroSystemGrabKeys(Window w, const NeuroKey *const *key_list);

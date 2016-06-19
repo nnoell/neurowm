@@ -60,13 +60,13 @@ static void init_wm(const NeuroConfiguration *c) {
 
   // Init System, NeuroMonitor, Core and Panels
   if (!NeuroSystemInit())
-    NeuroSystemError("init_wm - Could not init System module");
+    NeuroSystemError(__func__, "Could not init System module");
   if (!NeuroMonitorInit())
-    NeuroSystemError("init_wm - Could not init NeuroMonitor module");
+    NeuroSystemError(__func__, "Could not init NeuroMonitor module");
   if (!NeuroCoreInit())
-    NeuroSystemError("init_wm - Could not init Core module");
+    NeuroSystemError(__func__, "Could not init Core module");
   if (!NeuroDzenInit())
-    NeuroSystemError("init_wm - Could not init Dzen module");
+    NeuroSystemError(__func__, "Could not init Dzen module");
 
   // Change to the default workspace
   NeuroWorkspaceChange(NeuroMonitorSelectorHead(NULL)->default_ws);

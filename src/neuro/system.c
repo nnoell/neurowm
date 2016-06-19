@@ -62,7 +62,7 @@ static const char *const recompile_cmd_[] = {
 static int xerror_handler_start(Display *d, XErrorEvent *ee) {
   (void)d;
   (void)ee;
-  NeuroSystemError("xerror_handler_start - Another window manager is already running");
+  NeuroSystemError(__func__, "xerror_handler_start - Another window manager is already running");
   return -1;
 }
 
@@ -132,7 +132,7 @@ static void run_command(const char *const *cmd) {
   const NeuroIndex size = NeuroTypeArrayLength((const void *const *)cmd) + 1;  // We need an extra slot for NULL
   char **command = (char **)calloc(size, sizeof(void *));
   if (!command)
-    NeuroSystemError("NeuroSystemSpawn - Could not calloc");
+    NeuroSystemError(__func__, "Could not calloc");
 
   // Copy the data from cmd
   command[ size - 1 ] = NULL;
@@ -142,7 +142,7 @@ static void run_command(const char *const *cmd) {
     const NeuroIndex n = strlen(src);
     command[ i ] = (char *)calloc(n, sizeof(char));
     if (!command[ i ])
-      NeuroSystemError("NeuroSystemSpawn - Could not calloc");
+      NeuroSystemError(__func__, "Could not calloc");
     strncpy(command[ i ], src, n);
   }
 
@@ -157,7 +157,7 @@ static void run_command(const char *const *cmd) {
   free(command);
   command = NULL;
 
-  NeuroSystemError("NeuroSystemSpawn - Could not execvp");
+  NeuroSystemError(__func__, "Could not execvp");
 }
 
 
@@ -243,7 +243,7 @@ void NeuroSystemGetPointerWindowLocation(NeuroPoint *p, Window *w) {
   unsigned int state = 0;
   if (!XQueryPointer(display_, root_, &root_win, w ? w : &child_win, p ? &p->x : &px, p ? &p->y : &py, &xc, &yc,
       &state) ? p : NULL)
-    NeuroSystemError("NeuroSystemGetPointerWindowLocation - Could not query pointer");
+    NeuroSystemError(__func__, "Could not query pointer");
 }
 
 Cursor NeuroSystemGetCursor(NeuroSystemCursor c) {
@@ -266,7 +266,7 @@ NeuroColor NeuroSystemGetColorFromHex(const char* color) {
   assert(color);
   XColor c;
   if (!XAllocNamedColor(display_, DefaultColormap(display_, screen_), color, &c, &c))
-    NeuroSystemError("NeuroSystemGetColorFromHex - Could not allocate color");
+    NeuroSystemError(__func__, "Could not allocate color");
   return (NeuroColor)c.pixel;
 }
 
@@ -365,8 +365,9 @@ int NeuroSystemSpawnPipe(const char *const *cmd, pid_t *p) {
   return filedes[ 1 ];
 }
 
-void NeuroSystemError(const char *msg) {
-  perror(msg);
+void NeuroSystemError(const char *function_name, const char *msg) {
+  fprintf(stderr, "%s|%s:", function_name, msg);
+  perror("");
   exit(EXIT_FAILURE);
 }
 

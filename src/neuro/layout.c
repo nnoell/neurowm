@@ -144,7 +144,7 @@ void NeuroLayoutRun(NeuroIndex ws, NeuroIndex i) {
   NeuroLayout *const l = NeuroCoreStackGetLayout(ws, i);
   NeuroArrange *const a = new_arrange(ws, l);
   if (!a)
-    NeuroSystemError("NeuroLayoutRun - Could not run layout");
+    NeuroSystemError(__func__, "Could not run layout");
   if (a->size) {  // Then run layout
     if (l->mod & NEURO_LAYOUT_MOD_MIRROR)
       mirror_arrange(a, l->arranger_fn);
