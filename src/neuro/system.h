@@ -90,6 +90,7 @@ NeuroColor NeuroSystemGetColor(NeuroSystemColor c);
 NeuroColor NeuroSystemGetColorFromHex(const char *color);
 
 // System functions
+const char *NeuroSystemGetVersion(void);
 const char *const *NeuroSystemGetRecompileCommand(const char **output, const char **source);
 void NeuroSystemChangeWmName(const char *name);
 void NeuroSystemChangeProcName(const char *name);

@@ -32,6 +32,9 @@ static Atom wm_atoms_[ NEURO_SYSTEM_WMATOM_END ];
 static Atom net_atoms_[ NEURO_SYSTEM_NETATOM_END ];
 static NeuroColor colors_[ NEURO_SYSTEM_COLOR_END ];
 
+// Version
+static const char *const version_ = PKG_NAME " " PKG_VERSION;
+
 // Recompile command
 static char recompile_cmd_output_[ NEURO_NAME_SIZE_MAX ];
 static char recompile_cmd_source_[ NEURO_NAME_SIZE_MAX ];
@@ -268,6 +271,10 @@ NeuroColor NeuroSystemGetColorFromHex(const char* color) {
 }
 
 // System functions
+const char *NeuroSystemGetVersion(void) {
+  return version_;
+}
+
 const char * const *NeuroSystemGetRecompileCommand(const char **output, const char **source) {
   snprintf((char *)recompile_cmd_output_, NEURO_NAME_SIZE_MAX, "%s/." PKG_NAME "/" PKG_MYNAME, getenv("HOME"));
   snprintf((char *)recompile_cmd_source_, NEURO_NAME_SIZE_MAX, "%s/." PKG_NAME "/" PKG_NAME ".c", getenv("HOME"));

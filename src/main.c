@@ -73,7 +73,7 @@ static bool help_handler(void) {
 }
 
 static bool version_handler(void) {
-  printf(PKG_NAME " " PKG_VERSION "\n");
+  printf("%s\n", NeuroSystemGetVersion());
   return true;
 }
 
