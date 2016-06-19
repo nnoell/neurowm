@@ -62,7 +62,7 @@ static const char *const recompile_cmd_[] = {
 static int xerror_handler_start(Display *d, XErrorEvent *ee) {
   (void)d;
   (void)ee;
-  NeuroSystemError(__func__, "xerror_handler_start - Another window manager is already running");
+  NeuroSystemError(__func__, "Another window manager is already running");
   return -1;
 }
 
