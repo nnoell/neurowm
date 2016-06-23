@@ -88,11 +88,11 @@ Atom NeuroSystemGetWmAtom(NeuroSystemWmatom a);
 Atom NeuroSystemGetNetAtom(NeuroSystemNetatom a);
 NeuroColor NeuroSystemGetColor(NeuroSystemColor c);
 NeuroColor NeuroSystemGetColorFromHex(const char *color);
+void NeuroSystemChangeWmName(const char *name);
 
 // System functions
 const char *NeuroSystemGetVersion(void);
 const char *const *NeuroSystemGetRecompileCommand(const char **output, const char **source);
-void NeuroSystemChangeWmName(const char *name);
 void NeuroSystemChangeProcName(const char *name);
 pid_t NeuroSystemGetWmPid(void);
 bool NeuroSystemSpawn(const char *const *cmd, pid_t *p);

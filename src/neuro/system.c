@@ -270,6 +270,15 @@ NeuroColor NeuroSystemGetColorFromHex(const char* color) {
   return (NeuroColor)c.pixel;
 }
 
+void NeuroSystemChangeWmName(const char *name) {
+  assert(name);
+  const Atom netwmcheck = XInternAtom(display_, "_NET_SUPPORTING_WM_CHECK", false);
+  const Atom netwmname = XInternAtom(display_, "_NET_WM_NAME", false);
+  const Atom utf8_str = XInternAtom(display_, "UTF8_STRING", false);
+  XChangeProperty(display_, root_, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root_, 1);
+  XChangeProperty(display_, root_, netwmname, utf8_str, 8, PropModeReplace, (const unsigned char *)name, strlen(name));
+}
+
 // System functions
 const char *NeuroSystemGetVersion(void) {
   return version_;
@@ -283,15 +292,6 @@ const char * const *NeuroSystemGetRecompileCommand(const char **output, const ch
   if (source)
     *source = recompile_cmd_source_;
   return recompile_cmd_;
-}
-
-void NeuroSystemChangeWmName(const char *name) {
-  assert(name);
-  const Atom netwmcheck = XInternAtom(display_, "_NET_SUPPORTING_WM_CHECK", false);
-  const Atom netwmname = XInternAtom(display_, "_NET_WM_NAME", false);
-  const Atom utf8_str = XInternAtom(display_, "UTF8_STRING", false);
-  XChangeProperty(display_, root_, netwmcheck, XA_WINDOW, 32, PropModeReplace, (unsigned char *)&root_, 1);
-  XChangeProperty(display_, root_, netwmname, utf8_str, 8, PropModeReplace, (const unsigned char *)name, strlen(name));
 }
 
 void NeuroSystemChangeProcName(const char *name) {
