@@ -652,19 +652,33 @@ static const NeuroKey* key_list_[] = {
 
 // BUTTON (MOD, BUTTON, ACTIONCHAIN, UNWRAPONFOCUS)
 static const NeuroButton button0_ = {
-    NEURO_NULL_MASK,     Button1, NEURO_CHAIN_NULL(NeuroActionListFocusPtrClient),            true  };
+  NEURO_NULL_MASK, Button1,
+  NEURO_CHAIN_NULL(NeuroActionListFocusPtrClient), true
+};
 static const NeuroButton button1_ = {
-    mod_mask_,           Button1, NEURO_CHAIN_NULL(NeuroActionListFreeMovePtrClient),         false };
+  mod_mask_, Button1,
+  NEURO_CHAIN_NULL(NeuroActionListFreeMovePtrClient), false
+};
 static const NeuroButton button2_ = {
-    mod_mask_,           Button2, NEURO_CHAIN_NULL(NeuroActionListToggleFreePtrClient),       false };
+  mod_mask_, Button2,
+  NEURO_CHAIN_NULL(NeuroActionListToggleFreePtrClient), false
+};
 static const NeuroButton button3_ = {
-    mod_mask_,           Button3, NEURO_CHAIN_NULL(NeuroActionListFreeResizePtrClient),       false };
+  mod_mask_, Button3,
+  NEURO_CHAIN_NULL(NeuroActionListFreeResizePtrClient), false
+};
 static const NeuroButton button4_ = {
-    mod_mask_|ShiftMask, Button1, NEURO_CHAIN_NULL(NeuroActionListFloatMovePtrClient),        false };
+  mod_mask_|ShiftMask, Button1,
+  NEURO_CHAIN_NULL(NeuroActionListFloatMovePtrClient), false
+};
 static const NeuroButton button5_ = {
-    mod_mask_|ShiftMask, Button2, NEURO_CHAIN_NULL(NeuroActionListToggleFullscreenPtrClient), false };
+  mod_mask_|ShiftMask, Button2,
+  NEURO_CHAIN_NULL(NeuroActionListToggleFullscreenPtrClient), false
+};
 static const NeuroButton button6_ = {
-    mod_mask_|ShiftMask, Button3, NEURO_CHAIN_NULL(NeuroActionListFloatResizePtrClient),      false };
+  mod_mask_|ShiftMask, Button3,
+  NEURO_CHAIN_NULL(NeuroActionListFloatResizePtrClient), false
+};
 
 // BUTTON LIST
 static const NeuroButton* button_list_[] = {
