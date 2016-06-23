@@ -381,6 +381,7 @@ typedef struct NeuroWorkspace NeuroWorkspace;
 
 // NeuroKey
 struct NeuroKey {
+  const char *const description;
   const unsigned int mod;
   const KeySym key;
   const NeuroActionChain action_chain;
@@ -389,6 +390,7 @@ typedef struct NeuroKey NeuroKey;
 
 // NeuroButton
 struct NeuroButton {
+  const char *const description;
   const unsigned int mod;
   const unsigned int button;
   const NeuroActionChain action_chain;
