@@ -112,7 +112,7 @@ enum NeuroLayoutMod {
   NEURO_LAYOUT_MOD_NULL = 0,
   NEURO_LAYOUT_MOD_MIRROR = 1 << 0,
   NEURO_LAYOUT_MOD_REFLECTX = 1 << 1,
-  NEURO_LAYOUT_MODE_REFLECTY = 1 << 2
+  NEURO_LAYOUT_MOD_REFLECTY = 1 << 2
 };
 typedef enum NeuroLayoutMod NeuroLayoutMod;
 

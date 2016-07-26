@@ -81,7 +81,7 @@ static const NeuroLayoutConf grid_ = {
   NeuroClientBorderWidthSetterSmart,
   NeuroClientBorderGapSetterAlways,
   {0.0f, 0.0f, 1.0f, 1.0f},
-  NEURO_LAYOUT_MOD_MIRROR|NEURO_LAYOUT_MOD_REFLECTX|NEURO_LAYOUT_MODE_REFLECTY,
+  NEURO_LAYOUT_MOD_MIRROR|NEURO_LAYOUT_MOD_REFLECTX|NEURO_LAYOUT_MOD_REFLECTY,
   true,
   {NEURO_ARG_NULL, NEURO_ARG_NULL, NEURO_ARG_NULL, NEURO_ARG_NULL}
 };
@@ -410,7 +410,7 @@ static const NeuroKey key21_ = {  // Toggles reflect X mod to the current layout
 };
 static const NeuroKey key22_ = {  // Toggles reflect Y mod to the current layout
   mod_mask_, XK_y,
-  NEURO_CHAIN(NeuroActionListToggleModLayout, NEURO_ARG_LMOD(NEURO_LAYOUT_MODE_REFLECTY))
+  NEURO_CHAIN(NeuroActionListToggleModLayout, NEURO_ARG_LMOD(NEURO_LAYOUT_MOD_REFLECTY))
 };
 static const NeuroKey key23_ = {  // Toggles the full layout
   mod_mask_, XK_f,

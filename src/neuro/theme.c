@@ -170,7 +170,7 @@ void NeuroThemeNnoellLoggerMonitorCurrLayoutMod(const NeuroMonitor *m, char *str
       strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")M^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
     if (l->mod & NEURO_LAYOUT_MOD_REFLECTX)
       strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")X^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
-    if (l->mod & NEURO_LAYOUT_MODE_REFLECTY)
+    if (l->mod & NEURO_LAYOUT_MOD_REFLECTY)
       strncat(tmp, "^fg(" NEURO_THEME_NNOELL_COLOR_GREEN ")Y^fg()", NEURO_DZEN_LOGGER_MAX - strlen(tmp) - 1);
   }
   NeuroDzenWrapDzenBox(tmp2, tmp, &boxpp_nnoell_white_);

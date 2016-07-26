@@ -62,7 +62,7 @@ static void init_wm(const NeuroConfiguration *c) {
   if (!NeuroSystemInit())
     NeuroSystemError(__func__, "Could not init System module");
   if (!NeuroMonitorInit())
-    NeuroSystemError(__func__, "Could not init NeuroMonitor module");
+    NeuroSystemError(__func__, "Could not init Monitor module");
   if (!NeuroCoreInit())
     NeuroSystemError(__func__, "Could not init Core module");
   if (!NeuroDzenInit())

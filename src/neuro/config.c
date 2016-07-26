@@ -180,7 +180,7 @@ static const NeuroKey key21_ = {
 static const NeuroKey key22_ = {
   "Toggles reflect Y mod to the current layout",
   Mod1Mask, XK_y,
-  NEURO_CHAIN(NeuroActionListToggleModLayout, NEURO_ARG_LMOD(NEURO_LAYOUT_MODE_REFLECTY))
+  NEURO_CHAIN(NeuroActionListToggleModLayout, NEURO_ARG_LMOD(NEURO_LAYOUT_MOD_REFLECTY))
 };
 static const NeuroKey key23_ = {
   "Toggles the full layout",

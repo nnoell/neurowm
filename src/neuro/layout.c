@@ -152,7 +152,7 @@ void NeuroLayoutRun(NeuroIndex ws, NeuroIndex i) {
       normal_arrange(a, l->arranger_fn);
     if (l->mod & NEURO_LAYOUT_MOD_REFLECTX)
       reflect_x_mod(a);
-    if (l->mod & NEURO_LAYOUT_MODE_REFLECTY)
+    if (l->mod & NEURO_LAYOUT_MOD_REFLECTY)
       reflect_y_mod(a);
   }
   delete_arrange(a);
