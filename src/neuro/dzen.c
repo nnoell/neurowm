@@ -196,7 +196,7 @@ static void stop_cpu_calc_thread(void) {
   // Join thread
   void *status;
   if (pthread_join(cpu_calc_refresh_info_.thread, &status))  // Wait
-    perror("stop_cpu_perc_thread - Could not join thread");
+    perror("stop_cpu_calc_thread - Could not join thread");
 
   // Destroy cond and mutex
   pthread_cond_destroy(&cpu_calc_refresh_info_.wait_cond);
@@ -318,7 +318,7 @@ static void stop_dzen_refresh_thread(void) {
   // Join thread
   void *status;
   if (pthread_join(dzen_refresh_info_.thread, &status))  // Wait
-    perror("stop_refresh_thread - Could not join thread");
+    perror("stop_dzen_refresh_thread - Could not join thread");
 
   // Init cond and mutex
   pthread_cond_destroy(&dzen_refresh_info_.wait_cond);
@@ -415,9 +415,9 @@ void NeuroDzenRefresh(bool on_event_only) {
 
 void NeuroDzenInitCpuCalc(void) {
   if (!init_cpu_calc_refresh_info())
-    NeuroSystemError(__func__, "Could not init CPU Set");
+    NeuroSystemError(__func__, "Could not init cpu calc refresh info");
   if (!init_cpu_calc_thread())
-    NeuroSystemError(__func__, "Could not init CPU percent thread");
+    NeuroSystemError(__func__, "Could not init cpu calc thread");
 }
 
 void NeuroDzenStopCpuCalc(void) {
