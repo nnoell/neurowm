@@ -185,7 +185,7 @@ static bool init_cpu_calc_thread(void) {
   pthread_cond_init(&cpu_calc_refresh_info_.wait_cond, NULL);
 
   // Create thread
-  return pthread_create(&cpu_calc_refresh_info_.thread, NULL, refresh_cpu_calc_thread, NULL);
+  return 0 == pthread_create(&cpu_calc_refresh_info_.thread, NULL, refresh_cpu_calc_thread, NULL);
 }
 
 static void stop_cpu_calc_thread(void) {
@@ -416,7 +416,7 @@ void NeuroDzenRefresh(bool on_event_only) {
 void NeuroDzenInitCpuCalc(void) {
   if (!init_cpu_calc_refresh_info())
     NeuroSystemError(__func__, "Could not init CPU Set");
-  if (init_cpu_calc_thread())
+  if (!init_cpu_calc_thread())
     NeuroSystemError(__func__, "Could not init CPU percent thread");
 }
 
