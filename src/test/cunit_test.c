@@ -13,7 +13,7 @@
 // Includes
 #include <stdio.h>
 #include <string.h>
-#include <CUnit/Basic.h>
+#include <BCUnit/Basic.h>
 #include "../neuro/system.h"
 #include "../neuro/core.h"
 #include "../neuro/wm.h"

@@ -44,7 +44,7 @@ CFLAGS = -ggdb3 -Wall -fpic -O3 ${DFLAGS}\
          -Wstrict-overflow=5 -Winline -Wundef -Wnested-externs -Wshadow -Wunreachable-code -Wfloat-equal\
          -Wredundant-decls
 LDADD = -lX11 ${PKG_LINK_OPTIONS} -pthread
-LDADDTEST = -lX11 ${PKG_LINK_OPTIONS} -pthread -lcunit
+LDADDTEST = -lX11 ${PKG_LINK_OPTIONS} -pthread -lbcunit
 
 # Mod names
 MOD_NAMES = wm config dzen event rule workspace layout client core system geometry type theme action monitor
