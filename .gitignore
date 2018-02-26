@@ -4,3 +4,13 @@ build/bin/cunit_test
 build/obj/*.o
 build/lib/*.a
 build/lib/*.so*
+CMakeFiles/
+neurowm
+CMakeCache.txt
+GPATH
+GRTAGS
+GTAGS
+cmake_install.cmake
+pkgbuild/*
+src/neuro/libneuro.a
+build/
