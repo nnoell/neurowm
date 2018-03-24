@@ -1,26 +1,61 @@
-cmake_minimum_required (VERSION 3.5)
-# set(CMAKE_CXX_STANDARD 14)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# BUILD OPTIONS:
+# --------------
+#
+# Default prefix with multihead support:
+#   $ cd build
+#   $ cmake ..
+#   $ sudo make install
+#
+# Custom prefix without multihead support:
+#   $ cd build
+#   $ cmake -DCMAKE_INSTALL_PREFIX:PATH=/custom/prefix -DWITH_MULTIHEAD:BOOL=FALSE ..
+#   $ make install
 
-if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
-    message( FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there. You may need to remove CMakeCache.txt." )
-endif()
+cmake_minimum_required (VERSION 3.5)
 
 project(neurowm C)
-set(neurowm_MAJOR_VERSION 0)
-set(neurowm_MINOR_VERSION 35)
 
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+# Variables
+set(MAJOR_VERSION 0)
+set(MINOR_VERSION 35)
+
+# Directories
 set(WORKSPACE_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
-
 set(SRC_DIR "${WORKSPACE_ROOT}/src")
-set(NEURO_DIR "${SRC_DIR}/neuro")
 
-include_directories("${SRC_DIR}/neuro")
-add_subdirectory("${SRC_DIR}/neuro")
+# Files
+file(GLOB_RECURSE ALL_C_SOURCES "${SRC_DIR}/neuro/*.c")
+file(GLOB_RECURSE ALL_C_HEADERS "${SRC_DIR}/neuro/*.h")
 
-add_executable(neurowm "${SRC_DIR}/main.c")
-set_target_properties(neurowm PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
-target_link_libraries(neurowm neuro X11 Xrandr pthread)
+# Defines
+add_definitions(-DPKG_NAME="neurowm")
+add_definitions(-DPKG_MYNAME="myneurowm")
+add_definitions(-DPKG_VERSION="${MAJOR_VERSION}.${MINOR_VERSION}")
+if(WITH_MULTIHEAD)
+  add_definitions(-DXRANDR)
+endif()
 
-install (TARGETS neurowm DESTINATION bin)
+# Library
+add_library(lib_neuro SHARED "${ALL_C_SOURCES}")
+set_target_properties(lib_neuro PROPERTIES
+  OUTPUT_NAME neurowm
+  PUBLIC_HEADER "${ALL_C_HEADERS}"
+  SOVERSION "${MAJOR_VERSION}.${MINOR_VERSION}")
+if(WITH_MULTIHEAD)
+  target_link_libraries(lib_neuro X11 pthread Xrandr)
+else()
+  target_link_libraries(lib_neuro X11 pthread)
+endif()
+
+# Executable
+add_executable(bin_neuro "${SRC_DIR}/main.c")
+target_link_libraries(bin_neuro lib_neuro)
+set_target_properties(bin_neuro PROPERTIES
+  OUTPUT_NAME neurowm
+  INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+# Install
+install(TARGETS bin_neuro lib_neuro
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib/neuro
+  PUBLIC_HEADER DESTINATION include/neuro)
