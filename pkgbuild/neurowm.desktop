@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=neurowm
+Comment=Lightweight X11 tiled window manager written in C by nnoell@github
+Exec=neurowm
+Icon=neurowm
+Terminal=false
+StartupNotify=false
+Categories=Application;

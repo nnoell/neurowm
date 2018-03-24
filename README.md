@@ -23,7 +23,7 @@ If you want to run *neurowm* with all its features, install these packages:
  - **xdotool**: default X11 command line
 
 
-Installation
+Installation using Makefile
 ============
 
 Once downloaded, `cd` to its root folder and compile the source using the **Makefile**:
@@ -33,6 +33,22 @@ Once downloaded, `cd` to its root folder and compile the source using the **Make
 Now install the headers, library and binary using the **install target** (you must be root):
 
 	sudo make install
+
+
+Installation using CMake
+=============
+
+Once downloaded, `cd` to its root folder and the `build` folder. Once there write:
+
+    cmake ..
+    
+This generates the Makefile(s) necessary to perform the installation. Then, still inside the build folder, write:
+
+    make
+    
+Finally, to install write:
+
+    sudo make install
 
 
 Configuration

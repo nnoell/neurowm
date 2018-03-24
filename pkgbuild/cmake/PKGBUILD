@@ -1,0 +1,52 @@
+# Maintainer: Simon Bergström <simon@menuan.se>
+#
+# About: Currently, this PKGBUILD will pull the master branch and
+# build that. One can set it up to instead pull and build a specific
+# tag in order to get better version tracking.
+#
+
+pkgname=neurowm-git
+pkgver=v0.35.r14.gbe569ba
+pkgrel=1
+pkgdesc="neurowm is a tiling window manager written in C"
+arch=('i686' 'x86_64')
+url="https://github.com/nnoell/neurowm"
+license=('custom:BSD3-style')
+depends=('libx11')
+makedepends=('cmake' 'gcc' 'git')
+optdepends=('libxrandr' 'dzen2' 'gmrun' 'xdotool' 'rofi')
+checkdepends=('bcunit')
+provides=('neurowm')
+conflicts=('neurowm')
+replaces=('neurowm')
+source=("neurowm::git+https://github.com/simpers/neurowm#branch=arch")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  echo "Going to $srcdir/$pkgname"
+  cd "$srcdir/neurowm"
+  mkdir -p "build" && cd "build"  
+  cmake ..
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  if [ ! -f "pkgbuild/neurowm.desktop" ]; then
+      echo 'Missing the xsession file (pkgbuild/neurowm.desktop)'
+  else
+      install -Dm644 "pkgbuild/neurowm.desktop" "$pkgdir/usr/share/xsessions/neurowm.desktop"
+  fi
+  install -Dm644 "examples/default_neurowm.c" "$pkgdir/usr/share/neurowm/examples/default_neurowm.c"
+  install -Dm644 "examples/nnoell_neurowm.c" "$pkgdir/usr/share/neurowm/examples/nnoell_neurowm.c"
+  install -Dm644 "examples/null_neurowm.c" "$pkgdir/usr/share/neurowm/examples/null_neurowm.c"
+  cd "build"
+  echo "Installing into $pkgdir/"
+  make DESTDIR="$pkgdir/" install
+}
